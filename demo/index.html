@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Real or Replica — V2 demo</title>
+<link rel="preload" as="video" href="hero-video.mp4" type="video/mp4">
+<link rel="preload" as="image" href="hero-poster.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#fff8e7;--gold:#ffc53d;--accent:#ffc53d;--on-accent:#2b1d12;--bg:#0b0908;--surface:#1c1917;--surface2:#2a2318;--blue:#38bdf8;--dim:#d6c7a8;--border:rgba(255,197,61,.22);--shadow:0 2px 8px rgba(0,0,0,.25)}
+  body[data-theme="light"]{--ink:#221a0f;--gold:#8a6400;--accent:#c99312;--on-accent:#fff8e7;--bg:#f7f3ea;--surface:#ffffff;--surface2:#efe8d8;--dim:#6b5a2a;--border:rgba(0,0,0,.14);--shadow:0 2px 8px rgba(0,0,0,.10)}
+  body[data-theme="midnight"]{--ink:#eaf2ff;--gold:#38bdf8;--accent:#38bdf8;--on-accent:#0a1220;--bg:#0a1220;--surface:#131e33;--surface2:#1a2947;--dim:#a8bcd8;--border:rgba(56,189,248,.28);--shadow:0 2px 8px rgba(0,0,0,.35)}
+  body[data-theme="forest"]{--ink:#eef7e8;--gold:#7bc47f;--accent:#7bc47f;--on-accent:#0d1a12;--bg:#0d1a12;--surface:#152a1d;--surface2:#1e3a28;--dim:#b7d3b0;--border:rgba(123,196,127,.28);--shadow:0 2px 8px rgba(0,0,0,.35)}
+  body[data-textsize="small"]{font-size:14px} body[data-textsize="large"]{font-size:18px} body[data-textsize="xlarge"]{font-size:20px}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Georgia,"Times New Roman",ui-serif,system-ui,serif;color:var(--ink);background:var(--bg);line-height:1.55}
+  /* Look matches the public site demo (dark + gold), logic is V2 Oct 26-27.
+     No card photos, no Raian art, no official Pokémon art as backgrounds. */
+  .bg{position:fixed;inset:0;z-index:-1;opacity:0;transition:opacity 700ms ease;background:radial-gradient(circle at 50% 30%,#3a2c12 0 20%,transparent 60%),linear-gradient(160deg,#171410,#2b1d4e 70%,#171410)}
+  .bg.on{opacity:1}
+  @media (prefers-reduced-motion:reduce){.bg{transition:none}}
+  .banner{background:linear-gradient(180deg,#ffd970,#ffc53d);color:#3a2c12;text-align:center;padding:10px 12px;font-weight:700}
+  .demo-banner{background:linear-gradient(180deg,#ffd970,#ffc53d);color:#3a2c12;text-align:center;padding:12px;border-radius:1.2rem}
+  .banner small{display:block;font-weight:400;font-size:.85rem}
+  header{padding:16px 16px 0;font-weight:700}
+  header a{color:var(--ink);text-decoration:none}
+  main{max-width:640px;margin:0 auto;padding:16px 20px 190px}
+  h1,h2,h3{font-family:"Cinzel",Georgia,serif;letter-spacing:.02em}
+  h1{font-size:32px;font-weight:700;line-height:1.15;margin:0}
+  h2{font-size:24px;font-weight:700;line-height:1.2;margin:0}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}
+  .box{border:1px solid var(--border);border-radius:12px;padding:12px;margin:12px 0;background:var(--surface2)}
+  .fake{border-color:#a33}
+  .small{font-size:.9rem;color:var(--dim)}
+  .frame{position:relative;border:4px dashed var(--blue);border-radius:2rem;overflow:hidden;background:linear-gradient(160deg,rgba(56,189,248,.10),rgba(255,217,61,.07));padding:10px;min-height:320px;display:flex;align-items:center;justify-content:center}
+  .frame video,.frame img{width:100%;border-radius:10px}
+  .corner{position:absolute;width:26px;height:26px;border-color:var(--gold);border-style:solid;z-index:2}
+  .c-tl{top:8px;left:8px;border-right:0;border-bottom:0}
+  .c-tr{top:8px;right:8px;border-left:0;border-bottom:0}
+  .c-bl{bottom:8px;left:8px;border-right:0;border-top:0}
+  .c-br{bottom:8px;right:8px;border-left:0;border-top:0}
+  .overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:1}
+  button{width:100%;border-radius:999px;font-family:"Cinzel",Georgia,serif;font-weight:700;text-align:center;min-height:56px;font-size:17px;line-height:1.3;padding:12px 20px;border:1px solid var(--border);cursor:pointer;background:var(--surface2);color:var(--ink);margin:8px 0;box-shadow:var(--shadow)}
+  button.secondary{background:var(--surface)}
+  button.gold{background:var(--accent);color:var(--on-accent)}
+  button:disabled{opacity:.6;cursor:wait}
+  input,select{width:100%;padding:10px;margin:8px 0;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--ink)}
+  input[type=checkbox]{width:auto;margin:0 8px 0 0}
+  label{display:block;margin:10px 0}
+  .verdict{font-family:Georgia,serif;font-size:2rem;font-weight:800;margin:8px 0;color:var(--gold)}
+  details{margin-top:12px} summary{cursor:pointer;font-weight:700}
+  table{width:100%;border-collapse:collapse} td,th{border-bottom:1px solid #444;padding:6px;text-align:left}
+  .dots{text-align:center;margin:10px 0}.dot{display:inline-block;width:14px;height:14px;border-radius:50%;background:#444;margin:0 4px}.dot.on{background:var(--gold)}
+  nav{position:fixed;left:12px;right:12px;bottom:12px;background:var(--surface);border:1px solid var(--border);border-radius:1.8rem;padding:12px;display:flex;flex-wrap:wrap;gap:6px;justify-content:space-around;box-shadow:var(--shadow);z-index:10}
+  nav button{width:auto;padding:6px 8px;margin:0;background:none;box-shadow:none;text-transform:none;font-size:.8rem;color:var(--dim);flex:0 0 calc(16.666% - 5px);text-align:center}
+  nav button.on{color:var(--gold)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 16px 0}
+  .topbar button.bubble{width:auto;min-height:44px;padding:6px 14px;font-size:.95rem;margin:0;display:flex;align-items:center;gap:8px}
+  .bubble-avatar{display:inline-block;width:32px;height:32px;line-height:32px;border-radius:50%;text-align:center;background:#3a2c12;font-size:1.2rem}
+  .avatar-preview{display:inline-block;width:72px;height:72px;line-height:72px;border-radius:50%;text-align:center;background:#3a2c12;font-size:2.2rem}
+  .avatar-grid{display:flex;flex-wrap:wrap;gap:2px;margin:8px 0}
+  .avatar-btn{width:auto;min-height:44px;min-width:44px;padding:6px;font-size:1.4rem;border-radius:12px;margin:2px}
+  .avatar-btn.on{outline:3px solid var(--gold)}
+  body.no-motion .bg,body.no-motion .fade{transition:none!important;animation:none!important}
+  .verdict-pill{display:inline-block;background:linear-gradient(105deg,#ffe9a8,#ffc53d 38%,#c99312 72%,#ffd76a);color:#3a2c12;border-radius:999px;padding:10px 22px;font-family:"Cinzel",Georgia,serif;font-weight:900;font-size:1.3rem}
+  .meter{text-align:center;margin-top:12px}.meter i{width:26px;height:26px;border-radius:50%;display:inline-block;margin:0 3px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.35),#4a4440 60%,#292524)}.meter i.on{background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.9),#ffc53d 58%,#f0a91e)}
+  .fade{animation:fade 700ms ease} @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.fade{animation:none}}
+
+  .bg2{background:radial-gradient(circle at 50% 70%,#1d2a3a 0 20%,transparent 60%),linear-gradient(160deg,#171410,#3a2c12 70%,#171410)}
+  .screen{scroll-margin-top:16px}
+  button{text-shadow:none}
+  .note{border:1px solid var(--border);border-radius:10px;padding:12px;margin:12px 0;background:var(--surface2)}
+  .screenbtns button{width:auto;margin:4px;padding:10px 14px;min-height:44px;font-size:.9rem}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+  /* --- Section backgrounds: 6 layers, 700ms dissolve, vivid at edges, NO full-screen dim --- */
+  .bg-layer{position:fixed;inset:0;z-index:-1;opacity:0;transition:opacity 700ms ease;overflow:hidden;will-change:opacity,transform}
+  .bg-layer.on{opacity:1}
+  .bg-layer video,.bg-layer img.hero-poster{width:100%;height:100%;object-fit:cover;display:block}
+  .bg-layer img.hero-poster{display:none}
+  body.no-motion .bg-layer video{display:none} body.no-motion .bg-layer img.hero-poster{display:block}
+  @media (prefers-reduced-motion:reduce){.bg-layer{transition:none}.bg-layer video{display:none}.bg-layer img.hero-poster{display:block}}
+  /* Story: golden cauldron bubbling / swirling mist, slow */
+  .bg-story{background:radial-gradient(circle at 30% 70%,rgba(255,197,61,.55) 0 12%,transparent 45%),radial-gradient(circle at 70% 30%,rgba(255,217,61,.35) 0 10%,transparent 40%),linear-gradient(160deg,#171410,#3a2c12 70%,#171410);animation:storyBubble 9s ease-in-out infinite alternate}
+  @keyframes storyBubble{from{background-position:0 0,0 0,0 0}to{background-position:40px -30px,-30px 40px,0 0}}
+  /* Checker: soft scanning sweep + tell dots lighting up */
+  .bg-checker{background:linear-gradient(160deg,#101820,#1d2a3a 70%,#101820)}
+  .bg-checker::before{content:"";position:absolute;left:0;right:0;height:90px;top:0;background:linear-gradient(180deg,transparent,rgba(56,189,248,.45),transparent);animation:sweep 5s ease-in-out infinite;will-change:transform}
+  .bg-checker::after{content:"";position:absolute;left:20%;top:30%;width:220px;height:120px;background:radial-gradient(circle at 20% 50%,#ffc53d 0 8px,transparent 12px),radial-gradient(circle at 50% 50%,#38bdf8 0 8px,transparent 12px),radial-gradient(circle at 80% 50%,#ffc53d 0 8px,transparent 12px);animation:dotPulse 3s ease-in-out infinite}
+  @keyframes sweep{0%{transform:translateY(-10vh)}50%{transform:translateY(105vh)}100%{transform:translateY(-10vh)}}
+  @keyframes dotPulse{0%,100%{opacity:.5}50%{opacity:1}}
+  /* Index: drifting abstract card shapes / constellation, slow parallax */
+  .bg-index{background:radial-gradient(circle at 20% 20%,rgba(255,197,61,.4) 0 6%,transparent 22%),radial-gradient(circle at 80% 60%,rgba(56,189,248,.4) 0 6%,transparent 22%),radial-gradient(circle at 50% 85%,rgba(255,197,61,.3) 0 5%,transparent 20%),linear-gradient(160deg,#171410,#1d2a3a 70%,#171410);animation:indexDrift 14s ease-in-out infinite alternate}
+  @keyframes indexDrift{from{background-position:0 0,0 0,0 0,0 0}to{background-position:30px 20px,-25px -15px,15px -20px,0 0}}
+  /* Games: bouncing bubbles / musical notes, playful */
+  .bg-games{background:linear-gradient(160deg,#171410,#2b1d4e 70%,#171410)}
+  .bg-games::before{content:"";position:absolute;left:12%;bottom:12%;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.7),#38bdf8 60%);animation:bubbleBounce 3.2s ease-in-out infinite}
+  .bg-games::after{content:"";position:absolute;right:14%;bottom:20%;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.7),#ffc53d 60%);animation:bubbleBounce 2.6s ease-in-out infinite reverse}
+  @keyframes bubbleBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-90px)}}
+  /* Close: rising ember rain / starfield */
+  .bg-close{background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.7) 0 2px,transparent 4px),radial-gradient(circle at 70% 40%,rgba(255,197,61,.9) 0 3px,transparent 5px),radial-gradient(circle at 50% 70%,rgba(255,255,255,.6) 0 2px,transparent 4px),linear-gradient(160deg,#171410,#3a2c12 70%,#171410);animation:emberRise 8s linear infinite}
+  @keyframes emberRise{from{background-position:0 0,0 0,0 0,0 0}to{background-position:0 -120px,0 -180px,0 -90px,0 0}}
+  @media (prefers-reduced-motion:reduce){.bg-story,.bg-checker::before,.bg-checker::after,.bg-index,.bg-games::before,.bg-games::after,.bg-close{animation:none}}
+  body.no-motion .bg-story,body.no-motion .bg-checker::before,body.no-motion .bg-checker::after,body.no-motion .bg-index,body.no-motion .bg-games::before,body.no-motion .bg-games::after,body.no-motion .bg-close{animation:none!important}
+  /* Local scrim ONLY behind hero words, never a full-screen blackout */
+  .hero-text{background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.30));border-radius:16px;padding:16px;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+  .avatar-bounce{animation:avatarBounce .6s ease}
+  @keyframes avatarBounce{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-12px) scale(1.1)}100%{transform:translateY(0) scale(1)}}
+  .avatar-big{font-size:3rem;line-height:1}
+</style></head><body>
+<div class="bg-layer hero-layer on" id="bgHero"><video id="heroVideo" autoplay muted loop playsinline poster="hero-poster.webp" src="hero-video.mp4"></video><img class="hero-poster" alt="Original Mallow and Ember creatures by a golden cauldron" src="hero-poster.webp"></div>
+<div class="bg-layer bg-story" id="bgStory" aria-hidden="true"></div>
+<div class="bg-layer bg-checker" id="bgChecker" aria-hidden="true"></div>
+<div class="bg-layer bg-index" id="bgIndex" aria-hidden="true"></div>
+<div class="bg-layer bg-games" id="bgGames" aria-hidden="true"></div>
+<div class="bg-layer bg-close" id="bgClose" aria-hidden="true"></div>
+<div class="banner">🫧 PLAYGROUND DEMO <small>Look around — this V2 playground build uses the site demo look, with new V2 + back scoring. Nothing here saves to an account. Not public, not deployed.</small></div>
+<div class="topbar"><button class="bubble" id="profileBubble" onclick="showScreen('settings')"><span class="bubble-avatar" id="bubbleAvatar">🫧</span><span id="bubbleName">Guest</span><span class="small"> · Profile / Settings</span></button><span class="small" id="bubbleLoginNote">Local demo login only — no real account</span></div>
+<header><a href="#" onclick="return false">← Pick a category</a></header>
+<main>
+<p class="small" id="checkingLine">Checking: Pokémon Card · Photo 1 of 2 · DEMO</p>
+
+<!-- HOME SCREEN -->
+<div class="screen" id="screen-home" hidden>
+  <div class="hero-text"><h1>Real or Replica — is your Pokémon card real or fake?</h1>
+  <p>Scan the front and back of your card. We check its identity first — set and printed number — then measure it tell by tell against a genuine reference for that same card. You get Likely Genuine, Likely Counterfeit, or Inconclusive — and if the evidence isn't enough, we say so instead of guessing.</p>
+  <button onclick="showScreen('check');showStep('front')" style="font-size:1.15rem;padding:14px 18px;margin:12px 0 4px">🫧 Check your card</button></div>
+  <div class="card"><h2>What are we checking?</h2>
+    <p class="small">Pick the thing in your hand first. Pokémon Card is the only live category in this demo.</p>
+    <button onclick="showScreen('check');showStep('front')">Pokémon Card — live check</button>
+    <div class="screenbtns">
+      <button class="secondary" onclick="homeNote('Slabbed cards: use the Pokémon Card check and tick “This card is slabbed” — cert + card inside, every time.')">Graded slab</button>
+      <button class="secondary" onclick="homeNote('Magic: The Gathering is not in this demo yet — Pokémon Card is the only live category here.')">Magic: The Gathering</button>
+      <button class="secondary" onclick="homeNote('One Piece is not in this demo yet — Pokémon Card is the only live category here.')">One Piece</button>
+      <button class="secondary" onclick="homeNote('Yu-Gi-Oh! is not in this demo yet — Pokémon Card is the only live category here.')">Yu-Gi-Oh!</button>
+    </div>
+    <p class="small" id="homeNote" hidden></p>
+  </div>
+  <div class="card"><h2>All screens</h2><div class="screenbtns">
+    <button class="secondary" onclick="showScreen('picker')">Picker</button>
+    <button class="secondary" onclick="showScreen('light')">Light Test</button>
+    <button class="secondary" onclick="showScreen('grader')">Condition Grader</button>
+    <button class="secondary" onclick="showScreen('verdict')">Verdict</button>
+    <button class="secondary" onclick="showScreen('receipt')">Receipt</button>
+    <button class="secondary" onclick="showScreen('binders')">Binders</button>
+    <button class="secondary" onclick="showScreen('plan')">Plan</button>
+    <button class="secondary" onclick="showScreen('games')">Games</button>
+    <button class="secondary" onclick="showScreen('tells')">Tells</button>
+    <button class="secondary" onclick="showScreen('settings')">Settings &amp; Profile</button>
+    <button class="secondary" onclick="showScreen('help')">Help</button>
+  </div><p class="small">Every screen above opens and does its stated job, or says plainly what is not in this demo yet. No dead screens.</p></div>
+  <div class="box"><b>Little Office — live panel</b><p class="small" id="officeHome">No check running yet. When a check runs, this panel marks stages only from that check's real timeline — no fake progress, no looping animation.</p></div>
+</div>
+  <div class="card scroll-section" data-bg="story"><h2>Our story</h2><p class="small">A card checker built to earn trust, one honest check at a time. Scroll on — the background changes with each section, gently, about 700ms, never a hard cut. Reduced motion shows a still image instead.</p></div>
+  <div class="card scroll-section" data-bg="checker"><h2>How a check works</h2><p class="small">Identity first, then front tells, then back tells. Tap Check your card above to start a real check in this demo.</p><button class="secondary" onclick="showScreen('check');showStep('front')">Go to the checker</button></div>
+  <div class="card scroll-section" data-bg="index"><h2>The index</h2><p class="small">37,369 Pokémon card identities searchable in English and Japanese (23,771 English, 13,598 Japanese), as of 27 October 2026. A lookup hit is identity only, never authentication.</p></div>
+  <div class="card scroll-section" data-bg="games"><h2>Games</h2><p class="small">Tell or Tale? and Bubble Beat — your saved avatar plays with you. Demo rewards only, device-local, never real money or prizes.</p><button class="secondary" onclick="showScreen('games')">Play the games</button></div>
+  <div class="card scroll-section" data-bg="close"><h2>Help us test it</h2><p class="small">We're still building it. Try the demo, tell us what worked and what was confusing, and if the evidence isn't enough, we say so instead of guessing.</p><button class="secondary" onclick="showScreen('settings')">Customise my app</button></div>
+<!-- PICKER SCREEN -->
+<div class="screen" id="screen-picker" hidden>
+  <h1>Pick a way to check</h1>
+  <div class="card"><h2>Front, back, or camera</h2>
+    <button onclick="showScreen('check');showStep('front')">Front photo (file or camera)</button>
+    <button onclick="showScreen('check');showStep('back')">Back photo (after a front photo)</button>
+    <button onclick="quickSnap('front')">Quick snap — front, one tap</button>
+    <p class="small">Quick snap starts the camera and captures when the video is ready, in a real browser. If the camera is blocked, use Choose File — the demo never breaks on a blocked camera.</p>
+    <button class="secondary" onclick="pickerNote()">Batch — not in this demo yet</button>
+    <p class="small" id="pickerNote" hidden>Batch check is not in this demo yet. Check one card at a time here — every card gets its own front and back photos and its own identity match.</p>
+  </div>
+</div>
+<div class="screen" id="screen-check">
+<!-- FRONT STEP -->
+<div id="frontStep">
+  <h1>First, the front of the card</h1>
+  <p>Lay it flat, keep the shine off it, and fill the frame with the front of your card.</p>
+  <div class="frame" id="frontFrame">
+    <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+    <video id="cam" playsinline muted autoplay style="display:none"></video>
+    <img id="capFront" alt="" style="display:none">
+    <div class="overlay" id="frontOverlay"><div style="font-size:2rem">🃏</div><p>Line the front of<br>the card up inside<br>this frame</p></div>
+  </div>
+  <div class="dots"><span class="dot on"></span><span class="dot"></span></div>
+  <button id="takeFrontBtn">Take the front photo</button>
+  <button class="secondary" id="quickFrontBtn">Quick snap — front</button>
+  <button class="secondary" id="stopCamBtn">Stop camera</button>
+  <button class="secondary" data-canned="test-a">Use a sample photo instead</button>
+  <p class="small" style="text-align:center">Or choose a file: <input type="file" id="photo" accept="image/*" style="width:auto"></p>
+  <p class="small" id="camStatus"></p>
+  <div class="box">
+    <b>Limits first</b>
+    <ol style="margin:8px 0;padding-left:20px"><li>Front-only is not a full check.</li><li>A bad photo is not a fake verdict.</li><li>A canned scan is not a real verdict.</li></ol>
+    <p class="small">Photo guide: card fills the frame, flat, even light, portrait for a portrait card, no fingers or carpet in the crop.</p>
+  </div>
+  <div class="box fake">
+    <b>FAKE OF THE WEEK — labelled FAKE, education only</b>
+    <p class="small">One tell: a fake front can look sharp small, but its edge and print texture do not match the real card of the same identity. No card photo is shown here.</p>
+  </div>
+</div>
+<!-- BACK STEP -->
+<div id="backStep" hidden>
+  <h1>Next, the back of the card</h1>
+  <p>Flip the card over, lay it flat, and fill the frame with the back.</p>
+  <div class="frame" id="backFrame">
+    <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+    <img id="capBack" alt="" style="display:none">
+    <div class="overlay" id="backOverlay"><div style="font-size:2rem">🃏</div><p>Line the back of<br>the card up inside<br>this frame</p></div>
+  </div>
+  <div class="dots"><span class="dot"></span><span class="dot on"></span></div>
+  <button id="takeBackBtn">Take the back photo</button>
+  <button class="secondary" id="quickBackBtn">Quick snap — back</button>
+  <button class="secondary" onclick="stopCam()">Stop camera</button>
+  <button class="secondary" id="skipBackBtn">Skip back — front-only check</button>
+  <p class="small" style="text-align:center">Or choose a file: <input type="file" id="backPhoto" accept="image/*" style="width:auto"></p>
+  <p class="small" id="backStatus"></p>
+</div>
+<!-- CHECK STEP -->
+<div id="checkStep" hidden>
+  <div class="card">
+    <h2>Ready to check</h2>
+    <div class="box"><b>End-to-end check — 6 stages, local only, in order</b>
+    <ol style="margin:8px 0;padding-left:20px"><li>Identity — set + printed number first (EN/JA index, 37,369 identities); ambiguous = needs_input, never auto-picked.</li><li>Quality gate — a failed photo = retake, never Counterfeit.</li><li>Front tells (5) — median across verified references for this identity where more than one exists; pilot/uncalibrated.</li><li>Back — single pilot back reference only; Counterfeit if front OR back is Counterfeit, Genuine only if BOTH are Genuine.</li><li>Slab — cert + card inside BOTH required; status is always cert_and_card_present_not_grader_verified, never a grade.</li><li>Receipt — from this check only, with check id and timestamp; example-only before any check.</li></ol>
+    <p class="small"><b>Cross-source honesty gate:</b> tells v2 fails fake separation phone-vs-stock even calibrated, so a fresh-upload Likely verdict against a stock/canned reference stays Inconclusive here, with the block named — tells numbers are still shown. Canned tests are labelled SAMPLE and are pipeline tests, never real verdicts.</p>
+    <p class="small"><b>Real-verdict path (playground):</b> Chatot (Vivid Voltage 139) is the only identity with two verified phone references — a phone-vs-phone check files Likely Genuine (see REAL-VERDICT-CHATOT-2026-10-27.md in this folder). It is 2 of 3 phone copies, so it is NOT median-ready yet: one more distinct Chatot phone photo is needed for a 3-phone median. No other identity files a real Likely verdict here yet.</p></div>
+    <label>Card identity (the reference must be for this identity, or the verdict is Inconclusive)
+      <select id="identity"><option>Alakazam|Base|1</option><option>Charizard|Base|4</option></select></label>
+    <div class="box"><b>Find a real card — EN/JA index</b>
+      <p class="small">37,369 identities searchable (EN 23,771 + JA 13,598). Set + printed number first — the printed number beats name/rarity. A lookup hit is identity only, never authentication, and most cards have no reference image here yet, so their check stays Inconclusive.</p>
+      <label>Set (set id or set name, e.g. base1 or Base Set) <input type="text" id="lookupSet" placeholder="base1"></label>
+      <label>Printed card number <input type="text" id="lookupNumber" placeholder="4"></label>
+      <label>Card name (optional, fallback search only) <input type="text" id="lookupName" placeholder="Charizard"></label>
+      <label>Language <select id="lookupLang"><option value="all">All (EN + JA)</option><option value="en">English only</option><option value="ja">Japanese only</option></select></label>
+      <button class="secondary" id="lookupBtn">Find card in EN/JA index</button>
+      <p class="small" id="lookupResult"></p>
+      <button class="secondary" id="lookupUseBtn" hidden>Use this identity for the check</button>
+      <p class="small">Scan quality gate: a blurry, glare-blown, or badly cropped photo returns needs_input and a retake request — never a Counterfeit verdict on quality alone. Sleeve is not detectable from pixels alone, so it is never rejected on sleeve. Multi-reference: where an identity has more than one verified reference, tells can be measured against their median (pilot/uncalibrated) — see below.</p>
+      <button class="secondary" id="multiRefBtn">Show verified references for the selected identity</button>
+      <p class="small" id="multiRefResult"></p>
+    </div>
+    <label><input type="checkbox" id="slabClaimed"> This card is slabbed — a cert number is then required, and cert + card inside, every time.</label>
+    <label>Slab cert number (optional — cert alone never makes a card genuine)
+      <input type="text" id="cert" placeholder="Cert number, if slabbed" autocomplete="off"></label>
+    <p class="small">Slab rule: cert + card inside, every time. A cert without the card inside stays incomplete. In this demo, the front photo counts as the card-inside photo. Backs are scored separately — a back score is a back-design/print score, not an identity proof.</p>
+    <button class="gold" id="checkBtn">Check this card</button>
+    <button class="secondary" data-canned="test-b">Sample B — Alakazam vs Charizard</button>
+    <p class="small" id="status"></p>
+    <div class="box"><b>Little Office — live panel</b><p class="small" id="officePanel">No check running yet. Stages mark only from a real check timeline — no fake progress.</p></div>
+  </div>
+</div>
+</div>
+<!-- VERDICT SCREEN -->
+<div class="screen" id="screen-verdict" hidden>
+<p class="small" id="verdictEmpty">No verdict yet in this session — run a check first, or use a canned test on the Check screen. Sample verdicts elsewhere are always labelled SAMPLE, never a real check.</p>
+<!-- RESULT -->
+<div class="card fade" id="resultCard" hidden>
+  <h2>Verdict</h2>
+  <p style="text-align:center"><span class="verdict-pill" id="verdict">—</span></p>
+  <div class="meter" id="meter"></div>
+  <p class="small" style="text-align:center" id="meterNote"></p>
+  <p id="reason"></p>
+  <div class="box fake" id="needsInputBox" hidden><b>More evidence needed — no verdict guessed</b><p class="small" id="needsInput"></p></div>
+  <p class="small" id="lookTwice" hidden><b>Look twice:</b> Charizard is a commonly faked identity — edge, print texture and holo pattern matter most here. Measurement still decides the verdict.</p>
+  <p class="small" id="backLine"></p>
+  <p class="small" id="backVerdictLine"></p>
+  <details id="backDetails" hidden><summary>Back Tells — scored separately</summary>
+    <table><thead><tr><th>Tell</th><th>Match</th><th>Strong mismatch</th><th>Difference</th></tr></thead><tbody id="backTells"></tbody></table>
+    <p class="small" id="backTellsNote"></p>
+    <p class="small">Pilot back reference: one genuine English back crop. Backs are mostly uniform, so this scores back design/print, not the card's identity.</p>
+  </details>
+  <p class="small" id="slabLine"></p>
+  <p class="small">Estimate only, never official, never guaranteed, never a grade, never a SAM authentication. A manifest name match alone never produces a Genuine verdict.</p>
+  <details id="timelineDetails"><summary>Check timeline — what the checker saw, decided, and returned</summary>
+    <ol id="timeline"></ol>
+    <p class="small">Bubbles above are front tells matching, not a percentage, not a grade, not authentication. A filed verdict passed the verification gate: identity proven, tells recorded, findings citing recorded tells, and a sign-off flag. If that gate fails, the verdict stays Inconclusive or asks for the missing evidence.</p>
+  </details>
+  <details id="planDetails"><summary>Check plan — steps shown before the check ran</summary>
+    <ol id="planList"></ol>
+    <p class="small" id="planNote"></p>
+  </details>
+  <details id="factsDetails"><summary>Recorded facts — every finding cites a measured tell</summary>
+    <table><thead><tr><th>Tell</th><th>Side</th><th>Match</th><th>Difference</th><th>Source</th></tr></thead><tbody id="facts"></tbody></table>
+    <p class="small" id="factsNote"></p>
+  </details>
+  <details><summary>Tells Explainer — why this verdict</summary>
+    <table><thead><tr><th>Tell</th><th>Match</th><th>Strong mismatch</th><th>Difference</th></tr></thead><tbody id="tells"></tbody></table>
+    <p class="small" id="tellsNote"></p>
+  </details>
+  <p class="small" id="helpLine" hidden></p>
+  <div class="box">
+    <label><input type="checkbox" id="reportConsent"> Think this is fake? Report it for education, with my permission.</label>
+    <p class="small" id="reportNote" hidden>Held for review in this local demo only — nothing sent, nothing posted automatically.</p>
+  </div>
+  <p class="small" id="meta"></p>
+  <button class="secondary" id="fileBinderBtn">File this check in my binder</button>
+  <button class="secondary" id="rerunBtn">Re-run with that</button>
+  <button class="secondary" onclick="showStep('front')">Check another</button>
+</div>
+</div>
+<p class="small" style="text-align:center">Photos you pick stay on your device — this demo doesn't upload or store anything. Sample photos are illustrations. Local demo only. No deploy, no public link, no Play submission, no spend. SAM is last-resort only — this demo makes no live SAM call.</p>
+
+<!-- LIGHT TEST -->
+<div class="screen" id="screen-light" hidden>
+  <h1>The Light Test 💡</h1>
+  <p class="small">By Lens — a pocket check for card stock, self-marked only. Real card stock has a dark core and blocks light; a dull glow at the edges is a flag to look closer. This is NOT a verdict.</p>
+  <div class="card"><p>Take or choose a backlit photo (optional — you can mark without one):</p>
+    <input type="file" id="lightPhoto" accept="image/*">
+    <img id="lightPreview" alt="" style="display:none;width:100%;border-radius:10px;margin-top:8px">
+    <div class="screenbtns"><button class="secondary" onclick="lightMark('Light blocked — dark core, as expected for real stock')">Light blocked</button>
+    <button class="secondary" onclick="lightMark('Dull glow at the edges — flag, look closer')">Dull glow</button>
+    <button class="secondary" onclick="lightMark('Can\'t tell from this photo')">Can't tell</button></div>
+    <p class="small" id="lightResult" hidden></p>
+    <p class="small">Self-marked only, session only, nothing saved to an account. A Light Test result never changes a V2 verdict on its own.</p>
+  </div>
+</div>
+<!-- CONDITION GRADER -->
+<div class="screen" id="screen-grader" hidden>
+  <h1>Card Condition Grader</h1>
+  <p class="small">Wear only — NOT real-or-fake, NOT an official PSA/CGC grade, NOT a grade guess. You mark the wear; the demo summarises what you marked.</p>
+  <div class="card">
+    <label>Corners <select id="gCorners"><option>Mint</option><option>Near Mint</option><option>Excellent</option><option>Very Good</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></label>
+    <label>Edges <select id="gEdges"><option>Mint</option><option>Near Mint</option><option>Excellent</option><option>Very Good</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></label>
+    <label>Surface <select id="gSurface"><option>Mint</option><option>Near Mint</option><option>Excellent</option><option>Very Good</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></label>
+    <label>Centering <select id="gCentering"><option>Mint</option><option>Near Mint</option><option>Excellent</option><option>Very Good</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></label>
+    <button onclick="gradeMark()">Summarise wear</button>
+    <p class="small" id="gradeResult" hidden></p>
+    <p class="small">Estimate only, from your marks. Condition is not authenticity: a worn real card is still real, and a mint fake is still fake.</p>
+  </div>
+</div>
+<!-- RECEIPT -->
+<div class="screen" id="screen-receipt" hidden>
+  <h1>Receipt</h1>
+  <p class="small">Lens / Gauge tell format — with REAL V2 tells from your last check in this session, never sample text passed off as a check.</p>
+  <div class="card" id="receiptCard"><p class="small">No check run yet in this session — run a check first, then come back here. The format below is example only.</p>
+    <p class="small"><b>Example format only:</b> Lens — Print &amp; colours: Pass · Gauge — Centering: measured, not guessed. Real receipts replace this with your measured tells.</p>
+    <button class="secondary" onclick="shareReceipt()">Share this receipt</button>
+    <p class="small" id="shareNote"></p>
+  </div>
+</div>
+<!-- BINDERS -->
+<div class="screen" id="screen-binders" hidden>
+  <h1>My Binders</h1>
+  <p class="small">In this demo, checks file themselves by verdict — session only, nothing saves to an account. Sample cards below are labelled samples, not yours.</p>
+  <div class="card" id="binderCard"></div>
+</div>
+<!-- PLAN -->
+<div class="screen" id="screen-plan" hidden>
+  <h1>Checks &amp; Plan</h1>
+  <div class="card"><h2>Your check pool — this session</h2><p class="small" id="planCounter"></p>
+    <p>Free — 10 free checks to start, then 5/month. $4.99 — 100 Real/month. $6.99 — 300 Real/month. Grading standalone $3.99/month — 20 Grades/month (estimate only). $19.99 Ultimate — 500 Real + 50 Grades/month. Unused never rolls over. Social bonus: 1 free Real scan per platform, once ever, max 4.</p>
+    <p class="small">Limits first: front-only is not a full check, a bad photo is not a fake verdict, a canned scan is not a real verdict.</p>
+  </div>
+</div>
+<!-- GAMES -->
+<div class="screen" id="screen-games" hidden>
+  <h1>Mini Games 🎮</h1>
+  <p class="small">Demo rewards only — coins and stars live on this device only (localStorage), never real money, never real prizes, never a paid item. Your Settings screen shows the same device-only balance (key <code>cc_demo_rewards_v1</code>).</p>
+  <div class="card"><h2>🏆 Demo Rewards</h2><p class="small" id="rewardsAvatar"></p><p class="small" id="rewardsLine"></p>
+    <p class="small" id="rewardsDetail"></p>
+    <button class="secondary" onclick="claimDaily()">Claim today's daily reward (+25 coins, once a day)</button>
+    <p class="small" id="dailyNote"></p>
+    <p class="small">Earn (anti-farm rule, owner decision Oct 27): +10 coins per correct game answer and +50 coins per level completed only on your FIRST pass of that level each day — replays the same day are practice only and earn 0 coins, with a "practice only — no coins" note. +1 star the first time you ever complete a level. +20 coins per completed card check only once per unique card per day. Daily claim once a day. No leaderboard here yet — a live board needs real sign-in first, so it is honestly not in this demo.</p></div>
+  <div class="card"><h2>Tell or Tale? — levels</h2><p class="small" id="gameAvatar"></p><p class="small">Which statement is a real tell? No card photos, no verdicts — just the knowledge. Harder questions as levels rise; finish a level with 60% or better to unlock the next.</p>
+    <div class="screenbtns" id="tellLevels"></div><p class="small" id="tellProgress"></p>
+    <p id="gameQ"></p><div class="screenbtns" id="gameBtns"></div><p class="small" id="gameResult"></p><p class="small" id="gameScore"></p>
+    <button class="secondary" onclick="startGame()">Start / next question</button></div>
+  <div class="card"><h2>🎹 Bubble Beat — piano keys, levels</h2><p class="small" id="bbAvatar"></p><p class="small">Watch the highlighted keys, then tap the same notes in order. Each level has its own beat pattern and a faster tempo. Playable muted — the highlighted key is the cue, sound is not required.</p>
+    <p class="small">Music note: the old full-app Bubble Beat had tap-blips only and no music track. This demo plays on-device synthesized tones, but that has NOT been verified on a real phone yet — do not treat the old music bug as fixed until a phone playthrough hears it.</p>
+    <div class="screenbtns" id="bbLevels"></div><p class="small" id="bbProgress"></p>
+    <label class="small"><input type="checkbox" id="bbMusic" checked onchange="saveMusicPref()"> Music on (synthesized tones; off = visual only)</label>
+    <p class="small" id="bbBeat"></p>
+    <div class="screenbtns" id="bbKeys"></div>
+    <p class="small" id="bbResult"></p><p class="small" id="bbScore"></p>
+    <button class="secondary" onclick="bbShowPattern()">Show the beat</button>
+    <button class="secondary" onclick="bbStartRound()">Play this level</button></div>
+  <div class="card"><p class="small">Other crew games (Guess the Price, Coin Catch, Pop Path, Match Audit and the rest of the shelf) are not in this demo yet — they need real price snapshots or full app screens first. No dead buttons here: nothing above pretends to be a game it is not.</p></div>
+</div>
+<!-- TELLS -->
+<div class="screen" id="screen-tells" hidden>
+  <h1>🔍 TELLS CHECKLIST — NOT A REAL CARD CHECK</h1>
+  <p class="small"><b>This checklist does NOT say a card is real or fake.</b> It only records the tells YOU mark yourself. Real card checking lives in the Check screen, not here.</p>
+  <div class="card"><p class="small">Mark each tell yourself:</p><div id="tellsSelf"></div>
+    <button onclick="tellsSummary()">Summarise my marks</button><p class="small" id="tellsSummary" hidden></p>
+    <p class="small">Tells Explainer: aspect ratio, mean colour, border colour, edge density, colour histogram — each is measured by V2 in a real check, and each finding there cites its measured tell. Here, your marks are yours, not measurements.</p>
+  </div>
+</div>
+<!-- SETTINGS + PROFILE -->
+<div class="screen" id="screen-settings" hidden>
+  <h1>Settings &amp; Profile</h1>
+  <p class="small">Demo only: everything here saves on this device only (local storage in this browser). There is NO real account system in this demo — the login below is local/session-only, labelled as such, with no password and no server.</p>
+  <div class="card"><h2>Theme &amp; customisation — this device only</h2>
+    <p class="small">Themes, accent colour and text size apply app-wide, on every screen, and save on this device only (localStorage). No server, no account. Changing a theme never changes a verdict, a price, or a demo-only label.</p>
+    <p class="small">Theme:</p>
+    <div class="screenbtns" id="themeGrid">
+      <button class="secondary" data-theme-btn="dark-gold" onclick="applyTheme('dark-gold')">Dark Gold</button>
+      <button class="secondary" data-theme-btn="light" onclick="applyTheme('light')">Light</button>
+      <button class="secondary" data-theme-btn="midnight" onclick="applyTheme('midnight')">Midnight</button>
+      <button class="secondary" data-theme-btn="forest" onclick="applyTheme('forest')">Forest</button>
+    </div>
+    <p class="small">Accent colour (overrides the theme accent):</p>
+    <div class="screenbtns" id="accentGrid">
+      <button class="secondary" onclick="applyAccent('')">Theme default</button>
+      <button class="secondary" onclick="applyAccent('#ffc53d')">Gold</button>
+      <button class="secondary" onclick="applyAccent('#38bdf8')">Sky</button>
+      <button class="secondary" onclick="applyAccent('#7bc47f')">Green</button>
+      <button class="secondary" onclick="applyAccent('#f472b6')">Pink</button>
+    </div>
+    <label>Pick any accent colour <input type="color" id="accentPicker" value="#ffc53d" onchange="applyAccent(this.value)"></label>
+    <label>Text size <select id="textSizeSel" onchange="applyTextSize(this.value)"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option><option value="xlarge">Extra large</option></select></label>
+    <p class="small" id="themeState"></p>
+  </div>
+  <div class="card"><h2>Profile</h2>
+    <p style="text-align:center"><span class="avatar-preview" id="avatarPreview">🫧</span></p>
+    <p class="small" style="text-align:center" id="avatarPreviewName">Guest</p>
+    <label>Username <input type="text" id="setUsername" placeholder="Pick a username" autocomplete="off"></label>
+    <label>Display name <input type="text" id="setDisplayName" placeholder="Name shown in the app" autocomplete="off"></label>
+    <label>Bio / tagline <input type="text" id="setBio" placeholder="A short line about you" autocomplete="off"></label>
+    <label>Favourite set <select id="setFavSet"><option>Base</option><option>Jungle</option><option>Fossil</option><option>Base Set 2</option><option>Team Rocket</option><option>Gym Heroes</option><option>Gym Challenge</option><option>Neo Genesis</option><option>Neo Discovery</option><option>Expedition</option><option>Scarlet &amp; Violet</option><option>Other</option></select></label>
+    <label>Favourite card type <select id="setFavType"><option>Fire</option><option>Water</option><option>Grass</option><option>Lightning</option><option>Psychic</option><option>Fighting</option><option>Darkness</option><option>Metal</option><option>Fairy</option><option>Dragon</option><option>Colorless</option></select></label>
+    <p class="small">Avatar builder — original creatures only (Mallow the fluffy cub, Ember the fire drake style). Never official Pokémon characters/art, never real card photos. Your builder avatar shows in the top bubble, in games, and in Binders.</p>
+    <p style="text-align:center"><span class="avatar-big" id="avatarBuilderPreview">🫧</span></p>
+    <label>Creature base <select id="builderBase" onchange="updateAvatarBuilder()"><option value="mallow">Mallow — fluffy cub</option><option value="ember">Ember — fire drake</option><option value="bubble">Bubble buddy</option><option value="star">Star sprite</option></select></label>
+    <label>Colour <select id="builderColour" onchange="updateAvatarBuilder()"><option value="mint">Mint</option><option value="gold">Gold</option><option value="sky">Sky</option><option value="pink">Pink</option><option value="purple">Purple</option></select></label>
+    <label>Ears / accessory <select id="builderAccessory" onchange="updateAvatarBuilder()"><option value="">None</option><option value="✨">Sparkles ✨</option><option value="🔥">Flame 🔥</option><option value="🌟">Star 🌟</option><option value="🎩">Top hat 🎩</option><option value="👑">Crown 👑</option></select></label>
+    <button class="secondary" onclick="applyAvatarBuilder()">Use this avatar</button>
+    <p class="small" id="builderNote"></p>
+    <p class="small">Quick pick — 48 built-in emoji/symbol options below, no card photos, no downloads:</p>
+
+    <div class="avatar-grid" id="avatarGrid"></div>
+    <p class="small">Avatar background colour:</p>
+    <div class="avatar-grid" id="avatarColorGrid"></div>
+    <button class="gold" onclick="saveProfile()">Save profile (this device only)</button>
+    <p class="small" id="profileSaved" hidden>Saved on this device.</p>
+  </div>
+  <div class="card"><h2>Login — local demo only</h2>
+    <p class="small">This is NOT a real account login. It only remembers a name on this device so the avatar bubble at the top shows who is "signed in" in this demo. No password, no server, nothing leaves this device, nothing is saved to an account.</p>
+    <label>Login name <input type="text" id="loginName" placeholder="Username for this demo" autocomplete="off"></label>
+    <button onclick="localLogin()">Log in locally (demo only)</button>
+    <button class="secondary" onclick="localLogout()">Log out (clear local login)</button>
+    <p class="small" id="loginState"></p>
+  </div>
+  <div class="card"><h2>Biometric unlock — Play Store release only</h2>
+    <p class="small"><b>Biometric unlock — simulated in this web demo only. Real fingerprint/face prompt only in the Play build, not here.</b></p>
+    <p class="small">In the Play Store release build, this will use Android BiometricPrompt: fingerprint or face, whichever this device offers. Biometric unlock opens a LOCAL session only — it never replaces a server account, never sends any biometric data anywhere (Android only returns success or fail, never a fingerprint or face image to the app), and it always offers a PIN/password fallback. It is opt-in only: you must enrol it in Settings first, and turning it off returns you to the normal login. Full spec: BIOMETRIC-LOGIN-SPEC-2026-10-27.md in this demo folder.</p>
+    <p class="small">In this web demo, no fingerprint or face is checked, no biometric was verified, and nothing biometric is stored — this button only shows what the screen will say.</p>
+    <button onclick="simulateBiometric()">Try biometric unlock (web demo simulation)</button>
+    <button class="secondary" onclick="biometricFallback()">Use local login instead (fallback)</button>
+    <p class="small" id="biometricState"></p>
+  </div>
+  <div class="card"><h2>Settings</h2>
+    <label><input type="checkbox" id="setSound" checked> Sound preference — saved with your profile. Bubble Beat has its own music toggle in Games; this setting does not by itself turn Bubble Beat sound on or off</label>
+    <label><input type="checkbox" id="setMotion"> Reduced motion on — instant transitions, no fades (also respects your device setting)</label>
+    <div class="box"><b>Plan &amp; limits</b><p class="small" id="settingsRewards"></p><p class="small" id="settingsPlan"></p><p class="small">Free — 10 free checks to start, then 5/month. $4.99 — 100 Real/month. $6.99 — 300 Real/month. Grading standalone $3.99/month — 20 Grades/month (estimate only). $19.99 Ultimate — 500 Real + 50 Grades/month. Unused never rolls over. Social bonus: 1 free Real scan per platform, once ever, max 4.</p></div>
+    <button class="secondary" onclick="clearSession(this)">Clear session &amp; local demo data</button>
+    <p class="small" id="clearNote" hidden></p>
+  </div>
+  <div class="card"><h2>Help &amp; about</h2>
+    <button class="secondary" onclick="showScreen('help')">Open Help</button>
+    <p class="small">Real or Replica — V2 playground demo. Oct 26–Nov 4 hackathon work, local only. Not the Play Store app, not a public release. No card photos are used as avatars or backgrounds.</p>
+  </div>
+</div>
+<!-- HELP -->
+<div class="screen" id="screen-help" hidden>
+  <h1>Help</h1>
+  <div class="card"><h2>How a check works</h2>
+    <ol><li>Pick Pokémon Card, then photograph the front, then the back.</li><li>Pick the card's identity (Name | Set | Number) — the reference must match, or the verdict is Inconclusive.</li><li>Tap Check this card. Front tells and back tells are scored separately, then combined: Counterfeit if either side is Counterfeit, Genuine only if both are Genuine.</li></ol>
+    <p class="small">Bubbles are tells matching, not a percentage, not a grade, not authentication. A slabbed card needs its cert number AND a card-inside photo — cert alone never makes a card genuine, and nothing here is grader-verified.</p></div>
+  <div class="card"><h2>If the camera will not start</h2>
+    <p class="small">Use Choose File instead — the demo never breaks on a blocked camera. Lay the card flat, fill the frame, keep shine off it, no fingers or carpet in the crop.</p></div>
+  <div class="card"><h2>Profile, login, and your data</h2>
+    <p class="small">Profile and login in this demo are local only: username, display name, bio, favourite set/type, and avatar save in this browser only. Tapping the avatar bubble at the top opens Settings &amp; Profile. Clear session &amp; local demo data in Settings removes them from this device. Nothing here saves to an account, and photos you pick stay on your device.</p></div>
+  <div class="card"><h2>About this demo</h2>
+    <p class="small">V2 playground build, Oct 26–Nov 4 hackathon work, local only. Not the Play Store app. Questions about a verdict? Re-run with a flatter, evenly lit photo, or add the back photo — a bad photo is not a fake verdict.</p></div>
+</div>
+</main>
+<nav>
+  <button class="on" data-nav="check" onclick="showScreen('check');showStep('front')">🫧<br>Check</button>
+  <button data-nav="binders" onclick="showScreen('binders')">📒<br>Binders</button>
+  <button data-nav="games" onclick="showScreen('games')">🎮<br>Games</button>
+  <button data-nav="plan" onclick="showScreen('plan')">📋<br>Plan</button>
+  <button data-nav="home" onclick="showScreen('home')">🧭<br>Explore</button>
+  <button data-nav="tells" onclick="showScreen('tells')">🔍<br>Tells</button>
+  <button data-nav="light" onclick="showScreen('light')">💡<br>Light</button>
+  <button data-nav="grader" onclick="showScreen('grader')">⭐<br>Grade</button>
+  <button data-nav="receipt" onclick="showScreen('receipt')">🧾<br>Receipt</button>
+  <button data-nav="camera" onclick="showScreen('check');showStep('front')">📷<br>Camera</button>
+  <button data-nav="help" onclick="showScreen('help')">❓<br>Help</button>
+  <button data-nav="settings" onclick="showScreen('settings')">⚙️<br>Settings</button>
+</nav>
+<script>
+const CANNED_FALLBACK={
+  "test-a":{verdict:"Likely Genuine",verdict_reason:"SAMPLE — canned pipeline test, not a real verdict. tells measured: matches=5 strong_mismatches=0",identity:"Alakazam|Base|1",tells:{matches:5,strong_mismatches:0,tells:{}},api_calls:0,spend_usd:0,sam_escalation_required:false},
+  "test-b":{verdict:"Inconclusive",verdict_reason:"SAMPLE — canned pipeline test, not a real verdict. identity_mismatch_reference_not_for_supplied_identity",identity:"Charizard|Base|4",tells:null,api_calls:0,spend_usd:0,sam_escalation_required:false}
+};
+let frontBlob=null, backBlob=null, camStream=null;
+const video=document.getElementById('cam');
+let lastCheck=null, binder=[], sessionChecks=0, lightNote='', gradeNote='';
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const scrollTop=()=>window.scrollTo({top:0,behavior:reducedMotion?'auto':'smooth'});
+
+const SECTION_BGS={hero:'bgHero',story:'bgStory',checker:'bgChecker',index:'bgIndex',games:'bgGames',close:'bgClose'};
+function screenToSection(name){if(name==='home')return 'hero';if(name==='games')return 'games';if(name==='check'||name==='picker'||name==='verdict'||name==='light'||name==='grader')return 'checker';if(name==='binders'||name==='plan')return 'index';if(name==='receipt'||name==='tells')return 'close';if(name==='help')return 'story';return 'hero';}
+function setSectionBg(section){
+  Object.values(SECTION_BGS).forEach(id=>{const el=document.getElementById(id);if(el){el.classList.remove('on');el.style.opacity='';}});
+  const el=document.getElementById(SECTION_BGS[section]||'bgHero');if(el)el.classList.add('on');
+  const v=document.getElementById('heroVideo');
+  if(v){if(section==='hero'&&!reducedMotion&&!document.body.classList.contains('no-motion')){v.play().catch(()=>{});}else{v.pause();}}
+}
+
+/* ---- Smooth scroll + scrub (Lenis / ScrollTrigger PATTERN, vanilla, no library code) ----
+   Eased, interpolated wheel input: current += (target - current) * 0.1, ~7kb-equivalent
+   logic in a few lines, no downloaded library, $0. Scroll distance maps to background
+   progress: pausing mid-scroll holds the frame (inline opacities stay put).
+   Desktop fine-pointer wheel only; touch/mobile uses native scroll; reduced-motion off. */
+let smoothTarget=0, smoothCurrent=0, smoothRAF=null;
+const smoothEnabled = !reducedMotion && window.matchMedia('(pointer:fine)').matches;
+function scrubBackgrounds(){
+  const home=document.getElementById('screen-home');
+  if(!home||home.hidden||reducedMotion||document.body.classList.contains('no-motion')) return;
+  const sections=[...document.querySelectorAll('.scroll-section')];
+  if(!sections.length) return;
+  const centre=window.innerHeight*0.5;
+  // Hero fades out as the first scroll section approaches the centre.
+  const hero=document.getElementById('bgHero');
+  if(hero) hero.style.opacity=String(Math.max(0,Math.min(1,1-(window.scrollY/320))));
+  sections.forEach(el=>{
+    const r=el.getBoundingClientRect(), dist=Math.abs((r.top+r.height/2)-centre);
+    const layer=document.getElementById(SECTION_BGS[el.dataset.bg]);
+    if(layer) layer.style.opacity=String(Math.max(0,Math.min(1,1-dist/(window.innerHeight*0.9))));
+  });
+}
+function smoothLoop(){
+  smoothCurrent += (smoothTarget-smoothCurrent)*0.1;
+  if(Math.abs(smoothTarget-smoothCurrent)<0.5) smoothCurrent=smoothTarget;
+  window.scrollTo(0,smoothCurrent); scrubBackgrounds();
+  if(smoothCurrent!==smoothTarget) smoothRAF=requestAnimationFrame(smoothLoop); else smoothRAF=null;
+}
+if(smoothEnabled){
+  window.addEventListener('wheel',e=>{
+    const home=document.getElementById('screen-home');
+    if(!home||home.hidden) return;
+    e.preventDefault();
+    const max=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+    smoothTarget=Math.max(0,Math.min(max,smoothTarget+e.deltaY));
+    if(!smoothRAF) smoothRAF=requestAnimationFrame(smoothLoop);
+  },{passive:false});
+  window.addEventListener('scroll',()=>{const home=document.getElementById('screen-home'); if(home&&!home.hidden) scrubBackgrounds();},{passive:true});
+}
+/* Touch/mobile also gets the scrub dissolve on native scroll (not just desktop wheel). */
+window.addEventListener('scroll',()=>{const home=document.getElementById('screen-home'); if(home&&!home.hidden) scrubBackgrounds();},{passive:true});
+/* Hero video fallback: if the local video cannot play, show the local still poster. */
+(function(){const v=document.getElementById('heroVideo'); if(!v) return; const showPoster=()=>{const p=v.parentElement&&v.parentElement.querySelector('img.hero-poster'); if(p) p.style.display='block';}; v.addEventListener('error',showPoster); v.addEventListener('stalled',()=>{if(v.readyState<2) showPoster();});})();
+/* CSS scroll-timeline / view-timeline fallback note: the layers' 700ms opacity
+   transition is the fallback dissolve when JS scrub is unavailable; no external
+   library is loaded, so there is nothing to fall back to downloading. */
+/* Scroll on Home: sections with data-bg dissolve the background as they come into view. */
+let scrollObserver=null;
+function initScrollSections(){
+  if(scrollObserver) return;
+  if(!('IntersectionObserver' in window)) return;
+  scrollObserver=new IntersectionObserver(entries=>{
+    const home=document.getElementById('screen-home'); if(!home||home.hidden) return;
+    entries.forEach(e=>{if(e.isIntersecting) setSectionBg(e.target.dataset.bg);});
+  },{threshold:0.4});
+  document.querySelectorAll('.scroll-section').forEach(el=>scrollObserver.observe(el));
+}
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(el=>el.hidden=true);
+  const t=document.getElementById('screen-'+name); if(t) t.hidden=false;
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.nav===name||(name==='home'&&b.dataset.nav==='home')));
+  // Section backgrounds: 700ms dissolve, no hard cuts. Screen -> section mapping.
+  setSectionBg(screenToSection(name));
+  if(name==='receipt') renderReceipt();
+  if(name==='binders') renderBinders();
+  if(name==='plan') document.getElementById('planCounter').textContent='Checks run this session: '+sessionChecks+' (session only, nothing saved to an account).';
+  if(name==='tells') renderTellsSelf();
+  if(name==='settings'){buildAvatarPicker();fillSettingsFields();renderProfile();applySavedTheme();updateAvatarBuilder();renderGameAvatars();const sr=document.getElementById('settingsRewards');if(sr) sr.textContent='Demo rewards (this device only, never real money): '+REWARDS.coins+' coins · '+REWARDS.stars+' stars · '+REWARDS.checks+' checks rewarded. See Games for the full balance.';const sp=document.getElementById('settingsPlan');if(sp) sp.textContent='Checks run this session: '+sessionChecks+' · Favourite set: '+profile.favSet+' · Favourite type: '+profile.favType+' (session only, nothing saved to an account).';}
+  smoothTarget=0; smoothCurrent=0;
+  scrollTop();
+}
+function showStep(name){
+  showScreen('check');
+  document.getElementById('frontStep').hidden=name!=='front';
+  document.getElementById('backStep').hidden=name!=='back';
+  document.getElementById('checkStep').hidden=name!=='check';
+  document.getElementById('resultCard').hidden=true;
+  document.getElementById('checkingLine').textContent=name==='front'?'Checking: Pokémon Card · Photo 1 of 2 · DEMO':name==='back'?'Checking: Pokémon Card · Photo 2 of 2 · DEMO':'Checking: Pokémon Card · Ready to check · DEMO';
+  scrollTop();
+}
+function homeNote(t){const e=document.getElementById('homeNote');e.hidden=false;e.textContent=t;}
+function pickerNote(){document.getElementById('pickerNote').hidden=false;}
+function stopCam(){if(camStream){camStream.getTracks().forEach(tr=>tr.stop());camStream=null;}video.style.display='none';document.getElementById('camStatus').textContent='Camera stopped.';document.getElementById('backStatus').textContent='Camera stopped.';}
+function officeFromTimeline(rows){
+  const txt=rows&&rows.length?rows.map(r=>r.step+': '+r.decided).join(' · '):'No timeline — stages mark only from a real check.';
+  const o=document.getElementById('officePanel'); if(o) o.textContent=txt;
+  const h=document.getElementById('officeHome'); if(h) h.textContent=txt;
+}
+function renderReceipt(){
+  const c=document.getElementById('receiptCard'); if(!c) return;
+  if(!lastCheck){return;}
+  const d=lastCheck.d, esc=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const rows=(tells,who)=>tells&&tells.tells?Object.entries(tells.tells).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${v.match?'✓ Pass':'—'}</td><td>${v.strong_mismatch?'Flag':'—'}</td><td>${typeof v.difference==='number'?v.difference.toFixed(4):''}</td></tr>`).join(''):'<tr><td colspan="4">Not measured</td></tr>';
+  const backState=d.back_verdict?('Back verdict: '+d.back_verdict+(d.back_reason?' — '+d.back_reason:'')):(d.back_tells?'Back scored separately, see below.':'Front-only — no back photo in this check.');
+  const slabState=d.slab_status||'No slab cert/card-inside in this check — cert alone never makes a card genuine, nothing here is grader-verified.';
+  c.innerHTML=`<h2>Receipt — ${esc(d.identity||'')}</h2>${d.is_canned_test?'<p class="small"><b>SAMPLE — canned pipeline test, not a real verdict.</b></p>':''}${d.cross_source_blocked?'<p class="small"><b>Cross-source Likely blocked:</b> original Likely verdict '+esc(d.blocked_likely_verdict||'')+' not shipped — see reason below.</p>':''}<p class="small">Verdict: <b>${esc(d.verdict||'')}</b> · ${esc(d.verdict_reason||'')}</p>
+  <p class="small">Check id: ${esc(d.check_id||'—')} · Receipt time: ${esc(lastCheck.receivedAt||'—')} · Front tells matching: ${d.tells&&typeof d.tells.matches==='number'?d.tells.matches+' of 5':'not measured'} · Back state: ${esc(backState)} · Slab state: ${esc(slabState)}</p>
+  <button class="secondary" onclick="shareReceipt()">Share this receipt</button><p class="small" id="shareNote"></p>
+  <h3>Lens — front tells (real, measured)</h3><table><thead><tr><th>Tell</th><th>Pass</th><th>Flag</th><th>Difference</th></tr></thead><tbody>${rows(d.tells,'Lens')}</tbody></table>
+  <h3>Gauge — back tells (real, measured, or front-only)</h3><table><thead><tr><th>Tell</th><th>Pass</th><th>Flag</th><th>Difference</th></tr></thead><tbody>${rows(d.back_tells,'Gauge')}</tbody></table>
+  <p class="small">${lightNote?('Light Test (self-marked, not a verdict): '+esc(lightNote)+'<br>'):''}${gradeNote?('Condition wear (user-marked estimate, not a grade): '+esc(gradeNote)+'<br>'):''}Bubbles are tells matching, not a percentage, not a grade, not authentication. No SAM authentication is claimed.</p>`;
+}
+function buildReceiptText(){
+  if(!lastCheck) return 'Real or Replica — Receipt (example format only — no check run yet in this session).\nVerdict: none yet. Run a check first; this format is not a real check.';
+  const d=lastCheck.d, esc=x=>String(x==null?'':x);
+  const fmt=(tells)=>tells&&tells.tells?Object.entries(tells.tells).map(([k,v])=>`- ${k}: ${v.match?'Pass':'not a match'}${v.strong_mismatch?' (strong mismatch)':''}, difference ${typeof v.difference==='number'?v.difference.toFixed(4):'not measured'}`).join('\n'):'Not measured';
+  return ['Real or Replica — Receipt (real check, this session)'+(d.is_canned_test?' — SAMPLE, canned pipeline test, not a real verdict':'')+(d.cross_source_blocked?' — Cross-source Likely blocked, original Likely verdict '+(d.blocked_likely_verdict||'')+' not shipped':'') ,'Identity: '+esc(d.identity||''),'Verdict: '+esc(d.verdict||''),'Reason: '+esc(d.verdict_reason||''),'Check id: '+esc(d.check_id||'—'),'Receipt time: '+esc(lastCheck.receivedAt||'—'),'Front tells (Lens, measured):',fmt(d.tells),'Back tells (Gauge, measured or front-only):',fmt(d.back_tells),'Back state: '+(d.back_verdict||'front-only, no back photo'),'Slab state: '+(d.slab_status||'no slab cert/card-inside — cert alone never genuine, nothing grader-verified'),'Note: tells matching is not a percentage, not a grade, not authentication.'].join('\n');
+}
+async function shareReceipt(){
+  const text=buildReceiptText(); const note=document.getElementById('shareNote');
+  const done=msg=>{if(note) note.textContent=msg;};
+  try{
+    if(navigator.share){await navigator.share({title:'Real or Replica — Receipt',text});done('Shared via your device share sheet.');return;}
+    if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);done('Receipt text copied — paste it where you want to share it.');return;}
+  }catch(e){}
+  try{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();done('Receipt text copied — paste it where you want to share it.');}
+  catch(e){done('Could not copy automatically — select the receipt above to share it manually.');}
+}
+function renderBinders(){
+  const c=document.getElementById('binderCard'); if(!c) return;
+  const samples='<p><b>Sample cards (labelled samples, not yours):</b> 1 sample filed as Likely Genuine, 1 sample filed as Inconclusive.</p>';
+  const mine=binder.length?binder.map(b=>`<p>${b.identity} — ${b.verdict} · ${b.reason}</p>`).join(''):'<p class="small">No checks filed yet this session. Run a check, then tap “File this check in my binder”.</p>';
+  c.innerHTML='<p>Your avatar '+avatarStr()+'\'s binder — session only.</p>'+samples+'<h3>Filed this session</h3>'+mine+'<p class="small">Session only — nothing saves to an account, and no photos are stored here.</p>';
+}
+function lightMark(t){lightNote=t;const e=document.getElementById('lightResult');e.hidden=false;e.textContent='Marked: '+t+' — self-marked only, NOT a verdict.';}
+function gradeMark(){
+  const v=id=>document.getElementById(id).value;
+  gradeNote='Corners '+v('gCorners')+', Edges '+v('gEdges')+', Surface '+v('gSurface')+', Centering '+v('gCentering');
+  const e=document.getElementById('gradeResult');e.hidden=false;e.textContent='User-marked wear estimate: '+gradeNote+' — estimate only, NOT an official grade, NOT authenticity.';
+}
+/* ---- Demo rewards (local only, never money/prizes) ---- */
+const CC_REWARDS_KEY='cc_demo_rewards_v1';
+function loadRewards(){try{const r=JSON.parse(localStorage.getItem(CC_REWARDS_KEY)||'null');if(r&&typeof r.coins==='number'){r.levelsDone=r.levelsDone||{};r.levelAwardDays=r.levelAwardDays||{};r.checkAwardDays=r.checkAwardDays||{};return r;}}catch(e){}return {coins:0,stars:0,checks:0,levelsDone:{},levelAwardDays:{},checkAwardDays:{}};}
+let REWARDS=loadRewards();
+function saveRewards(){try{localStorage.setItem(CC_REWARDS_KEY,JSON.stringify(REWARDS));}catch(e){}renderRewards();}
+function renderRewards(){renderGameAvatars();
+  const l=document.getElementById('rewardsLine');if(l)l.textContent='Balance: '+REWARDS.coins+' coins · '+REWARDS.stars+' stars · '+REWARDS.checks+' checks rewarded';
+  const d=document.getElementById('rewardsDetail');if(d){const done=Object.keys(REWARDS.levelsDone).join(', ');d.textContent='Levels completed: '+(done||'none yet');}
+  const n=document.getElementById('dailyNote');if(n){const last=localStorage.getItem('cc_demo_daily_v1')||'';n.textContent=last===todayStr()?'Daily reward already claimed today.':'Daily reward not claimed today yet.';}
+}
+function todayStr(){const t=new Date();return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');}
+function claimDaily(){
+  if(localStorage.getItem('cc_demo_daily_v1')===todayStr()){document.getElementById('dailyNote').textContent='Already claimed today — one claim per day.';return;}
+  localStorage.setItem('cc_demo_daily_v1',todayStr());REWARDS.coins+=25;saveRewards();
+  document.getElementById('dailyNote').textContent='Daily reward claimed: +25 coins.';
+}
+function levelAwardedToday(game,level){return (REWARDS.levelAwardDays||{})[game+'-'+level]===todayStr();}
+function awardLevel(game,level){
+  const k=game+'-'+level;
+  if(levelAwardedToday(game,level)){return ' (practice only — no coins; first pass today already awarded.)';}
+  let msg='';
+  REWARDS.coins+=50; REWARDS.levelAwardDays[k]=todayStr();
+  if(!REWARDS.levelsDone[k]){REWARDS.levelsDone[k]=true;REWARDS.stars+=1;msg=' +1 star (first completion).';}
+  saveRewards();return msg;
+}
+function awardCheckReward(identity){
+  const key=(identity||'unknown')+'|'+todayStr();
+  if((REWARDS.checkAwardDays||{})[key]){return;}
+  REWARDS.checkAwardDays[key]=true; REWARDS.checks+=1; REWARDS.coins+=20; saveRewards();
+}
+/* ---- Tell or Tale? levels ---- */
+const TELL_LEVELS={
+ 1:[
+  {q:'Which is a real V2 tell? A) The card feels lucky B) Border colour measured against the reference',a:1},
+  {q:'A back photo alone proves which card it is? A) Yes B) No — backs are mostly uniform, so back score is design/print, not identity',a:1},
+  {q:'Cert alone makes a slabbed card genuine? A) Yes B) No — cert + card inside, every time',a:1}],
+ 2:[
+  {q:'A verdict with no recorded fact can file as Likely? A) Yes B) No — no recorded fact, no Likely filing',a:1},
+  {q:'If the verification gate fails, what happens? A) It files anyway B) It stays Inconclusive or asks for the missing evidence',a:1},
+  {q:'A canned scan is a real verdict? A) Yes B) No — canned is a pipeline test, never presented as real',a:1},
+  {q:'SAM authenticates a card? A) Yes B) No — SAM crops, it never authenticates',a:1},
+  {q:'A grade guess is an official grade? A) Yes B) No — estimate only, never official',a:1}],
+ 3:[
+  {q:'Front Genuine + fake back = ? A) Genuine B) Likely Counterfeit — either side counterfeit makes the whole counterfeit',a:1},
+  {q:'A slab claimed without a cert photo gives? A) A genuine verdict B) needs_input naming the missing cert',a:1},
+  {q:'A flagged do-not-use photo gives? A) A verdict anyway B) needs_input, findings cleared, never a verdict or quote',a:1},
+  {q:'Back scoring in V2 uses? A) The full 174-back pool B) A single pilot reference — pool scoring is not wired yet',a:1},
+  {q:'Free scans are watered-down verdicts? A) Yes B) No — same honesty, only crop method and count differ',a:1},
+  {q:'Pausing a check files a verdict? A) Yes B) No — paused checks file no verdict and no result',a:1},
+  {q:'A level score counts as another level\'s score? A) Yes B) No — scores are always tagged with game + level',a:1}]
+};
+let tellLevel=1, tellUnlocked=1, gameIdx=0, gameScoreN=0, tellCorrect=0;
+try{tellUnlocked=Math.max(1,Math.min(3,parseInt(localStorage.getItem('cc_demo_tell_unlocked')||'1',10)||1));}catch(e){}
+function renderTellLevels(){renderGameAvatars();
+  const c=document.getElementById('tellLevels');if(!c)return;
+  c.innerHTML=[1,2,3].map(l=>`<button class="secondary" ${l>tellUnlocked?'disabled':''} onclick="setTellLevel(${l})">Level ${l}${l===tellLevel?' ✓':''}${l>tellUnlocked?' (locked)':''}</button>`).join('');
+  const p=document.getElementById('tellProgress');if(p)p.textContent='Playing Level '+tellLevel+' · Highest unlocked: Level '+tellUnlocked+' · Pass a level at 60%+ to unlock the next.';
+}
+function setTellLevel(l){if(l>tellUnlocked)return;tellLevel=l;gameIdx=0;tellCorrect=0;renderTellLevels();startGame();}
+function startGame(){
+  const qs=TELL_LEVELS[tellLevel];
+  if(gameIdx>=qs.length){gameIdx=0;tellCorrect=0;}
+  const q=qs[gameIdx];
+  document.getElementById('gameQ').textContent='Level '+tellLevel+' — Q'+(gameIdx+1)+' of '+qs.length+': '+q.q;
+  document.getElementById('gameBtns').innerHTML='<button class="secondary" onclick="gameAnswer(0)">A</button><button class="secondary" onclick="gameAnswer(1)">B</button>';
+  document.getElementById('gameScore').textContent='Score this level run: '+gameScoreN+' · Correct: '+tellCorrect+' of '+gameIdx;
+}
+function gameAnswer(i){
+  const qs=TELL_LEVELS[tellLevel];const q=qs[gameIdx];
+  if(i===q.a){gameScoreN++;tellCorrect++;if(levelAwardedToday('tell',tellLevel)){document.getElementById('gameResult').textContent='Correct — practice only — no coins (first pass today already awarded).';}else{REWARDS.coins+=10;saveRewards();document.getElementById('gameResult').textContent='Correct. +10 coins.';}}
+  else{document.getElementById('gameResult').textContent='Not that one — the other answer is the tell/rule.';}
+  gameIdx++;
+  if(gameIdx>=qs.length){
+    const pct=tellCorrect/qs.length;let msg='Level '+tellLevel+' finished: '+tellCorrect+' of '+qs.length+' correct.';
+    if(pct>=0.6){msg+=' Level complete! '+avatarStr()+' celebrates! +50 coins'+awardLevel('tell',tellLevel);
+      if(tellLevel<3&&tellLevel>=tellUnlocked){tellUnlocked=tellLevel+1;try{localStorage.setItem('cc_demo_tell_unlocked',String(tellUnlocked));}catch(e){}msg+=' Level '+tellUnlocked+' unlocked!';}}
+    else{msg+=' 60% or better unlocks the next level — replay this level to try again.';}
+    document.getElementById('gameResult').textContent=msg;gameIdx=0;tellCorrect=0;gameScoreN=0;renderTellLevels();
+  }
+  document.getElementById('gameScore').textContent='Score this level run: '+gameScoreN+' · Correct: '+tellCorrect+' of '+gameIdx;
+}
+/* ---- Bubble Beat levels (piano keys, own beat per level) ---- */
+const BB_NOTES={C:261.63,D:293.66,E:329.63,F:349.23,G:392.00,A:440.00,B:493.88};
+const BB_LEVELS={
+ 1:{pattern:['C','E','G','E'],tempo:900,label:'Level 1 — slow, 4 notes (C E G E)'},
+ 2:{pattern:['C','D','E','F','G','F'],tempo:700,label:'Level 2 — faster, 6 notes (C D E F G F)'},
+ 3:{pattern:['C','E','G','A','G','E','D','C'],tempo:550,label:'Level 3 — fastest, 8 notes (C E G A G E D C)'}};
+let bbLevel=1, bbUnlocked=1, bbSeq=[], bbPos=0, bbPlaying=false;
+try{bbUnlocked=Math.max(1,Math.min(3,parseInt(localStorage.getItem('cc_demo_bb_unlocked')||'1',10)||1));}catch(e){}
+try{if(localStorage.getItem('cc_demo_bb_music')==='off'){const m=document.getElementById('bbMusic');if(m)m.checked=false;}}catch(e){}
+function saveMusicPref(){try{localStorage.setItem('cc_demo_bb_music',document.getElementById('bbMusic').checked?'on':'off');}catch(e){}}
+function renderBb(){renderGameAvatars();
+  const c=document.getElementById('bbLevels');if(!c)return;
+  c.innerHTML=[1,2,3].map(l=>`<button class="secondary" ${l>bbUnlocked?'disabled':''} onclick="setBbLevel(${l})">Level ${l}${l===bbLevel?' ✓':''}${l>bbUnlocked?' (locked)':''}</button>`).join('');
+  const p=document.getElementById('bbProgress');if(p)p.textContent=BB_LEVELS[bbLevel].label+' · Highest unlocked: Level '+bbUnlocked+' · Finish a beat with no miss to unlock the next level.';
+  const k=document.getElementById('bbKeys');if(k)k.innerHTML=Object.keys(BB_NOTES).map(n=>`<button class="secondary" id="bbKey-${n}" onclick="bbTap('${n}')">${n}</button>`).join('');
+  const s=document.getElementById('bbScore');if(s)s.textContent='Beat progress: tap Show the beat, then Play this level and repeat it.';
+}
+function setBbLevel(l){if(l>bbUnlocked)return;bbLevel=l;bbSeq=[];bbPos=0;renderBb();}
+function bbTone(n){
+  if(!document.getElementById('bbMusic').checked)return;
+  try{const ctx=bbTone.ctx||(bbTone.ctx=new (window.AudioContext||window.webkitAudioContext)());const o=ctx.createOscillator();const g=ctx.createGain();o.type='sine';o.frequency.value=BB_NOTES[n];g.gain.setValueAtTime(0.15,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+0.4);}catch(e){}
+}
+function bbFlash(n){
+  const el=document.getElementById('bbKey-'+n);if(!el)return;el.style.outline='3px solid gold';setTimeout(()=>{el.style.outline='';},BB_LEVELS[bbLevel].tempo*0.8);
+  document.getElementById('bbBeat').textContent='Now: '+n+' — watch the highlighted key (visual beat, works muted).';bbTone(n);
+}
+function bbShowPattern(){
+  if(bbShowPattern.iv) clearInterval(bbShowPattern.iv);
+  const pat=BB_LEVELS[bbLevel].pattern;let i=0;bbPlaying=true;
+  document.getElementById('bbResult').textContent='Watch the beat…';
+  const iv=setInterval(()=>{if(i>=pat.length){clearInterval(iv);bbPlaying=false;document.getElementById('bbResult').textContent='Your turn — tap Play this level, then tap the keys in the same order.';return;}bbFlash(pat[i]);i++;},BB_LEVELS[bbLevel].tempo); bbShowPattern.iv=iv;
+}
+function bbStartRound(){bbSeq=BB_LEVELS[bbLevel].pattern.slice();bbPos=0;document.getElementById('bbResult').textContent='Repeat the beat: tap the keys in order. First note: '+bbSeq[0];}
+function bbTap(n){
+  if(!bbSeq.length){document.getElementById('bbResult').textContent='Tap Play this level first.';return;}
+  bbFlash(n);
+  if(n===bbSeq[bbPos]){bbPos++;const dancer=document.getElementById('bbAvatarDancer');if(dancer){dancer.classList.remove('avatar-bounce');void dancer.offsetWidth;dancer.classList.add('avatar-bounce');}if(levelAwardedToday('bubblebeat',bbLevel)){/* practice only — no coins, progress still counts */}else{REWARDS.coins+=10;saveRewards();}
+    if(bbPos>=bbSeq.length){let msg='Beat complete! '+avatarStr()+' dances! +50 coins'+awardLevel('bubblebeat',bbLevel);
+      if(bbLevel<3&&bbLevel>=bbUnlocked){bbUnlocked=bbLevel+1;try{localStorage.setItem('cc_demo_bb_unlocked',String(bbUnlocked));}catch(e){}msg+=' Level '+bbUnlocked+' unlocked!';}
+      document.getElementById('bbResult').textContent=msg;bbSeq=[];renderBb();}
+    else{document.getElementById('bbResult').textContent='Good — '+bbPos+' of '+bbSeq.length+' notes.'+(levelAwardedToday('bubblebeat',bbLevel)?' Practice only — no coins (first pass today already awarded).':'')+' Next: keep going.';}}
+  else{document.getElementById('bbResult').textContent='Miss on '+n+' — the beat restarts. Tap Play this level and try again.';bbSeq=[];}
+}
+const SELF_TELLS=['aspect_ratio','mean_rgb','border_rgb','edge_density','colour_histogram'];
+function renderTellsSelf(){
+  const c=document.getElementById('tellsSelf'); if(!c||c.children.length) return;
+  SELF_TELLS.forEach(t=>{
+    const d=document.createElement('div');d.innerHTML=`<label>${t} <select data-tell="${t}"><option>Can't tell</option><option>Pass</option><option>Flag</option></select></label>`;c.appendChild(d);
+  });
+}
+function tellsSummary(){
+  const vals=[...document.querySelectorAll('[data-tell]')].map(e=>e.dataset.tell+': '+e.value).join(' · ');
+  const e=document.getElementById('tellsSummary');e.hidden=false;e.textContent='Your marks: '+vals+' — NOT A REAL CARD CHECK, no verdict is derived from these marks.';
+}
+async function quickSnap(side){
+  showScreen('check'); showStep(side==='front'?'front':'back');
+  const ok=await ensureCam(); if(!ok) return;
+  const statusEl=side==='front'?document.getElementById('camStatus'):document.getElementById('backStatus');
+  statusEl.textContent='Quick snap — waiting for the camera to be ready…';
+  let tries=0; const iv=setInterval(()=>{tries++;
+    if(video.videoWidth){clearInterval(iv);capture(side);statusEl.textContent='Quick snap captured.';}
+    else if(tries>30){clearInterval(iv);statusEl.textContent='Camera not ready — tap Take the photo to capture manually, or use Choose File.';}
+  },100);
+}
+async function ensureCam(){
+  if(camStream) return true;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){document.getElementById('camStatus').textContent='Camera not available in this preview — use Choose File.';return false;}
+  try{camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});video.srcObject=camStream;video.style.display='block';return true;}
+  catch(e){document.getElementById('camStatus').textContent='Camera blocked or not available here — use Choose File, or open this demo in Chrome on your phone.';return false;}
+}
+function capture(side){
+  const c=document.createElement('canvas');c.width=video.videoWidth||640;c.height=video.videoHeight||480;c.getContext('2d').drawImage(video,0,0,c.width,c.height);
+  c.toBlob(b=>{
+    if(side==='front'){frontBlob=b;const img=document.getElementById('capFront');img.src=URL.createObjectURL(b);img.style.display='block';document.getElementById('frontOverlay').style.display='none';showStep('back');}
+    else{backBlob=b;const img=document.getElementById('capBack');img.src=URL.createObjectURL(b);img.style.display='block';document.getElementById('backOverlay').style.display='none';showStep('check');}
+  },'image/jpeg',0.92);
+}
+document.getElementById('takeFrontBtn').onclick=async()=>{if(await ensureCam()){if(video.videoWidth) capture('front'); else document.getElementById('camStatus').textContent='Camera live — tap Take the front photo again to capture.';}};
+document.getElementById('stopCamBtn').onclick=()=>stopCam();
+document.getElementById('quickFrontBtn').onclick=()=>quickSnap('front');
+document.getElementById('quickBackBtn').onclick=()=>quickSnap('back');
+document.getElementById('takeBackBtn').onclick=async()=>{if(await ensureCam()){if(video.videoWidth) capture('back'); else document.getElementById('backStatus').textContent='Camera live — tap Take the back photo again to capture.';}};
+document.getElementById('skipBackBtn').onclick=()=>showStep('check');
+document.getElementById('photo').onchange=e=>{if(e.target.files[0]){frontBlob=e.target.files[0];showStep('back');}};
+document.getElementById('backPhoto').onchange=e=>{if(e.target.files[0]){backBlob=e.target.files[0];showStep('check');}};
+document.getElementById('rerunBtn').onclick=()=>showStep('front');
+document.getElementById('fileBinderBtn').onclick=()=>{if(lastCheck){binder.push({identity:lastCheck.d.identity||'',verdict:lastCheck.d.verdict||'',reason:lastCheck.d.verdict_reason||''});showScreen('binders');}else{showScreen('check');}};
+const lp=document.getElementById('lightPhoto'); if(lp) lp.onchange=e=>{const f=e.target.files[0]; if(!f) return; const img=document.getElementById('lightPreview'); img.src=URL.createObjectURL(f); img.style.display='block';};
+document.getElementById('reportConsent').onchange=e=>{document.getElementById('reportNote').hidden=!e.target.checked;};
+function show(d,meta){
+  sessionChecks++; awardCheckReward((meta&&meta.identity)||d.identity||''); lastCheck={d,meta,receivedAt:new Date().toISOString()}; officeFromTimeline(d.loop_timeline||d.steps||[]); const ve=document.getElementById('verdictEmpty'); if(ve) ve.hidden=true;
+  showScreen('verdict');
+  document.getElementById('frontStep').hidden=true;document.getElementById('backStep').hidden=true;document.getElementById('checkStep').hidden=true;
+  const c=document.getElementById('resultCard');c.hidden=false;c.classList.remove('fade');void c.offsetWidth;c.classList.add('fade');
+  document.getElementById('verdict').textContent=d.verdict||'Inconclusive';
+  const m=d.tells&&typeof d.tells.matches==='number'?d.tells.matches:0;
+  document.getElementById('meter').innerHTML=[0,1,2,3,4].map(i=>`<i class="${i<m?'on':''}"></i>`).join('');
+  document.getElementById('meterNote').textContent=d.tells&&typeof d.tells.matches==='number'?`Front tells matching: ${m} of 5 — not a percentage, not a grade.`:'Front tells not measured.';
+  document.getElementById('reason').textContent=d.verdict_reason||'';
+  const ident=(meta&&meta.identity)||d.identity||'';
+  document.getElementById('lookTwice').hidden=!ident.startsWith('Charizard');
+  const backOn=meta&&meta.back;
+  document.getElementById('backLine').textContent=backOn?'Back added and scored separately (see Back Tells below).':'Front-only — a back check would have helped.';
+  document.getElementById('backVerdictLine').textContent=d.back_verdict?`Back verdict: ${d.back_verdict} — ${d.back_reason||''}`:'';
+  const bd=document.getElementById('backDetails');const bt=document.getElementById('backTells');bt.innerHTML='';
+  if(d.back_tells&&d.back_tells.tells){bd.hidden=false;for(const [k,v] of Object.entries(d.back_tells.tells)){const tr=document.createElement('tr');tr.innerHTML=`<td>${k}</td><td>${v.match?'✓':'—'}</td><td>${v.strong_mismatch?'yes':'no'}</td><td>${typeof v.difference==='number'?v.difference.toFixed(4):''}</td>`;bt.appendChild(tr);}document.getElementById('backTellsNote').textContent=`Back matches: ${d.back_tells.matches}, strong mismatches: ${d.back_tells.strong_mismatches}.`;}
+  else{bd.hidden=true;}
+  const ni=document.getElementById('needsInputBox');
+  if(d.needs_input&&d.needs_input.length){ni.hidden=false;document.getElementById('needsInput').textContent=d.needs_input.join(' · ');}
+  else{ni.hidden=true;}
+  const tl=document.getElementById('timeline');tl.innerHTML='';
+  const rows=d.loop_timeline||[];
+  if(rows.length){rows.forEach(r=>{const li=document.createElement('li');li.innerHTML=`<b>${r.step}</b><br>Saw: ${r.saw}<br>Decided: ${r.decided}<br>Returned: ${r.returned}`;tl.appendChild(li);});}
+  else if(d.steps&&d.steps.length){d.steps.forEach(s=>{const li=document.createElement('li');li.textContent=`${s.step}: ${s.detail}`;tl.appendChild(li);});}
+  else{const li=document.createElement('li');li.textContent='No timeline in this preview — per-step numbers need the local server.';tl.appendChild(li);}
+  const cert=meta&&meta.cert;
+  document.getElementById('slabLine').textContent=d.slab_status?`Slab check: ${d.slab_status} — cert alone never makes a card genuine, and nothing here is grader-verified.`:cert?'Slab cert entered: incomplete without the card-inside photo — cert alone never makes a card genuine.':'No slab cert entered.';
+  const pl=document.getElementById('planList');pl.innerHTML='';
+  if(d.plan&&d.plan.steps){d.plan.steps.forEach(s=>{const li=document.createElement('li');li.textContent=s;pl.appendChild(li);});document.getElementById('planNote').textContent=`Plan status: ${d.plan.status||''} · Completed: ${(d.plan.completed||[]).join(', ')||'—'} · Check id: ${d.check_id||'—'}`;}
+  else{document.getElementById('planNote').textContent='No plan in this preview — plans need the local server.';}
+  const fb=document.getElementById('facts');fb.innerHTML='';
+  if(d.facts&&d.facts.length){d.facts.forEach(f=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${f.tell}</td><td>${f.side}</td><td>${f.match?'✓':'—'}</td><td>${typeof f.difference==='number'?f.difference.toFixed(4):''}</td><td>${f.source_file||''}</td>`;fb.appendChild(tr);});document.getElementById('factsNote').textContent=`${d.facts.length} recorded facts. A verdict with no recorded fact cannot file.`;}
+  else{document.getElementById('factsNote').textContent='No recorded facts — that is why this verdict cannot file as Likely.';}
+  const tb=document.getElementById('tells');tb.innerHTML='';
+  const tells=d.tells&&d.tells.tells;
+  if(tells&&Object.keys(tells).length){for(const [k,v] of Object.entries(tells)){const tr=document.createElement('tr');tr.innerHTML=`<td>${k}</td><td>${v.match?'✓':'—'}</td><td>${v.strong_mismatch?'yes':'no'}</td><td>${typeof v.difference==='number'?v.difference.toFixed(4):''}</td>`;tb.appendChild(tr);}document.getElementById('tellsNote').textContent=`Matches: ${d.tells.matches}, strong mismatches: ${d.tells.strong_mismatches}.`;}
+  else if(d.tells&&typeof d.tells.matches==='number'){document.getElementById('tellsNote').textContent=`Canned summary only — matches: ${d.tells.matches}, strong mismatches: ${d.tells.strong_mismatches}. Per-tell numbers need the local server.`;}
+  else{document.getElementById('tellsNote').textContent='No tells measured — that is why this verdict stays Inconclusive.';}
+  const help=document.getElementById('helpLine');
+  if((d.verdict||'')==='Inconclusive'){help.hidden=false;help.textContent=(d.verdict_reason||'').includes('identity_mismatch')?'What would have helped: a same-card reference for this identity. Use “Re-run with that” to start a new check.':'What would have helped: a flatter, evenly lit photo, or a back photo. Use “Re-run with that” to start a new check.';}
+  else{help.hidden=true;}
+  document.getElementById('meta').textContent=`Identity: ${ident} · Scan quality: ${d.scan_quality_passed===false?'FAILED — retake, never Counterfeit on quality alone':(d.scan_quality_passed?'passed':'—')} · References: ${d.multi_reference?d.multi_reference.reference_mode+' ('+d.multi_reference.reference_count+')':'single'} · SAM escalation required: ${d.sam_escalation_required?'yes':'no'} · Back scored: ${backOn?'yes':'no (front-only)'} · API calls: ${d.api_calls??0} · Spend: $${d.spend_usd??0}`;
+}
+async function fetchJson(url,opts){const r=await fetch(url,opts);if(!r.ok) throw new Error('HTTP '+r.status);return r.json();}
+let lastLookup=null;
+document.getElementById('lookupBtn').onclick=async()=>{
+  const res=document.getElementById('lookupResult'); const use=document.getElementById('lookupUseBtn');
+  const set=document.getElementById('lookupSet').value.trim(), num=document.getElementById('lookupNumber').value.trim();
+  const name=document.getElementById('lookupName').value.trim(), lang=document.getElementById('lookupLang').value;
+  if(!set||!num){res.textContent='Enter a set and a printed card number first — the printed number beats name/rarity.';use.hidden=true;return;}
+  res.textContent='Searching EN/JA index locally…';
+  try{
+    const d=await fetchJson('/api/lookup?set='+encodeURIComponent(set)+'&number='+encodeURIComponent(num)+'&name='+encodeURIComponent(name)+'&language='+encodeURIComponent(lang));
+    lastLookup=d;
+    if(d.status==='resolved'&&d.row){
+      const r=d.row;
+      res.textContent=`Found: ${r.name} — ${r.set_name} (${r.set_id}) #${r.localId} · ${r.language.toUpperCase()} · rarity ${r.rarity||'—'} · HP ${r.hp??'—'} · ${(r.types||[]).join(', ')} · illus. ${r.illustrator||'—'} · Reference image: ${d.reference_for_identity_available?(d.canned_identity?('YES (canned '+d.canned_identity+')'):('YES (verified batch pilot, uncalibrated — '+d.reference_status+')')):'NO — a check for this card stays Inconclusive, not Genuine.'} Lookup is identity only, never authentication.`;
+      use.hidden=false;
+    } else {
+      res.textContent=(d.needs_input||['Not found.']).join(' ') + (d.name_candidates&&d.name_candidates.length?(' Candidates: '+d.name_candidates.map(c=>c.name+' '+c.set_name+' #'+c.localId).join('; ')):'');
+      use.hidden=true;
+    }
+  }catch(e){res.textContent='Lookup needs the local server — run server.py. No identity was guessed.';use.hidden=true;}
+};
+document.getElementById('multiRefBtn').onclick=async()=>{
+  const res=document.getElementById('multiRefResult');
+  const ident=document.getElementById('identity').value;
+  res.textContent='Checking verified references…';
+  try{
+    const d=await fetchJson('/api/multi-reference?identity='+encodeURIComponent(ident));
+    res.textContent=`${ident}: ${d.reference_count} verified reference(s) — mode: ${d.reference_mode} (${d.note})`;
+  }catch(e){res.textContent='Multi-reference needs the local server — run server.py.';}
+};
+document.getElementById('lookupUseBtn').onclick=()=>{
+  if(!lastLookup||!lastLookup.row) return;
+  const r=lastLookup.row; const sel=document.getElementById('identity');
+  const val=lastLookup.reference_for_identity_available?lastLookup.canned_identity:(r.name+'|'+r.set_name+'|'+r.localId);
+  if(![...sel.options].some(o=>o.value===val)){const o=document.createElement('option');o.value=val;o.textContent=val;sel.appendChild(o);}
+  sel.value=val;
+  document.getElementById('lookupResult').textContent+=' — identity set for the check below.';
+};
+document.getElementById('checkBtn').onclick=async()=>{
+  const f=frontBlob||document.getElementById('photo').files[0];if(!f){document.getElementById('status').textContent='Choose or capture a front photo first.';return;}
+  const backF=backBlob||document.getElementById('backPhoto').files[0];
+  const btn=document.getElementById('checkBtn');btn.disabled=true;document.getElementById('status').textContent='Checking locally…'; const op=document.getElementById('officePanel'); if(op) op.textContent='Working — stages will mark only when this check returns its real timeline.';
+  try{const fd=new FormData();fd.append('photo',f,'front.jpg');if(backF){fd.append('back_photo',backF,'back.jpg');fd.append('back_claimed','true');}fd.append('identity',document.getElementById('identity').value);if(document.getElementById('slabClaimed').checked) fd.append('slab_claimed','true');const certVal=document.getElementById('cert').value.trim();if(certVal) fd.append('slab_cert',certVal);const d=await fetchJson('/api/check',{method:'POST',body:fd});document.getElementById('status').textContent='';show(d,{identity:document.getElementById('identity').value,back:!!backF,cert:document.getElementById('cert').value.trim()});}
+  catch(e){document.getElementById('status').textContent='Upload check needs the local server — run server.py, or use a canned test in this preview.';show({verdict:'Inconclusive',verdict_reason:'preview_upload_unavailable_local_server_only',api_calls:0,spend_usd:0},{identity:document.getElementById('identity').value,back:!!backF,cert:document.getElementById('cert').value.trim()});}
+  finally{btn.disabled=false;}
+};
+document.querySelectorAll('[data-canned]').forEach(b=>b.onclick=async()=>{
+  document.getElementById('status').textContent='Running canned test locally…';
+  try{const d=await fetchJson('/api/canned',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({test:b.dataset.canned})});document.getElementById('status').textContent='';show(d,{identity:d.identity,back:false,cert:''});}
+  catch(e){document.getElementById('status').textContent='Preview fallback: canned result (local server not running). Per-tell numbers need the local server.';const d=CANNED_FALLBACK[b.dataset.canned];show(d,{identity:d.identity,back:false,cert:''});}
+});
+/* Games + rewards init (demo only) */
+renderRewards(); renderTellLevels(); renderBb();
+
+/* ---- Themes & customisation (device-local only) ---- */
+const BUILDER_BASE_EMOJI={mallow:'🦁',ember:'🐲',bubble:'🫧',star:'⭐'};
+const BUILDER_COLOUR_BG={mint:'#3a5a4a',gold:'#4a3a00',sky:'#1d2a3a',pink:'#4a1d33',purple:'#2b1d4e'};
+function avatarStr(){return profile.avatar||'🫧';}
+function renderGameAvatars(){
+  const a=avatarStr(), name=profile.displayName||profile.username||'Guest';
+  const ga=document.getElementById('gameAvatar'); if(ga) ga.innerHTML='Your avatar <span class="avatar-bounce" style="display:inline-block">'+a+'</span> is playing as '+name+'.';
+  const ba=document.getElementById('bbAvatar'); if(ba) ba.innerHTML='Your avatar <span id="bbAvatarDancer" style="display:inline-block">'+a+'</span> dances on the beat — it bounces on every correct note.';
+  const ra=document.getElementById('rewardsAvatar'); if(ra) ra.textContent='Your avatar '+a+' — demo rewards for '+name+', device-local only, never real money or prizes.';
+}
+function applyTheme(theme){
+  profile.theme=theme; document.body.dataset.theme=(theme==='dark-gold')?'':theme;
+  if(profile.accent) document.body.style.setProperty('--accent',profile.accent); else document.body.style.removeProperty('--accent');
+  persistProfile(); const t=document.getElementById('themeState'); if(t) t.textContent='Theme: '+theme+' — applied app-wide, saved on this device only.';
+  document.querySelectorAll('[data-theme-btn]').forEach(b=>b.style.outline=(b.dataset.themeBtn===theme)?'3px solid var(--accent)':'');
+}
+function applyAccent(colour){
+  profile.accent=colour||'';
+  if(colour) document.body.style.setProperty('--accent',colour); else document.body.style.removeProperty('--accent');
+  persistProfile(); const t=document.getElementById('themeState'); if(t) t.textContent=colour?('Accent: '+colour+' — applied app-wide, saved on this device only.'):'Accent: theme default.';
+  const pk=document.getElementById('accentPicker'); if(pk&&colour) pk.value=colour;
+}
+function applyTextSize(size){
+  profile.textSize=size; document.body.dataset.textsize=(size==='medium')?'':size; persistProfile();
+}
+function updateAvatarBuilder(){
+  const base=document.getElementById('builderBase').value, acc=document.getElementById('builderAccessory').value, col=document.getElementById('builderColour').value;
+  const pv=document.getElementById('avatarBuilderPreview'); if(pv){pv.textContent=BUILDER_BASE_EMOJI[base]+acc; pv.style.background=BUILDER_COLOUR_BG[col]||'#3a2c12'; pv.style.borderRadius='50%'; pv.style.padding='8px';}
+}
+function applyAvatarBuilder(){
+  const base=document.getElementById('builderBase').value, acc=document.getElementById('builderAccessory').value, col=document.getElementById('builderColour').value;
+  profile.avatarBase=base; profile.avatarColour=col; profile.avatarAccessory=acc;
+  profile.avatar=BUILDER_BASE_EMOJI[base]+acc; profile.avatarBg=BUILDER_COLOUR_BG[col]||profile.avatarBg;
+  persistProfile(); renderProfile(); renderGameAvatars();
+  const n=document.getElementById('builderNote'); if(n) n.textContent='Avatar saved on this device: '+profile.avatar+' — now in the top bubble, in games, and in Binders.';
+}
+function applySavedTheme(){
+  document.body.dataset.theme=(profile.theme&&profile.theme!=='dark-gold')?profile.theme:'';
+  if(profile.accent) document.body.style.setProperty('--accent',profile.accent);
+  document.body.dataset.textsize=(profile.textSize&&profile.textSize!=='medium')?profile.textSize:'';
+  const ts=document.getElementById('textSizeSel'); if(ts) ts.value=profile.textSize||'medium';
+  const pk=document.getElementById('accentPicker'); if(pk&&profile.accent) pk.value=profile.accent;
+}
+/* ---- Settings / Profile / Avatar (local only, no account backend) ---- */
+const AVATARS=['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😋','😎','🤓','🥳','🤠','🦸','🦹','🧙','🧝','🧛','🧞','🦄','🐉','🐲','🦊','🐺','🐱','🐶','🦁','🐯','🐸','🐳','🦋','🐝','🌸','🌟','⭐','🔥','⚡','❄️','🌙','☀️','🌈','🍀','🎲'];
+const AVATAR_COLORS=['#3a2c12','#2b1d4e','#1d2a3a','#4a1d1d','#123524','#4a3a00'];
+let profile={username:'',displayName:'',bio:'',favSet:'Base',favType:'Fire',avatar:'🫧',avatarBg:'#3a2c12',sound:true,reducedMotion:false,loggedIn:false,theme:'dark-gold',accent:'',textSize:'medium',avatarBase:'mallow',avatarColour:'mint',avatarAccessory:''};
+try{const saved=localStorage.getItem('ror-v2-profile');if(saved) profile=Object.assign(profile,JSON.parse(saved));}catch(e){}
+function persistProfile(){try{localStorage.setItem('ror-v2-profile',JSON.stringify(profile));}catch(e){}}
+function renderProfile(){
+  const bubble=document.getElementById('bubbleAvatar'); if(bubble){bubble.textContent=profile.avatar; bubble.style.background=profile.avatarBg;}
+  const bn=document.getElementById('bubbleName'); if(bn) bn.textContent=(profile.loggedIn&&profile.username)?profile.username:(profile.username||'Guest');
+  const pv=document.getElementById('avatarPreview'); if(pv){pv.textContent=profile.avatar; pv.style.background=profile.avatarBg;}
+  const pn=document.getElementById('avatarPreviewName'); if(pn) pn.textContent=(profile.displayName||profile.username||'Guest')+(profile.bio?' — '+profile.bio:'');
+  const ls=document.getElementById('loginState'); if(ls) ls.textContent=profile.loggedIn?('Signed in locally as '+(profile.username||'Guest')+' — demo only, not a real account.'):'Not logged in locally. Log in above to show a name in the avatar bubble (demo only).';
+  const ln=document.getElementById('bubbleLoginNote'); if(ln) ln.textContent=profile.loggedIn?'Local demo login — not a real account':'Local demo login only — no real account';
+  document.body.classList.toggle('no-motion',!!profile.reducedMotion);
+  document.querySelectorAll('#avatarGrid .avatar-btn').forEach(b=>b.classList.toggle('on',b.dataset.avatar===profile.avatar));
+  document.querySelectorAll('#avatarColorGrid .avatar-btn').forEach(b=>b.classList.toggle('on',b.dataset.color===profile.avatarBg));
+  renderGameAvatars();
+}
+function buildAvatarPicker(){
+  const g=document.getElementById('avatarGrid'); if(!g||g.children.length) return;
+  AVATARS.forEach(a=>{const b=document.createElement('button');b.type='button';b.className='avatar-btn';b.dataset.avatar=a;b.textContent=a;b.onclick=()=>{profile.avatar=a;renderProfile();};g.appendChild(b);});
+  const cg=document.getElementById('avatarColorGrid');
+  if(cg){AVATAR_COLORS.forEach(c=>{const b=document.createElement('button');b.type='button';b.className='avatar-btn';b.dataset.color=c;b.style.background=c;b.textContent=' ';b.setAttribute('aria-label','Avatar background '+c);b.onclick=()=>{profile.avatarBg=c;renderProfile();};cg.appendChild(b);});}
+}
+function fillSettingsFields(){
+  const set=(id,v)=>{const e=document.getElementById(id); if(e) e.value=v;};
+  set('setUsername',profile.username); set('setDisplayName',profile.displayName); set('setBio',profile.bio); set('setFavSet',profile.favSet); set('setFavType',profile.favType); set('loginName',profile.username);
+  const s=document.getElementById('setSound'); if(s) s.checked=!!profile.sound;
+  const m=document.getElementById('setMotion'); if(m) m.checked=!!profile.reducedMotion;
+}
+function saveProfile(){
+  profile.username=document.getElementById('setUsername').value.trim();
+  profile.displayName=document.getElementById('setDisplayName').value.trim();
+  profile.bio=document.getElementById('setBio').value.trim();
+  profile.favSet=document.getElementById('setFavSet').value;
+  profile.favType=document.getElementById('setFavType').value;
+  profile.sound=document.getElementById('setSound').checked;
+  profile.reducedMotion=document.getElementById('setMotion').checked;
+  persistProfile(); renderProfile();
+  const s=document.getElementById('profileSaved'); if(s) s.hidden=false;
+}
+function localLogin(){
+  const n=document.getElementById('loginName').value.trim();
+  if(!n){document.getElementById('loginState').textContent='Type a login name first (demo only).';return;}
+  profile.username=n; profile.loggedIn=true; persistProfile(); renderProfile();
+}
+function localLogout(){profile.loggedIn=false; persistProfile(); renderProfile();}
+function simulateBiometric(){
+  // Web-demo simulation ONLY: no biometric is checked, nothing is verified,
+  // nothing biometric is stored (no localStorage key is written here).
+  // The real Play build will use Android BiometricPrompt instead.
+  const s=document.getElementById('biometricState');
+  if(s) s.textContent='Biometric unlock — simulated in this web demo only. Real fingerprint/face prompt only in the Play build, not here. No fingerprint or face was checked, no biometric was verified, and nothing was stored. Use the local login above to sign in for this demo.';
+}
+function biometricFallback(){
+  const s=document.getElementById('biometricState');
+  if(s) s.textContent='Fallback: use the local login above (login name, demo only). Biometric unlock is not available in this web demo — real fingerprint/face prompt only in the Play build.';
+  const ln=document.getElementById('loginName'); if(ln) ln.focus();
+}
+function clearSession(btn){
+  if(btn.dataset.armed){
+    try{localStorage.removeItem('ror-v2-profile');localStorage.removeItem('cc_demo_rewards_v1');localStorage.removeItem('cc_demo_daily_v1');localStorage.removeItem('cc_demo_tell_unlocked');localStorage.removeItem('cc_demo_bb_unlocked');localStorage.removeItem('cc_demo_bb_music');}catch(e){}
+    REWARDS={coins:0,stars:0,checks:0,levelsDone:{},levelAwardDays:{},checkAwardDays:{}}; tellUnlocked=1; bbUnlocked=1; renderRewards(); renderTellLevels(); renderBb();
+    profile={username:'',displayName:'',bio:'',favSet:'Base',favType:'Fire',avatar:'🫧',avatarBg:'#3a2c12',sound:true,reducedMotion:false,loggedIn:false,theme:'dark-gold',accent:'',textSize:'medium',avatarBase:'mallow',avatarColour:'mint',avatarAccessory:''};
+    binder=[]; sessionChecks=0; lastCheck=null;
+    const n=document.getElementById('clearNote'); if(n){n.hidden=false; n.textContent='Cleared: local profile, login, session checks, filed binders, demo rewards, daily claim and game unlocks in this demo.';}
+    btn.textContent='Clear session & local demo data'; delete btn.dataset.armed;
+    renderProfile(); fillSettingsFields();
+  } else { btn.dataset.armed='1'; btn.textContent='Tap again to confirm clear'; }
+}
+buildAvatarPicker(); fillSettingsFields(); renderProfile(); applySavedTheme(); renderGameAvatars(); initScrollSections();
+showScreen('home');
+</script></body></html>

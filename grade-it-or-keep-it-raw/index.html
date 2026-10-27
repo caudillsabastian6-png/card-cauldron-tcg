@@ -1,0 +1,464 @@
+<!doctype html>
+<!-- v16 (Oct 23, 2026) — idea #9 (Noor): "Grade It or Keep It Raw?" — owner-approved Oct 23, 2026. Fees checked 2026-10-23 against official PSA + CGC pages; see Sources section on this page. -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<title>Grade It or Keep It Raw? | Card Cauldron TCG</title>
+<meta name="description" content="The honest math on grading a Pokémon card: all-in PSA and CGC costs — fees plus shipping both ways — against what a 10, a 9, or lower actually adds. Most cards should stay raw. Ranges only, sources printed, no promises." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#050505; --bg2:#0d0b08; --panel:#14110a; --panel2:#1d1810;
+    --ink:#f6f1e3; --muted:#cfc4a6; --faint:#9a8f74;
+    --gold:#FFC53D; --gold2:#ffd97a; --gold-deep:#b97e1e;
+    --ember:#ff7a3c; --teal:#39d0c4; --bad:#ff6b5e;
+    --line:rgba(255,197,61,.30); --cardline:rgba(246,241,227,.14);
+    --shadow:0 24px 60px rgba(0,0,0,.55);
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+    overflow-x:hidden; line-height:1.55}
+  a{color:inherit}
+  h1,h2,h3,.disp{font-family:"Cinzel",serif; letter-spacing:.01em}
+  ::selection{background:var(--gold); color:#1a1206}
+  main{position:relative; z-index:1}
+
+  /* ---------- nav (same voice as the live site) ---------- */
+  nav.top{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; gap:1rem; padding:.6rem clamp(.8rem,3vw,2rem);
+    background:rgba(5,5,5,.82); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--cardline);
+  }
+  nav.top .brand{font-family:"Cinzel",serif; font-weight:900; font-size:1.02rem; color:var(--gold); text-decoration:none; white-space:nowrap}
+  nav.top .links{display:flex; gap:1.1rem; margin-left:auto; font-weight:700; font-size:.86rem}
+  nav.top .links a{text-decoration:none; color:var(--muted)}
+  nav.top .links a:hover{color:var(--gold)}
+  nav.top .store-btn{margin-left:.4rem; background:var(--gold); color:#1c1204; text-decoration:none;
+    font-weight:800; font-size:.84rem; padding:.5rem .95rem; border-radius:999px; white-space:nowrap}
+  .mnav{display:none}
+  @media (max-width:760px){
+    nav.top{flex-wrap:wrap; row-gap:.35rem}
+    nav.top .links{display:none}
+    nav.top .brand{font-size:.92rem}
+    nav.top .store-btn{margin-left:auto}
+    .mnav{display:flex; gap:1rem; flex-wrap:wrap; flex-basis:100%; font-weight:700; font-size:.82rem; padding-bottom:.15rem}
+    .mnav a{text-decoration:none; color:var(--muted)}
+  }
+
+  /* ---------- sections ---------- */
+  section{padding:clamp(3.2rem,8vw,5.5rem) clamp(1rem,4vw,2.5rem); max-width:1100px; margin:0 auto; position:relative}
+  body.subpage main > section:first-child{padding-top:clamp(7.5rem,13vw,9rem)}
+  .kicker{font-weight:800; letter-spacing:.32em; text-transform:uppercase; font-size:.72rem; color:var(--gold2); margin:0 0 .8rem}
+  h1{margin:0; font-weight:900; line-height:1.02; font-size:clamp(2.4rem,7.5vw,4.4rem); color:#ffe9b0;
+    text-shadow:0 4px 0 rgba(120,70,0,.35), 0 18px 50px rgba(0,0,0,.65), 0 0 60px rgba(255,197,61,.30)}
+  h1 em{font-style:normal; color:var(--gold)}
+  .lede{margin:1.2rem 0 0; max-width:44rem; font-size:clamp(1.02rem,2.4vw,1.22rem); color:var(--muted); font-weight:600}
+  .lede b{color:var(--ink)}
+  .sec-head{max-width:46rem}
+  .sec-head .num{font-family:"Cinzel",serif; color:var(--ember); font-weight:700; letter-spacing:.25em; font-size:.8rem}
+  .sec-head h2{margin:.35rem 0 .6rem; font-size:clamp(1.9rem,5.5vw,3rem); font-weight:900; line-height:1.05}
+  .sec-head h2 em{font-style:normal; color:var(--gold)}
+  .sec-head p{color:var(--muted); font-size:1.03rem; margin:0}
+  .sec-head p b{color:var(--ink)}
+
+  /* ---------- calculator ---------- */
+  .calc{
+    margin-top:2.2rem; background:linear-gradient(150deg,var(--panel2),var(--panel));
+    border:1px solid var(--line); border-radius:18px; padding:1.6rem 1.5rem 1.7rem;
+  }
+  .calc h3{margin:0 0 .3rem; font-size:1.3rem}
+  .calc .q{font-weight:800; margin:1.25rem 0 .55rem; font-size:.98rem}
+  .calc .q:first-of-type{margin-top:.7rem}
+  .opts{display:flex; gap:.55rem; flex-wrap:wrap}
+  .opt{
+    font:inherit; font-weight:800; font-size:.92rem; cursor:pointer;
+    padding:.6rem 1.05rem; border-radius:999px; border:1px solid var(--cardline);
+    background:var(--panel); color:var(--muted);
+  }
+  .opt:hover{border-color:var(--gold)}
+  .opt[aria-pressed="true"]{background:var(--gold); border-color:var(--gold); color:#221503}
+  .opt small{display:block; font-weight:700; font-size:.72rem; opacity:.75; letter-spacing:.03em}
+  .calc-hint{color:var(--faint); font-size:.9rem; margin:1.1rem 0 0}
+
+  .result{
+    margin-top:1.4rem; background:var(--bg2); border:1px solid var(--cardline);
+    border-radius:16px; padding:1.4rem 1.4rem 1.2rem;
+  }
+  .result[hidden]{display:none}
+  .verdict{font-family:"Cinzel",serif; font-weight:900; font-size:clamp(1.5rem,4.5vw,2.2rem); line-height:1.1; margin:0}
+  .verdict.raw{color:var(--bad)} .verdict.maybe{color:var(--gold)} .verdict.go{color:var(--teal)}
+  .notapromise{font-weight:800; color:var(--ink); font-size:1rem; margin:.55rem 0 0}
+  .why{color:var(--muted); margin:.7rem 0 0; max-width:46rem}
+  .why b{color:var(--ink)}
+  .costrows{display:grid; gap:.55rem; margin-top:1.2rem}
+  .costrow{
+    display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+    border-bottom:1px dashed var(--cardline); padding:.5rem 0; font-size:.97rem;
+  }
+  .costrow dt{color:var(--faint); font-weight:700}
+  .costrow dd{margin:0; font-weight:800; text-align:right}
+  .costrow dd span{color:var(--gold)}
+  .uplift{margin-top:1.1rem; background:var(--panel); border:1px solid var(--cardline); border-radius:12px; padding:.95rem 1.1rem}
+  .uplift p{margin:0; color:var(--muted); font-size:.95rem}
+  .uplift p b{color:var(--ink)}
+  .fineprint{color:var(--faint); font-size:.85rem; margin-top:1rem}
+  .fineprint a{color:var(--gold); font-weight:700}
+
+  /* ---------- tables ---------- */
+  .tblwrap{overflow-x:auto; background:var(--panel); border:1px solid var(--cardline); border-radius:14px; margin-top:1.6rem}
+  table.fees{border-collapse:collapse; width:100%; min-width:600px}
+  table.fees th, table.fees td{padding:.6rem .85rem; text-align:left; border-bottom:1px solid var(--cardline); font-size:.95rem}
+  table.fees th{color:var(--gold); letter-spacing:.05em; text-transform:uppercase; font-size:.76rem}
+  table.fees td.val{font-weight:800; color:var(--ink); white-space:nowrap}
+  table.fees td.src{color:var(--faint); font-size:.84rem}
+  table.fees tr.paused td{color:var(--faint)}
+  .grader-note{color:var(--muted); font-size:.94rem; margin:.8rem 0 0; max-width:46rem}
+  .grader-note b{color:var(--ink)}
+
+  /* ---------- why-raw cards ---------- */
+  .why-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem; margin-top:2rem}
+  .why-card{background:var(--panel); border:1px solid var(--cardline); border-radius:16px; padding:1.3rem 1.3rem 1.15rem}
+  .why-card .big{font-family:"Cinzel",serif; font-size:1.9rem; font-weight:900; color:var(--gold); line-height:1.1}
+  .why-card h3{margin:.5rem 0 .3rem; font-size:1.08rem}
+  .why-card p{margin:0; color:var(--muted); font-size:.92rem}
+  .why-card p b{color:var(--ink)}
+
+  /* ---------- sources ---------- */
+  .src-list{display:grid; gap:.55rem; margin-top:1.4rem; padding:0; list-style:none}
+  .src-list li{background:var(--panel); border:1px solid var(--cardline); border-radius:12px; padding:.8rem 1rem; font-size:.92rem; color:var(--muted)}
+  .src-list a{color:var(--gold); font-weight:700; word-break:break-all}
+  .stamp{color:var(--faint); font-size:.84rem; line-height:1.5; max-width:46rem; margin:1rem 0 0}
+
+  .btn{display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; font-weight:800;
+    padding:.85rem 1.5rem; border-radius:999px; font-size:1rem; border:1px solid transparent}
+  .btn-gold{background:linear-gradient(180deg,var(--gold2),var(--gold)); color:#221503; box-shadow:0 10px 30px rgba(255,197,61,.30)}
+  .store-cta{margin-top:2rem; text-align:center}
+  .store-cta p{color:var(--muted); margin:0 0 1rem}
+
+  /* ---------- footer (same voice as the live site) ---------- */
+  footer{border-top:1px solid var(--cardline); padding:2.2rem 1.2rem 2.6rem; text-align:center; position:relative; z-index:1}
+  footer .disp{color:var(--gold); font-weight:900; font-size:1.1rem}
+  footer p{color:var(--faint); font-size:.85rem; margin:.4rem 0 0}
+  footer .loop-line{color:var(--muted); font-size:.95rem; margin-top:.9rem}
+  footer .loop-tag{color:var(--gold); font-weight:900; letter-spacing:.09em}
+  footer a{color:var(--gold); font-weight:700}
+  .social-row{display:flex; flex-wrap:wrap; gap:.55rem 1.15rem; justify-content:center; margin-top:1rem}
+  .social-row a{color:var(--gold); font-weight:800; font-size:.9rem; text-decoration:none}
+  .social-row a:hover{text-decoration:underline}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+</style>
+</head>
+<body class="subpage">
+
+<nav class="top">
+  <a class="brand" href="/">CARD CAULDRON TCG</a>
+  <div class="links">
+    <a href="/">Home</a>
+    <a href="/shop.html">Shop</a>
+    <a href="/sets.html">Browse by Set</a>
+    <a href="/bulk.html">We Buy Bulk</a>
+    <a href="/app.html">Real or Replica</a>
+    <a href="/demo/">Demo</a>
+    <a href="/ask.html">Ask the Office</a>
+    <a href="/about.html">About</a>
+  </div>
+  <a class="store-btn" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">eBay Store ↗</a>
+  <div class="mnav">
+    <a href="/">Home</a>
+    <a href="/shop.html">Shop</a>
+    <a href="/sets.html">Browse by Set</a>
+    <a href="/bulk.html">We Buy Bulk</a>
+    <a href="/app.html">Real or Replica</a>
+    <a href="/demo/">Demo</a>
+    <a href="/ask.html">Ask the Office</a>
+    <a href="/about.html">About</a>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- ============ INTRO + CALCULATOR ============ -->
+  <section>
+    <p class="kicker">Card Cauldron TCG · Honest Math · Idea by Noor 🦉</p>
+    <h1>Grade It or<br /><em>Keep It Raw?</em></h1>
+    <p class="lede">Grading is sold like a lottery ticket and priced like a tax. Before you ship a card off for months, run the real numbers: <b>the grading fee, shipping both ways, and what a 10, a 9, or anything lower actually adds</b> over selling the card raw. Most of the time, the honest answer is the boring one.</p>
+
+    <div class="calc" id="calc">
+      <h3>Run your card</h3>
+
+      <p class="q">1 · What's the card worth raw, roughly?</p>
+      <div class="opts" role="group" aria-label="Raw value band">
+        <button type="button" class="opt" data-band="0" aria-pressed="false">Under $25</button>
+        <button type="button" class="opt" data-band="1" aria-pressed="false">$25 – $75</button>
+        <button type="button" class="opt" data-band="2" aria-pressed="false">$75 – $200</button>
+        <button type="button" class="opt" data-band="3" aria-pressed="false">$200+</button>
+      </div>
+
+      <p class="q">2 · What grade are you honestly hoping for?</p>
+      <div class="opts" role="group" aria-label="Hoped-for grade">
+        <button type="button" class="opt" data-grade="10" aria-pressed="false">A 10<small>the dream</small></button>
+        <button type="button" class="opt" data-grade="9" aria-pressed="false">A 9<small>clean, not perfect</small></button>
+        <button type="button" class="opt" data-grade="low" aria-pressed="false">Lower than a 9<small>played, off-center, a soft corner…</small></button>
+      </div>
+
+      <p class="calc-hint" id="calcHint">Pick both and we'll show the all-in cost, the break-even sale you'd need, and our verdict. Everything is a range — anybody who gives you one exact number is selling something.</p>
+
+      <div class="result" id="result" hidden aria-live="polite">
+        <p class="verdict" id="verdict"></p>
+        <p class="notapromise">Not a promise — most cards should stay raw.</p>
+        <p class="why" id="why"></p>
+        <dl class="costrows" id="costrows"></dl>
+        <div class="uplift"><p id="uplift"></p></div>
+        <p class="fineprint" id="resultFine"></p>
+      </div>
+    </div>
+
+    <noscript>
+      <div class="result" style="margin-top:1.4rem">
+        <p class="why"><b>The short version, no calculator needed:</b> under $25 raw — keep it raw, grading costs more than the card. $25–$75 raw — keep it raw unless a 10 is genuinely likely <i>and</i> that exact card's graded-10 sales clear the break-even below. $75–$200 raw — the first band where a likely 10 can pencil, on comps, not hope. $200+ raw — grading can pencil on a likely 10; a 9 or lower usually still doesn't. At every band: a hoped-for 9 or lower means keep it raw for resale. <b>Not a promise — most cards should stay raw.</b></p>
+      </div>
+    </noscript>
+  </section>
+
+  <!-- ============ THE REAL BILLS ============ -->
+  <section>
+    <div class="sec-head">
+      <p class="num">01 — THE REAL BILLS</p>
+      <h2>The fee is <em>not the bill</em></h2>
+      <p>The per-card fee is the headline. The bill is the fee <b>plus shipping your cards to the grader, plus return shipping back</b> — and return shipping is charged per order, which is why grading one card alone is the most expensive way to do it. Turnaround times below are the graders' <b>published estimates — not guarantees</b>; both companies say so on their own pages.</p>
+    </div>
+
+    <div class="tblwrap">
+      <table class="fees">
+        <caption style="text-align:left; padding:.85rem .85rem .2rem; font-family:Cinzel,serif; font-weight:900; color:var(--gold)">PSA — trading card grading (psacard.com, checked Oct 23, 2026)</caption>
+        <thead><tr><th>Service level</th><th>Fee / card</th><th>Max insured value</th><th>Published est. turnaround</th></tr></thead>
+        <tbody>
+          <tr><td>Standard</td><td class="val">$59.99</td><td>$1,000</td><td>90–100 business days</td></tr>
+          <tr><td>Priority (was Regular)</td><td class="val">$79.99</td><td>$1,500</td><td>70–80 business days</td></tr>
+          <tr><td>Express</td><td class="val">$199</td><td>$2,500</td><td>20–30 business days</td></tr>
+          <tr><td>Super Express</td><td class="val">$349</td><td>$5,000</td><td>10–15 business days</td></tr>
+          <tr><td>Premier (was Walk-Through)</td><td class="val">$599</td><td>$10,000</td><td>7–10 business days</td></tr>
+          <tr class="paused"><td>Value / Value Bulk / Value Plus / Value Max</td><td class="val">Paused</td><td>$500–$1,000</td><td>Paused since June 2, 2026 — last posted fees $24.99–$64.99; no reopening date published</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="grader-note"><b>Shipping, PSA:</b> you pay to ship your cards in (tracked/insured carrier, commonly about <b>$10–$30</b> for a small order), and PSA charges return shipping per order at checkout based on order value — recent guides put a small order's return leg around <b>$20–$40</b>. PSA's services page does not print one flat return rate, so <b>check the grader's site for the current fee</b> at checkout before you count on a number. If your card grades above your tier's value cap, PSA can move it up a tier and bill the difference.</p>
+
+    <div class="tblwrap">
+      <table class="fees">
+        <caption style="text-align:left; padding:.85rem .85rem .2rem; font-family:Cinzel,serif; font-weight:900; color:var(--gold)">CGC Cards — grading tiers (cgccards.com, checked Oct 23, 2026)</caption>
+        <thead><tr><th>Service level</th><th>Fee / card</th><th>Max value / card</th><th>Published est. turnaround</th></tr></thead>
+        <tbody>
+          <tr><td>Bulk (25-card minimum)</td><td class="val">$17</td><td>$500</td><td>150 working days</td></tr>
+          <tr><td>Economy</td><td class="val">$20</td><td>$1,000</td><td>90 working days</td></tr>
+          <tr><td>Standard</td><td class="val">$55</td><td>$3,000</td><td>10 working days</td></tr>
+          <tr><td>Express</td><td class="val">$100</td><td>$10,000</td><td>5 working days</td></tr>
+          <tr><td>WalkThrough</td><td class="val">$300</td><td>$100,000</td><td>2 working days</td></tr>
+          <tr><td>Unlimited Value</td><td class="val">$300 + 1% of fair market value</td><td>Unlimited</td><td>2 working days</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="grader-note"><b>Shipping, CGC:</b> you pay to ship your cards in (commonly about <b>$10–$30</b> for a small order). CGC's published domestic return rate is <b>$25 for 1–5 cards</b> with a declared value up to $5,000 (FedEx Ground), rising with card count and declared value — CGC's own shipping table, effective August 5, 2025. Paid CGC memberships discount grading fees (10%–20%); the free account doesn't. Same warning as PSA: if CGC values your card above the tier cap, it moves up a tier at your cost.</p>
+  </section>
+
+  <!-- ============ WHY MOST STAY RAW ============ -->
+  <section>
+    <div class="sec-head">
+      <p class="num">02 — THE UPLIFT, HONESTLY</p>
+      <h2>Why most cards <em>stay raw</em></h2>
+      <p>The whole bet lives or dies on one grade point. Here's what sold-price data — not listing prices, not hope — says about the gap.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <p class="big">~2× – 5×</p>
+        <h3>What a 10 can add (modern cards)</h3>
+        <p>Modern Pokémon cards that land a top grade commonly sell for roughly <b>2×–5× the same card raw</b> — with plenty landing below that range, and flagship chase cards sometimes far above it. It is a range, not a rate. <b>(Pokemon Price Tracker, 2026 raw-vs-graded analysis)</b></p>
+      </div>
+      <div class="why-card">
+        <p class="big">30% – 50%</p>
+        <h3>What a 9 is worth vs. its own 10</h3>
+        <p>A 9 typically sells for only <b>30%–50% of the same card's 10 price</b>. In one study of 126 eBay sales of a single chase card, <b>raw copies sold for almost the same as the graded 9s</b> — the fee bought a plastic case, not a premium. <b>(Pokemon Price Tracker 2026; Herrhana, 126 eBay sales, Jan–Jun 2026)</b></p>
+      </div>
+      <div class="why-card">
+        <p class="big">~9 in 10</p>
+        <h3>Modern 9s that lose money</h3>
+        <p>Across liquid markets, a modern (2022+) card that comes back a 9 <b>sells for less than its raw price plus the grading fee roughly 90% of the time</b> — and 8s and below often sell at or under raw. The value isn't in grading. It's in landing the 10. <b>(TCGInvest market analysis, 1,959 liquid graded markets)</b></p>
+      </div>
+    </div>
+    <p class="stamp">One more cost nobody puts on the poster: when you sell, marketplace fees (eBay's trading-card fee is about 13.25% of the total sale, per 2026 cost breakdowns) come off the graded sale too. The break-evens on this page are grading costs only — your card has to clear those <i>and</i> selling fees to actually come out ahead. Grading for your own shelf — protection, authentication, a card you love in a slab — is a perfectly good reason. Just don't let anybody call it an investment case when the math above says otherwise.</p>
+  </section>
+
+  <!-- ============ SOURCES ============ -->
+  <section>
+    <div class="sec-head">
+      <p class="num">03 — SHOW YOUR WORK</p>
+      <h2>Sources, <em>printed</em></h2>
+      <p>Every fee on this page was read on the grader's own site on <b>October 23, 2026</b> and cross-checked against at least one independent fee tracker the same day. Fees and turnaround estimates change — sometimes mid-year, as both companies did in 2026 — so re-check before you submit. Where a figure couldn't be pinned down exactly (PSA's per-order return shipping), this page prints a range and tells you to check the grader's site instead of guessing.</p>
+    </div>
+    <ul class="src-list">
+      <li><b>PSA fees, value caps &amp; turnaround (official):</b> PSA Trading Card Grading Services — <a href="https://www.psacard.com/services/tradingcardgrading" target="_blank" rel="noopener">psacard.com/services/tradingcardgrading</a></li>
+      <li><b>PSA Feb 2026 price update + Value tier history (official):</b> "An Update on Pricing and Services at PSA (February 2026)" — <a href="https://www.psacard.com/articles/articleview/15663/grading-services-update-february-2026" target="_blank" rel="noopener">psacard.com/articles/articleview/15663</a></li>
+      <li><b>PSA cross-check (Sept–Oct 2026 fee trackers):</b> ShopCardHub PSA Grading Guide 2026 — <a href="https://www.shopcardhub.com/psa-grading-guide" target="_blank" rel="noopener">shopcardhub.com/psa-grading-guide</a> · Legion Report — <a href="https://legionreport.com/psa-grading-cost/" target="_blank" rel="noopener">legionreport.com/psa-grading-cost</a> · PokeInsider on the Sept 2026 Standard tier — <a href="https://pokeinsider.com/2026/09/10/psa-standard-grading-cost/" target="_blank" rel="noopener">pokeinsider.com</a></li>
+      <li><b>CGC fees, value caps &amp; turnaround (official):</b> CGC Cards Services and Fees — <a href="https://www.cgccards.com/submit/services-fees/cgc-grading/" target="_blank" rel="noopener">cgccards.com/submit/services-fees/cgc-grading</a></li>
+      <li><b>CGC return shipping table (official):</b> "Shipping Your Collectibles To / From CGC" — <a href="https://www.cgcgrading.com/news/articles/shipping-collectibles-cgc-3bBipd2dAIiyJcQqJyqhzW/" target="_blank" rel="noopener">cgcgrading.com — shipping article</a> · CGC's Jan 2026 fee announcement — <a href="https://www.cgcgrading.com/news/articles/cgc-price-updates-2026-5wjf0o7nUg2mXUdUC2u82o/" target="_blank" rel="noopener">cgcgrading.com — price updates 2026</a></li>
+      <li><b>CGC cross-check (Sept 2026 fee trackers):</b> CardGrade CGC Grading Guide 2026 — <a href="https://cardgrade.io/blog/cgc-card-grading-guide" target="_blank" rel="noopener">cardgrade.io/blog/cgc-card-grading-guide</a></li>
+      <li><b>Shipping-both-ways cost ranges:</b> PreGradeCards, "The Hidden Costs of Card Grading" — <a href="https://pregradecards.com/blog/hidden-costs-card-grading-guide" target="_blank" rel="noopener">pregradecards.com/blog/hidden-costs-card-grading-guide</a></li>
+      <li><b>Uplift data:</b> Pokemon Price Tracker, "Raw vs Graded Pokémon Cards: ROI Analysis 2026" — <a href="https://www.pokemonpricetracker.com/blog/posts/raw-vs-graded-pokemon-cards-roi-analysis-2026" target="_blank" rel="noopener">pokemonpricetracker.com</a> · "PSA 10 vs PSA 9: 2026 Price Gap Analysis" — <a href="https://www.pokemonpricetracker.com/blog/posts/psa-10-vs-psa-9-2026-price-gap-analysis-roi-data" target="_blank" rel="noopener">pokemonpricetracker.com</a> · Herrhana, "The Price of Perfection" (126 eBay sales) — <a href="https://herrhana.substack.com/p/the-price-of-perfection-and-the-market" target="_blank" rel="noopener">herrhana.substack.com</a> · TCGInvest, "A PSA 9 Is Already a Loss 90% of the Time" — <a href="https://tcginvest.io/blog/psa-9-modern-pokemon-cards-loss-grading-economics" target="_blank" rel="noopener">tcginvest.io</a></li>
+    </ul>
+    <div class="store-cta">
+      <p>Want a second set of eyes on a card before you decide? That's literally our day job.</p>
+      <a class="btn btn-gold" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">Visit the eBay Store ↗</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="disp">CARD CAULDRON TCG</div>
+  <p class="loop-line"><span class="loop-tag">THE LOOP</span> — One shop, every door open — follow anywhere, find us everywhere.</p>
+  <nav class="social-row" aria-label="Card Cauldron TCG everywhere">
+    <a href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">eBay Store</a>
+    <a href="https://discord.gg/Aj4ahGsSx" target="_blank" rel="noopener">Discord</a>
+    <a href="https://www.instagram.com/sabastian0392" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@CardCauldronTCG" target="_blank" rel="noopener">YouTube</a>
+    <a href="https://www.tiktok.com/@thecardcauldrontcg" target="_blank" rel="noopener">TikTok</a>
+    <a href="https://www.facebook.com/profile.php?id=1412438935277177" target="_blank" rel="noopener">Facebook</a>
+    <a href="https://www.pinterest.com/caudillsabastian6" target="_blank" rel="noopener">Pinterest</a>
+  </nav>
+  <p><a href="/about.html#contact">Need help? Talk to a human →</a></p>
+  <p><a href="/privacy.html">Privacy Policy</a></p>
+  <p>Brewed fresh daily in Van Wert, Ohio. Every purchase supports a real collector — and milestone customers win real prizes.</p>
+  <p>Pokémon and all respective names are trademark &amp; © of Nintendo, Creatures Inc. and GAME FREAK inc. This is an independent reseller shop, not affiliated with Nintendo or The Pokémon Company. Card Cauldron TCG is not affiliated with PSA or CGC; fees above are theirs, quoted from their own pages.</p>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  // ---- Verified figures, checked 2026-10-23 (see Sources section) ----
+  // All-in cost per single card = grading fee + shipping out + return shipping.
+  // PSA Standard: fee $59.99 (official) + out $10-$30 + return $20-$40 (tracker ranges; PSA prints no flat rate)
+  // CGC Economy:  fee $20 (official)    + out $10-$30 + return $25 (official CGC table, 1-5 cards, declared <= $5,000)
+  // CGC Bulk:     fee $17 (official, 25-card min) — per-card share inside a 25-card batch, batch total shown too.
+  var ROUTES = {
+    psa:     { name:"PSA Standard", fee:59.99, shipOut:[10,30], shipBack:[20,40], tat:"90–100 business days" },
+    cgcEcon: { name:"CGC Economy",  fee:20,    shipOut:[10,30], shipBack:[25,25], tat:"90 working days" },
+    cgcBulk: { name:"CGC Bulk",     fee:17,    shipOut:[10,30], shipBack:[30,30], tat:"150 working days", batch:25 }
+  };
+  function allIn(r){
+    if(r.batch){ // per-card share of one batch order + the batch total
+      var lo = r.fee + (r.shipOut[0]+r.shipBack[0])/r.batch;
+      var hi = r.fee + (r.shipOut[1]+r.shipBack[1])/r.batch;
+      return { perCard:[Math.ceil(lo), Math.ceil(hi)],
+               batchTotal:[r.fee*r.batch + r.shipOut[0] + r.shipBack[0],
+                           r.fee*r.batch + r.shipOut[1] + r.shipBack[1]] };
+    }
+    return { perCard:[r.fee + r.shipOut[0] + r.shipBack[0], r.fee + r.shipOut[1] + r.shipBack[1]] };
+  }
+  var BANDS = [
+    { label:"under $25",  lo:5,   hi:25,  open:false },
+    { label:"$25–$75",    lo:25,  hi:75,  open:false },
+    { label:"$75–$200",   lo:75,  hi:200, open:false },
+    { label:"$200+",      lo:200, hi:200, open:true  }
+  ];
+  var UPLIFT = {
+    "10": "<b>What a 10 realistically adds:</b> modern cards that land a 10 commonly sell for roughly <b>2×–5× the same card raw</b> — plenty land below that, flagship chase cards can land above it. Check <b>sold</b> listings for your exact card, never asking prices. (Pokemon Price Tracker, 2026 raw-vs-graded analysis)",
+    "9":  "<b>What a 9 realistically adds:</b> a 9 typically sells for only <b>30%–50% of the same card's 10 price</b>, and in a 126-sale study raw copies sold for <b>almost the same as the graded 9s</b>. On modern cards, a 9 sells for less than raw + the grading fee roughly 90% of the time. (Pokemon Price Tracker 2026; Herrhana 2026; TCGInvest)",
+    "low":"<b>What lower than a 9 realistically adds:</b> usually nothing — 8s and below <b>often sell at or under the raw price</b>, because buyers can get an ungraded copy and take their own chances. (Herrhana 2026; Pokemon Price Tracker 2026)"
+  };
+  // Verdicts: [band][grade] -> {cls, head, why(band, costs)}
+  function be(r, band){ var c = allIn(r).perCard; return [band.lo + c[0], band.hi + c[1]]; }
+  function money(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+  var VERDICTS = {
+    "0": {
+      "10": { cls:"raw", head:"Verdict: keep it raw.",
+        why:function(b){ var p=be(ROUTES.psa,b), e=be(ROUTES.cgcEcon,b);
+          return "The cheapest single-card routes all-in at <b>"+money(allIn(ROUTES.cgcEcon).perCard[0])+"–"+money(allIn(ROUTES.psa).perCard[1])+"</b> — several times what the card itself is worth. Even a perfect 10 has to sell for <b>"+money(e[0])+"–"+money(p[1])+"</b> just to break even, on a card worth under $25 raw. The one exception: a card like this riding along inside a 25-card CGC Bulk batch you were <i>already</i> sending. Never the reason for the batch."; } },
+      "9":  { cls:"raw", head:"Verdict: keep it raw.",
+        why:function(){ return "A 9 typically adds little or nothing over raw — and grading it costs more than the card. Sell it raw, buy yourself lunch with the fee money."; } },
+      "low":{ cls:"raw", head:"Verdict: keep it raw.",
+        why:function(){ return "Below a 9, a slab usually sells at or under the raw price. You'd be paying to make the card worth the same or less."; } }
+    },
+    "1": {
+      "10": { cls:"raw", head:"Verdict: usually — keep it raw.",
+        why:function(b){ var p=be(ROUTES.psa,b), e=be(ROUTES.cgcEcon,b);
+          return "Break-even is a graded sale of <b>"+money(e[0])+"–"+money(e[1])+"</b> by CGC Economy or <b>"+money(p[0])+"–"+money(p[1])+"</b> by PSA Standard — that's roughly <b>2×–5× the raw value</b> before selling fees. That only happens when a 10 is genuinely likely <i>and</i> your exact card's sold 10s clear the top of that range. Hope is not a comp."; } },
+      "9":  { cls:"raw", head:"Verdict: keep it raw.",
+        why:function(){ return "At this value, a 9's typical premium doesn't cover a $55–$130 all-in grading bill stacked on top of the raw price. The math needs a 10; a 9 is how the fee wins."; } },
+      "low":{ cls:"raw", head:"Verdict: keep it raw.",
+        why:function(){ return "Below a 9, expect the slab to sell at or under raw. Grading turns a $25–$75 card into a $25–$75 card with a $55+ receipt attached."; } }
+    },
+    "2": {
+      "10": { cls:"maybe", head:"Verdict: maybe — comps decide.",
+        why:function(b){ var p=be(ROUTES.psa,b), e=be(ROUTES.cgcEcon,b);
+          return "This is the first band where a likely 10 can pencil. Break-even: a graded sale of <b>"+money(e[0])+"–"+money(e[1])+"</b> (CGC Economy) or <b>"+money(p[0])+"–"+money(p[1])+"</b> (PSA Standard), before selling fees. Pull the last few <b>sold</b> 10s of your exact card: if they sit comfortably above the top of the range and the card in your hand is truly gem — centered, clean surface, sharp corners — it's a real candidate. If you have to squint at the card or the comps, that's your answer: raw."; } },
+      "9":  { cls:"raw", head:"Verdict: usually — keep it raw.",
+        why:function(){ return "A 9 here needs to sell for the raw price <i>plus</i> $55–$130 of grading cost just to tread water, and 9s typically sell for 30%–50% of their own 10's price. Unless your exact card's sold 9s prove otherwise, keep it raw."; } },
+      "low":{ cls:"raw", head:"Verdict: keep it raw.",
+        why:function(){ return "Below a 9, the slab adds cost, not value, at this band too. Raw buyers will pay for the card; low-grade buyers pay for the discount."; } }
+    },
+    "3": {
+      "10": { cls:"go", head:"Verdict: this is the band where it can pencil.",
+        why:function(b){ var p=be(ROUTES.psa,b), e=be(ROUTES.cgcEcon,b);
+          return "At $200 raw, break-even is a graded sale of about <b>"+money(e[0])+"+</b> (CGC Economy) or <b>"+money(p[0])+"</b> (PSA Standard), rising dollar-for-dollar with the raw value — and high-demand cards that land a 10 often clear that by a wide margin. Still two rules: check the exact card's <b>sold</b> 10s first, and declare the value honestly — above $1,000 both graders push you to a pricier tier, and a card that grades <i>up</i> in value can be upcharged to match."; } },
+      "9":  { cls:"maybe", head:"Verdict: borderline — usually raw, comps can argue.",
+        why:function(){ return "A 9 has to sell for raw + $55–$130 (grading, all-in) before selling fees just to break even. Some high-demand and vintage 9s genuinely do; most modern 9s don't — they sell closer to raw. If the last few sold 9s of your exact card clear that bar with room to spare, it's defensible. Otherwise: raw."; } },
+      "low":{ cls:"raw", head:"Verdict: keep it raw (for resale).",
+        why:function(){ return "For resale, below a 9 rarely adds value even here. The honest exception: grading a card you <i>own and love</i> for authentication and protection is a collection decision, not a money decision — do it with open eyes and it's fine."; } }
+    }
+  };
+
+  var sel = { band:null, grade:null };
+  var result = document.getElementById("result");
+  var hint = document.getElementById("calcHint");
+  function press(group, btn){
+    group.querySelectorAll(".opt").forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+    btn.setAttribute("aria-pressed","true");
+  }
+  document.querySelectorAll("[data-band]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      press(btn.parentElement, btn); sel.band = btn.getAttribute("data-band"); render();
+    });
+  });
+  document.querySelectorAll("[data-grade]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      press(btn.parentElement, btn); sel.grade = btn.getAttribute("data-grade"); render();
+    });
+  });
+  function row(route){
+    var c = allIn(route), b = BANDS[+sel.band];
+    var cost = money(c.perCard[0]) + "–" + money(c.perCard[1]);
+    var beRange = money(b.lo + c.perCard[0]) + (b.open ? "+" : "–" + money(b.hi + c.perCard[1]));
+    var extra = route.batch ? " <small style='color:var(--faint)'>(per card inside a 25-card batch; batch total " + money(c.batchTotal[0]) + "–" + money(c.batchTotal[1]) + ")</small>" : "";
+    return "<div class='costrow'><dt>" + route.name + " — all-in, one card</dt><dd><span>" + cost + "</span>" + extra +
+      "<br /><small style='color:var(--faint)'>break-even graded sale: " + beRange + " · published est. turnaround: " + route.tat + "</small></dd></div>";
+  }
+  function render(){
+    if(sel.band === null || sel.grade === null){
+      if(sel.band !== null || sel.grade !== null){ hint.textContent = "One more pick — then the math shows up."; }
+      return;
+    }
+    var v = VERDICTS[sel.band][sel.grade];
+    var band = BANDS[+sel.band];
+    var verdict = document.getElementById("verdict");
+    verdict.textContent = v.head; verdict.className = "verdict " + v.cls;
+    document.getElementById("why").innerHTML = v.why(band);
+    document.getElementById("costrows").innerHTML =
+      row(ROUTES.cgcEcon) + row(ROUTES.psa) + row(ROUTES.cgcBulk);
+    document.getElementById("uplift").innerHTML = UPLIFT[sel.grade];
+    document.getElementById("resultFine").innerHTML =
+      "All-in = grading fee + shipping to the grader + return shipping, for a single-card order (CGC Bulk shown per-card inside a batch). Selling fees are extra. Fees checked Oct 23, 2026 — PSA's return shipping is set at checkout and its services page prints no flat rate, so <b>check the grader's site for the current fee</b> before you ship. Full sources below.";
+    result.hidden = false;
+    hint.textContent = "Change either pick to re-run it. Ranges only — your exact card's sold prices are the tiebreaker, always.";
+  }
+})();
+</script>
+</body>
+</html>

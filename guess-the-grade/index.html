@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guess the Grade — Honest Edition | Card Cauldron TCG</title>
+<meta name="description" content="A guessing game played on the shop's own slab photos — labels fully covered. The point of the game is the point of the game: a photo can't grade a card.">
+<style>
+  :root{--bg:#050505;--gold:#FFC53D;--ink:#f2ead2;--mut:#a99f83;--card:#101010;--line:#2a2517}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.55;padding:24px 16px 64px}
+  .wrap{max-width:640px;margin:0 auto}
+  header{text-align:center;margin-bottom:8px}
+  .brand{color:var(--gold);letter-spacing:.35em;font-size:.72rem;text-transform:uppercase}
+  h1{font-size:2rem;line-height:1.15;margin:8px 0 4px;color:var(--ink)}
+  h1 em{color:var(--gold);font-style:normal}
+  .sub{color:var(--mut);font-size:.95rem}
+  .honesty{border:1px solid var(--gold);color:var(--gold);border-radius:10px;padding:10px 14px;text-align:center;font-weight:bold;margin:18px 0;background:#0d0b04}
+  .honesty.small{font-size:.85rem;padding:8px 12px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:18px 0}
+  .panel p{margin-bottom:12px}
+  .btn{display:inline-block;background:var(--gold);color:#050505;border:none;border-radius:10px;padding:13px 26px;font-size:1.05rem;font-weight:bold;cursor:pointer;font-family:inherit;text-decoration:none}
+  .btn:hover{background:#ffd268}
+  .btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+  .center{text-align:center}
+  .progress{display:flex;justify-content:space-between;color:var(--mut);font-size:.9rem;margin:14px 2px 8px}
+  .bar{height:8px;background:#1c1c1c;border-radius:99px;overflow:hidden;margin-bottom:16px}
+  .bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+  /* --- slab stage --- */
+  .stage{position:relative;max-width:520px;margin:0 auto;border-radius:12px;overflow:hidden}
+  .stage img{display:block;width:100%;height:auto;user-select:none;-webkit-user-drag:none}
+  /* THE COVER: an opaque frame laid over the label band. It is never removed,
+     not even on the reveal — the grade is announced as text, so the label
+     (and its cert number) is never rendered at any point in the game. */
+  .cover{position:absolute;background:#050505;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;z-index:3}
+  .cover span{color:var(--gold);font-size:clamp(.55rem,2.4vw,.8rem);letter-spacing:.18em;text-transform:uppercase;font-weight:bold;line-height:1.5}
+  .guessrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0 4px}
+  .guess{width:70px;height:70px;border-radius:12px;border:2px solid var(--gold);background:transparent;color:var(--gold);font-size:1.5rem;font-weight:bold;cursor:pointer;font-family:inherit}
+  .guess:hover{background:#241d08}
+  .guess:disabled{opacity:.45;cursor:default}
+  .guess.picked{background:var(--gold);color:#050505}
+  .reveal{display:none;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:16px 18px;margin:18px 0;background:#0d0b04}
+  .reveal .big{font-size:1.35rem;margin-bottom:6px}
+  .reveal .big b{color:var(--gold)}
+  .nextrow{display:none;text-align:center;margin-top:14px}
+  .score-big{font-size:2.6rem;color:var(--gold);text-align:center;margin:6px 0}
+  .verdict{text-align:center;color:var(--ink);margin-bottom:8px}
+  .fineprint{color:var(--mut);font-size:.82rem;text-align:center;margin-top:22px}
+  .hidden{display:none}
+  footer{text-align:center;color:var(--mut);font-size:.85rem;margin-top:34px}
+  footer b{color:var(--gold);letter-spacing:.2em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">Card Cauldron TCG</div>
+    <h1>Guess the Grade<br><em>— Honest Edition —</em></h1>
+    <p class="sub">Milo's game, rebuilt to tell the truth. Every slab below is one of the shop's own, photographed by the shop.</p>
+  </header>
+
+  <div class="honesty">a photo can't grade a card — this is a game, not a method.</div>
+
+  <!-- INTRO -->
+  <section id="intro" class="panel">
+    <p><b>How it works:</b> a slab photo appears with its label <b>fully covered by an opaque frame</b> — covered, not blurred, not pixelated. The cert number is never shown, at any point, even after you guess.</p>
+    <p>Look at the card all you want. Then guess the grade: <b>7, 8, 9 or 10</b>. There are 18 slabs — the shop's whole photographed slab shelf, PSA and CGC.</p>
+    <p>Here's the honest catch: centering you can sort of see. Corners, edges and surface — the things grades are actually made of — hide from a phone photo. So guess boldly, and notice how often bold is wrong. That noticing <i>is</i> the game.</p>
+    <p class="center" style="margin-top:16px"><button class="btn" id="startBtn">Start guessing →</button></p>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="hidden">
+    <div class="progress"><span id="roundLabel">Round 1 of 18</span><span id="scoreLabel">Score 0</span></div>
+    <div class="bar"><i id="barFill"></i></div>
+
+    <div class="stage" id="stage">
+      <img id="slabImg" src="" alt="A graded slab from the shop with its label covered by an opaque frame">
+      <div class="cover" id="cover"><span>🏷️ Label covered<br>Guess the grade</span></div>
+    </div>
+
+    <div class="honesty small">a photo can't grade a card — this is a game, not a method.</div>
+
+    <div class="guessrow" id="guessRow">
+      <button class="guess" data-g="7">7</button>
+      <button class="guess" data-g="8">8</button>
+      <button class="guess" data-g="9">9</button>
+      <button class="guess" data-g="10">10</button>
+    </div>
+
+    <div class="reveal" id="reveal">
+      <div class="big" id="revealBig"></div>
+      <div id="revealText"></div>
+      <p style="margin-top:10px"><b>a photo can't grade a card — this is a game, not a method.</b></p>
+      <p style="color:var(--mut);font-size:.88rem">The cover stays on even now — the grade above is the shop's record of this slab, told to you as text. The label itself is never shown.</p>
+    </div>
+    <div class="nextrow" id="nextRow"><button class="btn" id="nextBtn">Next slab →</button></div>
+  </section>
+
+  <!-- SCORE -->
+  <section id="final" class="hidden">
+    <div class="panel">
+      <div class="score-big" id="finalScore"></div>
+      <p class="verdict" id="finalVerdict"></p>
+      <p>However you did, sit with this: you were grading from a phone photo, through a plastic case, of a card whose corners, edges and surface you never truly saw. Professional graders had the card in hand, under light, out of your sight. The gap between those two situations is the whole lesson — and it's why this game exists.</p>
+      <div class="honesty">a photo can't grade a card — this is a game, not a method.</div>
+      <p>Got a raw card of your own and a real decision to make — grade it, or keep it raw? That's not a guessing game, and we built the honest walk-through for it:</p>
+      <p class="center" style="margin-top:14px"><a class="btn" href="../grade-it-or-keep-it-raw/">Grade it — or keep it raw? →</a></p>
+      <p class="center" style="margin-top:12px"><button class="btn ghost" id="againBtn">Play again</button></p>
+    </div>
+  </section>
+
+  <p class="fineprint">All 18 photos are the shop's own photographs of the shop's own slabs (12 PSA, 6 CGC). Labels are covered by the game's opaque frame; cert numbers are never displayed. Nothing here is a grading service, a pre-grade, or a promise about any card's grade.</p>
+  <footer><b>CARD CAULDRON TCG</b><br>Guess the Grade — Honest Edition</footer>
+</div>
+
+<script>
+// Round data. NO cert numbers anywhere in this file — by design.
+// cover = opaque frame rect in % of the photo (left, top, width, height),
+// measured per photo and verified against the drawn frame before shipping.
+const ROUNDS=[
+ {img:"assets/round-01.jpg",card:"Pikachu — Silver Tempest 049/195",grader:"PSA",grade:8,gradeLabel:"PSA 8 · NM-MT",cover:[22.5,12.8,58,15.2]},
+ {img:"assets/round-02.jpg",card:"Blissey V — VMAX Climax (Japanese) 127/184",grader:"CGC",grade:10,gradeLabel:"CGC 10 · Gem Mint",cover:[21,9.3,55,17.9]},
+ {img:"assets/round-03.jpg",card:"Eevee — Prismatic Evolutions, Pokémon Day 2025, 074/131",grader:"PSA",grade:9,gradeLabel:"PSA 9 · MINT",cover:[21.5,12.1,58,15.3]},
+ {img:"assets/round-04.jpg",card:"Heliolisk — Japanese Mega Dream ex, Art Rare, 201/193",grader:"PSA",grade:10,gradeLabel:"PSA 10 · GEM MT",cover:[25,29.8,51,12.2]},
+ {img:"assets/round-05.jpg",card:"Dunsparce — Crown Zenith, Galarian Gallery GG23/GG70",grader:"CGC",grade:9,gradeLabel:"CGC 9 · Mint",cover:[21.5,11.3,54.5,17.4]},
+ {img:"assets/round-06.jpg",card:"Probopass — Japanese Nihil Zero, Art Rare, 088/080",grader:"PSA",grade:10,gradeLabel:"PSA 10 · GEM MT",cover:[17.5,9.8,63.5,15.4]},
+ {img:"assets/round-07.jpg",card:"Leafeon ex — Prismatic Evolutions, Surprise Box Exclusive, 006/131",grader:"PSA",grade:9,gradeLabel:"PSA 9 · MINT",cover:[16,11.3,63.5,15.4]},
+ {img:"assets/round-08.jpg",card:"Larvesta — Super Electric Breaker (Japanese), Art Rare, 108/106",grader:"CGC",grade:10,gradeLabel:"CGC 10 · Pristine",cover:[23.5,12.8,53,16.9]},
+ {img:"assets/round-09.jpg",card:"Hop's Trevenant — Ascended Heroes, Illustration Rare, 237/217",grader:"PSA",grade:9,gradeLabel:"PSA 9 · MINT",cover:[17.5,12.5,58,14.9]},
+ {img:"assets/round-10.jpg",card:"Pikachu — Japanese 25th Anniversary Collection 001/028",grader:"PSA",grade:10,gradeLabel:"PSA 10 · GEM MT",cover:[20.5,11.3,57,14.2]},
+ {img:"assets/round-11.jpg",card:"Espeon ex — Japanese Terastal Festival 063/187",grader:"CGC",grade:9,gradeLabel:"CGC 9 · Mint",cover:[20,13.8,52,17.9]},
+ {img:"assets/round-12.jpg",card:"Victini — Unova Victini Illustration Collection 208",grader:"PSA",grade:9,gradeLabel:"PSA 9 · MINT",cover:[21,11.8,56.5,13.2]},
+ {img:"assets/round-13.jpg",card:"Mega Greninja ex — Chaos Rising 022/086",grader:"CGC",grade:10,gradeLabel:"CGC 10 · Gem Mint",cover:[19,9.8,54.5,18.4]},
+ {img:"assets/round-14.jpg",card:"Pikachu — Temporal Forces, Pokémon Day 2026, 051/162",grader:"PSA",grade:9,gradeLabel:"PSA 9 · MINT",cover:[20.5,10.8,59.5,14.7]},
+ {img:"assets/round-15.jpg",card:"Pikachu — Japanese Illustration Contest 2024, 242/SV-P",grader:"PSA",grade:10,gradeLabel:"PSA 10 · GEM MT",cover:[15.5,8.8,63,15.4]},
+ {img:"assets/round-16.jpg",card:"Arven's Greedent — Destined Rivals, Illustration Rare, 205/182",grader:"PSA",grade:10,gradeLabel:"PSA 10 · GEM MT",cover:[19,11.3,62,15.1]},
+ {img:"assets/round-17.jpg",card:"Mega Venusaur ex — Mega Brave (Japanese) 003/063",grader:"CGC",grade:10,gradeLabel:"CGC 10 · Pristine",cover:[21,8.8,56,17.9]},
+ {img:"assets/round-18.jpg",card:"Pikachu ex — Japanese Mega Dream ex 044/193",grader:"PSA",grade:10,gradeLabel:"PSA 10 · GEM MT",cover:[23,21.3,52.5,13.2]}
+];
+let cur=0, score=0, locked=false;
+const $=id=>document.getElementById(id);
+function show(id){["intro","game","final"].forEach(s=>$(s).classList.toggle("hidden",s!==id));}
+function loadRound(){
+  locked=false;
+  const r=ROUNDS[cur];
+  $("slabImg").src=r.img;
+  const c=$("cover");
+  c.style.left=r.cover[0]+"%"; c.style.top=r.cover[1]+"%";
+  c.style.width=r.cover[2]+"%"; c.style.height=r.cover[3]+"%";
+  $("roundLabel").textContent="Round "+(cur+1)+" of "+ROUNDS.length;
+  $("scoreLabel").textContent="Score "+score;
+  $("barFill").style.width=(cur/ROUNDS.length*100)+"%";
+  $("reveal").style.display="none"; $("nextRow").style.display="none";
+  document.querySelectorAll(".guess").forEach(b=>{b.disabled=false;b.classList.remove("picked");});
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".guess").forEach(b=>b.addEventListener("click",()=>{
+  if(locked) return; locked=true;
+  const r=ROUNDS[cur], g=parseInt(b.dataset.g,10), right=(g===r.grade);
+  if(right) score++;
+  b.classList.add("picked");
+  document.querySelectorAll(".guess").forEach(x=>x.disabled=true);
+  $("revealBig").innerHTML=(right?"✅ You called it — ":"❌ Not this time — ")+"it's a <b>"+r.gradeLabel+"</b>";
+  $("revealText").textContent="The card: "+r.card+". You guessed "+g+". "+(right
+    ? "Enjoy it — and remember it was still a guess. The photo didn't show you the corners, edges or surface that decided it."
+    : "No shame in it: the photo never showed you the corners, edges or surface that decided it. Nobody can see a grade in a picture — that's the honest truth this game is built on.");
+  $("scoreLabel").textContent="Score "+score;
+  $("reveal").style.display="block"; $("nextRow").style.display="block";
+  $("nextBtn").textContent=(cur===ROUNDS.length-1)?"See your score →":"Next slab →";
+}));
+$("nextBtn").addEventListener("click",()=>{
+  if(cur<ROUNDS.length-1){cur++;loadRound();}
+  else{
+    $("barFill").style.width="100%";
+    $("finalScore").textContent=score+" / "+ROUNDS.length;
+    $("finalVerdict").textContent= score>=15 ? "Sharp eyes. Still guessing, though — the photos never once proved you right, the labels just happened to agree with you."
+      : score>=9 ? "Right around the honest middle — which is exactly where photo-grading lives: sometimes right, never certain."
+      : "Below half — and that's the most useful score here. If a photo can't even settle a guessing game, imagine trusting one with a submission fee.";
+    show("final"); window.scrollTo({top:0,behavior:"smooth"});
+  }
+});
+$("startBtn").addEventListener("click",()=>{cur=0;score=0;show("game");loadRound();});
+$("againBtn").addEventListener("click",()=>{cur=0;score=0;show("game");loadRound();});
+</script>
+</body>
+</html>
