@@ -151,7 +151,7 @@
     border:1px solid rgba(255,233,176,.4); background:rgba(10,7,20,.45);
     padding:.42rem .8rem; border-radius:999px; backdrop-filter:blur(4px);
   }
-  .flycard{
+  .flycard{display:none !important;
     position:absolute; z-index:-1; width:clamp(84px,13vw,150px); aspect-ratio:498/689; height:auto; object-fit:contain; border-radius:8px;
     box-shadow:0 18px 40px rgba(0,0,0,.6); will-change:transform;
   }
@@ -506,8 +506,8 @@
 
   /* ---------- cauldron sound toggle ---------- */
   #soundToggle{
-    position:fixed; right:1rem; bottom:calc(.9rem + env(safe-area-inset-bottom, 0px));
-    z-index:55; min-height:48px; display:inline-flex; align-items:center; gap:.5rem;
+    position:fixed; right:1rem; bottom:calc(78px + .9rem + env(safe-area-inset-bottom, 0px));
+    z-index:56; min-height:48px; display:inline-flex; align-items:center; gap:.5rem;
     font:inherit; font-weight:800; font-size:.9rem; cursor:pointer;
     padding:.7rem 1.1rem; border-radius:999px;
     background:var(--panel2); color:var(--ink); border:1px solid var(--line);
@@ -808,6 +808,20 @@
   /* ---------- v12 multi-page: current-page nav + subpage top spacing ---------- */
   nav .links a[aria-current="page"], .mnav a[aria-current="page"]{color:var(--gold)}
   body.subpage main > section:first-child{padding-top:clamp(7.5rem,13vw,9rem)}
+
+  /* ---------- website chrome: menu icon top, bubble dock bottom ---------- */
+  .web-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:.4rem;background:var(--bg);border-bottom:1px solid var(--cardline);}
+  .web-menu-btn{font-size:1.2rem;line-height:1;background:linear-gradient(180deg,var(--gold2),var(--gold));color:#221503;border:1px solid var(--gold);border-radius:999px;padding:.45rem .8rem;font-weight:900;cursor:pointer;}
+  .web-topbar .brand{font-size:.85rem;}
+  .web-topbar .store-btn{font-size:.75rem;padding:.4rem .7rem;margin-left:auto;}
+  .web-menu-panel{position:absolute;top:100%;left:.8rem;background:var(--panel);border:1px solid var(--cardline);border-radius:14px;padding:.4rem;box-shadow:0 12px 30px rgba(0,0,0,.45);display:grid;min-width:220px;z-index:60;}
+  .web-menu-panel[hidden]{display:none;}
+  .web-menu-panel a{display:block;padding:.6rem .8rem;color:var(--ink);text-decoration:none;font-weight:800;border-radius:10px;}
+  .web-menu-panel a:hover{background:rgba(240,178,62,.18);}
+  .web-dock{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:55;display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;gap:.25rem;padding:.4rem;background:rgba(18,12,38,.92);border:1px solid rgba(240,178,62,.45);border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.5);width:96vw;max-width:96vw;box-sizing:border-box;}
+  .web-dock a{flex:1 1 0;min-width:0;text-align:center;text-decoration:none;font-weight:900;font-size:.72rem;color:var(--ink);background:linear-gradient(180deg,#2a2150,#1f1840);border:1px solid rgba(240,178,62,.5);border-radius:999px;padding:.55rem .1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .web-dock a:hover{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#221503;}
+  body{padding-bottom:76px;}
 </style>
 <script type="application/ld+json">
 {
@@ -860,34 +874,27 @@
   <span>🐉 This shop runs on <b>Muse</b> — join with invite code <b class="ref-code">VVGLRZ</b> for free tokens (redeem within 48 hours of joining).</span>
   <a href="https://muse.ai" target="_blank" rel="noopener">Get Muse ↗</a>
 </div>
-<nav>
+<header class="web-topbar">
+  <button type="button" class="web-menu-btn" id="webMenuBtn" aria-expanded="false" aria-controls="webMenuPanel" aria-label="Open menu">☰</button>
   <a class="brand" href="#top">CARD CAULDRON TCG</a>
-  <div class="links">
-    <a href="/" aria-current="page">Home</a>
-    <a href="/shop.html">Shop</a>
-    <a href="/sets.html">Browse by Set</a>
-    <a href="/bulk.html">We Buy Bulk</a>
-    <a href="/app.html">Real or Replica</a>
-    <a href="/ask.html">Ask the Office</a>
-    <a href="/about.html">About</a>
-  </div>
   <a class="store-btn" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">eBay Store ↗</a>
-  <div class="mnav">
-    <a href="/" aria-current="page">Home</a>
+  <div class="web-menu-panel" id="webMenuPanel" hidden>
+    <a href="/">Home</a>
     <a href="/shop.html">Shop</a>
     <a href="/sets.html">Browse by Set</a>
     <a href="/bulk.html">We Buy Bulk</a>
     <a href="/app.html">Real or Replica</a>
+    <a href="/demo/">Demo — Real or Replica</a>
     <a href="/ask.html">Ask the Office</a>
     <a href="/about.html">About</a>
   </div>
-</nav>
+</header>
 
 <main id="top">
 
   <!-- ============ HERO ============ -->
   <header class="hero">
-    <div class="hero-bg" data-parallax="0.25"><img src="assets/hero-cauldron.webp" alt="A bubbling golden cauldron flanked by fanned holographic trading cards — the Card Cauldron TCG shop art" width="1600" height="564" fetchpriority="high" /></div>
+    <div class="hero-bg" data-parallax="0.25"><img src="assets/hero-cauldron.webp" alt="Card Cauldron hero art" width="1600" height="564" fetchpriority="high" /></div>
     <div class="hero-shade"></div>
     <svg class="hero-bolt" id="bolt1" viewBox="0 0 100 220" fill="#cfe4ff" aria-hidden="true"><path d="M58 0 L14 118 L40 118 L22 220 L88 84 L56 84 L84 0 Z"/></svg>
     <svg class="hero-bolt b2" id="bolt2" viewBox="0 0 100 220" fill="#cfe4ff" aria-hidden="true"><path d="M58 0 L14 118 L40 118 L22 220 L88 84 L56 84 L84 0 Z"/></svg>
@@ -1669,6 +1676,29 @@
     });
     updateCfg();
   }
+})();
+</script>
+
+<div class="web-dock" aria-label="Site navigation">
+  <a href="/">🏠 Home</a>
+  <a href="/shop.html">🛒 Shop</a>
+  <a href="/sets.html">📚 Sets</a>
+  <a href="/bulk.html">📦 Bulk</a>
+  <a href="/app.html">🔍 App</a>
+  <a href="/demo/">🎮 Demo</a>
+  <a href="/ask.html">💬 Ask</a>
+  <a href="/about.html">ℹ️ About</a>
+</div>
+<script>
+(function(){
+  var b=document.getElementById("webMenuBtn"), p=document.getElementById("webMenuPanel");
+  if(!b||!p) return;
+  b.addEventListener("click", function(){
+    var open = p.hidden; p.hidden = !open; b.setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("click", function(e){
+    if(!p.hidden && !p.contains(e.target) && e.target!==b){ p.hidden=true; b.setAttribute("aria-expanded","false"); }
+  });
 })();
 </script>
 </body>
