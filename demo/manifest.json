@@ -1,7 +1,7 @@
 {
-  "name": "Real or Replica Demo",
+  "name": "Real or Replica Demo (Upscale Build)",
   "short_name": "Real or Replica Demo",
-  "description": "Public demo of Real or Replica by Card Cauldron TCG: games and look-around only. Does NOT do real card checks.",
+  "description": "Upscale build of the public demo of Real or Replica \u2014 STAGED BUILD ONLY, not live, not live-SSD: games and look-around only, bundled demo pool by default. Does NOT do real card checks, does NOT serve VoiceCalls or PorchCaptures.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
