@@ -431,6 +431,17 @@
   #opLoginGate button span{display:block;width:100%;text-align:center}
   .op-avatar-card{display:inline-block;text-align:center;margin:4px;padding:8px;border-radius:16px;border:2px solid rgba(255,197,61,.25);background:rgba(41,37,36,.9);cursor:pointer;width:104px;vertical-align:top}
   .op-avatar-card.on{outline:3px solid #ffc53d}
+  .chat-msg{display:flex;gap:8px;align-items:flex-start;margin:10px 0}
+  .chat-avatar{width:40px;height:40px;border-radius:50%;object-fit:contain;background:#1f1840;border:2px solid #f0b23e;flex:none}
+  .chat-avatar-fallback{width:40px;height:40px;border-radius:50%;background:#8a63ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex:none}
+  .chat-bubble{background:#1f1840;border:1px solid rgba(255,197,61,.35);border-radius:14px;padding:8px 10px;flex:1;min-width:0}
+  .chat-msg.mine{flex-direction:row-reverse}
+  .chat-bubble.mine{background:#f0b23e;border-color:#f0b23e;color:#1a1206}
+  .chat-bubble.mine b{color:#1a1206}
+  .chat-bubble.mine .small{color:#5a4210}
+  .chat-bubble b{color:#ffd97a}
+  .chat-emoji-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+  .chat-emoji-row button{font-size:22px;background:#1f1840;border:1px solid rgba(255,197,61,.35);border-radius:10px;padding:4px 8px;cursor:pointer}
   .op-avatar-card img{width:72px;height:72px;border-radius:50%;display:block;margin:0 auto 4px;object-fit:contain}
   .op-field{display:block;margin:8px 0}
   .op-field input,.op-field select{width:100%;padding:10px 12px;border-radius:12px;border:1.5px solid rgba(255,197,61,.25);background:#292524;color:var(--text);font-size:16px}
@@ -468,7 +479,7 @@
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -1031,23 +1042,21 @@
   <section class="screen" id="scr-games">
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>Mini Games 🎮</h2><p class="small dim" id="opGamesAvatarLine"></p>
-    <p class="lead" style="margin-top:6px;">Short bubbly games from the crew, just for fun — 12 playable right here, plus Guess the Price, which wakes up when real price snapshots land. Best scores show for this visit only; nothing is saved to an account.</p>
-    <div class="card mt" id="upscaleMoneyPanel"><p>Loading real snapshot totals…</p></div>
+    <div class="stack" id="gamesList1"></div>
+    <div class="card mt" role="note" aria-label="About these games — not a button">
+      <p class="small" style="margin:0;">🫧 Short bubbly games from the crew, just for fun. Best scores show for this visit only; nothing is saved to an account. This bubble is just info — you can't tap it to play.</p>
+    </div>
+    <div class="stack mt" id="gamesList2"></div>
+    <p class="small dim" id="gamesShelfLine">13 games on the shelf — no best scores yet this visit. Be the first!</p>
+    <div class="card mt" role="note" aria-label="About Guess the Price — not a button">
+      <p class="small" style="margin:0;">💰 Guess the Price wakes up when real price snapshots land. Nothing here ever touches your free checks. This bubble is just info — you can't tap it to play.</p>
+    </div>
     <div class="band band-grape mt">
       <h3>📓 Parity tracker — this visit only</h3>
       <p class="sub2">Play a game and your best score lands here, in this visit only. No account, no backend, nothing saved.</p>
     </div>
     <div class="card mt" id="trackerPanel"><p class="small dim">No games finished yet this visit.</p></div>
-    <div class="band band-grape mt">
-      <h3>🕹️ The crew's games shelf</h3>
-      <p class="sub2" id="gamesShelfLine">13 games on the shelf — no best scores yet this visit. Be the first!</p>
-    </div>
-    <div class="stack mt" id="gamesList1"></div>
-    <div class="band band-teal mt">
-      <h3>✨ More from the crew</h3>
-      <p class="sub2">Seven more ways to play — same rule everywhere: scores are bragging rights only.</p>
-    </div>
-    <div class="stack mt" id="gamesList2"></div>
+    <div class="card mt" id="upscaleMoneyPanel"><p>Loading real snapshot totals…</p></div>
     <div class="band band-navy mt">
       <h3>🏁 That's the whole shelf</h3>
       <p class="sub2">Nothing here ever touches your free checks.</p>
@@ -1206,6 +1215,47 @@
     <p class="small dim" id="fbList">None yet on this device.</p></div>
   </section>
 
+  <section class="screen" id="scr-chatroom">
+    <button type="button" class="backlink" data-nav="home">← Home</button>
+    <h2>💬 Feedback &amp; Chat Room</h2>
+    <p class="small dim">Chat with other people here, and leave feedback as a chat message — everybody in the demo can read it. Your name and message show to everybody, nothing else. Do not share private info (no address, phone, passwords, or payment details). Be kind — rude messages can be removed.</p>
+    <div class="card mt">
+      <div id="chatList" style="max-height:320px;overflow-y:auto;text-align:left;"></div>
+      <p class="small dim" id="chatStatus">Loading chat…</p>
+      <label class="op-field">Display name <input type="text" id="chatName" maxlength="40" placeholder="Type your name or nickname"></label>
+      <label class="op-field">Message <textarea id="chatText" rows="3" maxlength="500" placeholder="Say hi, leave feedback, or ask a question — 500 characters max" style="width:100%;"></textarea></label>
+      <div class="chat-emoji-row"><button type="button" onclick="opChatEmoji('😀')">😀</button><button type="button" onclick="opChatEmoji('😂')">😂</button><button type="button" onclick="opChatEmoji('❤️')">❤️</button><button type="button" onclick="opChatEmoji('🔥')">🔥</button><button type="button" onclick="opChatEmoji('🐉')">🐉</button><button type="button" onclick="opChatEmoji('🃏')">🃏</button><button type="button" onclick="opChatEmoji('⭐')">⭐</button><button type="button" onclick="opChatEmoji('🫧')">🫧</button><button type="button" onclick="opChatEmoji('🎮')">🎮</button><button type="button" onclick="opChatEmoji('🏆')">🏆</button><button type="button" onclick="opChatEmoji('💬')">💬</button><button type="button" onclick="opChatEmoji('👍')">👍</button><button type="button" onclick="opChatEmoji('👏')">👏</button><button type="button" onclick="opChatEmoji('🙌')">🙌</button><button type="button" onclick="opChatEmoji('😮')">😮</button><button type="button" onclick="opChatEmoji('😍')">😍</button><button type="button" onclick="opChatEmoji('🤔')">🤔</button><button type="button" onclick="opChatEmoji('🎉')">🎉</button><button type="button" onclick="opChatEmoji('🥳')">🥳</button><button type="button" onclick="opChatEmoji('🦊')">🦊</button><button type="button" onclick="opChatEmoji('🌸')">🌸</button><button type="button" onclick="opChatEmoji('💎')">💎</button><button type="button" onclick="opChatEmoji('🍋')">🍋</button><button type="button" onclick="opChatEmoji('🧪')">🧪</button></div>
+      <button type="button" class="bubble-btn b-gold" onclick="opSendChat()"><span>Send message</span></button>
+      <button type="button" class="bubble-btn b-white" onclick="opLoadChat()"><span>Refresh chat</span></button>
+      <p class="small dim">Chat saves on the backend when it is turned on. Until then, sending shows an honest offline note — it does not pretend your message went to other people.</p>
+    </div>
+  </section>
+
+  <section class="screen" id="scr-rewards">
+    <button type="button" class="backlink" data-nav="home">← Home</button>
+    <h2>🎁 Rewards</h2>
+    <p class="small dim">Your coins live on this device only, for now. They are never real money. When real sign-in lands, your coins move to your account — until then, nobody else's device can see your coins, and we cannot see theirs either.</p>
+    <div class="card mt">
+      <h3 style="margin:0;">Your coins</h3>
+      <p style="font-size:32px;margin:8px 0;" id="rewardsCoins">🪙 0</p>
+      <p class="small dim">Leaderboard scores are different — those ARE saved on the backend for everybody to see. Coins are not, yet.</p>
+    </div>
+    <div class="card mt">
+      <h3 style="margin:0;">📅 Daily check-in</h3>
+      <p class="small dim">Come back each day and check in for <b>+10 coins</b>. Check in two days in a row and your streak grows.</p>
+      <p id="dailyStreak">Streak: 0 days</p>
+      <p class="small dim" id="dailyStatus"></p>
+      <button type="button" class="bubble-btn b-gold" id="dailyBtn" onclick="opDailyCheckin()"><span>Check in today (+10 coins)</span></button>
+    </div>
+    <div class="card mt">
+      <h3 style="margin:0;">How you earn coins right now</h3>
+      <p class="small">🎮 Bubble Beat finish — +50 coins<br>💬 Tell or Tale? pass (60%+) — +50 coins<br>📅 Daily check-in — +10 coins<br>Other games give leaderboard scores for now, not coins yet.</p>
+      <p class="small dim">Rewards store (avatar goodies, backgrounds) is coming at launch — your coins here are saved for it on this device.</p>
+      <button type="button" class="bubble-btn b-white" data-nav="games"><span>Play games</span></button>
+      <button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button>
+    </div>
+  </section>
+
   <!-- game screens get injected here -->
   <div id="gameScreens"></div>
 
@@ -1353,6 +1403,8 @@ function show(id){
     dockBtns[j].classList.toggle("on", dockBtns[j].getAttribute("data-dock") === (dockMap[id]||"__none__"));
   }
   if(id==="games") renderGamesHub();
+  if(id==="rewards") opRenderRewards();
+  if(id==="chatroom"){ try{ var cn=document.getElementById("chatName"); if(cn && !cn.value) cn.value = (typeof opProfile!=="undefined" && (opProfile.displayName||opProfile.username)) || ""; }catch(e){} opLoadChat(); }
   if(id==="leaderboard"){ loadGlobalBoard(window._lbGame || "rapid"); if(window.loadTotalBoard) loadTotalBoard(); }
 }
 document.addEventListener("click", function(e){
@@ -1843,6 +1895,25 @@ function ccStopSpeak(){ try{ if(window.speechSynthesis) window.speechSynthesis.c
 function ccHearHTML(text){ try{ if(!window.speechSynthesis) return ''; }catch(e){ return ''; } return '<button type="button" class="bubble-btn b-white small cc-hear" data-speak="'+encodeURIComponent(text)+'" style="margin-top:10px;"><span>\uD83D\uDD0A Hear this question</span></button>'; }
 document.addEventListener('click', function(e){ var b=e.target.closest('.cc-hear'); if(!b) return; try{ ccSpeak(decodeURIComponent(b.getAttribute('data-speak')||'')); }catch(err){} });
 var API_BASE = 'https://api.cardcauldrontcg.com';
+/* Auto-post after first consent (owner-approved Oct 28, 2026):
+   first Post tap + checked auto-post box saves op_auto_post=1 + name on this device.
+   Later game ends auto-submit once, show 'Posted automatically'. Turn off any time. */
+var OP_AUTO_POST = false, OP_AUTO_POST_NAME = '';
+try{ OP_AUTO_POST = (localStorage.getItem('op_auto_post')==='1'); OP_AUTO_POST_NAME = localStorage.getItem('op_auto_post_name')||''; }catch(e){}
+function opSetAutoPost(on, name){
+  OP_AUTO_POST = !!on; if(name) OP_AUTO_POST_NAME = name;
+  try{
+    if(on){ localStorage.setItem('op_auto_post','1'); if(name) localStorage.setItem('op_auto_post_name', name); }
+    else { localStorage.removeItem('op_auto_post'); }
+  }catch(e){}
+}
+function opPostScore(game, score, nm, onDone, onFail){
+  return fetch(API_BASE + '/leaderboard/submit', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({game:game, name:nm, score:score})})
+    .then(function(r){ if(!r.ok) throw new Error('post failed'); return r.json(); })
+    .then(function(d){ if(onDone) onDone(d); })
+    .catch(function(e){ if(onFail) onFail(e); });
+}
+
 var LB_GAMES=[{id:"rapid",label:"Rapid Fire"},{id:"fit",label:"Perfect Fit"},{id:"match",label:"Match Audit"},{id:"beat",label:"Bubble Beat"},{id:"poppath",label:"Pop Path"},{id:"coin",label:"Coin Catch"},{id:"mystery",label:"Mystery Pack"},{id:"ziggy",label:"Ziggy"},{id:"brew",label:"Brew"},{id:"relay",label:"Message Relay"},{id:"zoom",label:"Zoom Pop"},{id:"shelf",label:"Shelf"}];
 function loadTotalBoard(){
   var st=document.getElementById("lbTotalStatus"), box=document.getElementById("lbTotalTop");
@@ -1894,18 +1965,34 @@ function endBoardInit(){
       .catch(function(){ rankEl.textContent = 'Leaderboard is offline right now — your score is saved for this visit only. Try posting again later.'; topEl.innerHTML=''; });
   }
   loadTop();
+  function doPost(nm, auto){
+    noteEl.textContent = auto ? 'Posting automatically…' : 'Posting…'; subEl.disabled = true;
+    opPostScore(game, score, nm, function(){
+        noteEl.textContent = auto ? 'Posted automatically! You are on the global leaderboard as '+nm+'.' : 'Posted! You are on the global leaderboard as '+nm+'.';
+        try{ if(typeof opProfile!=='undefined' && nm && nm!=='Anonymous'){ opProfile.displayName = nm; if(typeof opSaveProfileData==='function') opSaveProfileData(); } }catch(e){}
+        loadTop();
+      }, function(){
+        noteEl.textContent = 'Could not post — leaderboard is offline. Your score is still saved for this visit.'; subEl.disabled = false;
+      });
+  }
   if(subEl) subEl.addEventListener('click', function(){
     var nm = (nameEl ? nameEl.value.trim() : '') || 'Anonymous';
-    noteEl.textContent = 'Posting…'; subEl.disabled = true;
-    fetch(API_BASE + '/leaderboard/submit', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({game:game, name:nm, score:score})})
-      .then(function(r){ if(!r.ok) throw new Error('post failed'); return r.json(); })
-      .then(function(){
-        noteEl.textContent = 'Posted! You are on the global leaderboard as '+nm+'.';
-        try{ if(typeof opProfile!=='undefined' && nameEl && nameEl.value.trim()){ opProfile.displayName = nameEl.value.trim(); if(typeof opSaveProfileData==='function') opSaveProfileData(); } }catch(e){}
-        loadTop();
-      })
-      .catch(function(){ noteEl.textContent = 'Could not post — leaderboard is offline. Your score is still saved for this visit.'; subEl.disabled = false; });
+    var wantAuto = false; try{ var cb = document.getElementById('endAutoPost'); wantAuto = !!(cb && cb.checked); }catch(e){}
+    if(wantAuto && nm && nm!=='Anonymous') opSetAutoPost(true, nm);
+    doPost(nm, false);
   });
+  /* Auto-post path: only when consent was saved on this device AND a name is saved.
+     If the name box was changed to a different name, do NOT auto-post under the old name — ask again. */
+  try{
+    var autoBtn = document.getElementById('endAutoOff');
+    if(autoBtn) autoBtn.addEventListener('click', function(){ opSetAutoPost(false); noteEl.textContent = 'Auto-post turned off. Tap Post my score to post this score only.'; autoBtn.style.display='none'; var cb=document.getElementById('endAutoPost'); if(cb) cb.checked=false; });
+    if(OP_AUTO_POST && OP_AUTO_POST_NAME && nameEl && nameEl.value.trim() === OP_AUTO_POST_NAME){
+      if(autoBtn) autoBtn.style.display='inline-block';
+      doPost(OP_AUTO_POST_NAME, true);
+    } else if(OP_AUTO_POST && OP_AUTO_POST_NAME && nameEl && nameEl.value.trim() !== OP_AUTO_POST_NAME){
+      noteEl.textContent = 'Auto-post is saved for '+OP_AUTO_POST_NAME+'. Change the name back, or post this score by hand — a new name needs a new first Post tap.';
+    }
+  }catch(e){}
 }
 function doneHTML(score, line){
   lastGameScore = score;
@@ -1919,6 +2006,8 @@ function doneHTML(score, line){
     + '<ol id="endTop" style="text-align:left;"></ol>'
     + '<label style="display:block;font-weight:800;margin-top:10px;">Name or nickname<br><input id="endName" type="text" maxlength="40" placeholder="Type your name or nickname" style="width:100%;padding:10px;border-radius:10px;margin-top:6px;"></label>'
     + '<button type="button" class="bubble-btn b-gold" id="endSubmit" style="margin-top:10px;"><span>Post my score to the leaderboard</span></button>'
+    + '<label style="display:block;font-weight:700;margin-top:10px;"><input type="checkbox" id="endAutoPost"> Post my future scores automatically too (only after this first Post tap — you can turn it off anytime)</label>'
+    + '<button type="button" class="bubble-btn" id="endAutoOff" style="margin-top:8px;display:none;"><span>Auto-post is ON — turn it off</span></button>'
     + '<p class="small dim" id="endNote">Posting shows your name and score to everybody, nothing else. If you do not post, this score stays for this visit only.</p><p class="small dim">Tap “Post my score” even while it still says “Checking the leaderboard…” — posting works while the top list loads.</p></div>'
     + '<p class="small dim">Scores are bragging rights only — they never touch your free checks.</p>'
     + '<button type="button" class="bubble-btn b-pink" id="againBtn"><span>Play again</span></button></div>';
@@ -3174,6 +3263,65 @@ function opSetBg(v){var b=document.querySelector('.op-bg'); if(b) b.setAttribute
 })();
 </script>
 <script>
+function opChatEscape(t){ return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function opLoadChat(){
+  var list=document.getElementById("chatList"), st=document.getElementById("chatStatus"); if(!list) return;
+  if(st) st.textContent="Loading chat…";
+  fetch(API_BASE + "/chat/list?limit=100").then(function(r){ if(!r.ok) throw new Error("chat not live"); return r.json(); }).then(function(d){
+    var msgs=d.messages||[];
+    if(!msgs.length){ list.innerHTML="<p>No messages yet — be the first to say hi.</p>"; }
+    else{ list.innerHTML=msgs.map(function(m){
+      var avKey = String(m.avatar||""); var avOk = /^[a-z]+-(original|berry|forest|ocean|sunset)$/.test(avKey) && typeof OP_AVATAR_DATA!=="undefined" && OP_AVATAR_DATA[avKey];
+      var tintKey = String(m.tint||"none"); var tintCss = (typeof OP_TINTS!=="undefined" && OP_TINTS[tintKey]) ? OP_TINTS[tintKey] : "none";
+      var avHtml = avOk ? "<img class=\"chat-avatar\" src=\""+OP_AVATAR_DATA[avKey]+"\" style=\"filter:"+tintCss+"\" alt=\"\">" : "<div class=\"chat-avatar-fallback\">"+opChatEscape(String(m.name||"A").charAt(0).toUpperCase())+"</div>";
+      return "<div class=\"chat-msg\">"+avHtml+"<div class=\"chat-bubble\"><b>"+opChatEscape(m.name||"Anonymous")+"</b> <span class=\"small dim\">"+opChatEscape(m.created||"")+"</span><br>"+opChatEscape(m.text||"")+"</div></div>";
+    }).join(""); }
+    opMarkMine(); if(st) st.textContent="Chat is live — messages below are from everybody.";
+  }).catch(function(){ list.innerHTML="<p>Chat backend is not turned on yet — your messages are not reaching other people until the backend chat step is switched on. Nothing here is faked.</p>"; if(st) st.textContent="Chat is offline right now."; });
+}
+function opLocalDateStr(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function opMarkMine(){
+  var myName=""; try{ myName=(document.getElementById("chatName") && document.getElementById("chatName").value.trim()) || (typeof opProfile!=="undefined" && (opProfile.displayName||opProfile.username)) || ""; }catch(e){}
+  if(!myName) return;
+  var msgs=document.querySelectorAll("#chatList .chat-msg");
+  for(var i=0;i<msgs.length;i++){
+    var b=msgs[i].querySelector("b"); if(!b) continue;
+    if(b.textContent.trim().toLowerCase()===myName.toLowerCase()){
+      msgs[i].classList.add("mine");
+      var bub=msgs[i].querySelector(".chat-bubble"); if(bub) bub.classList.add("mine");
+    }
+  }
+}
+function opRenderRewards(){
+  var c=document.getElementById("rewardsCoins"); if(c) c.textContent = "🪙 " + opCoins;
+  var today=opLocalDateStr(new Date());
+  var last=""; var streak=0; try{ last=localStorage.getItem("cc_daily_checkin_date")||""; streak=parseInt(localStorage.getItem("cc_daily_streak")||"0",10)||0; }catch(e){}
+  var st=document.getElementById("dailyStreak"); if(st) st.textContent = "Streak: " + streak + (streak===1 ? " day" : " days");
+  var btn=document.getElementById("dailyBtn"); var msg=document.getElementById("dailyStatus");
+  if(last===today){ if(btn){ btn.disabled=true; btn.innerHTML="<span>Checked in today ✓</span>"; } if(msg) msg.textContent="You already checked in today. Come back tomorrow to keep your streak."; }
+  else { if(btn){ btn.disabled=false; btn.innerHTML="<span>Check in today (+10 coins)</span>"; } if(msg) msg.textContent = last ? "Last check-in: "+last+"." : "First check-in — welcome!"; }
+}
+function opDailyCheckin(){
+  var today=opLocalDateStr(new Date()); var y=new Date(); y.setDate(y.getDate()-1); var yesterday=opLocalDateStr(y);
+  var last=""; var streak=0; try{ last=localStorage.getItem("cc_daily_checkin_date")||""; streak=parseInt(localStorage.getItem("cc_daily_streak")||"0",10)||0; }catch(e){}
+  if(last===today) { opRenderRewards(); return; }
+  streak = (last===yesterday) ? streak+1 : 1;
+  try{ localStorage.setItem("cc_daily_checkin_date", today); localStorage.setItem("cc_daily_streak", String(streak)); }catch(e){}
+  opAddCoins(10); opRenderRewards();
+  var msg=document.getElementById("dailyStatus"); if(msg) msg.textContent = "+10 coins! Streak is now " + streak + (streak===1 ? " day." : " days.");
+}
+function opChatEmoji(e){ var tx=document.getElementById("chatText"); if(!tx) return; tx.value = tx.value + e; tx.focus(); }
+function opSendChat(){
+  var nmEl=document.getElementById("chatName"), txEl=document.getElementById("chatText"), st=document.getElementById("chatStatus");
+  var nm=(nmEl?nmEl.value.trim():"")||"Anonymous", tx=(txEl?txEl.value.trim():"");
+  if(!tx){ if(st) st.textContent="Type a message first."; return; }
+  if(tx.length>500) tx=tx.slice(0,500);
+  if(st) st.textContent="Sending…";
+  fetch(API_BASE + "/chat/send", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({name:nm, text:tx, avatar: (typeof opProfile!=="undefined" ? (opProfile.avatarBase+"-"+opProfile.avatarVariant) : ""), tint: (typeof opProfile!=="undefined" ? opProfile.avatarTint : "none")})})
+    .then(function(r){ if(!r.ok) throw new Error("send failed"); return r.json(); })
+    .then(function(){ if(txEl) txEl.value=""; if(st) st.textContent="Sent!"; opLoadChat(); })
+    .catch(function(){ if(st) st.textContent="Could not send — chat backend is not turned on yet. Your message was not posted to other people."; });
+}
 function opFeedbackText(){
   var type=document.getElementById("fbType") ? document.getElementById("fbType").value : "Feedback";
   var part=document.getElementById("fbPart") ? document.getElementById("fbPart").value : "";
