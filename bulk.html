@@ -820,11 +820,11 @@
   .bulk-val{color:var(--gold); font-weight:800; font-size:1.12rem; white-space:nowrap}
   .bulk-note{color:var(--muted); margin-top:1.1rem}
   /* web chrome: top menu + bottom dock */
-  .web-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:.4rem;background:var(--bg);border-bottom:1px solid var(--cardline);}
-  .web-menu-btn{font-size:1.2rem;line-height:1;background:linear-gradient(180deg,var(--gold2),var(--gold));color:#221503;border:1px solid var(--gold);border-radius:999px;padding:.45rem .8rem;font-weight:900;cursor:pointer;}
-  .web-topbar .brand{font-size:.85rem;}
-  .web-topbar .store-btn{font-size:.75rem;padding:.4rem .7rem;margin-left:auto;}
-  .web-menu-panel{position:absolute;top:100%;left:.8rem;background:var(--panel);border:1px solid var(--cardline);border-radius:14px;padding:.4rem;box-shadow:0 12px 30px rgba(0,0,0,.45);display:grid;min-width:220px;z-index:60;}
+  .web-topbar{position:relative;z-index:50;display:flex;align-items:center;gap:.4rem;padding:.5rem .7rem;box-sizing:border-box;width:100%;background:var(--bg);border-bottom:1px solid var(--cardline);}
+  .web-menu-btn{font-size:1.2rem;line-height:1;flex-shrink:0;background:linear-gradient(180deg,var(--gold2),var(--gold));color:#221503;border:1px solid var(--gold);border-radius:999px;padding:.45rem .8rem;font-weight:900;cursor:pointer;}
+  .web-topbar .brand{font-size:.85rem;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .web-topbar .store-btn{font-size:.75rem;padding:.4rem .7rem;margin-left:auto;flex-shrink:0;white-space:nowrap;}
+  .web-menu-panel{position:absolute;max-height:70vh;overflow-y:auto;top:100%;left:.8rem;background:var(--panel);border:1px solid var(--cardline);border-radius:14px;padding:.4rem;box-shadow:0 12px 30px rgba(0,0,0,.45);display:grid;min-width:220px;z-index:60;}
   .web-menu-panel[hidden]{display:none;}
   .web-menu-panel a{display:block;padding:.6rem .8rem;color:var(--ink);text-decoration:none;font-weight:800;border-radius:10px;}
   .web-menu-panel a:hover{background:rgba(240,178,62,.18);}
@@ -832,6 +832,23 @@
   .web-dock a{flex:1 1 0;min-width:0;text-align:center;text-decoration:none;font-weight:900;font-size:.72rem;color:var(--ink);background:linear-gradient(180deg,#2a2150,#1f1840);border:1px solid rgba(240,178,62,.5);border-radius:999px;padding:.55rem .1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .web-dock a:hover{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#221503;}
   body{padding-bottom:76px;}
+
+  /* ---------- website background picker: animated layer, default = current background ---------- */
+  #webBgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .7s ease;overflow:hidden;}
+  body[data-webbg="flames"] #webBgLayer{opacity:.55;background:radial-gradient(circle at 30% 80%,rgba(255,122,60,.35) 0 12%,transparent 45%),radial-gradient(circle at 70% 20%,rgba(255,197,61,.25) 0 10%,transparent 40%),linear-gradient(160deg,transparent,#2b1d4e 70%,transparent);animation:webEmber 8s linear infinite;}
+  @keyframes webEmber{from{background-position:0 0,0 0,0 0}to{background-position:0 -120px,0 -180px,0 0}}
+  body[data-webbg="bubbles"] #webBgLayer{opacity:.5;background:radial-gradient(circle at 20% 80%,rgba(56,189,248,.4) 0 18px,transparent 24px),radial-gradient(circle at 70% 30%,rgba(255,217,61,.35) 0 14px,transparent 20px),radial-gradient(circle at 85% 85%,rgba(56,189,248,.3) 0 22px,transparent 28px);animation:webDrift 12s ease-in-out infinite alternate;}
+  @keyframes webDrift{from{background-position:0 0,0 0,0 0}to{background-position:30px -40px,-20px 30px,15px -25px}}
+  body[data-webbg="stars"] #webBgLayer{opacity:.6;background:radial-gradient(circle at 20% 20%,rgba(255,255,255,.8) 0 2px,transparent 4px),radial-gradient(circle at 70% 40%,rgba(255,217,61,.9) 0 2px,transparent 4px),radial-gradient(circle at 50% 80%,rgba(255,255,255,.6) 0 2px,transparent 4px);animation:webTwinkle 4s ease-in-out infinite alternate;}
+  @keyframes webTwinkle{from{opacity:.35}to{opacity:.65}}
+  body[data-webbg="ember"] #webBgLayer{opacity:.5;background:radial-gradient(circle at 30% 20%,rgba(255,122,60,.7) 0 2px,transparent 5px),radial-gradient(circle at 70% 60%,rgba(255,197,61,.8) 0 3px,transparent 6px);animation:webEmber 9s linear infinite;}
+  body[data-webbg="waves"] #webBgLayer{opacity:.45;background:repeating-linear-gradient(160deg,rgba(57,208,196,.25) 0 12px,transparent 12px 36px),linear-gradient(160deg,transparent,#1d2a3a 70%,transparent);animation:webDrift 10s ease-in-out infinite alternate;}
+  body[data-webbg="mist"] #webBgLayer{opacity:.5;background:radial-gradient(ellipse at 50% 90%,rgba(195,186,221,.35) 0 30%,transparent 60%),linear-gradient(160deg,transparent,#181130 70%,transparent);animation:webDrift 14s ease-in-out infinite alternate;}
+  body[data-webbg="custom"] #webBgLayer{opacity:.35;background-size:cover;background-position:center;}
+  .web-menu-label{display:block;padding:.7rem .8rem .2rem;color:var(--gold);font-size:.72rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;}
+  .web-bg-btn{display:block;width:100%;text-align:left;padding:.5rem .8rem;background:transparent;border:0;color:var(--ink);font-weight:800;cursor:pointer;border-radius:10px;}
+  .web-bg-btn:hover{background:rgba(240,178,62,.18);}
+  .web-bg-btn[aria-pressed="true"]{background:rgba(240,178,62,.28);color:var(--gold2);}
 </style>
 </head>
 <body class="subpage">
@@ -854,6 +871,28 @@
     <a href="/demo/">Demo — Real or Replica</a>
     <a href="/ask.html">Ask the Office</a>
     <a href="/about.html">About</a>
+    <span class="web-menu-label">Demo — Real or Replica</span>
+    <a href="/demo/">Demo home</a>
+    <a href="/demo/">Check a card</a>
+    <a href="/demo/">Mini games</a>
+    <a href="/demo/">My Binders</a>
+    <a href="/demo/">Checks &amp; Plan</a>
+    <a href="/demo/">Tells</a>
+    <span class="web-menu-label">Follow the shop</span>
+    <a href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">eBay Store ↗</a>
+    <a href="https://discord.gg/Aj4ahGsSx" target="_blank" rel="noopener">Discord ↗</a>
+    <a href="https://www.instagram.com/sabastiancardcauldron" target="_blank" rel="noopener">Instagram ↗</a>
+    <a href="https://www.tiktok.com/@thecardcauldrontcg" target="_blank" rel="noopener">TikTok ↗</a>
+    <span class="web-menu-label">Background</span>
+    <button type="button" class="web-bg-btn" data-bg="current" aria-pressed="true">Current — keep as is</button>
+    <button type="button" class="web-bg-btn" data-bg="flames">Animated — Flames</button>
+    <button type="button" class="web-bg-btn" data-bg="bubbles">Animated — Bubbles</button>
+    <button type="button" class="web-bg-btn" data-bg="stars">Animated — Stars</button>
+    <button type="button" class="web-bg-btn" data-bg="ember">Animated — Ember sparks</button>
+    <button type="button" class="web-bg-btn" data-bg="waves">Animated — Waves</button>
+    <button type="button" class="web-bg-btn" data-bg="mist">Animated — Cauldron mist</button>
+    <button type="button" class="web-bg-btn" data-bg="calm">Calm — no animation</button>
+    <label style="display:block;padding:.5rem .8rem;font-weight:800;">Add your own background <input type="file" id="webBgCustom" accept="image/*" style="display:block;margin-top:.4rem;width:100%;"></label>
   </div>
 </header>
 
@@ -1436,6 +1475,33 @@
   });
   document.addEventListener("click", function(e){
     if(!p.hidden && !p.contains(e.target) && e.target!==b){ p.hidden=true; b.setAttribute("aria-expanded","false"); }
+  });
+})();
+</script>
+<div id="webBgLayer" aria-hidden="true"></div>
+
+<script>
+(function(){
+  var layer=document.getElementById("webBgLayer");
+  function apply(v, customUrl){
+    document.body.setAttribute("data-webbg", v||"current");
+    if(layer){ if(v==="custom" && customUrl){ layer.style.backgroundImage="url("+customUrl+")"; } else { layer.style.backgroundImage=""; } }
+    document.querySelectorAll(".web-bg-btn").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-bg")===v)); });
+  }
+  try{
+    var saved=localStorage.getItem("cc_webbg")||"current";
+    var custom=localStorage.getItem("cc_webbg_custom")||"";
+    apply(saved, custom);
+  }catch(e){ apply("current",""); }
+  document.addEventListener("click", function(e){
+    var b=e.target.closest(".web-bg-btn");
+    if(b){ var v=b.getAttribute("data-bg"); try{ localStorage.setItem("cc_webbg", v); }catch(err){} apply(v, localStorage.getItem("cc_webbg_custom")||""); return; }
+    if(e.target && e.target.id==="webBgCustom"){
+      var f=e.target.files && e.target.files[0]; if(!f) return;
+      var rd=new FileReader();
+      rd.onload=function(){ try{ localStorage.setItem("cc_webbg_custom", rd.result); localStorage.setItem("cc_webbg","custom"); }catch(err){ alert("That image is too large to save on this device — try a smaller one."); return; } apply("custom", rd.result); };
+      rd.readAsDataURL(f);
+    }
   });
 })();
 </script>
