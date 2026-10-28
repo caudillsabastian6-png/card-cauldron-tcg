@@ -47,11 +47,11 @@
   }
   /* ---------- Card Cauldron logo backdrop (same as the app) ---------- */
   .logo-bg{
-    position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+    position:fixed; inset:0; z-index:0; transform:translateY(calc(var(--bgScroll,0) * -0.05px)); will-change:transform; overflow:hidden; pointer-events:none;
     background:
       radial-gradient(ellipse 90% 45% at 50% -5%, rgba(120,140,200,.16), transparent 60%),
       radial-gradient(ellipse 80% 50% at 50% 112%, rgba(255,197,61,.12), transparent 60%),
-      radial-gradient(ellipse 120% 90% at 50% 45%, transparent 45%, rgba(0,0,0,.72) 100%),
+      radial-gradient(ellipse 120% 90% at 50% 45%, transparent 45%, rgba(0,0,0,.55) 100%),
       linear-gradient(180deg,#12100f 0%,#0b0908 55%,#060505 100%);
   }
   .logo-bg::before{
@@ -78,9 +78,9 @@
   }
   @keyframes logoFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-14px) scale(1.03);}}
   .logo-wrap img{
-    width:100%; height:100%; object-fit:contain; opacity:.16;
-    -webkit-mask-image:radial-gradient(circle, black 52%, transparent 72%);
-    mask-image:radial-gradient(circle, black 52%, transparent 72%);
+    width:100%; height:100%; object-fit:contain; opacity:.32;
+    -webkit-mask-image:radial-gradient(circle, black 68%, transparent 85%);
+    mask-image:radial-gradient(circle, black 68%, transparent 85%);
   }
   .calm .logo-wrap, .calm .logo-glow{animation:none !important;}
   /* ---------- DEMO banner (always visible) ---------- */
@@ -391,25 +391,26 @@
 
   /* ---------- OLD-PLUS: top row, live background, top banner, gate, avatar (only additions) ---------- */
   .op-toprow{position:static;display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px 12px 4px;position:relative;z-index:1}
+  #opTopRow{position:sticky;top:0;z-index:60;background:#0a0714;padding-top:10px;padding-bottom:8px;box-shadow:0 2px 12px rgba(0,0,0,.5)}
   .op-toprow button.bubble-btn{width:auto;min-height:48px;padding:10px 16px;font-size:16px;flex:1}
   .op-toprow button.bubble-btn span{display:block;width:100%;text-align:center}
-  .op-menupanel{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px 4px}
-  .op-menupanel button.bubble-btn{flex:1 1 calc(50% - 4px);max-width:calc(50% - 4px);min-height:48px;padding:12px 8px;font-size:16px;white-space:nowrap;overflow:visible;text-overflow:clip}
+  .op-menupanel{position:fixed;top:64px;left:12px;right:12px;z-index:61;max-height:calc(100vh - 150px);overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:10px;background:#181130;border:1px solid #f0b23e;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.5);box-sizing:border-box;}
+  .op-menupanel button.bubble-btn,.op-menupanel a.bubble-btn{flex:1 1 auto;max-width:none;min-height:38px;padding:8px 10px;font-size:14px;white-space:normal;overflow:hidden;text-overflow:ellipsis;text-decoration:none;display:block;text-align:left;}
   .op-menupanel button.bubble-btn span{display:block;width:100%;text-align:center;white-space:nowrap}
   .op-menupanel[hidden]{display:none}
   .op-profilebubble{display:flex;align-items:center;gap:8px;background:rgba(41,37,36,.9);border:1.5px solid rgba(255,197,61,.35);border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--text);font-weight:800}
   .op-profilebubble img{width:32px;height:32px;border-radius:50%;object-fit:contain}
   .op-coins{font-weight:900;color:#ffd97a;white-space:nowrap}
-  .op-bg{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;background:transparent}
-  .op-bg::after{content:"";position:absolute;left:-50%;top:-50%;width:200%;height:200%;background-image:radial-gradient(circle at 20% 30%,rgba(56,189,248,.38) 0 40px,transparent 42px),radial-gradient(circle at 70% 20%,rgba(255,197,61,.36) 0 52px,transparent 54px),radial-gradient(circle at 40% 70%,rgba(255,107,157,.32) 0 36px,transparent 38px),radial-gradient(circle at 85% 75%,rgba(127,227,127,.32) 0 44px,transparent 46px);background-size:640px 480px;animation:opScroll 60s linear infinite}
+  .op-bg{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;background:transparent;transform:translateY(calc(var(--bgScroll,0) * -0.15px));will-change:transform}
+  .op-bg::after{content:"";position:absolute;left:-50%;top:-50%;width:200%;height:200%;background-image:radial-gradient(circle at 20% 30%,rgba(56,189,248,.38) 0 40px,transparent 42px),radial-gradient(circle at 70% 20%,rgba(255,197,61,.36) 0 52px,transparent 54px),radial-gradient(circle at 40% 70%,rgba(255,107,157,.32) 0 36px,transparent 38px),radial-gradient(circle at 85% 75%,rgba(127,227,127,.32) 0 44px,transparent 46px);background-size:640px 480px;animation:opScroll 36s linear infinite}
   @keyframes opScroll{from{transform:translate(0,0)}to{transform:translate(320px,240px)}}
   .calm .op-bg::after{animation:none !important}
   @media (prefers-reduced-motion:reduce){.op-bg::after{animation:none !important}}
 
-  .op-bg[data-bg="stars"]::after{background-image:radial-gradient(circle at 15% 25%,rgba(255,255,255,.9) 0 2px,transparent 3px),radial-gradient(circle at 65% 15%,rgba(255,217,122,.9) 0 2px,transparent 3px),radial-gradient(circle at 35% 65%,rgba(255,255,255,.7) 0 1px,transparent 2px),radial-gradient(circle at 85% 70%,rgba(255,217,122,.7) 0 2px,transparent 3px);background-size:320px 320px;animation:opScrollUp 90s linear infinite}
-  .op-bg[data-bg="embers"]::after{background-image:radial-gradient(circle at 30% 80%,rgba(255,122,60,.5) 0 6px,transparent 8px),radial-gradient(circle at 60% 90%,rgba(255,197,61,.45) 0 4px,transparent 6px),radial-gradient(circle at 80% 85%,rgba(255,90,60,.4) 0 5px,transparent 7px);background-size:480px 640px;animation:opRise 28s linear infinite}
-  .op-bg[data-bg="waves"]::after{background-image:radial-gradient(ellipse at 20% 40%,rgba(56,189,248,.38) 0 90px,transparent 95px),radial-gradient(ellipse at 75% 60%,rgba(138,99,255,.38) 0 110px,transparent 115px),radial-gradient(ellipse at 50% 85%,rgba(57,208,196,.34) 0 80px,transparent 85px);background-size:640px 480px;animation:opSlideX 45s linear infinite}
-  .op-bg[data-bg="mist"]::after{background-image:radial-gradient(ellipse at 25% 30%,rgba(255,197,61,.28) 0 140px,transparent 150px),radial-gradient(ellipse at 70% 70%,rgba(138,99,255,.28) 0 160px,transparent 170px);background-size:800px 600px;animation:opDrift 120s linear infinite}
+  .op-bg[data-bg="stars"]::after{background-image:radial-gradient(circle at 15% 25%,rgba(255,255,255,.9) 0 2px,transparent 3px),radial-gradient(circle at 65% 15%,rgba(255,217,122,.9) 0 2px,transparent 3px),radial-gradient(circle at 35% 65%,rgba(255,255,255,.7) 0 1px,transparent 2px),radial-gradient(circle at 85% 70%,rgba(255,217,122,.7) 0 2px,transparent 3px);background-size:320px 320px;animation:opScrollUp 60s linear infinite}
+  .op-bg[data-bg="embers"]::after{background-image:radial-gradient(circle at 30% 80%,rgba(255,122,60,.5) 0 6px,transparent 8px),radial-gradient(circle at 60% 90%,rgba(255,197,61,.45) 0 4px,transparent 6px),radial-gradient(circle at 80% 85%,rgba(255,90,60,.4) 0 5px,transparent 7px);background-size:480px 640px;animation:opRise 20s linear infinite}
+  .op-bg[data-bg="waves"]::after{background-image:radial-gradient(ellipse at 20% 40%,rgba(56,189,248,.38) 0 90px,transparent 95px),radial-gradient(ellipse at 75% 60%,rgba(138,99,255,.38) 0 110px,transparent 115px),radial-gradient(ellipse at 50% 85%,rgba(57,208,196,.34) 0 80px,transparent 85px);background-size:640px 480px;animation:opSlideX 30s linear infinite}
+  .op-bg[data-bg="mist"]::after{background-image:radial-gradient(ellipse at 25% 30%,rgba(255,197,61,.28) 0 140px,transparent 150px),radial-gradient(ellipse at 70% 70%,rgba(138,99,255,.28) 0 160px,transparent 170px);background-size:800px 600px;animation:opDrift 80s linear infinite}
   @keyframes opScrollUp{from{transform:translate(0,320px)}to{transform:translate(0,0)}}
   @keyframes opRise{from{transform:translate(0,240px)}to{transform:translate(0,-240px)}}
   @keyframes opSlideX{from{transform:translate(-320px,0)}to{transform:translate(320px,0)}}
@@ -432,7 +433,7 @@
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>Plan</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Lens's Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/"><span>Website — Home</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/shop.html"><span>Website — Shop</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/sets.html"><span>Website — Browse by Set</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/bulk.html"><span>Website — We Buy Bulk</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/ask.html"><span>Website — Ask the Office</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/about.html"><span>Website — About</span></a></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/"><span>Website — Home</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/shop.html"><span>Website — Shop</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/sets.html"><span>Website — Browse by Set</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/bulk.html"><span>Website — We Buy Bulk</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/ask.html"><span>Website — Ask the Office</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/about.html"><span>Website — About</span></a></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
   <nav class="upscale-topnav" aria-label="Demo and community">
     <span class="upscale-sweep" aria-hidden="true"></span>
@@ -896,7 +897,7 @@
   <section class="screen" id="scr-plan">
     <div class="decor" aria-hidden="true"><i style="width:64px;height:64px;top:8%;left:-14px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#7fe37f 55%);"></i></div>
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>Checks &amp; Plan</h2>
+    <h2>Upgrade — Checks &amp; Plan</h2>
     <p class="lead dim" style="margin-top:6px;font-size:16px;">How checking works in the full app — shown here in the open, exactly as it will be at launch.</p>
 
     <div class="band band-navy mt">
@@ -1095,7 +1096,7 @@
     <button type="button" data-nav="picker" data-dock="check"><span class="ic" aria-hidden="true">🫧</span><span class="tx">Check</span></button>
     <button type="button" data-nav="binders" data-dock="binders"><span class="ic" aria-hidden="true">📒</span><span class="tx">Binders</span></button>
     <button type="button" data-nav="games" data-dock="games"><span class="ic" aria-hidden="true">🎮</span><span class="tx">Games</span></button>
-    <button type="button" data-nav="plan" data-dock="plan"><span class="ic" aria-hidden="true">📋</span><span class="tx">Plan</span></button>
+    <button type="button" data-nav="plan" data-dock="plan"><span class="ic" aria-hidden="true">📋</span><span class="tx">Upgrade</span></button>
     <button type="button" data-nav="home" data-dock="home" class="on"><span class="ic" aria-hidden="true">🧭</span><span class="tx">Explore</span></button>
     <button type="button" data-nav="tells" data-dock="tells"><span class="ic" aria-hidden="true">🔍</span><span class="tx">Tells</span></button>
   </nav>
@@ -1220,7 +1221,7 @@ function show(id){
   for(var i=0;i<screens.length;i++) screens[i].classList.remove("active");
   var el = $("scr-"+id);
   if(el) el.classList.add("active");
-  window.scrollTo(0,0);
+  window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; requestAnimationFrame(function(){ window.scrollTo(0,0); });
   var dockMap = { home:"home", binders:"binders", games:"games", plan:"plan", picker:"check" };
   var dockBtns = document.querySelectorAll(".dock button");
   for(var j=0;j<dockBtns.length;j++){
@@ -2798,6 +2799,19 @@ function opSetBg(v){var b=document.querySelector('.op-bg'); if(b) b.setAttribute
   var el=document.getElementById("junoReminder");
   if(!el) return;
   el.textContent=r[Math.floor(Date.now()/86400000) % r.length];
+})();
+</script>
+<script>
+(function(){
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      document.body.style.setProperty("--bgScroll", String(window.scrollY||0));
+      ticking=false;
+    });
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
 })();
 </script>
 </body>
