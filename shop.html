@@ -705,8 +705,8 @@
     background:linear-gradient(90deg,var(--gold-deep),var(--gold) 30%,var(--gold2) 55%,var(--gold) 80%,var(--gold-deep));}
   .ref-banner .ref-code{letter-spacing:.08em}
   .ref-banner a{color:#221503; font-weight:800; text-decoration:underline; text-underline-offset:3px; white-space:nowrap}
-  /* ---------- v7: anthem extras (lyrics + shorts) ---------- */
-  .anthem-extras{margin-top:1.4rem}
+  /* ---------- v7: melody extras ---------- */
+  .melody-extras{margin-top:1.4rem}
   .ae-title{font-size:1.25rem; margin:1.2rem 0 .5rem}
   .ae-note{color:var(--muted); margin:.2rem 0 .8rem}
   .lyrics{background:var(--panel); border:1px solid var(--cardline); border-radius:14px; padding:1.1rem 1.3rem; max-height:26rem; overflow:auto}
@@ -816,10 +816,6 @@
 <div id="flash" aria-hidden="true"></div>
 
 
-<div class="ref-banner" role="note">
-  <span>🐉 This shop runs on <b>Muse</b> — join with invite code <b class="ref-code">VVGLRZ</b> for free tokens (redeem within 48 hours of joining).</span>
-  <a href="https://muse.ai" target="_blank" rel="noopener">Get Muse ↗</a>
-</div>
 <nav>
   <a class="brand" href="/">CARD CAULDRON TCG</a>
   <div class="links">
@@ -1318,12 +1314,12 @@
   <p><a href="/about.html#contact">Need help? Talk to a human →</a></p>
   <p><a href="/privacy.html">Privacy Policy</a></p>
   <p>Brewed fresh daily in Van Wert, Ohio. Every purchase supports a real collector — and milestone customers win real prizes.</p>
-  <p>Sound: our own Card Cauldron Anthem — off until you tap.</p>
+  <p>Sound: a smooth relaxing melody — off until you tap.</p>
   <p>Pokémon and all respective names are trademark &amp; © of Nintendo, Creatures Inc. and GAME FREAK inc. This is an independent reseller shop, not affiliated with Nintendo or The Pokémon Company.</p>
 </footer>
 
-<button id="soundToggle" type="button" aria-pressed="false" aria-label="Toggle the Card Cauldron Anthem">🔊 Cauldron Sound <span class="snd-state">Off</span></button>
-<audio id="anthem" src="assets/cauldron-anthem.mp3" loop preload="none"></audio>
+<button id="soundToggle" type="button" aria-pressed="false" aria-label="Toggle the smooth background melody">🔊 Cauldron Sound <span class="snd-state">Off</span></button>
+<!-- Cauldron Sound now plays a smooth instrumental melody, no words, generated in the browser. -->
 
 <script>
 (function(){
@@ -1616,31 +1612,70 @@
     });
   }
 
-  /* ---------- Cauldron Sound: our own anthem, off until tapped, never autoplay ---------- */
+  /* ---------- Cauldron Sound: smooth relaxing melody, no words, off until tapped, never autoplay ---------- */
   var sndBtn = document.getElementById("soundToggle");
-  var anthem = document.getElementById("anthem");
-  if (sndBtn && anthem){
+  if (sndBtn){
     var sndState = sndBtn.querySelector(".snd-state");
-    var sndOn = false;          /* visitor has turned sound on this visit */
-    var sndWasOn = false;       /* it was playing before a hide/blur pause */
+    var sndOn = false;
+    var sndWasOn = false;
     var rampTimer = null;
     var BASE_VOL = 0.35, DUCK_VOL = 0.08;
+    /* Instrumental melody object, same play/pause/volume shape as the old audio element */
+    var melody = (function(){
+      var ctx = null, master = null, timer = null, vol = BASE_VOL, paused = true;
+      var chords = [[261.63,329.63,392.00],[220.00,261.63,329.63],[174.61,220.00,261.63],[196.00,246.94,293.66]];
+      var step = 0;
+      function note(freq, when, dur){
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = "sine"; o.frequency.setValueAtTime(freq, when);
+        g.gain.setValueAtTime(0, when);
+        g.gain.linearRampToValueAtTime(0.5, when + 0.4);
+        g.gain.linearRampToValueAtTime(0, when + dur);
+        o.connect(g); g.connect(master); o.start(when); o.stop(when + dur + 0.1);
+      }
+      function playChord(){
+        if (!ctx || paused) return;
+        var now = ctx.currentTime, chord = chords[step % chords.length]; step++;
+        chord.forEach(function(f, i){ note(f, now + i * 0.15, 3.2); });
+      }
+      return {
+        get paused(){ return paused; },
+        get volume(){ return vol; },
+        set volume(v){ vol = v; if (master && ctx) master.gain.setTargetAtTime(v, ctx.currentTime, 0.1); },
+        play: function(){
+          if (!ctx){
+            var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+            ctx = new AC(); master = ctx.createGain(); master.gain.value = vol; master.connect(ctx.destination);
+          }
+          if (ctx.state === "suspended") ctx.resume();
+          paused = false; step = 0; playChord();
+          if (timer) clearInterval(timer);
+          timer = setInterval(playChord, 2800);
+        },
+        pause: function(){
+          paused = true;
+          if (timer){ clearInterval(timer); timer = null; }
+          if (ctx && ctx.state === "running") ctx.suspend();
+        }
+      };
+    })();
+    var soundSrc = melody;
     function setSndLabel(){
       sndState.textContent = sndOn ? "On" : (sndBtn.classList.contains("ready") ? "Tap for sound" : "Off");
     }
     try {
       if (window.localStorage && localStorage.getItem("cauldronSound") === "on"){
-        sndBtn.classList.add("ready");   /* remembered ON — but audio still waits for the first tap */
+        sndBtn.classList.add("ready");
       }
     } catch(e){}
     setSndLabel();
     function saveSnd(v){ try { if (window.localStorage) localStorage.setItem("cauldronSound", v); } catch(e){} }
     function rampTo(target, ms){
       if (rampTimer) clearInterval(rampTimer);
-      var start = anthem.volume, diff = target - start, steps = Math.max(1, Math.round(ms/30)), n = 0;
+      var start = soundSrc.volume, diff = target - start, steps = Math.max(1, Math.round(ms/30)), n = 0;
       rampTimer = setInterval(function(){
         n++;
-        anthem.volume = Math.min(1, Math.max(0, start + diff * (n/steps)));
+        soundSrc.volume = Math.min(1, Math.max(0, start + diff * (n/steps)));
         if (n >= steps){ clearInterval(rampTimer); rampTimer = null; }
       }, 30);
     }
@@ -1649,34 +1684,30 @@
         sndOn = true;
         sndBtn.classList.remove("ready");
         sndBtn.setAttribute("aria-pressed", "true");
-        anthem.volume = BASE_VOL;
-        var p = anthem.play();
-        if (p && p.catch) p.catch(function(){});
+        soundSrc.volume = BASE_VOL;
+        soundSrc.play();
         saveSnd("on");
       } else {
         sndOn = false; sndWasOn = false;
         sndBtn.setAttribute("aria-pressed", "false");
-        anthem.pause();
+        soundSrc.pause();
         saveSnd("off");
       }
       setSndLabel();
     });
-    /* duck under any video on the page while it plays, restore after */
     Array.prototype.forEach.call(document.querySelectorAll("video"), function(v){
-      v.addEventListener("play", function(){ if (sndOn && !anthem.paused) rampTo(DUCK_VOL, 600); });
-      function unduck(){ if (sndOn && !anthem.paused) rampTo(BASE_VOL, 600); }
+      v.addEventListener("play", function(){ if (sndOn && !soundSrc.paused) rampTo(DUCK_VOL, 600); });
+      function unduck(){ if (sndOn && !soundSrc.paused) rampTo(BASE_VOL, 600); }
       v.addEventListener("pause", unduck);
       v.addEventListener("ended", unduck);
     });
-    /* pause when the tab/app loses visibility or focus; resume on return only if it was on */
     function sndHide(){
-      if (sndOn && !anthem.paused){ sndWasOn = true; anthem.pause(); }
+      if (sndOn && !soundSrc.paused){ sndWasOn = true; soundSrc.pause(); }
     }
     function sndShow(){
       if (sndOn && sndWasOn && !document.hidden){
         sndWasOn = false;
-        var p = anthem.play();
-        if (p && p.catch) p.catch(function(){});
+        soundSrc.play();
       }
     }
     document.addEventListener("visibilitychange", function(){
