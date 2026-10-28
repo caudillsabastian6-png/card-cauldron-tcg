@@ -613,7 +613,7 @@
   </section>
 
   <!-- ================= CONTINUE-TO-BACK POPUP (upload #12) ================= -->
-  <div id="capContinuePop" hidden style="position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div id="capContinuePop" hidden style="position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;">
     <div style="background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
       <div style="font-size:44px;">🎉</div>
       <h2 style="margin:10px 0 6px;">Front photo done!</h2>
@@ -622,6 +622,33 @@
       <div class="stack" style="margin-top:16px;">
         <button type="button" class="bubble-btn b-gold" id="capContinueBtn"><span id="capContinueBtnText">📸 Take the back photo now</span></button>
         <button type="button" class="bubble-btn b-white small" id="capContinueClose"><span>Not yet — let me look first</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= REWARDS POPUPS (upload #14) ================= -->
+  <!-- App-open rewards/referral popup: shown once per session, only after the login gate closes. Never on Home by itself, never before sign-in. -->
+  <div id="rewardsOpenPop" hidden style="position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
+      <div style="font-size:44px;">&#127873;</div>
+      <h2 style="margin:10px 0 6px;">Earn rewards while you play!</h2>
+      <p class="lead" style="margin:0;">Play games to earn coins &#8212; they show in the coin bubble at the top, device-local only, never real money.</p>
+      <p class="small dim" style="margin-top:8px;">Invite a friend at launch and you both get 10 free checks, once per friend. That referral screen is coming at launch &#8212; this popup is just the heads-up, not a live code yet.</p>
+      <div class="stack" style="margin-top:16px;">
+        <button type="button" class="bubble-btn b-gold" id="rewardsOpenGames"><span>&#127918; Play games &amp; earn coins</span></button>
+        <button type="button" class="bubble-btn b-white small" id="rewardsOpenClose"><span>Got it &#8212; not now</span></button>
+      </div>
+    </div>
+  </div>
+  <!-- In-game rewards popup: shown once per session, after a game end screen. -->
+  <div id="rewardsGamePop" hidden style="position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
+      <div style="font-size:44px;">&#129689;</div>
+      <h2 style="margin:10px 0 6px;">Spin your rewards!</h2>
+      <p class="lead" style="margin:0;">Nice finish &#8212; your coins are in the top bubble. Keep playing to stack them up for the rewards store and avatar goodies at launch.</p>
+      <p class="small dim" style="margin-top:8px;">Coins and scores here are device-local only, never real money, and they never touch your free checks.</p>
+      <div class="stack" style="margin-top:16px;">
+        <button type="button" class="bubble-btn b-gold" id="rewardsGameClose"><span>Keep playing</span></button>
       </div>
     </div>
   </div>
@@ -1294,7 +1321,9 @@ function show(id){
   if(gameCleanup){ try{ gameCleanup(); }catch(e){} gameCleanup=null; }
   var screens = document.querySelectorAll(".screen");
   for(var i=0;i<screens.length;i++) screens[i].classList.remove("active");
-  var _cp = $("capContinuePop"); if(_cp) _cp.hidden = true;
+  var _cp = $("capContinuePop"); if(_cp) { _cp.hidden = true; _cp.style.display = "none"; }
+  var _rp = $("rewardsOpenPop"); if(_rp) { _rp.hidden = true; _rp.style.display = "none"; }
+  var _gp = $("rewardsGamePop"); if(_gp) { _gp.hidden = true; _gp.style.display = "none"; }
   var el = $("scr-"+id);
   if(el) el.classList.add("active");
   window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; requestAnimationFrame(function(){ window.scrollTo(0,0); });
@@ -1387,7 +1416,7 @@ function renderCaptureStep(){
   $("capGot").textContent = "";
   $("capNext").classList.add("hidden");
   $("capBack").textContent = capStep===0 ? "← Pick a category" : "← "+capCat.steps[capStep-1].cap;
-  var _pop = $("capContinuePop"); if(_pop) _pop.hidden = true;
+  var _pop = $("capContinuePop"); if(_pop) { _pop.hidden = true; _pop.style.display = "none"; }
   /* Upload #12: camera opens by itself when the step appears. No tap
      needed to get the live feed. If it cannot start, the message below
      the frame says so in plain words and the Take button still works. */
@@ -1415,7 +1444,7 @@ function capPhotoReady(){
     var _cb = $("capContinueBtnText");
     if(_cb) _cb.textContent = "\uD83D\uDCF8 Take the " + capCat.steps[capStep+1].cap.toLowerCase() + " photo now";
     var _pop2 = $("capContinuePop");
-    if(_pop2) _pop2.hidden = false;
+    if(_pop2) { _pop2.hidden = false; _pop2.style.display = "flex"; }
   }
   $("capNext").classList.remove("hidden");
   popSnd();
@@ -1433,14 +1462,14 @@ $("capTake").addEventListener("click", function(){
   capStartLive(true);
 });
 $("capContinueBtn").addEventListener("click", function(){
-  var p=$("capContinuePop"); if(p) p.hidden=true;
+  var p=$("capContinuePop"); if(p) { p.hidden=true; p.style.display="none"; }
   if(!capHas) return;
   popSnd();
   if(capStep >= capCat.steps.length-1){ return; }
   capStep++; renderCaptureStep();
 });
 $("capContinueClose").addEventListener("click", function(){
-  var p=$("capContinuePop"); if(p) p.hidden=true;
+  var p=$("capContinuePop"); if(p) { p.hidden=true; p.style.display="none"; }
 });
 $("capUploadFile").addEventListener("click", function(){ capStopLive(); $("capFile").click(); });
 $("capFile").addEventListener("change", function(){
@@ -1840,6 +1869,7 @@ function endBoardInit(){
 }
 function doneHTML(score, line){
   lastGameScore = score;
+  setTimeout(function(){ rewardsShowGameOnce(); }, 2000);
   setTimeout(endBoardInit, 0);
   return '<div class="gdone"><p class="big" aria-hidden="true">🎉</p>'
     + '<h3 style="font-size:25px;">Final score: '+score+'</h3>'
@@ -2991,9 +3021,25 @@ function opSaveProfile(){
 }
 function opHideGate(){ var g = document.getElementById('opLoginGate'); if(g) g.style.display = 'none'; }
 function opShowGate(){ var g = document.getElementById('opLoginGate'); if(g) g.style.display = 'flex'; }
+/* ---- Rewards popups, upload #14: once per session, dismissible ---- */
+function rewardsHideAll(){ var a=$("rewardsOpenPop"); if(a){a.hidden=true;a.style.display="none";} var b=$("rewardsGamePop"); if(b){b.hidden=true;b.style.display="none";} }
+function rewardsShowOpenOnce(){
+  try{ if(sessionStorage.getItem("rewardsOpenShown")) return; sessionStorage.setItem("rewardsOpenShown","1"); }catch(e){}
+  var a=$("rewardsOpenPop"); if(a){ a.hidden=false; a.style.display="flex"; }
+}
+function rewardsShowGameOnce(){
+  try{ if(sessionStorage.getItem("rewardsGameShown")) return; sessionStorage.setItem("rewardsGameShown","1"); }catch(e){}
+  var b=$("rewardsGamePop"); if(b){ b.hidden=false; b.style.display="flex"; }
+}
+document.addEventListener("click", function(e){
+  if(e.target.closest("#rewardsOpenClose")){ rewardsHideAll(); }
+  if(e.target.closest("#rewardsOpenGames")){ rewardsHideAll(); show("games"); }
+  if(e.target.closest("#rewardsGameClose")){ rewardsHideAll(); }
+});
 function opDoLogin(name){
   var n = (name||'').trim() || opProfile.displayName || opProfile.username || 'Guest';
   opProfile.username = n; opProfile.loggedIn = true; opSaveProfileData(); opRenderAvatar(); opHideGate();
+  rewardsShowOpenOnce();
   var s = document.getElementById('opLoginState'); if(s) s.textContent = 'Signed in locally as '+n+' — demo only, not a real account.';
 }
 function opGateLogin(){ var inp = document.getElementById('opGateLoginName'); opDoLogin(inp ? inp.value : ''); }
