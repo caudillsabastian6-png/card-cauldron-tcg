@@ -215,19 +215,20 @@
   /* ---------- capture frame ---------- */
   .frame{
     position:relative; margin:16px auto 0; width:100%; max-width:200px; aspect-ratio:5/7;
-    border:4px dashed var(--sky); border-radius:2rem; overflow:hidden;
-    background:linear-gradient(160deg, rgba(56,189,248,.10), rgba(255,217,61,.07));
+    border:2px solid rgba(255,197,61,.55); border-radius:2rem; overflow:hidden;
+    background:linear-gradient(160deg, #050403 0%, #0b0908 60%, #000 100%);
+    box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 0 28px rgba(255,197,61,.25);
     display:flex; align-items:center; justify-content:center;
   }
   .frame img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000;}
   /* Tells previews: whole photo only, never cropped (fix Oct 24) */
   #tellsPrevFront, #tellsPrevBack{object-fit:contain; width:100%; max-width:420px; height:auto; max-height:620px; background:#000; border-radius:12px; cursor:zoom-in;}
   .frame .empty{padding:24px; text-align:center;}
-  .frame .corner{position:absolute; width:26px; height:26px; border-color:var(--gold); border-style:solid; z-index:2;}
-  .c-tl{left:10px; top:10px; border-width:4px 0 0 4px; border-top-left-radius:14px;}
-  .c-tr{right:10px; top:10px; border-width:4px 4px 0 0; border-top-right-radius:14px;}
-  .c-bl{left:10px; bottom:10px; border-width:0 0 4px 4px; border-bottom-left-radius:14px;}
-  .c-br{right:10px; bottom:10px; border-width:0 4px 4px 0; border-bottom-right-radius:14px;}
+  .frame .corner{position:absolute; width:48px; height:48px; border-color:var(--gold); border-style:solid; z-index:2; filter:drop-shadow(0 0 6px rgba(255,197,61,.8));}
+  .c-tl{left:10px; top:10px; border-width:6px 0 0 6px; border-top-left-radius:14px;}
+  .c-tr{right:10px; top:10px; border-width:6px 6px 0 0; border-top-right-radius:14px;}
+  .c-bl{left:10px; bottom:10px; border-width:0 0 6px 6px; border-bottom-left-radius:14px;}
+  .c-br{right:10px; bottom:10px; border-width:0 6px 6px 0; border-bottom-right-radius:14px;}
   .sample-art{
     position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
     background:linear-gradient(150deg,#ffe878 0%,#6fd0fc 55%,#ff9ec2 100%); text-align:center; padding:16px; color:#33305e;
@@ -2253,7 +2254,7 @@ var RELAY_MSGS = [
 ];
 function startRelay(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var MEMO = 3400, PICK = 7000, TOTAL = 8;
+  var MEMO = 6000, PICK = 12000, TOTAL = 8;
   var deck = shuffle(RELAY_MSGS).slice(0,TOTAL).map(function(target){
     return { target: target, options: shuffle([target].concat(shuffle(RELAY_MSGS.filter(function(m){ return m!==target; })).slice(0,2))) };
   });
@@ -2295,7 +2296,7 @@ function startRelay(){
       feedback = timedOut ? "The timer bubble emptied — the message was: “"+cur.target+"”" : "Good try — the message was: “"+cur.target+"”";
     }
     phase = "feedback"; render();
-    bag.set(advance, 1650);
+    bag.set(advance, 2500);
   }
   function advance(){
     wasOk = null; feedback = "";
@@ -2724,6 +2725,13 @@ function opMusicNote(f){ try{ var ctx=audioCtx(); if(!ctx) return; var t0=ctx.cu
 function opMusicStart(){ opMusicStop(); var notes=[523.25,587.33,659.25,783.99,659.25,587.33]; var i=0; opMusicTimer=setInterval(function(){ if(!opMusicOn) return; opMusicNote(notes[i%notes.length]); i++; },700); opMusicNote(notes[0]); }
 function opMusicStop(){ if(opMusicTimer){ clearInterval(opMusicTimer); opMusicTimer=null; } }
 function opToggleMusic(){ opMusicOn = !opMusicOn; var l = document.getElementById('opMusicLabel'); if(l) l.textContent = opMusicOn ? '🎵 MUSIC ON' : '🎵 MUSIC'; if(opMusicOn) opMusicStart(); else opMusicStop(); }
+/* MUSIC must stop when the app leaves the screen: never play in the background */
+function opMusicStopForBackground(){
+  if(opMusicOn){ opToggleMusic(); }
+}
+document.addEventListener('visibilitychange', function(){ if(document.hidden) opMusicStopForBackground(); });
+window.addEventListener('pagehide', opMusicStopForBackground);
+window.addEventListener('blur', opMusicStopForBackground);
 var OP_BEAT_LEVELS = [
   {n:1,name:"Keep the beat",total:16,travel:3700,gap:900,perfect:30,onbeat:65},
   {n:2,name:"Faster bubbles",total:20,travel:3200,gap:800,perfect:30,onbeat:65},
