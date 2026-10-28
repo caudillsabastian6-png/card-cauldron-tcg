@@ -446,6 +446,13 @@
     .bubble-btn{min-height:48px; padding:10px 16px;}
     .bubble-btn .sub{font-size:13.5px;}
     video{max-height:52dvh; object-fit:contain;}
+    /* Games sideways: fit the board to the short height, no scroll
+       needed to play. Portrait is untouched. */
+    .field{margin-top:10px; max-height:56dvh !important;}
+    .match-grid{gap:8px; margin-top:10px;}
+    .match-card{min-height:56px; font-size:26px;}
+    .gdone{margin-top:10px; gap:8px;}
+    .screen h2{font-size:24px;}
   }
 </style>
 </head>
@@ -2093,14 +2100,16 @@ function startBeat(){
   }
   var vnow = 0, nextSpawn = 350; /* virtual clock, advanced by the tick cascade */
   var body = $("gameBeat-body");
-  body.innerHTML = opBeatPickerHTML() +
-    '<p class="scorebar" role="status" id="beatBar">Score 0 · Streak 0 · Bubble 0 of '+TOTAL+'</p>'
-    + '<div style="margin-top:12px;"><button type="button" class="bubble-btn b-gold small" id="beatMusicBtn"><span>🎵 Beat music: ON</span></button></div>'
-    + '<div class="field" id="beatField" style="height:'+FIELD_H+'px;" role="img" aria-label="Bubbles rising toward a gold beat ring">'
+  /* Game field FIRST: the first thing you see is the game itself.
+     Score, beat-music toggle, and the level picker sit BELOW it. */
+  body.innerHTML = '<div class="field" id="beatField" style="height:'+FIELD_H+'px;" role="img" aria-label="Bubbles rising toward a gold beat ring">'
     + '<div id="beatRing" aria-hidden="true" style="position:absolute;left:0;right:0;top:'+(RING_Y-4)+'px;height:8px;border-radius:999px;background:linear-gradient(90deg,#ffc53d,#f0a91e);box-shadow:0 0 0 4px rgba(255,197,61,.35);"></div>'
     + '<p aria-hidden="true" style="position:absolute;right:12px;top:'+(RING_Y-28)+'px;font-size:13px;font-weight:900;">GOLD BEAT RING</p>'
     + '<p id="beatNote" role="status" style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-weight:800;padding:0 12px;">Tap each bubble exactly as it crosses the gold ring!</p>'
-    + '</div>';
+    + '</div>'
+    + '<p class="scorebar" role="status" id="beatBar">Score 0 · Streak 0 · Bubble 0 of '+TOTAL+'</p>'
+    + '<div style="margin-top:12px;"><button type="button" class="bubble-btn b-gold small" id="beatMusicBtn"><span>🎵 Beat music: ON</span></button></div>'
+    + opBeatPickerHTML();
   var field = $("beatField");
   var mb = $("beatMusicBtn");
   if(mb) mb.addEventListener("click", function(){
