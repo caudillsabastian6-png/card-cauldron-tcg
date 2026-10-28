@@ -454,6 +454,13 @@
     .gdone{margin-top:10px; gap:8px;}
     .screen h2{font-size:24px;}
   }
+  /* ---------- upload #17: question cards, dropdowns, tracker scroll, cauldron ---------- */
+  @keyframes ccPopIn{from{opacity:0; transform:translateY(14px) scale(.97);}to{opacity:1; transform:translateY(0) scale(1);}}
+  .cc-qcard{animation:ccPopIn .6s ease-out; border:2px solid var(--gold, #f0b23e); border-radius:1.4rem; padding:16px; background:#1b2735;}
+  .cc-opt{animation:ccPopIn .6s ease-out both;}
+  .cc-drop-list{display:none;}
+  @media (prefers-reduced-motion: reduce){ .cc-qcard,.cc-opt{animation:none !important;} }
+  .calm .cc-qcard,.calm .cc-opt{animation:none !important;}
 </style>
 </head>
 <body>
@@ -1027,6 +1034,11 @@
     <p class="lead" style="margin-top:6px;">Short bubbly games from the crew, just for fun — 12 playable right here, plus Guess the Price, which wakes up when real price snapshots land. Best scores show for this visit only; nothing is saved to an account.</p>
     <div class="card mt" id="upscaleMoneyPanel"><p>Loading real snapshot totals…</p></div>
     <div class="band band-grape mt">
+      <h3>📓 Parity tracker — this visit only</h3>
+      <p class="sub2">Play a game and your best score lands here, in this visit only. No account, no backend, nothing saved.</p>
+    </div>
+    <div class="card mt" id="trackerPanel"><p class="small dim">No games finished yet this visit.</p></div>
+    <div class="band band-grape mt">
       <h3>🕹️ The crew's games shelf</h3>
       <p class="sub2" id="gamesShelfLine">13 games on the shelf — no best scores yet this visit. Be the first!</p>
     </div>
@@ -1036,11 +1048,6 @@
       <p class="sub2">Seven more ways to play — same rule everywhere: scores are bragging rights only.</p>
     </div>
     <div class="stack mt" id="gamesList2"></div>
-    <div class="band band-grape mt">
-      <h3>📓 Parity tracker — this visit only</h3>
-      <p class="sub2">Play a game and your best score lands here, in this visit only. No account, no backend, nothing saved.</p>
-    </div>
-    <div class="card mt" id="trackerPanel"><p class="small dim">No games finished yet this visit.</p></div>
     <div class="band band-navy mt">
       <h3>🏁 That's the whole shelf</h3>
       <p class="sub2">Nothing here ever touches your free checks.</p>
@@ -1137,9 +1144,14 @@
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>🏆 Global Leaderboard — Mini Games</h2>
     <p class="small dim">This board is for everybody who plays, not just this visit. Global scores are live now on the SSD backend at api.cardcauldrontcg.com. Post a score from any game's end screen, by name only, and it shows here for everybody. No fake names or scores are shown here.</p>
+    <div class="card mt" style="border:3px solid #f0b23e;"><h3>🏆 Total leaderboard — all games combined</h3>
+    <p class="small dim">Most points out of all games combined, at the top. Each player's total is the sum of their best score in each game — not an average.</p>
+    <p class="small dim" id="lbTotalStatus">Loading total scores…</p>
+    <div id="lbTotalTop" style="margin-top:10px;"></div>
+    <p class="small dim">Guess the Price and Tell or Tale? do not post scores, so they are not in this total.</p></div>
     <div class="card mt"><h3>Global board — live</h3>
-    <p class="small dim" id="opGlobalStatus">Pick a game, then its top scores load live from the backend.</p>
-    <div id="opLbPicker" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;"></div>
+    <p class="small dim" id="opGlobalStatus">Pick a game from the dropdown, then its top scores load live from the backend.</p>
+    <div id="opLbPicker" style="margin-top:10px;"></div>
     <ol id="opGlobalTop" style="text-align:left;margin-top:12px;"></ol>
     <p class="small dim">Play a game, and when you finish, post your score from the end screen — it will appear here, by display name only.</p></div>
     <div class="card mt"><h3>Your scores this visit</h3>
@@ -1241,7 +1253,7 @@ function renderTracker(){
     }).join("");
     panel.innerHTML =
       '<p style="font-weight:900;">Games played this visit: '+sessionTracker.plays+' · Total score: '+sessionTracker.total+'</p>'
-      + (rows ? '<div style="margin-top:8px;">'+rows+'</div>'
+      + (rows ? '<div style="margin-top:8px;max-height:220px;overflow-y:auto;">'+rows+'</div>'
                : '<p class="small dim" style="margin-top:8px;">No games finished yet this visit — play one and it lands here.</p>')
       + '<p class="small dim" style="margin-top:10px;">In-session only: this tracker lives in this visit. Leave or refresh and it resets. No account, no backend, nothing is saved or sent anywhere.</p>'
       + '<div class="stack mt"><button type="button" class="bubble-btn b-white small" id="trackerClearBtn"><span>Clear this visit\'s tracker</span></button></div>';
@@ -1325,6 +1337,7 @@ $("calmBtn").addEventListener("click", function(){
 /* ================= navigation ================= */
 var gameCleanup = null; /* fn set by the active game to stop its timers */
 function show(id){
+  try{ if(window.ccStopSpeak) window.ccStopSpeak(); }catch(e){}
   if(gameCleanup){ try{ gameCleanup(); }catch(e){} gameCleanup=null; }
   var screens = document.querySelectorAll(".screen");
   for(var i=0;i<screens.length;i++) screens[i].classList.remove("active");
@@ -1340,7 +1353,7 @@ function show(id){
     dockBtns[j].classList.toggle("on", dockBtns[j].getAttribute("data-dock") === (dockMap[id]||"__none__"));
   }
   if(id==="games") renderGamesHub();
-  if(id==="leaderboard") loadGlobalBoard(window._lbGame || "rapid");
+  if(id==="leaderboard"){ loadGlobalBoard(window._lbGame || "rapid"); if(window.loadTotalBoard) loadTotalBoard(); }
 }
 document.addEventListener("click", function(e){
   var t = e.target.closest("[data-nav]");
@@ -1825,12 +1838,32 @@ function gameShell(scr, title, byline, bodyHTML){
     + '<div style="margin-top:auto;padding-top:22px;"><button type="button" class="bubble-btn b-white" data-nav="games"><span>Back to Mini Games</span></button></div>'
     + '</section>';
 }
+function ccSpeak(text){ try{ if(!window.speechSynthesis) return false; window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(text); u.rate=1; window.speechSynthesis.speak(u); return true; }catch(e){ return false; } }
+function ccStopSpeak(){ try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){} }
+function ccHearHTML(text){ try{ if(!window.speechSynthesis) return ''; }catch(e){ return ''; } return '<button type="button" class="bubble-btn b-white small cc-hear" data-speak="'+encodeURIComponent(text)+'" style="margin-top:10px;"><span>\uD83D\uDD0A Hear this question</span></button>'; }
+document.addEventListener('click', function(e){ var b=e.target.closest('.cc-hear'); if(!b) return; try{ ccSpeak(decodeURIComponent(b.getAttribute('data-speak')||'')); }catch(err){} });
 var API_BASE = 'https://api.cardcauldrontcg.com';
 var LB_GAMES=[{id:"rapid",label:"Rapid Fire"},{id:"fit",label:"Perfect Fit"},{id:"match",label:"Match Audit"},{id:"beat",label:"Bubble Beat"},{id:"poppath",label:"Pop Path"},{id:"coin",label:"Coin Catch"},{id:"mystery",label:"Mystery Pack"},{id:"ziggy",label:"Ziggy"},{id:"brew",label:"Brew"},{id:"relay",label:"Message Relay"},{id:"zoom",label:"Zoom Pop"},{id:"shelf",label:"Shelf"}];
+function loadTotalBoard(){
+  var st=document.getElementById("lbTotalStatus"), box=document.getElementById("lbTotalTop");
+  if(!st || !box) return; st.textContent = "Loading total scores…"; box.innerHTML = "";
+  var jobs = LB_GAMES.map(function(g){ return fetch(API_BASE + "/leaderboard/top?game=" + encodeURIComponent(g.id) + "&limit=50").then(function(r){ return r.json(); }).then(function(d){ return {game:g.id, scores:d.scores||[]}; }).catch(function(){ return {game:g.id, scores:[]}; }); });
+  Promise.all(jobs).then(function(results){
+    var totals = {};
+    results.forEach(function(res){ var best = {}; res.scores.forEach(function(sc){ var nm = String(sc.name||"Anonymous"); var v = Number(sc.score)||0; if(best[nm]==null || v>best[nm]) best[nm]=v; }); Object.keys(best).forEach(function(nm){ totals[nm] = (totals[nm]||0) + best[nm]; }); });
+    var rows = Object.keys(totals).map(function(nm){ return {name:nm, total:totals[nm]}; }).sort(function(a,b){ return b.total-a.total; }).slice(0,10);
+    if(!rows.length){ st.textContent = "No global scores yet — be the first! Play a game and post from the end screen."; return; }
+    st.textContent = "Total leaderboard — most points from all games combined, at the top:";
+    var first = rows[0];
+    var html = '<div style="border:3px solid #f0b23e;border-radius:1.2rem;padding:14px;background:#2b2210;margin-bottom:10px;"><p style="font-size:22px;font-weight:900;margin:0;">#1 '+first.name+' — '+first.total+'</p><p class="small dim" style="margin:6px 0 0;">Top total player, in the gold box.</p></div>';
+    if(rows.length>1){ html += '<ol style="text-align:left;margin-top:10px;">' + rows.slice(1).map(function(r,i){ return "<li>#"+(i+2)+" "+r.name+" — "+r.total+"</li>"; }).join("") + "</ol>"; }
+    box.innerHTML = html;
+  }).catch(function(){ st.textContent = "Total leaderboard is offline right now — try again later."; });
+}
 function loadGlobalBoard(game){
   window._lbGame = game;
   var st=document.getElementById("opGlobalStatus"), top=document.getElementById("opGlobalTop"), pk=document.getElementById("opLbPicker");
-  if(pk && !pk.children.length){ pk.innerHTML = LB_GAMES.map(function(g){ return '<button type="button" class="bubble-btn b-white" data-lb="'+g.id+'" style="padding:6px 10px;"><span>'+g.label+'</span></button>'; }).join(""); pk.querySelectorAll("[data-lb]").forEach(function(b){ b.addEventListener("click", function(){ loadGlobalBoard(b.getAttribute("data-lb")); }); }); }
+  if(pk && !pk.children.length){ pk.innerHTML = '<button type="button" class="bubble-btn b-gold" id="lbDropBtn"><span>\uD83C\uDFC6 Leaderboards \u25BE</span></button><div class="cc-drop-list" id="lbDropList" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">' + LB_GAMES.map(function(g){ return '<button type="button" class="bubble-btn b-white" data-lb="'+g.id+'" style="padding:6px 10px;"><span>'+g.label+'</span></button>'; }).join("") + '</div>'; var db=document.getElementById("lbDropBtn"); if(db) db.addEventListener("click", function(){ var l=document.getElementById("lbDropList"); if(l) l.style.display = (l.style.display==="flex" ? "none" : "flex"); }); pk.querySelectorAll("[data-lb]").forEach(function(b){ b.addEventListener("click", function(){ loadGlobalBoard(b.getAttribute("data-lb")); var l=document.getElementById("lbDropList"); if(l) l.style.display="none"; }); }); }
   if(pk) pk.querySelectorAll("[data-lb]").forEach(function(b){ b.style.outline = (b.getAttribute("data-lb")===game) ? "2px solid #ffd97a" : "none"; });
   if(!st || !top) return; st.textContent = "Loading top scores for " + game + "…"; top.innerHTML = "";
   fetch(API_BASE + "/leaderboard/top?game=" + encodeURIComponent(game) + "&limit=10").then(function(r){ return r.json(); }).then(function(d){
@@ -1886,7 +1919,7 @@ function doneHTML(score, line){
     + '<ol id="endTop" style="text-align:left;"></ol>'
     + '<label style="display:block;font-weight:800;margin-top:10px;">Name or nickname<br><input id="endName" type="text" maxlength="40" placeholder="Type your name or nickname" style="width:100%;padding:10px;border-radius:10px;margin-top:6px;"></label>'
     + '<button type="button" class="bubble-btn b-gold" id="endSubmit" style="margin-top:10px;"><span>Post my score to the leaderboard</span></button>'
-    + '<p class="small dim" id="endNote">Posting shows your name and score to everybody, nothing else. If you do not post, this score stays for this visit only.</p></div>'
+    + '<p class="small dim" id="endNote">Posting shows your name and score to everybody, nothing else. If you do not post, this score stays for this visit only.</p><p class="small dim">Tap “Post my score” even while it still says “Checking the leaderboard…” — posting works while the top list loads.</p></div>'
     + '<p class="small dim">Scores are bragging rights only — they never touch your free checks.</p>'
     + '<button type="button" class="bubble-btn b-pink" id="againBtn"><span>Play again</span></button></div>';
 }
@@ -2261,9 +2294,9 @@ function startCoin(){
     '<p class="scorebar" role="status" id="coinBar">Score 0 · Caught 0 · Missed 0 · Time left 40s</p>'
     + '<div class="field" id="coinField" style="height:'+FIELD_H+'px;touch-action:none;" role="img" aria-label="Coins falling toward a catcher you move along the bottom">'
     + '<div id="coinLayer"></div>'
-    + '<div aria-hidden="true" id="coinCatcher" style="position:absolute;bottom:6px;width:80px;height:52px;margin-left:-40px;border-radius:1.2rem 1.2rem 0 0;background:linear-gradient(180deg,#ff9ec2,#f74f8b);display:flex;align-items:center;justify-content:center;font-size:29px;box-shadow:0 6px 14px rgba(51,48,94,.2);left:50%;">🧺</div>'
+    + '<div aria-hidden="true" id="coinCatcher" style="position:absolute;bottom:6px;width:110px;height:72px;margin-left:-55px;border-radius:12px 12px 40px 40px;background:linear-gradient(180deg,#ffd970,#b97e1e);border:3px solid #ffd97a;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 6px 14px rgba(51,48,94,.2);left:50%;">🫕</div>'
     + '</div>'
-    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;"><button type="button" class="bubble-btn b-sky" id="coinL"><span>← Move left</span></button><button type="button" class="bubble-btn b-sky" id="coinR"><span>Move right →</span></button></div>'
+    + '<div style="display:flex;gap:16px;justify-content:center;margin-top:14px;"><button type="button" class="bubble-btn b-sky" id="coinL" aria-label="Move left" style="width:76px;height:76px;border-radius:50%;font-size:32px;padding:0;"><span>◀</span></button><button type="button" class="bubble-btn b-sky" id="coinR" aria-label="Move right" style="width:76px;height:76px;border-radius:50%;font-size:32px;padding:0;"><span>▶</span></button></div>'
     + '<p class="small dim center" style="margin-top:10px;" id="coinDull"></p>';
   var field = $("coinField"), layer = $("coinLayer");
   function moveTo(clientX){
@@ -2582,15 +2615,15 @@ function startRelay(){
       '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Message '+(round+1)+' of '+deck.length+'</p>';
     if(phase==="show"){
       body.innerHTML = head
-        + '<div class="card center mt"><span style="font-size:38px;" aria-hidden="true">💬</span>'
-        + '<p style="font-size:20px;font-weight:900;line-height:1.35;margin-top:8px;">“'+cur.target+'”</p>'
-        + '<p class="small dim" style="margin-top:8px;">Read it fast — it\'s about to float away…</p></div>';
+        + '<div class="card center mt cc-qcard"><span style="font-size:38px;" aria-hidden="true">💬</span>'
+        + '<p style="font-size:22px;font-weight:900;line-height:1.35;margin-top:8px;">“'+cur.target+'”</p>'
+        + '<p class="small dim" style="margin-top:8px;">Read it fast — it\'s about to float away…</p>' + ccHearHTML("Wick's message: " + cur.target) + '</div>';
     } else {
       var opts = cur.options.map(function(opt,i){
-        return '<button type="button" class="bubble-btn '+variants[i%3]+'" data-opt="'+i+'" '+(phase==="feedback"?"disabled":"")+' aria-label="Relay this message: '+opt.replace(/"/g,"&quot;")+'"><span style="font-size:16.5px;">'+opt+'</span></button>';
+        return '<button type="button" class="bubble-btn '+variants[i%3]+' cc-opt" data-opt="'+i+'" '+(phase==="feedback"?"disabled":"")+' aria-label="Relay this message: '+opt.replace(/"/g,"&quot;")+'" style="animation-delay:'+(0.15+i*0.15).toFixed(2)+'s;"><span style="font-size:18px;">'+opt+'</span></button>';
       }).join("");
       body.innerHTML = head
-        + '<div class="card center mt" style="'+(wasOk===false?"background:#3a2a1c;":"")+'"><p style="font-size:18px;font-weight:900;">'+(phase==="feedback"?"Relay check":"Which message did Wick pass you?")+'</p>'
+        + '<div class="card center mt cc-qcard" style="'+(wasOk===false?"background:#3a2a1c;":"")+'"><p style="font-size:20px;font-weight:900;">'+(phase==="feedback"?"Relay check":"Which message did Wick pass you?")+'</p>' + (phase==="pick" ? ccHearHTML("Which message did Wick pass you? Options: " + cur.options.join(". ") + ".") : "")
         + '<div class="timerbar blue" role="img" aria-label="Time left"><i id="relBar" style="width:100%;"></i></div>'
         + '<p style="font-weight:800;margin-top:10px;min-height:24px;" role="status">'+(phase==="feedback"?feedback:"Pick the matching message!")+'</p></div>'
         + '<div class="stack mt">'+opts+'</div>';
@@ -2610,7 +2643,7 @@ function startRelay(){
       streak = 0; popSnd(); wasOk = false;
       feedback = timedOut ? "The timer bubble emptied — the message was: “"+cur.target+"”" : "Good try — the message was: “"+cur.target+"”";
     }
-    phase = "feedback"; render();
+    phase = "feedback"; render(); ccStopSpeak(); ccSpeak(feedback);
     bag.set(advance, 2500);
   }
   function advance(){
@@ -2667,15 +2700,15 @@ function startZoom(){
     var sparks = cur.kind==="holo" ? '<span style="position:absolute;left:16%;top:12%;font-size:29px;" aria-hidden="true">✦</span><span style="position:absolute;right:18%;top:42%;font-size:21px;" aria-hidden="true">✦</span><span style="position:absolute;left:38%;bottom:14%;font-size:25px;" aria-hidden="true">✦</span>' : "";
     body.innerHTML =
       '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Crop '+(round+1)+' of '+deck.length+'</p>'
-      + '<div class="card center mt" id="zoomCard">'
+      + '<div class="card center mt cc-qcard" id="zoomCard">'
       + '<div style="position:relative;width:240px;height:240px;margin:0 auto;border-radius:1.4rem;overflow:hidden;box-shadow:0 8px 18px rgba(51,48,94,.18);background:#1b2735;" role="img" aria-label="A zoomed-in crop of a real demo-pool scan — guess the finish">'
       + '<img src="'+cur.img+'" alt="Zoomed crop of a demo-pool scan" style="position:absolute;width:420px;height:auto;left:-'+cur.ox+'px;top:-'+cur.oy+'px;object-fit:cover;">'
       + '</div>'
-      + '<p style="font-weight:800;margin-top:12px;min-height:24px;" id="zoomMsg">Zoomed way in — what pattern are you looking at?</p></div>'
+      + '<p style="font-size:20px;font-weight:900;margin-top:12px;min-height:24px;" id="zoomMsg">Zoomed way in — what pattern are you looking at?</p>' + ccHearHTML("Zoomed way in — what pattern are you looking at? Options: Holofoil pattern, Reverse pattern, Plain stock.") + '</div>'
       + '<div class="stack mt">'
-      + '<button type="button" class="bubble-btn b-gold" data-z="holo"><span>Holofoil pattern ✨</span></button>'
-      + '<button type="button" class="bubble-btn b-sky" data-z="reverse"><span>Reverse pattern 🌟</span></button>'
-      + '<button type="button" class="bubble-btn b-white" data-z="plain"><span>Plain stock 🃏</span></button></div>'
+      + '<button type="button" class="bubble-btn b-gold cc-opt" data-z="holo" style="animation-delay:.15s;"><span style="font-size:18px;">Holofoil pattern ✨</span></button>'
+      + '<button type="button" class="bubble-btn b-sky cc-opt" data-z="reverse" style="animation-delay:.3s;"><span style="font-size:18px;">Reverse pattern 🌟</span></button>'
+      + '<button type="button" class="bubble-btn b-white cc-opt" data-z="plain" style="animation-delay:.45s;"><span style="font-size:18px;">Plain stock 🃏</span></button></div>'
       + '<p class="small dim center" style="margin-top:10px;">A guessing game with demo pattern crops — never a real check.</p>';
     body.querySelectorAll("[data-z]").forEach(function(b){
       b.addEventListener("click", function(){ answer(b.getAttribute("data-z")); });
@@ -2694,7 +2727,7 @@ function startZoom(){
       msg = "Good look — that crop was the "+LABELS[cur.kind].toLowerCase()+".";
       var c = $("zoomCard"); if(c) c.style.background = "#3a2a1c";
     }
-    var m = $("zoomMsg"); if(m) m.textContent = msg;
+    var m = $("zoomMsg"); if(m) m.textContent = msg; ccStopSpeak(); ccSpeak(msg);
     var sb = body.querySelector(".scorebar"); if(sb) sb.textContent = "Score "+score+" · Streak "+streak+" · Crop "+(round+1)+" of "+deck.length;
     bag.set(function(){
       round++;
@@ -2735,14 +2768,14 @@ function startShelf(){
     var left = Math.max(0, Math.ceil((GAME_MS-vnow)/1000));
     var c = cur();
     var btns = SHELF_ERAS.map(function(e,i){
-      return '<button type="button" class="bubble-btn '+VARCLASS[e.variant]+'" data-era="'+i+'" aria-label="File '+c.name+' in the '+e.label+' binder"><span style="font-size:17.5px;">📚 '+e.label+'</span></button>';
+      return '<button type="button" class="bubble-btn '+VARCLASS[e.variant]+' cc-opt" data-era="'+i+'" aria-label="File '+c.name+' in the '+e.label+' binder" style="animation-delay:'+(0.15+i*0.15).toFixed(2)+'s;"><span style="font-size:18px;">📚 '+e.label+'</span></button>';
     }).join("");
     body.innerHTML =
       '<p class="scorebar" role="status">Score '+score+' · Filed '+correct+' · '+attempts+(attempts===1?" try":" tries")+' · Time left '+left+'s</p>'
       + '<div class="timerbar"><i id="shelfTimer" style="width:'+(left/75*100)+'%;"></i></div>'
-      + '<div class="card center mt" style="'+(flash==="peach"?"background:#3a2a1c;":flash==="good"?"background:#1e3a1e;":"")+'"><p class="small" style="font-weight:900;letter-spacing:.06em;color:var(--dim);">FILE THIS SET</p>'
-      + '<p style="font-size:29px;font-weight:900;margin-top:4px;">'+c.name+'</p>'
-      + '<p style="font-weight:800;margin-top:8px;min-height:24px;" role="status">'+note+'</p></div>'
+      + '<div class="card center mt cc-qcard" style="'+(flash==="peach"?"background:#3a2a1c;":flash==="good"?"background:#1e3a1e;":"")+'"><p class="small" style="font-weight:900;letter-spacing:.06em;color:var(--dim);">FILE THIS SET</p>'
+      + '<p style="font-size:30px;font-weight:900;margin-top:4px;">'+c.name+'</p>'
+      + '<p style="font-weight:800;margin-top:8px;min-height:24px;" role="status">'+note+'</p>' + ccHearHTML("File this set: " + c.name + ". Options: " + SHELF_ERAS.map(function(e){ return e.label; }).join(", ") + ".") + '</div>'
       + '<div class="stack mt">'+btns+'</div>';
     body.querySelectorAll("[data-era]").forEach(function(b){
       b.addEventListener("click", function(){ place(parseInt(b.getAttribute("data-era"),10)); });
@@ -2753,6 +2786,7 @@ function startShelf(){
     var c = cur(); attempts++;
     if(era === c.era){ popHighSnd(); score += 100; correct++; flash = "good"; note = "Filed! "+c.name+" lives in "+SHELF_ERAS[c.era].label+". +100"; }
     else { popSnd(); flash = "peach"; note = "Not quite — "+c.name+" belongs in "+SHELF_ERAS[c.era].label+"."; }
+    ccStopSpeak(); ccSpeak(note);
     cursor++;
     if(cursor >= queue.length){ queue = shuffle(SHELF_SETS); cursor = 0; }
     render();
@@ -2786,17 +2820,19 @@ function startGuess(){
   function round(){
     var c = OP_PRICE_CARDS[Math.floor(Math.random()*OP_PRICE_CARDS.length)];
     var opts = [c.price, Math.round(c.price*0.6*100)/100, Math.round(c.price*1.6*100)/100].sort(function(){ return Math.random()-0.5; });
+    var ccMoney = function(p){ return "$"+Number(p).toFixed(2); };
+    var _gspeak = 'Guess the price. '+c.name+', '+c.set+', '+c.num+'. Options: ' + opts.map(ccMoney).join(', ') + '.';
     var html = '<div class="card mt center"><p style="font-size:42px;" aria-hidden="true">💰</p>'
-      + '<div style="border:2px solid var(--gold);border-radius:1.2rem;padding:14px;margin-top:10px;background:#1b2735;">'
-      + '<p style="font-size:22px;font-weight:900;margin:0;">'+c.name+'</p>'
+      + '<div class="cc-qcard" style="margin-top:10px;">'
+      + '<p style="font-size:24px;font-weight:900;margin:0;">'+c.name+'</p>'
       + '<p style="font-weight:800;margin:6px 0 0;">'+c.set+' · '+c.num+' · Near Mint</p>'
-      + '<p class="small dim" style="margin:6px 0 0;">Recorded sold '+new Date(c.sold_at).toLocaleDateString()+' · snapshot set 2026-10-25, '+OP_PRICE_CARDS.length+' cards · no photo on this sold record, so the card name, set and number are the thing you are pricing</p></div>'
-      + '<p class="lead" style="font-size:16.5px;margin-top:12px;text-align:left;">Guess the real recorded eBay sold price for this card. Pick the recorded price:</p><div class="stack mt">';
-    opts.forEach(function(p){ html += '<button type="button" class="bubble-btn b-gold" data-price="'+p+'"><span>$'+p+'</span></button>'; });
+      + '<p class="small dim" style="margin:6px 0 0;">Recorded sold '+new Date(c.sold_at).toLocaleDateString()+' · snapshot set 2026-10-25, '+OP_PRICE_CARDS.length+' cards · no photo on this sold record, so the card name, set and number are the thing you are pricing</p>' + ccHearHTML(_gspeak) + '</div>'
+      + '<p class="lead" style="font-size:20px;font-weight:900;margin-top:12px;text-align:left;">Guess the real recorded eBay sold price for this card. Pick the recorded price:</p><div class="stack mt">';
+    opts.forEach(function(p, oi){ html += '<button type="button" class="bubble-btn b-gold cc-opt" data-price="'+p+'" style="animation-delay:'+(0.15+oi*0.15).toFixed(2)+'s;"><span style="font-size:20px;">'+ccMoney(p)+'</span></button>'; });
     html += '</div><p class="small dim" id="guessNote" style="margin-top:10px;">Every answer names its snapshot — never a made-up price. If a card has no recorded sold price, it does not appear.</p><button type="button" class="bubble-btn b-sky" id="guessNext" style="display:none;margin-top:10px;"><span>Next card →</span></button></div>';
     body.innerHTML = html;
     var btns = body.querySelectorAll("[data-price]");
-    btns.forEach(function(b){ b.addEventListener("click", function(){ var p = parseFloat(b.getAttribute("data-price")); var ok = (p === c.price); $("guessNote").textContent = ok ? ("Correct! $"+c.price+" was the recorded sold price for "+c.name+" ("+c.set+" "+c.num+").") : ("Not that one — the recorded sold price was $"+c.price+" for "+c.name+" ("+c.set+" "+c.num+")."); recordBest("guess", ok ? 100 : 0); var nb = document.getElementById("guessNext"); if(nb){ nb.style.display="block"; nb.addEventListener("click", function(){ round(); }); } }); });
+    btns.forEach(function(b){ b.addEventListener("click", function(){ var p = parseFloat(b.getAttribute("data-price")); var ok = (p === c.price); var _nt = ok ? ("Correct! "+ccMoney(c.price)+" was the recorded sold price for "+c.name+" ("+c.set+" "+c.num+").") : ("Not that one — the recorded sold price was "+ccMoney(c.price)+" for "+c.name+" ("+c.set+" "+c.num+")."); $("guessNote").textContent = _nt; ccStopSpeak(); ccSpeak(_nt); recordBest("guess", ok ? 100 : 0); var nb = document.getElementById("guessNext"); if(nb){ nb.style.display="block"; nb.addEventListener("click", function(){ ccStopSpeak(); round(); }); } }); });
   }
   round();
 }
@@ -2805,17 +2841,21 @@ function startTell(){
   gameCleanup = null;
   var body = $("gameTell-body");
   var level = opTellLevel, qs = OP_TELL_LEVELS[level], idx = 0, correct = 0;
-  function levelButtons(){ return [1,2,3].map(function(l){ return '<button type="button" class="bubble-btn '+(l===level?'b-gold':'b-white')+'" '+(l>opTellUnlocked?'disabled':'')+' onclick="opSetTellLevel('+l+')"><span>Level '+l+(l===level?' ✓':'')+(l>opTellUnlocked?' · locked':'')+'</span></button>'; }).join(""); }
+  function levelButtons(){ return '<div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+level+' \u25BE</span></button><div class="stack mt cc-drop-list">' + [1,2,3].map(function(l){ return '<button type="button" class="bubble-btn '+(l===level?'b-gold':'b-white')+'" '+(l>opTellUnlocked?'disabled':'')+' onclick="opSetTellLevel('+l+')"><span>Level '+l+(l===level?' ✓':'')+(l>opTellUnlocked?' · locked':'')+'</span></button>'; }).join("") + '</div></div>'; }
   function renderQ(){
     if(idx >= qs.length){ finish(); return; }
     var q = qs[idx];
-    body.innerHTML = '<p class="small dim">Level '+level+' — Q'+(idx+1)+' of '+qs.length+' · Highest unlocked: Level '+opTellUnlocked+' · Pass at 60%+ to unlock the next.</p><p class="lead">'+q.q+'</p><div class="stack mt"><button type="button" class="bubble-btn b-gold" id="tellA"><span>A</span></button><button type="button" class="bubble-btn b-sky" id="tellB"><span>B</span></button></div><p class="small dim" id="tellNote" style="margin-top:10px;"></p><div class="stack mt">'+levelButtons()+'</div>';
+    var _m = q.q.match(/^(.*?) A\) (.*?) B\) (.*)$/);
+    var _qt = _m ? _m[1] : q.q, _oa = _m ? _m[2] : 'A', _ob = _m ? _m[3] : 'B';
+    var _speak = _qt + '. Option A: ' + _oa + '. Option B: ' + _ob + '.';
+    body.innerHTML = '<p class="small dim">Level '+level+' — Q'+(idx+1)+' of '+qs.length+' · Highest unlocked: Level '+opTellUnlocked+' · Pass at 60%+ to unlock the next.</p><div class="card mt cc-qcard"><p style="font-size:22px;font-weight:900;line-height:1.35;margin:0;">'+_qt+'</p>' + ccHearHTML(_speak) + '</div><div class="stack mt"><button type="button" class="bubble-btn b-gold cc-opt" id="tellA" style="animation-delay:.15s;"><span style="font-size:18px;">A — '+_oa+'</span></button><button type="button" class="bubble-btn b-sky cc-opt" id="tellB" style="animation-delay:.3s;"><span style="font-size:18px;">B — '+_ob+'</span></button></div><p class="small dim" id="tellNote" style="margin-top:10px;"></p><div class="stack mt">'+levelButtons()+'</div>';
     $("tellA").addEventListener("click", function(){ answer(0); });
     $("tellB").addEventListener("click", function(){ answer(1); });
   }
   function answer(i){
     var q = qs[idx];
-    if(i === q.a){ correct++; $("tellNote").textContent = "Correct — that is the tell/rule."; } else { $("tellNote").textContent = "Not that one — the other answer is the tell/rule."; }
+    ccStopSpeak();
+    if(i === q.a){ correct++; $("tellNote").textContent = "Correct — that is the tell/rule."; ccSpeak("Correct! That is the tell."); } else { $("tellNote").textContent = "Not that one — the other answer is the tell/rule."; ccSpeak("Not that one — the other answer is the tell."); }
     idx++;
     if(idx >= qs.length){ finish(); } else { renderQ(); }
   }
@@ -2824,6 +2864,7 @@ function startTell(){
     var msg = 'Level '+level+' finished: '+correct+' of '+qs.length+' correct.';
     if(pct >= 0.6){ if(level < 3 && level >= opTellUnlocked){ opTellUnlocked = level + 1; try{ localStorage.setItem("op_tell_unlocked", String(opTellUnlocked)); }catch(e){} msg += ' Level '+opTellUnlocked+' unlocked!'; } recordBest("tell", correct); opAddCoins(50); msg += ' +50 coins (device-local only, never money).'; }
     else { msg += ' 60% or better unlocks the next level — replay to try again.'; }
+    ccStopSpeak(); ccSpeak(msg);
     body.innerHTML = '<div class="card mt center"><p class="lead">'+msg+'</p><div class="stack mt"><button type="button" class="bubble-btn b-pink" id="tellAgain"><span>Play again</span></button></div><div class="stack mt">'+levelButtons()+'</div></div>';
     $("tellAgain").addEventListener("click", function(){ startTell(); });
   }
@@ -3077,7 +3118,7 @@ var OP_BEAT_LEVELS = [
   {n:6,name:"Beat master",total:44,travel:1600,gap:450,perfect:25,onbeat:55}];
 var OP_BEAT_LEVEL = 1, OP_BEAT_UNLOCKED = 1;
 try{ OP_BEAT_UNLOCKED = Math.max(1, Math.min(6, parseInt(localStorage.getItem('cc_demo_beat_unlocked')||'1',10) || 1)); }catch(e){}
-function opBeatPickerHTML(){ return '<p class="small dim">Bubble Beat — regular style, gold ring at 90px, 420px field. Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' · Highest unlocked: Level '+OP_BEAT_UNLOCKED+' · Clean finish (no missed bubble) unlocks the next level.</p><div class="stack mt">' + OP_BEAT_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_BEAT_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_BEAT_UNLOCKED?'disabled':'')+' onclick="opSetBeatLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+'</span><span class="sub">'+l.total+' bubbles · '+l.travel+'ms travel'+(l.n>OP_BEAT_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div>'; }
+function opBeatPickerHTML(){ return '<p class="small dim">Bubble Beat — regular style, gold ring at 90px, 420px field. Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' · Highest unlocked: Level '+OP_BEAT_UNLOCKED+' · Clean finish (no missed bubble) unlocks the next level.</p><div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' \u25BE</span></button><div class="stack mt cc-drop-list">' + OP_BEAT_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_BEAT_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_BEAT_UNLOCKED?'disabled':'')+' onclick="opSetBeatLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+'</span><span class="sub">'+l.total+' bubbles · '+l.travel+'ms travel'+(l.n>OP_BEAT_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div></div>'; }
 function opSetBeatLevel(n){ if(n > OP_BEAT_UNLOCKED) return; OP_BEAT_LEVEL = n; startBeat(); }
 var OP_TELL_LEVELS={
  1:[
