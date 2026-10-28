@@ -505,8 +505,8 @@
 
   /* ---------- cauldron sound toggle ---------- */
   #soundToggle{
-    position:fixed; right:1rem; bottom:calc(.9rem + env(safe-area-inset-bottom, 0px));
-    z-index:55; min-height:48px; display:inline-flex; align-items:center; gap:.5rem;
+    position:fixed; right:1rem; bottom:calc(78px + .9rem + env(safe-area-inset-bottom, 0px));
+    z-index:56; min-height:48px; display:inline-flex; align-items:center; gap:.5rem;
     font:inherit; font-weight:800; font-size:.9rem; cursor:pointer;
     padding:.7rem 1.1rem; border-radius:999px;
     background:var(--panel2); color:var(--ink); border:1px solid var(--line);
@@ -807,6 +807,35 @@
   /* ---------- v12 multi-page: current-page nav + subpage top spacing ---------- */
   nav .links a[aria-current="page"], .mnav a[aria-current="page"]{color:var(--gold)}
   body.subpage main > section:first-child{padding-top:clamp(7.5rem,13vw,9rem)}
+  /* web chrome: top menu + bottom dock */
+  .web-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:.4rem;background:var(--bg);border-bottom:1px solid var(--cardline);}
+  .web-menu-btn{font-size:1.2rem;line-height:1;background:linear-gradient(180deg,var(--gold2),var(--gold));color:#221503;border:1px solid var(--gold);border-radius:999px;padding:.45rem .8rem;font-weight:900;cursor:pointer;}
+  .web-topbar .brand{font-size:.85rem;}
+  .web-topbar .store-btn{font-size:.75rem;padding:.4rem .7rem;margin-left:auto;}
+  .web-menu-panel{position:absolute;top:100%;left:.8rem;background:var(--panel);border:1px solid var(--cardline);border-radius:14px;padding:.4rem;box-shadow:0 12px 30px rgba(0,0,0,.45);display:grid;min-width:220px;z-index:60;}
+  .web-menu-panel[hidden]{display:none;}
+  .web-menu-panel a{display:block;padding:.6rem .8rem;color:var(--ink);text-decoration:none;font-weight:800;border-radius:10px;}
+  .web-menu-panel a:hover{background:rgba(240,178,62,.18);}
+  .web-dock{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:55;display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;gap:.25rem;padding:.4rem;background:rgba(18,12,38,.92);border:1px solid rgba(240,178,62,.45);border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.5);width:96vw;max-width:96vw;box-sizing:border-box;}
+  .web-dock a{flex:1 1 0;min-width:0;text-align:center;text-decoration:none;font-weight:900;font-size:.72rem;color:var(--ink);background:linear-gradient(180deg,#2a2150,#1f1840);border:1px solid rgba(240,178,62,.5);border-radius:999px;padding:.55rem .1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .web-dock a:hover{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#221503;}
+  body{padding-bottom:76px;}
+
+  /* ---------- shop compact: less scroll, denser tiles ---------- */
+  section{padding:clamp(1.5rem,4vw,2.5rem) clamp(1rem,4vw,2.5rem);}
+  .chips{margin:1rem 0 .8rem;}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:.6rem;}
+  .tile{border-radius:12px;}
+  .tile .body{padding:.6rem .65rem .7rem; gap:.2rem;}
+  .tile h3{font-size:.88rem; line-height:1.2;}
+  .tile .set{font-size:.72rem;}
+  .tags{margin:.15rem 0 .35rem;}
+  .tagchip{font-size:.6rem; padding:.18rem .45rem;}
+  .buy{padding:.5rem .65rem; font-size:.82rem;}
+  @media (max-width:760px){
+    .grid{grid-template-columns:repeat(2,1fr);}
+    .hero{min-height:auto; padding:3rem 1.2rem 2rem;}
+  }
 </style>
 </head>
 <body class="subpage">
@@ -816,28 +845,21 @@
 <div id="flash" aria-hidden="true"></div>
 
 
-<nav>
+<header class="web-topbar">
+  <button type="button" class="web-menu-btn" id="webMenuBtn" aria-expanded="false" aria-controls="webMenuPanel" aria-label="Open menu">☰</button>
   <a class="brand" href="/">CARD CAULDRON TCG</a>
-  <div class="links">
-    <a href="/">Home</a>
-    <a href="/shop.html" aria-current="page">Shop</a>
-    <a href="/sets.html">Browse by Set</a>
-    <a href="/bulk.html">We Buy Bulk</a>
-    <a href="/app.html">Real or Replica</a>
-    <a href="/ask.html">Ask the Office</a>
-    <a href="/about.html">About</a>
-  </div>
   <a class="store-btn" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">eBay Store ↗</a>
-  <div class="mnav">
+  <div class="web-menu-panel" id="webMenuPanel" hidden>
     <a href="/">Home</a>
-    <a href="/shop.html" aria-current="page">Shop</a>
+    <a href="/shop.html">Shop</a>
     <a href="/sets.html">Browse by Set</a>
     <a href="/bulk.html">We Buy Bulk</a>
     <a href="/app.html">Real or Replica</a>
+    <a href="/demo/">Demo — Real or Replica</a>
     <a href="/ask.html">Ask the Office</a>
     <a href="/about.html">About</a>
   </div>
-</nav>
+</header>
 
 <main id="top">
 
@@ -1854,6 +1876,28 @@
       }, 3300);
     });
   }
+})();
+</script>
+<div class="web-dock" aria-label="Site navigation">
+  <a href="/">🏠 Home</a>
+  <a href="/shop.html">🛒 Shop</a>
+  <a href="/sets.html">📚 Sets</a>
+  <a href="/bulk.html">📦 Bulk</a>
+  <a href="/app.html">🔍 App</a>
+  <a href="/demo/">🎮 Demo</a>
+  <a href="/ask.html">💬 Ask</a>
+  <a href="/about.html">ℹ️ About</a>
+</div>
+<script>
+(function(){
+  var b=document.getElementById("webMenuBtn"), p=document.getElementById("webMenuPanel");
+  if(!b||!p) return;
+  b.addEventListener("click", function(){
+    var open = p.hidden; p.hidden = !open; b.setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("click", function(e){
+    if(!p.hidden && !p.contains(e.target) && e.target!==b){ p.hidden=true; b.setAttribute("aria-expanded","false"); }
+  });
 })();
 </script>
 </body>
