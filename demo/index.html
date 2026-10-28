@@ -587,6 +587,7 @@
     <p class="center" style="margin-top:10px;font-weight:800;" id="capGot"></p>
     <div class="dots" id="capDots" aria-hidden="true" style="margin-top:10px;"></div>
     <input type="file" id="capFile" accept="image/*" class="hidden" />
+    <input type="file" id="capCamFile" accept="image/*" capture="environment" class="hidden" />
     <div class="stack" style="margin-top:auto;padding-top:16px;">
       <button type="button" class="bubble-btn b-sky" id="capTake">Take the photo</button>
       <button type="button" class="bubble-btn b-white small" id="capUploadFile">Upload a file instead</button>
@@ -629,6 +630,7 @@
         <p class="small dim" style="margin-top:8px;">Line your card up against the light inside this frame</p>
       </div>
       <img id="ltImg" class="hidden" alt="" loading="lazy" decoding="async" />
+      <video id="ltVideo" autoplay playsinline muted style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000"></video>
       <div class="sample-art hidden" id="ltSample"><span class="big">💡</span><span class="cap">Sample photo — Light test</span><span class="pill sample">SAMPLE — demo illustration</span></div>
     </div>
     <p class="center" style="margin-top:10px;font-weight:800;" id="ltGot"></p>
@@ -638,8 +640,10 @@
     </div>
     <p class="small dim center mt">Optional, always: skipping this photo never blocks your check, your verdict, or your free-check count. It is one tell among many — the checkers still judge your front and back photos.</p>
     <input type="file" id="ltFile" accept="image/*" class="hidden" />
+    <input type="file" id="ltCamFile" accept="image/*" capture="environment" class="hidden" />
     <div class="stack" style="margin-top:auto;padding-top:16px;">
       <button type="button" class="bubble-btn b-gold" id="ltTake">💡 Take the light photo</button>
+      <button type="button" class="bubble-btn b-white small" id="ltUploadFile">Upload a file instead</button>
       <button type="button" class="bubble-btn b-white small" id="ltUseSample">Use a sample photo instead</button>
       <button type="button" class="bubble-btn b-white small" id="ltSkip">Skip — straight to the finish</button>
       <button type="button" class="bubble-btn b-lime hidden" id="ltKeep">Keep it — finish the demo steps →</button>
@@ -715,28 +719,47 @@
     <div class="card mt">
       <h3>Grade a card</h3>
       <p class="lead" style="font-size:15.5px;margin-top:6px;">Lay the card flat, keep glare off it, and fill the frame — all four corners and edges in view on both sides, because that's exactly what gets graded. Out of a sleeve if you can; sleeves hide surface wear.</p>
+      <div id="condCamWrap" class="hidden" style="margin-top:14px;">
+        <video id="condVideo" autoplay playsinline muted style="display:block;width:100%;aspect-ratio:5/7;object-fit:cover;background:#000;border-radius:1.2rem;"></video>
+        <p class="small dim center" style="margin-top:8px;">Live camera on — line the card up, then tap Snap.</p>
+        <div class="stack" style="margin-top:8px;">
+          <button type="button" class="bubble-btn b-gold" id="condSnap">📸 Snap this photo</button>
+          <button type="button" class="bubble-btn b-white small" id="condStopCam">Stop camera</button>
+        </div>
+      </div>
       <div class="frame-pair">
         <div>
           <div class="frame" id="condFrameFront">
             <div class="empty" id="condEmptyFront"><div style="font-size:38px;" aria-hidden="true">🃏</div><p class="small dim" style="margin-top:6px;">Line the front of your card up inside this frame</p></div>
             <div class="sample-art hidden" id="condSampleFront"><span class="big" style="font-size:52px;">🃏</span><span class="cap">Sample photo — Front</span><span class="pill sample">SAMPLE</span></div>
+            <img id="condPrevFront" class="hidden" alt="Your front photo (stays on your device)" />
           </div>
           <button type="button" class="bubble-btn b-sky small mt" id="condBtnFront">Use a sample front photo</button>
+          <button type="button" class="bubble-btn b-sky small mt" id="condCamFront">📷 Take front photo</button>
+          <button type="button" class="bubble-btn b-white small mt" id="condUpFront">⬆️ Upload front photo</button>
+          <input type="file" id="condFileFront" accept="image/*" class="hidden" />
+          <input type="file" id="condCamFileFront" accept="image/*" capture="environment" class="hidden" />
         </div>
         <div>
           <div class="frame" id="condFrameBack">
             <div class="empty" id="condEmptyBack"><div style="font-size:38px;" aria-hidden="true">🃏</div><p class="small dim" style="margin-top:6px;">Flip it over — the back tells half the story</p></div>
             <div class="sample-art hidden" id="condSampleBack"><span class="big" style="font-size:52px;">🃏</span><span class="cap">Sample photo — Back</span><span class="pill sample">SAMPLE</span></div>
+            <img id="condPrevBack" class="hidden" alt="Your back photo (stays on your device)" />
           </div>
           <button type="button" class="bubble-btn b-pink small mt" id="condBtnBack">Use a sample back photo</button>
+          <button type="button" class="bubble-btn b-pink small mt" id="condCamBack">📷 Take back photo</button>
+          <button type="button" class="bubble-btn b-white small mt" id="condUpBack">⬆️ Upload back photo</button>
+          <input type="file" id="condFileBack" accept="image/*" class="hidden" />
+          <input type="file" id="condCamFileBack" accept="image/*" capture="environment" class="hidden" />
         </div>
       </div>
-      <p class="small dim center" style="margin-top:12px;">In the full app you take your own front and back photos here. In this demo, sample photos stand in — so the grade below is a sample too.</p>
-      <button type="button" class="bubble-btn b-gold mt" id="condGradeBtn" disabled><span>🩹 See a SAMPLE grade</span><span class="sub">Needs both sample photos first</span></button>
+      <p class="small dim center hidden" style="margin-top:8px;" id="condCamMsg"></p>
+      <p class="small dim center" style="margin-top:12px;">Take your own front and back photos here with your camera, or upload them, or use the samples. In this demo the grade below is always a sample — it is NOT read from your photos.</p>
+      <button type="button" class="bubble-btn b-gold mt" id="condGradeBtn" disabled><span>🩹 See a SAMPLE grade</span><span class="sub">Needs both front + back photos first</span></button>
     </div>
     <div class="card mt hidden" id="condResult">
       <p class="center"><span class="pill sample">SAMPLE GRADE — NOT A REAL GRADE</span></p>
-      <p class="center small dim" style="margin-top:8px;">Sample card · graded from the sample photos above · example wording only</p>
+      <p class="center small dim" style="margin-top:8px;" id="condResultNote">Sample card · graded from the sample photos above · example wording only</p>
       <div class="center" style="margin-top:14px;">
         <span class="grade-chip">Near Mint</span>
         <p style="font-weight:800;margin-top:12px;">Condition score: 88 <span class="dim" style="font-weight:700;">/ 100</span></p>
@@ -1314,6 +1337,7 @@ function startCapture(cat){
   show("capture");
 }
 function renderCaptureStep(){
+  capStopLive();
   var step = capCat.steps[capStep];
   capHas = false;
   $("capMeta").textContent = "Checking: "+capCat.label+" · Photo "+(capStep+1)+" of "+capCat.steps.length+" · DEMO";
@@ -1356,11 +1380,22 @@ function capStopLive(){ if(capStream){ capStream.getTracks().forEach(function(tr
 $("capTake").addEventListener("click", function(){
   if(capLive){ var v=$("capVideo"); var c=document.createElement("canvas"); c.width=v.videoWidth||640; c.height=v.videoHeight||480; c.getContext("2d").drawImage(v,0,0,c.width,c.height); var img=$("capImg"); img.src=c.toDataURL("image/jpeg",0.85); img.alt=capCat.steps[capStep].cap+" — your photo (stays on your device)"; img.classList.remove("hidden"); $("capSample").classList.add("hidden"); capStopLive(); $("capTake").innerHTML="<span>"+capCat.steps[capStep].take+"</span>"; capPhotoReady(); return; }
   if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(s){ capStream=s; var v=$("capVideo"); v.srcObject=s; v.style.display="block"; v.play(); capLive=true; $("capTake").innerHTML="<span>📸 Snap this photo</span>"; var g=$("capGot"); if(g) g.textContent="Live camera on — line the card up inside the frame, then tap Snap."; }).catch(function(){ $("capFile").click(); });
-  } else { $("capFile").click(); }
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(s){ capStream=s; var v=$("capVideo"); v.srcObject=s; v.style.display="block"; v.play(); capLive=true; $("capTake").innerHTML="<span>📸 Snap this photo</span>"; var g=$("capGot"); if(g) g.textContent="Live camera on — line the card up inside the frame, then tap Snap."; }).catch(function(){ var g=$("capGot"); if(g) g.textContent="Camera blocked here — opening your phone camera picker instead. If nothing opens, use Upload a file, or open this demo in Chrome."; $("capCamFile").click(); });
+  } else { var g2=$("capGot"); if(g2) g2.textContent="Camera is not available in this browser — opening your phone camera picker instead. If nothing opens, use Upload a file, or open this demo in Chrome."; $("capCamFile").click(); }
 });
 $("capUploadFile").addEventListener("click", function(){ capStopLive(); $("capFile").click(); });
 $("capFile").addEventListener("change", function(){
+  var f = this.files && this.files[0];
+  this.value = "";
+  if(!f) return;
+  var url = URL.createObjectURL(f);
+  var img = $("capImg");
+  img.src = url; img.alt = capCat.steps[capStep].cap+" — your photo (stays on your device)";
+  img.classList.remove("hidden");
+  $("capSample").classList.add("hidden");
+  capPhotoReady();
+});
+$("capCamFile").addEventListener("change", function(){
   var f = this.files && this.files[0];
   this.value = "";
   if(!f) return;
@@ -1389,14 +1424,17 @@ $("capNext").addEventListener("click", function(){
   else { capStep++; renderCaptureStep(); }
 });
 $("capBack").addEventListener("click", function(){
-  popSnd();
+  popSnd(); capStopLive();
   if(capStep===0) show("picker");
   else { capStep--; renderCaptureStep(); }
 });
 
 /* ================= light test (demo — optional extra) ================= */
+var ltStream=null, ltLive=false;
+function ltStopLive(){ if(ltStream){ ltStream.getTracks().forEach(function(tr){ tr.stop(); }); ltStream=null; } var v=$("ltVideo"); if(v){ v.srcObject=null; v.style.display="none"; } ltLive=false; }
 var ltHas = false;
 function resetLightTest(){
+  ltStopLive();
   ltHas = false;
   $("ltImg").classList.add("hidden"); $("ltImg").removeAttribute("src");
   $("ltSample").classList.add("hidden");
@@ -1420,7 +1458,13 @@ function ltPhotoReady(){
   $("ltLeave").classList.remove("hidden");
   popSnd();
 }
-$("ltTake").addEventListener("click", function(){ $("ltFile").click(); });
+$("ltTake").addEventListener("click", function(){
+  if(ltLive){ var v=$("ltVideo"); var c=document.createElement("canvas"); c.width=v.videoWidth||640; c.height=v.videoHeight||480; c.getContext("2d").drawImage(v,0,0,c.width,c.height); var img=$("ltImg"); img.src=c.toDataURL("image/jpeg",0.85); img.alt="Your card held against a bright light — the light test photo (stays on your device)"; img.classList.remove("hidden"); $("ltSample").classList.add("hidden"); ltStopLive(); ltPhotoReady(); return; }
+  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(s){ ltStream=s; var v=$("ltVideo"); v.srcObject=s; v.style.display="block"; v.play(); ltLive=true; $("ltTake").innerHTML="<span>📸 Snap this photo</span>"; var g=$("ltGot"); if(g) g.textContent="Live camera on — hold the card against the light, then tap Snap."; }).catch(function(){ var g=$("ltGot"); if(g) g.textContent="Camera blocked here — opening your phone camera picker instead. If nothing opens, use Upload a file, or open this demo in Chrome."; $("ltCamFile").click(); });
+  } else { var g2=$("ltGot"); if(g2) g2.textContent="Camera is not available in this browser — opening your phone camera picker instead. If nothing opens, use Upload a file, or open this demo in Chrome."; $("ltCamFile").click(); }
+});
+$("ltUploadFile").addEventListener("click", function(){ ltStopLive(); $("ltFile").click(); });
 $("ltFile").addEventListener("change", function(){
   var f = this.files && this.files[0];
   this.value = "";
@@ -1432,47 +1476,126 @@ $("ltFile").addEventListener("change", function(){
   $("ltSample").classList.add("hidden");
   ltPhotoReady();
 });
-$("ltUseSample").addEventListener("click", function(){
+$("ltCamFile").addEventListener("change", function(){
+  var f = this.files && this.files[0];
+  this.value = "";
+  if(!f) return;
+  var img = $("ltImg");
+  img.src = URL.createObjectURL(f);
+  img.alt = "Your card held against a bright light — the light test photo (stays on your device)";
+  img.classList.remove("hidden");
+  $("ltSample").classList.add("hidden");
+  ltPhotoReady();
+});
+$("ltUseSample").addEventListener("click", function(){ ltStopLive();
   $("ltImg").classList.add("hidden");
   $("ltSample").classList.remove("hidden");
   ltPhotoReady();
 });
-$("ltSkip").addEventListener("click", function(){ popSnd(); show("gate"); });
-$("ltKeep").addEventListener("click", function(){ popSnd(); show("gate"); });
-$("ltLeave").addEventListener("click", function(){ popSnd(); show("gate"); });
-$("ltBack").addEventListener("click", function(){ popSnd(); show("capture"); });
+$("ltSkip").addEventListener("click", function(){ ltStopLive(); popSnd(); show("gate"); });
+$("ltKeep").addEventListener("click", function(){ ltStopLive(); popSnd(); show("gate"); });
+$("ltLeave").addEventListener("click", function(){ ltStopLive(); popSnd(); show("gate"); });
+$("ltBack").addEventListener("click", function(){ ltStopLive(); popSnd(); show("capture"); });
 
 /* ================= card condition grader (demo) ================= */
+/* Camera + upload + sample for front AND back. Own photos enable the
+   grade button, but the grade shown is ALWAYS a sample — it is never
+   claimed to be read from the user's photos. */
 var condIn = { front:false, back:false };
+var condOwn = { front:false, back:false };
+var condStream = null, condTarget = "front";
+function condStopCam(){
+  if(condStream){ condStream.getTracks().forEach(function(tr){ tr.stop(); }); condStream = null; }
+  var v = $("condVideo"); if(v){ v.srcObject = null; v.style.display = "none"; }
+  var w = $("condCamWrap"); if(w) w.classList.add("hidden");
+}
+function condSetPhoto(side, kind, url){
+  condIn[side] = true;
+  condOwn[side] = (kind === "own");
+  var emptyId = side === "front" ? "condEmptyFront" : "condEmptyBack";
+  var sampleId = side === "front" ? "condSampleFront" : "condSampleBack";
+  var prevId = side === "front" ? "condPrevFront" : "condPrevBack";
+  var takeId = side === "front" ? "condCamFront" : "condCamBack";
+  var sampleBtnId = side === "front" ? "condBtnFront" : "condBtnBack";
+  $(emptyId).classList.add("hidden");
+  if(kind === "own"){
+    $(sampleId).classList.add("hidden");
+    var img = $(prevId); img.src = url; img.classList.remove("hidden");
+    $(takeId).textContent = (side === "front" ? "Front photo in ✓ — retake" : "Back photo in ✓ — retake");
+    $(sampleBtnId).textContent = side === "front" ? "Use a sample front photo" : "Use a sample back photo";
+  } else {
+    $(prevId).classList.add("hidden"); $(prevId).removeAttribute("src");
+    $(sampleId).classList.remove("hidden");
+    $(takeId).textContent = side === "front" ? "📷 Take front photo" : "📷 Take back photo";
+    $(sampleBtnId).textContent = side === "front" ? "Sample front photo in ✓" : "Sample back photo in ✓";
+  }
+  popSnd(); condUpdate();
+}
 function condUpdate(){
   var ready = condIn.front && condIn.back;
   var btn = $("condGradeBtn");
   btn.disabled = !ready;
   btn.innerHTML = ready
     ? "<span>🩹 See a SAMPLE grade</span>"
-    : "<span>🩹 See a SAMPLE grade</span><span class=\"sub\">Needs both sample photos first</span>";
+    : "<span>🩹 See a SAMPLE grade</span><span class=\"sub\">Needs both front + back photos first</span>";
 }
-$("condBtnFront").addEventListener("click", function(){
-  condIn.front = true;
-  $("condEmptyFront").classList.add("hidden");
-  $("condSampleFront").classList.remove("hidden");
-  this.textContent = "Sample front photo in ✓";
-  popSnd(); condUpdate();
+function condOpenCam(side){
+  condTarget = side;
+  var msg = $("condCamMsg");
+  if(msg) msg.classList.add("hidden");
+  var camFileId = side === "front" ? "condCamFileFront" : "condCamFileBack";
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    if(msg){ msg.textContent = "Camera is not available in this browser — opening your phone camera picker instead. If nothing opens, use Upload, or open this demo in Chrome."; msg.classList.remove("hidden"); }
+    $(camFileId).click();
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(s){
+    condStream = s; var v = $("condVideo"); v.srcObject = s; v.style.display = "block";
+    $("condCamWrap").classList.remove("hidden"); v.play();
+  }).catch(function(){
+    if(msg){ msg.textContent = "Camera blocked here — opening your phone camera picker instead. If nothing opens, use Upload, or open this demo in Chrome."; msg.classList.remove("hidden"); }
+    $(camFileId).click();
+  });
+}
+function condWireFile(inputId, side){
+  $(inputId).addEventListener("change", function(){
+    var f = this.files && this.files[0];
+    this.value = "";
+    if(!f) return;
+    condSetPhoto(side, "own", URL.createObjectURL(f));
+  });
+}
+condWireFile("condFileFront", "front");
+condWireFile("condFileBack", "back");
+condWireFile("condCamFileFront", "front");
+condWireFile("condCamFileBack", "back");
+$("condCamFront").addEventListener("click", function(){ condOpenCam("front"); });
+$("condCamBack").addEventListener("click", function(){ condOpenCam("back"); });
+$("condUpFront").addEventListener("click", function(){ condStopCam(); $("condFileFront").click(); });
+$("condUpBack").addEventListener("click", function(){ condStopCam(); $("condFileBack").click(); });
+$("condSnap").addEventListener("click", function(){
+  var v = $("condVideo");
+  var c = document.createElement("canvas"); c.width = v.videoWidth || 640; c.height = v.videoHeight || 480;
+  c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
+  condSetPhoto(condTarget, "own", c.toDataURL("image/jpeg", 0.85));
+  condStopCam();
 });
-$("condBtnBack").addEventListener("click", function(){
-  condIn.back = true;
-  $("condEmptyBack").classList.add("hidden");
-  $("condSampleBack").classList.remove("hidden");
-  this.textContent = "Sample back photo in ✓";
-  popSnd(); condUpdate();
-});
+$("condStopCam").addEventListener("click", condStopCam);
+$("condBtnFront").addEventListener("click", function(){ condStopCam(); condSetPhoto("front", "sample", null); });
+$("condBtnBack").addEventListener("click", function(){ condStopCam(); condSetPhoto("back", "sample", null); });
 $("condGradeBtn").addEventListener("click", function(){
   if(!condIn.front || !condIn.back) return;
   popSnd();
+  var note = $("condResultNote");
+  if(note){
+    if(condOwn.front || condOwn.back){ note.textContent = "Your photos are in — the grade below is still a SAMPLE example, NOT read from your photos. Example wording only."; }
+    else { note.textContent = "Sample card · graded from the sample photos above · example wording only"; }
+  }
   var r = $("condResult");
   r.classList.remove("hidden");
   r.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
 });
+document.addEventListener("click", function(e){ if(e.target.closest("[data-nav]")) condStopCam(); });
 
 /* ================= plain words (Wick 🕯️ — session-only in this demo) ================= */
 var PW_TEXT = {
