@@ -95,7 +95,7 @@
   .demo-banner span{display:block; font-size:12.5px; font-weight:700; opacity:.85; margin-top:1px;}
   /* ---------- generic ---------- */
   main{flex:1; display:flex; flex-direction:column; padding-bottom:104px; position:relative; z-index:1;}
-  .screen{display:none; flex-direction:column; flex:1; padding:8px 20px 30px; position:relative;}
+  .screen{display:none; flex-direction:column; flex:1; padding:8px 20px 30px; position:relative; z-index:1;}
   .screen.active{display:flex;}
   h1{font-size:38px; font-weight:900; line-height:1.08; margin:0;}
   h2{font-size:27px; font-weight:900; line-height:1.15; margin:0;}
@@ -292,6 +292,8 @@
   .gdone{text-align:center; margin-top:22px; display:flex; flex-direction:column; gap:12px; align-items:center;}
   @keyframes endPopIn{from{opacity:0; transform:translateY(10px) scale(.98);}to{opacity:1; transform:translateY(0) scale(1);}}
   .gdone #endBoard{animation:endPopIn .3s ease-out;}
+  .gdone #endNote{color:#fff8e7; opacity:.95;}
+  .gdone .small.dim{opacity:.95;}
   @media (prefers-reduced-motion: reduce){ .gdone #endBoard{animation:none;} }
   .gdone .big{font-size:42px;}
   .hidden{display:none !important;}
@@ -407,8 +409,8 @@
   .op-profilebubble{display:flex;align-items:center;gap:8px;background:rgba(41,37,36,.9);border:1.5px solid rgba(255,197,61,.35);border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--text);font-weight:800}
   .op-profilebubble img{width:32px;height:32px;border-radius:50%;object-fit:contain}
   .op-coins{font-weight:900;color:#ffd97a;white-space:nowrap}
-  .op-bg{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;background:transparent;transform:translateY(calc(var(--bgScroll,0) * -0.15px));will-change:transform}
-  .op-bg::after{content:"";position:absolute;left:-50%;top:-50%;width:200%;height:200%;background-image:radial-gradient(circle at 20% 30%,rgba(56,189,248,.38) 0 40px,transparent 42px),radial-gradient(circle at 70% 20%,rgba(255,197,61,.36) 0 52px,transparent 54px),radial-gradient(circle at 40% 70%,rgba(255,107,157,.32) 0 36px,transparent 38px),radial-gradient(circle at 85% 75%,rgba(127,227,127,.32) 0 44px,transparent 46px);background-size:640px 480px;animation:opScroll 36s linear infinite}
+  .op-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:transparent;transform:translateY(calc(var(--bgScroll,0) * -0.15px));will-change:transform}
+  .op-bg::after{content:"";position:absolute;left:-50%;top:-50%;width:200%;height:200%;background-image:radial-gradient(circle at 20% 30%,rgba(56,189,248,.22) 0 32px,transparent 34px),radial-gradient(circle at 70% 20%,rgba(255,197,61,.20) 0 42px,transparent 44px),radial-gradient(circle at 40% 70%,rgba(255,107,157,.18) 0 28px,transparent 30px),radial-gradient(circle at 85% 75%,rgba(127,227,127,.18) 0 36px,transparent 38px);background-size:640px 480px;animation:opScroll 36s linear infinite}
   @keyframes opScroll{from{transform:translate(0,0)}to{transform:translate(320px,240px)}}
   .calm .op-bg::after{animation:none !important}
   @media (prefers-reduced-motion:reduce){.op-bg::after{animation:none !important}}
@@ -1079,8 +1081,11 @@
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>🏆 Global Leaderboard — Mini Games</h2>
     <p class="small dim">This board is for everybody who plays, not just this visit. Global scores are live now on the SSD backend at api.cardcauldrontcg.com. Post a score from any game's end screen, by name only, and it shows here for everybody. No fake names or scores are shown here.</p>
-    <div class="card mt"><h3>Global board — coming with the backend</h3>
-    <p id="opGlobalBoard">No global scores yet for this game. Play a game, and when you finish, post your score from the end screen — it will appear here, by display name only.</p></div>
+    <div class="card mt"><h3>Global board — live</h3>
+    <p class="small dim" id="opGlobalStatus">Pick a game, then its top scores load live from the backend.</p>
+    <div id="opLbPicker" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;"></div>
+    <ol id="opGlobalTop" style="text-align:left;margin-top:12px;"></ol>
+    <p class="small dim">Play a game, and when you finish, post your score from the end screen — it will appear here, by display name only.</p></div>
     <div class="card mt"><h3>Your scores this visit</h3>
     <p id="opLocalBoard">Play a game and your best score for this visit will show here.</p>
     <button type="button" class="bubble-btn b-white" data-nav="games"><span>Play the mini games</span></button></div>
@@ -1276,6 +1281,7 @@ function show(id){
     dockBtns[j].classList.toggle("on", dockBtns[j].getAttribute("data-dock") === (dockMap[id]||"__none__"));
   }
   if(id==="games") renderGamesHub();
+  if(id==="leaderboard") loadGlobalBoard(window._lbGame || "rapid");
 }
 document.addEventListener("click", function(e){
   var t = e.target.closest("[data-nav]");
@@ -1632,6 +1638,20 @@ function gameShell(scr, title, byline, bodyHTML){
     + '</section>';
 }
 var API_BASE = 'https://api.cardcauldrontcg.com';
+var LB_GAMES=[{id:"rapid",label:"Rapid Fire"},{id:"fit",label:"Perfect Fit"},{id:"match",label:"Match Audit"},{id:"beat",label:"Bubble Beat"},{id:"poppath",label:"Pop Path"},{id:"coin",label:"Coin Catch"},{id:"mystery",label:"Mystery Pack"},{id:"ziggy",label:"Ziggy"},{id:"brew",label:"Brew"},{id:"relay",label:"Message Relay"},{id:"zoom",label:"Zoom Pop"},{id:"shelf",label:"Shelf"}];
+function loadGlobalBoard(game){
+  window._lbGame = game;
+  var st=document.getElementById("opGlobalStatus"), top=document.getElementById("opGlobalTop"), pk=document.getElementById("opLbPicker");
+  if(pk && !pk.children.length){ pk.innerHTML = LB_GAMES.map(function(g){ return '<button type="button" class="bubble-btn b-white" data-lb="'+g.id+'" style="padding:6px 10px;"><span>'+g.label+'</span></button>'; }).join(""); pk.querySelectorAll("[data-lb]").forEach(function(b){ b.addEventListener("click", function(){ loadGlobalBoard(b.getAttribute("data-lb")); }); }); }
+  if(pk) pk.querySelectorAll("[data-lb]").forEach(function(b){ b.style.outline = (b.getAttribute("data-lb")===game) ? "2px solid #ffd97a" : "none"; });
+  if(!st || !top) return; st.textContent = "Loading top scores for " + game + "…"; top.innerHTML = "";
+  fetch(API_BASE + "/leaderboard/top?game=" + encodeURIComponent(game) + "&limit=10").then(function(r){ return r.json(); }).then(function(d){
+    var list = d.scores || [];
+    if(!list.length){ st.textContent = "No global scores yet for this game — be the first! Play it and post from the end screen."; return; }
+    st.textContent = "Top scores for " + game + ", live from the backend:";
+    top.innerHTML = list.map(function(s,i){ return "<li>#"+(i+1)+" "+String(s.name||"Anonymous")+" — "+s.score+"</li>"; }).join("");
+  }).catch(function(){ st.textContent = "Leaderboard is offline right now — try again later."; });
+}
 function endBoardInit(){
   var board = document.getElementById('endBoard'); if(!board) return;
   var rankEl = document.getElementById('endRank'), topEl = document.getElementById('endTop'),
