@@ -290,6 +290,9 @@
     box-shadow:inset 0 2px 0 rgba(255,255,255,.08), 0 8px 20px rgba(0,0,0,.55); overflow:hidden;
   }
   .gdone{text-align:center; margin-top:22px; display:flex; flex-direction:column; gap:12px; align-items:center;}
+  @keyframes endPopIn{from{opacity:0; transform:translateY(10px) scale(.98);}to{opacity:1; transform:translateY(0) scale(1);}}
+  .gdone #endBoard{animation:endPopIn .3s ease-out;}
+  @media (prefers-reduced-motion: reduce){ .gdone #endBoard{animation:none;} }
   .gdone .big{font-size:42px;}
   .hidden{display:none !important;}
   .icon-btn{
@@ -1072,9 +1075,9 @@
   <section class="screen" id="scr-leaderboard">
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>🏆 Global Leaderboard — Mini Games</h2>
-    <p class="small dim">This board is for everybody who plays, not just this visit. Global scores are NOT live yet — that needs a real backend server, which is not running yet. Until then, the scores below are this visit only, and no fake names or scores are shown here.</p>
+    <p class="small dim">This board is for everybody who plays, not just this visit. Global scores are live now on the SSD backend at api.cardcauldrontcg.com. Post a score from any game's end screen, by name only, and it shows here for everybody. No fake names or scores are shown here.</p>
     <div class="card mt"><h3>Global board — coming with the backend</h3>
-    <p id="opGlobalBoard">No global scores yet. When the backend is live, top scores from all players will appear here, by display name only.</p></div>
+    <p id="opGlobalBoard">No global scores yet for this game. Play a game, and when you finish, post your score from the end screen — it will appear here, by display name only.</p></div>
     <div class="card mt"><h3>Your scores this visit</h3>
     <p id="opLocalBoard">Play a game and your best score for this visit will show here.</p>
     <button type="button" class="bubble-btn b-white" data-nav="games"><span>Play the mini games</span></button></div>
@@ -1151,7 +1154,9 @@ function clamp(v,lo,hi){ return Math.min(hi,Math.max(lo,v)); }
 
 /* session-only game bests (in memory — never stored, never an account) */
 var sessionBests = {};
+var lastGameId='', lastGameScore=0;
 function recordBest(id, score){
+  lastGameId=id; lastGameScore=score;
   if(sessionBests[id]==null || score > sessionBests[id]) sessionBests[id]=score;
   sessionTracker.plays++;
   sessionTracker.total += score;
@@ -1623,11 +1628,54 @@ function gameShell(scr, title, byline, bodyHTML){
     + '<div style="margin-top:auto;padding-top:22px;"><button type="button" class="bubble-btn b-white" data-nav="games"><span>Back to Mini Games</span></button></div>'
     + '</section>';
 }
+var API_BASE = 'https://api.cardcauldrontcg.com';
+function endBoardInit(){
+  var board = document.getElementById('endBoard'); if(!board) return;
+  var rankEl = document.getElementById('endRank'), topEl = document.getElementById('endTop'),
+      nameEl = document.getElementById('endName'), subEl = document.getElementById('endSubmit'),
+      noteEl = document.getElementById('endNote');
+  var game = lastGameId || 'game', score = lastGameScore;
+  try{ if(nameEl) nameEl.value = (typeof opProfile!=='undefined' && (opProfile.displayName || opProfile.username)) || ''; }catch(e){}
+  function showTop(list){
+    if(!list || !list.length){ topEl.innerHTML = '<li>No global scores yet for this game — be the first!</li>'; rankEl.textContent = 'You would be #1 with '+score+' — post it below to claim it.'; return; }
+    topEl.innerHTML = list.map(function(s,i){ return '<li>#'+(i+1)+' '+String(s.name||'Anonymous')+' — '+s.score+'</li>'; }).join('');
+    var above = list.filter(function(s){ return s.score > score; }).length;
+    if(above < list.length){ rankEl.textContent = 'Where you are at: #'+(above+1)+' with '+score+'.'; }
+    else { rankEl.textContent = 'Where you are at: outside the top '+list.length+' with '+score+' — post it and climb!'; }
+  }
+  function loadTop(){
+    rankEl.textContent = 'Checking the leaderboard…';
+    fetch(API_BASE + '/leaderboard/top?game=' + encodeURIComponent(game) + '&limit=10')
+      .then(function(r){ return r.json(); }).then(function(d){ showTop(d.scores||[]); })
+      .catch(function(){ rankEl.textContent = 'Leaderboard is offline right now — your score is saved for this visit only. Try posting again later.'; topEl.innerHTML=''; });
+  }
+  loadTop();
+  if(subEl) subEl.addEventListener('click', function(){
+    var nm = (nameEl ? nameEl.value.trim() : '') || 'Anonymous';
+    noteEl.textContent = 'Posting…'; subEl.disabled = true;
+    fetch(API_BASE + '/leaderboard/submit', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({game:game, name:nm, score:score})})
+      .then(function(r){ if(!r.ok) throw new Error('post failed'); return r.json(); })
+      .then(function(){
+        noteEl.textContent = 'Posted! You are on the global leaderboard as '+nm+'.';
+        try{ if(typeof opProfile!=='undefined' && nameEl && nameEl.value.trim()){ opProfile.displayName = nameEl.value.trim(); if(typeof opSaveProfileData==='function') opSaveProfileData(); } }catch(e){}
+        loadTop();
+      })
+      .catch(function(){ noteEl.textContent = 'Could not post — leaderboard is offline. Your score is still saved for this visit.'; subEl.disabled = false; });
+  });
+}
 function doneHTML(score, line){
+  lastGameScore = score;
+  setTimeout(endBoardInit, 0);
   return '<div class="gdone"><p class="big" aria-hidden="true">🎉</p>'
     + '<h3 style="font-size:25px;">Final score: '+score+'</h3>'
     + '<p class="lead" style="font-size:16.5px;">'+line+'</p>'
-    + '<p class="small dim">Scores are bragging rights for this visit only — they never touch your free checks, and nothing is saved to an account.</p>'
+    + '<div class="card mt" id="endBoard"><h3>🏆 Leaderboard — where you are at</h3>'
+    + '<p id="endRank" style="font-weight:800;">Checking the leaderboard…</p>'
+    + '<ol id="endTop" style="text-align:left;"></ol>'
+    + '<label style="display:block;font-weight:800;margin-top:10px;">Name or nickname<br><input id="endName" type="text" maxlength="40" placeholder="Type your name or nickname" style="width:100%;padding:10px;border-radius:10px;margin-top:6px;"></label>'
+    + '<button type="button" class="bubble-btn b-gold" id="endSubmit" style="margin-top:10px;"><span>Post my score to the leaderboard</span></button>'
+    + '<p class="small dim" id="endNote">Posting shows your name and score to everybody, nothing else. If you do not post, this score stays for this visit only.</p></div>'
+    + '<p class="small dim">Scores are bragging rights only — they never touch your free checks.</p>'
     + '<button type="button" class="bubble-btn b-pink" id="againBtn"><span>Play again</span></button></div>';
 }
 function timersBag(){
