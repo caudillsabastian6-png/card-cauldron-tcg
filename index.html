@@ -76,7 +76,7 @@
 
   /* ---------- nav ---------- */
   nav{
-    position:fixed; top:0; left:0; right:0; z-index:50;
+    position:sticky; top:0; left:0; right:0; z-index:50;
     display:flex; align-items:center; gap:1rem; padding:.6rem clamp(.8rem,3vw,2rem);
     background:color-mix(in srgb, var(--bg) 78%, transparent);
     backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
@@ -152,7 +152,7 @@
     padding:.42rem .8rem; border-radius:999px; backdrop-filter:blur(4px);
   }
   .flycard{
-    position:absolute; z-index:-1; width:clamp(84px,13vw,150px); border-radius:8px;
+    position:absolute; z-index:-1; width:clamp(84px,13vw,150px); aspect-ratio:498/689; height:auto; object-fit:contain; border-radius:8px;
     box-shadow:0 18px 40px rgba(0,0,0,.6); will-change:transform;
   }
   .fly1{left:4%; top:20%; animation:flyA 11s ease-in-out infinite}
@@ -166,10 +166,11 @@
   }
   @keyframes bob{0%,100%{transform:translateY(0);opacity:.75}50%{transform:translateY(8px);opacity:1}}
   @media (max-width:640px){
-    .hero{padding-top:8.6rem}
-    .fly1{top:auto; bottom:23%; left:1%; width:62px}
+    .hero{padding-top:2rem; min-height:auto}
+    .hero-bg img{height:100%}
+    .fly1{top:auto; bottom:23%; left:3%; width:56px; max-height:78px}
     .fly2{display:none}
-    .fly3{top:auto; bottom:6%; right:1%; width:54px}
+    .fly3{top:auto; bottom:6%; right:3%; width:48px; max-height:67px}
     .cue-tail{display:none}
     .scroll-cue{letter-spacing:.22em}
   }
