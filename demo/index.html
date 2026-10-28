@@ -597,6 +597,20 @@
     </div>
   </section>
 
+  <!-- ================= CONTINUE-TO-BACK POPUP (upload #12) ================= -->
+  <div id="capContinuePop" hidden style="position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
+      <div style="font-size:44px;">🎉</div>
+      <h2 style="margin:10px 0 6px;">Front photo done!</h2>
+      <p class="lead" id="capContinueText" style="margin:0;">Now flip your card over. The camera for the back photo is already on.</p>
+      <p class="small dim" style="margin-top:8px;">Tap the gold button and the back camera opens straight away. No scrolling, no second button hunt.</p>
+      <div class="stack" style="margin-top:16px;">
+        <button type="button" class="bubble-btn b-gold" id="capContinueBtn"><span id="capContinueBtnText">📸 Take the back photo now</span></button>
+        <button type="button" class="bubble-btn b-white small" id="capContinueClose"><span>Not yet — let me look first</span></button>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= LAUNCH GATE ================= -->
   <section class="screen" id="scr-gate">
     <div class="decor" aria-hidden="true"><i style="width:80px;height:80px;top:6%;left:-20px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#ffc53d 55%);"></i><i style="width:48px;height:48px;bottom:22%;right:4%;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#38bdf8 55%);animation-delay:1s;"></i></div>
@@ -1265,6 +1279,7 @@ function show(id){
   if(gameCleanup){ try{ gameCleanup(); }catch(e){} gameCleanup=null; }
   var screens = document.querySelectorAll(".screen");
   for(var i=0;i<screens.length;i++) screens[i].classList.remove("active");
+  var _cp = $("capContinuePop"); if(_cp) _cp.hidden = true;
   var el = $("scr-"+id);
   if(el) el.classList.add("active");
   window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; requestAnimationFrame(function(){ window.scrollTo(0,0); });
@@ -1356,6 +1371,11 @@ function renderCaptureStep(){
   $("capGot").textContent = "";
   $("capNext").classList.add("hidden");
   $("capBack").textContent = capStep===0 ? "← Pick a category" : "← "+capCat.steps[capStep-1].cap;
+  var _pop = $("capContinuePop"); if(_pop) _pop.hidden = true;
+  /* Upload #12: camera opens by itself when the step appears. No tap
+     needed to get the live feed. If it cannot start, the message below
+     the frame says so in plain words and the Take button still works. */
+  setTimeout(function(){ capStartLive(false); }, 120);
   var dots = "";
   for(var i=0;i<capCat.steps.length;i++){
     dots += '<i class="'+(i<capStep?"done":(i===capStep?"now":""))+'"></i>';
@@ -1371,17 +1391,40 @@ function capPhotoReady(){
   $("capTake").classList.add("small");
   $("capUseSample").classList.add("hidden");
   var last = capStep >= capCat.steps.length-1;
-  $("capNext").innerHTML = "<span>"+(last ? "Finish the demo steps →" : "Next photo →")+"</span>";
+  var _nextLabel = last ? "Finish the demo steps \u2192" : ("Next: take the " + (capCat.steps[capStep+1] ? capCat.steps[capStep+1].cap.toLowerCase() : "next") + " photo \u2192");
+  $("capNext").innerHTML = "<span>"+_nextLabel+"</span>";
+  if(!last){
+    var _ct = $("capContinueText");
+    if(_ct) _ct.textContent = "Front photo done! Now flip your card over and take the " + capCat.steps[capStep+1].cap.toLowerCase() + " photo. The camera is already on.";
+    var _cb = $("capContinueBtnText");
+    if(_cb) _cb.textContent = "\uD83D\uDCF8 Take the " + capCat.steps[capStep+1].cap.toLowerCase() + " photo now";
+    var _pop2 = $("capContinuePop");
+    if(_pop2) _pop2.hidden = false;
+  }
   $("capNext").classList.remove("hidden");
   popSnd();
 }
 var capStream=null, capLive=false;
 function capStopLive(){ if(capStream){ capStream.getTracks().forEach(function(tr){ tr.stop(); }); capStream=null; } var v=$("capVideo"); if(v){ v.srcObject=null; v.style.display="none"; } capLive=false; }
+function capStartLive(openPickerOnFail){
+  if(capLive) return;
+  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(st){ capStream=st; var v=$("capVideo"); v.srcObject=st; v.style.display="block"; v.play(); capLive=true; $("capTake").innerHTML="<span>\uD83D\uDCF8 Snap this photo</span>"; var g=$("capGot"); if(g) g.textContent="Live camera is on — line the card up inside the frame, then tap Snap."; }).catch(function(){ var g=$("capGot"); if(g) g.textContent="Camera did not start here — tap Take the photo to open your phone camera picker, or use Upload a file. If nothing opens, open this demo in Chrome."; if(openPickerOnFail) $("capCamFile").click(); });
+  } else { var g2=$("capGot"); if(g2) g2.textContent="Camera is not available in this browser — tap Take the photo to open your phone camera picker, or use Upload a file."; if(openPickerOnFail) $("capCamFile").click(); }
+}
 $("capTake").addEventListener("click", function(){
   if(capLive){ var v=$("capVideo"); var c=document.createElement("canvas"); c.width=v.videoWidth||640; c.height=v.videoHeight||480; c.getContext("2d").drawImage(v,0,0,c.width,c.height); var img=$("capImg"); img.src=c.toDataURL("image/jpeg",0.85); img.alt=capCat.steps[capStep].cap+" — your photo (stays on your device)"; img.classList.remove("hidden"); $("capSample").classList.add("hidden"); capStopLive(); $("capTake").innerHTML="<span>"+capCat.steps[capStep].take+"</span>"; capPhotoReady(); return; }
-  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(s){ capStream=s; var v=$("capVideo"); v.srcObject=s; v.style.display="block"; v.play(); capLive=true; $("capTake").innerHTML="<span>📸 Snap this photo</span>"; var g=$("capGot"); if(g) g.textContent="Live camera on — line the card up inside the frame, then tap Snap."; }).catch(function(){ var g=$("capGot"); if(g) g.textContent="Camera blocked here — opening your phone camera picker instead. If nothing opens, use Upload a file, or open this demo in Chrome."; $("capCamFile").click(); });
-  } else { var g2=$("capGot"); if(g2) g2.textContent="Camera is not available in this browser — opening your phone camera picker instead. If nothing opens, use Upload a file, or open this demo in Chrome."; $("capCamFile").click(); }
+  capStartLive(true);
+});
+$("capContinueBtn").addEventListener("click", function(){
+  var p=$("capContinuePop"); if(p) p.hidden=true;
+  if(!capHas) return;
+  popSnd();
+  if(capStep >= capCat.steps.length-1){ return; }
+  capStep++; renderCaptureStep();
+});
+$("capContinueClose").addEventListener("click", function(){
+  var p=$("capContinuePop"); if(p) p.hidden=true;
 });
 $("capUploadFile").addEventListener("click", function(){ capStopLive(); $("capFile").click(); });
 $("capFile").addEventListener("change", function(){
@@ -1418,7 +1461,7 @@ $("capNext").addEventListener("click", function(){
     /* Pokémon Cards get the optional Light Test offer after the back
        photo, exactly like the full app — every other category goes
        straight to the finish. */
-    if(capCat.label === "Pokémon Card"){ resetLightTest(); show("lightTest"); }
+    if(capCat.label === "Pokémon Card"){ resetLightTest(); show("lightTest"); setTimeout(function(){ ltStartLive(false); }, 120); }
     else show("gate");
   }
   else { capStep++; renderCaptureStep(); }
@@ -1458,11 +1501,15 @@ function ltPhotoReady(){
   $("ltLeave").classList.remove("hidden");
   popSnd();
 }
+function ltStartLive(openPickerOnFail){
+  if(ltLive) return;
+  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(st){ ltStream=st; var v=$("ltVideo"); v.srcObject=st; v.style.display="block"; v.play(); ltLive=true; $("ltTake").innerHTML="<span>\uD83D\uDCF8 Snap this photo</span>"; var g=$("ltGot"); if(g) g.textContent="Live camera is on — hold the card against the light, then tap Snap."; }).catch(function(){ var g=$("ltGot"); if(g) g.textContent="Camera did not start here — tap Take the light photo to open your phone camera picker, or use Upload a file. If nothing opens, open this demo in Chrome."; if(openPickerOnFail) $("ltCamFile").click(); });
+  } else { var g2=$("ltGot"); if(g2) g2.textContent="Camera is not available in this browser — tap Take the light photo to open your phone camera picker, or use Upload a file."; if(openPickerOnFail) $("ltCamFile").click(); }
+}
 $("ltTake").addEventListener("click", function(){
   if(ltLive){ var v=$("ltVideo"); var c=document.createElement("canvas"); c.width=v.videoWidth||640; c.height=v.videoHeight||480; c.getContext("2d").drawImage(v,0,0,c.width,c.height); var img=$("ltImg"); img.src=c.toDataURL("image/jpeg",0.85); img.alt="Your card held against a bright light — the light test photo (stays on your device)"; img.classList.remove("hidden"); $("ltSample").classList.add("hidden"); ltStopLive(); ltPhotoReady(); return; }
-  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(s){ ltStream=s; var v=$("ltVideo"); v.srcObject=s; v.style.display="block"; v.play(); ltLive=true; $("ltTake").innerHTML="<span>📸 Snap this photo</span>"; var g=$("ltGot"); if(g) g.textContent="Live camera on — hold the card against the light, then tap Snap."; }).catch(function(){ var g=$("ltGot"); if(g) g.textContent="Camera blocked here — opening your phone camera picker instead. If nothing opens, use Upload a file, or open this demo in Chrome."; $("ltCamFile").click(); });
-  } else { var g2=$("ltGot"); if(g2) g2.textContent="Camera is not available in this browser — opening your phone camera picker instead. If nothing opens, use Upload a file, or open this demo in Chrome."; $("ltCamFile").click(); }
+  ltStartLive(true);
 });
 $("ltUploadFile").addEventListener("click", function(){ ltStopLive(); $("ltFile").click(); });
 $("ltFile").addEventListener("change", function(){
