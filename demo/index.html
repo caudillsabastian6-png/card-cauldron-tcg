@@ -328,6 +328,9 @@
     background:linear-gradient(180deg,#71879f,#2e3d4f); color:var(--text); font-family:inherit;
   }
   .match-card.up{background:linear-gradient(180deg,#4a4440,#292524); color:#fff8e7;}
+  @keyframes matchBob{0%,100%{transform:translateY(0) scale(1) rotate(-1deg);}50%{transform:translateY(-4px) scale(1.04) rotate(1deg);}}
+  .match-card:not(.up):not(.done){animation:matchBob 2s ease-in-out infinite; border-color:rgba(255,217,122,.55);}
+  @media (prefers-reduced-motion: reduce){ .match-card:not(.up):not(.done){animation:none;} }
   .match-card.done{background:rgba(87,217,87,.25);}
   /* perfect fit */
   .fit-row{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:center; gap:14px; margin-top:20px;}
@@ -1825,7 +1828,7 @@ function startFit(){
 /* ================= 3. Match Audit ================= */
 function startMatch(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var symbols = ["🫧","⭐","🍋","🌸","💎","🦉"];
+  var symbols = ["🦊","⭐","🍋","🌸","💎","🦉"];
   var deck = shuffle(symbols.flatMap(function(s,i){ return [{k:i*2,s:s},{k:i*2+1,s:s}]; }));
   var open = [], matched = {}, attempts = 0, lock = false;
   var body = $("gameMatch-body");
@@ -1834,7 +1837,7 @@ function startMatch(){
     var cards = deck.map(function(c, idx){
       var up = open.indexOf(idx)>=0 || matched[idx];
       var cls = matched[idx] ? "match-card done" : (up ? "match-card up" : "match-card");
-      return '<button type="button" class="'+cls+'" data-idx="'+idx+'" aria-label="'+(up ? "Card showing "+c.s : "Face-down card — flip it")+'">'+(up ? c.s : "🫧")+'</button>';
+      return '<button type="button" class="'+cls+'" data-idx="'+idx+'" aria-label="'+(up ? "Card showing "+c.s : "Face-down card — flip it")+'">'+(up ? c.s : "🐲")+'</button>';
     }).join("");
     body.innerHTML =
       '<p class="scorebar" role="status">Flips: '+attempts+' · Pairs found: '+pairs+' of '+symbols.length+'</p>'
