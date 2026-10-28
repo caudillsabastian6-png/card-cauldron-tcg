@@ -432,7 +432,7 @@
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>Plan</span></button></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>Plan</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Lens's Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/"><span>Website — Home</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/shop.html"><span>Website — Shop</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/sets.html"><span>Website — Browse by Set</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/bulk.html"><span>Website — We Buy Bulk</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/ask.html"><span>Website — Ask the Office</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/about.html"><span>Website — About</span></a></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
   <nav class="upscale-topnav" aria-label="Demo and community">
     <span class="upscale-sweep" aria-hidden="true"></span>
@@ -464,6 +464,7 @@
       <div>
         <h2>Hi there! 👋</h2>
         <p class="lead" style="margin-top:4px;">Got a card you're wondering about?</p>
+      <div class="card" style="margin-top:10px;background:#1b2a4a;border-color:#38bdf8;"><p style="font-weight:900;margin:0;">🫧 Juno's reminder: <span id="junoReminder">sleeves before the binder, always.</span></p></div>
       </div>
       <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle pop sounds">🔊</button>
     </div>
@@ -1046,6 +1047,17 @@
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>Settings &amp; Profile</h2>
     <p class="small dim">Demo only: everything here saves on this device only (local storage). No real account, no server, nothing leaves this device.</p>
+    <div class="card mt"><h3>Profile</h3>
+    <label class="op-field">Display name <input type="text" id="opDisplayName" placeholder="Name shown in the app" autocomplete="off"></label>
+    <label class="op-field">Bio / tagline <input type="text" id="opBio" placeholder="A short line about you" autocomplete="off"></label>
+    <button type="button" class="bubble-btn b-gold" onclick="opSaveProfile()"><span>Save profile (this device only)</span></button>
+    <p class="small dim" id="opProfileSaved" hidden>Saved on this device.</p></div>
+    <div class="card mt"><h3>Login — local demo only</h3>
+    <p class="small dim">This is NOT a real account login. It only remembers a name so the top bubble shows who is signed in. No password, no server, nothing leaves this device, nothing is saved to an account.</p>
+    <label class="op-field">Login name <input type="text" id="opLoginName" placeholder="Username for this demo" autocomplete="off"></label>
+    <button type="button" class="bubble-btn b-gold" onclick="opSettingsLogin()"><span>Log in locally (demo only)</span></button>
+    <button type="button" class="bubble-btn b-white" onclick="opLogout()"><span>Log out (clear local login)</span></button>
+    <p class="small dim" id="opLoginState"></p></div>
     <div class="card mt"><h3>Avatar — pick yours first</h3>
     <p class="small dim">NEW illustrated original creatures (Mallow/Ember-style). Never official Pokémon art, never real card photos. Pick a creature, then customise: colour by tinting the illustration AND/OR by choosing a pre-coloured variant, plus an accessory and a background colour. Your avatar shows in the top bubble, in games, in Binders, and in rewards.</p>
     <p class="center"><span style="position:relative;display:inline-block"><img id="opAvatarPreviewImg" style="width:96px;height:96px;object-fit:contain;border-radius:50%"><img id="opAvatarAccessoryImg" style="display:none;position:absolute;right:0;top:0;width:32px;height:32px"></span></p>
@@ -1061,17 +1073,17 @@
     <p class="small dim">Pick a different live scrolling animation for the background behind the app. It saves on this device only, and Calm &amp; Clear / reduced-motion still stops it.</p>
     <label class="op-field">Background animation <select id="opBgAnim" onchange="opSetBg(this.value)"><option value="bubbles">Bubbles — coloured dots, diagonal scroll</option><option value="stars">Stars — tiny gold and white stars, drifting up</option><option value="embers">Ember sparks — orange sparks rising</option><option value="waves">Waves — soft teal and violet waves, sliding sideways</option><option value="mist">Cauldron mist — slow gold and violet glow, drifting</option></select></label>
     <p class="small dim" id="opBgNote"></p></div>
-    <div class="card mt"><h3>Login — local demo only</h3>
-    <p class="small dim">This is NOT a real account login. It only remembers a name so the top bubble shows who is signed in. No password, no server, nothing leaves this device, nothing is saved to an account.</p>
-    <label class="op-field">Login name <input type="text" id="opLoginName" placeholder="Username for this demo" autocomplete="off"></label>
-    <button type="button" class="bubble-btn b-gold" onclick="opSettingsLogin()"><span>Log in locally (demo only)</span></button>
-    <button type="button" class="bubble-btn b-white" onclick="opLogout()"><span>Log out (clear local login)</span></button>
-    <p class="small dim" id="opLoginState"></p></div>
-    <div class="card mt"><h3>Profile</h3>
-    <label class="op-field">Display name <input type="text" id="opDisplayName" placeholder="Name shown in the app" autocomplete="off"></label>
-    <label class="op-field">Bio / tagline <input type="text" id="opBio" placeholder="A short line about you" autocomplete="off"></label>
-    <button type="button" class="bubble-btn b-gold" onclick="opSaveProfile()"><span>Save profile (this device only)</span></button>
-    <p class="small dim" id="opProfileSaved" hidden>Saved on this device.</p></div>
+  </section>
+
+  <section class="screen" id="scr-leaderboard">
+    <button type="button" class="backlink" data-nav="home">← Home</button>
+    <h2>🏆 Global Leaderboard — Mini Games</h2>
+    <p class="small dim">This board is for everybody who plays, not just this visit. Global scores are NOT live yet — that needs a real backend server, which is not running yet. Until then, the scores below are this visit only, and no fake names or scores are shown here.</p>
+    <div class="card mt"><h3>Global board — coming with the backend</h3>
+    <p id="opGlobalBoard">No global scores yet. When the backend is live, top scores from all players will appear here, by display name only.</p></div>
+    <div class="card mt"><h3>Your scores this visit</h3>
+    <p id="opLocalBoard">Play a game and your best score for this visit will show here.</p>
+    <button type="button" class="bubble-btn b-white" data-nav="games"><span>Play the mini games</span></button></div>
   </section>
 
   <!-- game screens get injected here -->
@@ -1220,7 +1232,7 @@ document.addEventListener("click", function(e){
   var t = e.target.closest("[data-nav]");
   if(!t) return;
   popSnd();
-  show(t.getAttribute("data-nav"));
+  var mp=document.getElementById("opMenuPanel"); if(mp) mp.hidden=true; show(t.getAttribute("data-nav"));
 });
 
 /* ================= categories ================= */
@@ -2471,12 +2483,17 @@ function startGuess(){
   function round(){
     var c = OP_PRICE_CARDS[Math.floor(Math.random()*OP_PRICE_CARDS.length)];
     var opts = [c.price, Math.round(c.price*0.6*100)/100, Math.round(c.price*1.6*100)/100].sort(function(){ return Math.random()-0.5; });
-    var html = '<div class="card mt center"><p style="font-size:42px;" aria-hidden="true">💰</p><p class="lead" style="font-size:16.5px;margin-top:8px;text-align:left;">Guess the real recorded eBay sold price for <b>'+c.name+'</b> ('+c.set+' '+c.num+'), Near Mint, from the recorded snapshot set (2026-10-25, '+OP_PRICE_CARDS.length+' cards). Pick the recorded price:</p><div class="stack mt">';
+    var html = '<div class="card mt center"><p style="font-size:42px;" aria-hidden="true">💰</p>'
+      + '<div style="border:2px solid var(--gold);border-radius:1.2rem;padding:14px;margin-top:10px;background:#1b2735;">'
+      + '<p style="font-size:22px;font-weight:900;margin:0;">'+c.name+'</p>'
+      + '<p style="font-weight:800;margin:6px 0 0;">'+c.set+' · '+c.num+' · Near Mint</p>'
+      + '<p class="small dim" style="margin:6px 0 0;">Recorded sold '+new Date(c.sold_at).toLocaleDateString()+' · snapshot set 2026-10-25, '+OP_PRICE_CARDS.length+' cards · no photo on this sold record, so the card name, set and number are the thing you are pricing</p></div>'
+      + '<p class="lead" style="font-size:16.5px;margin-top:12px;text-align:left;">Guess the real recorded eBay sold price for this card. Pick the recorded price:</p><div class="stack mt">';
     opts.forEach(function(p){ html += '<button type="button" class="bubble-btn b-gold" data-price="'+p+'"><span>$'+p+'</span></button>'; });
-    html += '</div><p class="small dim" id="guessNote" style="margin-top:10px;">Every answer names its snapshot — never a made-up price. If a card has no recorded sold price, it does not appear.</p></div>';
+    html += '</div><p class="small dim" id="guessNote" style="margin-top:10px;">Every answer names its snapshot — never a made-up price. If a card has no recorded sold price, it does not appear.</p><button type="button" class="bubble-btn b-sky" id="guessNext" style="display:none;margin-top:10px;"><span>Next card →</span></button></div>';
     body.innerHTML = html;
     var btns = body.querySelectorAll("[data-price]");
-    btns.forEach(function(b){ b.addEventListener("click", function(){ var p = parseFloat(b.getAttribute("data-price")); var ok = (p === c.price); $("guessNote").textContent = ok ? ("Correct! $"+c.price+" was the recorded sold price for "+c.name+" ("+c.set+" "+c.num+").") : ("Not that one — the recorded sold price was $"+c.price+" for "+c.name+" ("+c.set+" "+c.num+")."); recordBest("guess", ok ? 100 : 0); }); });
+    btns.forEach(function(b){ b.addEventListener("click", function(){ var p = parseFloat(b.getAttribute("data-price")); var ok = (p === c.price); $("guessNote").textContent = ok ? ("Correct! $"+c.price+" was the recorded sold price for "+c.name+" ("+c.set+" "+c.num+").") : ("Not that one — the recorded sold price was $"+c.price+" for "+c.name+" ("+c.set+" "+c.num+")."); recordBest("guess", ok ? 100 : 0); var nb = document.getElementById("guessNext"); if(nb){ nb.style.display="block"; nb.addEventListener("click", function(){ round(); }); } }); });
   }
   round();
 }
@@ -2774,6 +2791,14 @@ if(opProfile.loggedIn){ opHideGate(); } else { opShowGate(); }
 <script>
 function opSetBg(v){var b=document.querySelector('.op-bg'); if(b) b.setAttribute('data-bg', v||'bubbles'); try{localStorage.setItem('op_bg_anim', v||'bubbles');}catch(e){} var n=document.getElementById('opBgNote'); if(n) n.textContent='Background set to: '+v+' — saved on this device.'; var s=document.getElementById('opBgAnim'); if(s) s.value=v||'bubbles';}
 (function(){var v='bubbles'; try{v=localStorage.getItem('op_bg_anim')||'bubbles';}catch(e){} var b=document.querySelector('.op-bg'); if(b) b.setAttribute('data-bg', v); var s=document.getElementById('opBgAnim'); if(s) s.value=v;})();
+</script>
+<script>
+(function(){
+  var r=["sleeves before the binder, always.","flat, even light, no glare on the photo.","fill the frame \u2014 all four corners and edges in view.","front, then back \u2014 both photos for a full check.","a bad photo is not a fake verdict."];
+  var el=document.getElementById("junoReminder");
+  if(!el) return;
+  el.textContent=r[Math.floor(Date.now()/86400000) % r.length];
+})();
 </script>
 </body>
 </html>
