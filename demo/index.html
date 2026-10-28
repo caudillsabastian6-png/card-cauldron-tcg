@@ -395,8 +395,8 @@
   .op-toprow button.bubble-btn{width:auto;min-height:48px;padding:10px 16px;font-size:16px;flex:1}
   .op-toprow button.bubble-btn span{display:block;width:100%;text-align:center}
   .op-menupanel{position:fixed;top:64px;left:12px;right:12px;z-index:61;max-height:calc(100vh - 150px);overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:10px;background:#181130;border:1px solid #f0b23e;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.5);box-sizing:border-box;}
-  .op-menupanel button.bubble-btn,.op-menupanel a.bubble-btn{flex:1 1 auto;max-width:none;min-height:38px;padding:8px 10px;font-size:14px;white-space:normal;overflow:hidden;text-overflow:ellipsis;text-decoration:none;display:block;text-align:left;}
-  .op-menupanel button.bubble-btn span{display:block;width:100%;text-align:center;white-space:nowrap}
+  .op-menupanel button.bubble-btn,.op-menupanel a.bubble-btn{flex:1 1 auto;max-width:none;min-height:38px;padding:8px 10px;font-size:14px;white-space:normal;overflow:hidden;text-overflow:ellipsis;text-decoration:none;display:block;text-align:center;}
+  .op-menupanel button.bubble-btn span,.op-menupanel a.bubble-btn span{display:block;width:100%;text-align:center;white-space:nowrap}
   .op-menupanel[hidden]{display:none}
   .op-profilebubble{display:flex;align-items:center;gap:8px;background:rgba(41,37,36,.9);border:1.5px solid rgba(255,197,61,.35);border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--text);font-weight:800}
   .op-profilebubble img{width:32px;height:32px;border-radius:50%;object-fit:contain}
@@ -433,7 +433,7 @@
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/"><span>Website — Home</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/shop.html"><span>Website — Shop</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/sets.html"><span>Website — Browse by Set</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/bulk.html"><span>Website — We Buy Bulk</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/ask.html"><span>Website — Ask the Office</span></a><a class="bubble-btn b-white" href="https://cardcauldrontcg.com/about.html"><span>Website — About</span></a></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
   <nav class="upscale-topnav" aria-label="Demo and community">
     <span class="upscale-sweep" aria-hidden="true"></span>
@@ -1085,6 +1085,33 @@
     <div class="card mt"><h3>Your scores this visit</h3>
     <p id="opLocalBoard">Play a game and your best score for this visit will show here.</p>
     <button type="button" class="bubble-btn b-white" data-nav="games"><span>Play the mini games</span></button></div>
+  </section>
+
+  <section class="screen" id="scr-website">
+    <button type="button" class="backlink" data-nav="home">← Home</button>
+    <h2>🌐 Check out my website</h2>
+    <p class="small dim">These links leave the demo and open the real Card Cauldron TCG website and social pages in a new tab.</p>
+    <div class="card mt"><h3>Website pages</h3>
+    <div class="stack">
+      <a class="bubble-btn b-white" href="https://cardcauldrontcg.com/"><span>Website — Home</span></a>
+      <a class="bubble-btn b-white" href="https://cardcauldrontcg.com/shop"><span>Website — Shop</span></a>
+      <a class="bubble-btn b-white" href="https://cardcauldrontcg.com/sets"><span>Website — Browse by Set</span></a>
+      <a class="bubble-btn b-white" href="https://cardcauldrontcg.com/bulk"><span>Website — We Buy Bulk</span></a>
+      <a class="bubble-btn b-white" href="https://cardcauldrontcg.com/app"><span>Website — Real or Replica</span></a>
+      <a class="bubble-btn b-white" href="https://cardcauldrontcg.com/ask"><span>Website — Ask the Office</span></a>
+      <a class="bubble-btn b-white" href="https://cardcauldrontcg.com/about"><span>Website — About</span></a>
+    </div></div>
+    <div class="card mt"><h3>Follow the shop</h3>
+    <div class="stack">
+      <a class="bubble-btn b-white" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener"><span>eBay Store ↗</span></a>
+      <a class="bubble-btn b-white" href="https://discord.gg/Aj4ahGsSx" target="_blank" rel="noopener"><span>Discord ↗</span></a>
+      <a class="bubble-btn b-white" href="https://www.instagram.com/sabastian0392" target="_blank" rel="noopener"><span>Instagram ↗</span></a>
+      <a class="bubble-btn b-white" href="https://www.youtube.com/@CardCauldronTCG" target="_blank" rel="noopener"><span>YouTube ↗</span></a>
+      <a class="bubble-btn b-white" href="https://www.tiktok.com/@thecardcauldrontcg" target="_blank" rel="noopener"><span>TikTok ↗</span></a>
+      <a class="bubble-btn b-white" href="https://www.facebook.com/profile.php?id=1412438935277177" target="_blank" rel="noopener"><span>Facebook ↗</span></a>
+      <a class="bubble-btn b-white" href="https://www.pinterest.com/caudillsabastian6" target="_blank" rel="noopener"><span>Pinterest ↗</span></a>
+      <a class="bubble-btn b-white" href="https://t.me/CardCauldronTCG" target="_blank" rel="noopener"><span>Telegram ↗</span></a>
+    </div></div>
   </section>
 
   <!-- game screens get injected here -->
