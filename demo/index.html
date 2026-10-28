@@ -434,6 +434,19 @@
   .op-avatar-card img{width:72px;height:72px;border-radius:50%;display:block;margin:0 auto 4px;object-fit:contain}
   .op-field{display:block;margin:8px 0}
   .op-field input,.op-field select{width:100%;padding:10px 12px;border-radius:12px;border:1.5px solid rgba(255,197,61,.25);background:#292524;color:var(--text);font-size:16px}
+
+  /* ---------- landscape phones (upload #13) ---------- */
+  @media (orientation:landscape) and (max-height:540px){
+    .phone{max-width:760px; min-height:100dvh;}
+    .dock{max-width:760px;}
+    .top-banner{max-width:760px;}
+    #opTopRow{padding-top:6px; padding-bottom:6px;}
+    main{padding-bottom:84px;}
+    .screen{padding:6px 18px 84px;}
+    .bubble-btn{min-height:48px; padding:10px 16px;}
+    .bubble-btn .sub{font-size:13.5px;}
+    video{max-height:52dvh; object-fit:contain;}
+  }
 </style>
 </head>
 <body>
@@ -562,8 +575,10 @@
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>What are we checking?</h2>
     <p class="lead" style="margin-top:8px;" id="pickerIntro">Pick the thing in your hand first. Each kind gets its own photo steps, so the checkers always know exactly what they're looking at — there's no scan-anything button, on purpose.</p>
+    <button type="button" class="bubble-btn b-white" data-nav="batch" style="min-height:44px;padding:8px 14px;font-size:15px;"><span>🗂️ Do you want to scan more than one card at once?</span><span class="sub">Click here for batch check — up to 5 cards in one pass</span></button>
+    <p class="small center" style="margin-top:6px;">⭐ Pokémon Card is our #1 pool — it has the most verified cards, so it checks best right now. Other kinds join as their pools grow.</p>
     <div class="stack mt" id="pickerList"></div>
-    <button type="button" class="bubble-btn b-white mt" data-nav="batch"><span>🗂️ Pip's Batch Check</span><span class="sub">Got a whole binder page? Line up to 5 cards instead</span></button>
+    
     <p class="small dim center mt" id="pickerFoot">Whatever you pick, a full check works the same way: two checkers, one signed verdict, and a free check pops only when your verdict is ready.</p>
   </section>
 
@@ -1314,7 +1329,7 @@ var PLUSH_STEPS = [
 ];
 var CATEGORIES = [
   { label:"Pokémon Card", icon:"🃏", variant:"sky",   stepsLine:"Front photo, then back photo", short:"Front, then back", steps:CARD_STEPS },
-  { label:"Pokémon Plush", icon:"🧸", variant:"white", stepsLine:"Front photo, then a close-up of the tag", short:"Front + tag close-up", steps:PLUSH_STEPS },
+  { label:"Pokémon Plush", icon:"🧸", variant:"white", stepsLine:"Front photo, then a close-up of the tag", short:"Front + tag close-up", steps:PLUSH_STEPS, comingSoon:true },
   { label:"PSA Slab", icon:"🏷️", variant:"pink",  stepsLine:"Front of slab, close-up of the label, then back of slab", short:"Front · label · back", steps:SLAB_STEPS },
   { label:"CGC Slab", icon:"🏷️", variant:"lemon", stepsLine:"Front of slab, close-up of the label, then back of slab", short:"Front · label · back", steps:SLAB_STEPS },
   { label:"TAG Slab", icon:"🏷️", variant:"lime",  stepsLine:"Front of slab, close-up of the label, then back of slab", short:"Front · label · back", steps:SLAB_STEPS },
@@ -1334,7 +1349,8 @@ var VARCLASS = { sky:"b-sky", pink:"b-pink", lemon:"b-lemon", lime:"b-lime", gol
 (function(){
   var list = $("pickerList"), html = "";
   CATEGORIES.forEach(function(c, i){
-    html += '<button type="button" class="bubble-btn '+VARCLASS[c.variant]+'" data-cat="'+i+'" aria-label="Check a '+c.label+'"><span>'+c.icon+' '+c.label+'</span><span class="sub">'+c.stepsLine+'</span></button>';
+    if(c.comingSoon){ html += '<button type="button" class="bubble-btn '+VARCLASS[c.variant]+'" disabled aria-disabled="true" style="opacity:.55;" aria-label="'+c.label+' — coming soon, not ready yet"><span>'+c.icon+' '+c.label+' — Coming soon</span><span class="sub">Not ready yet — tap another kind for now</span></button>'; }
+    else { var _sub = c.stepsLine + (c.label==="Pokémon Card" ? " · ⭐ Most verified pool" : ""); html += '<button type="button" class="bubble-btn '+VARCLASS[c.variant]+'" data-cat="'+i+'" aria-label="Check a '+c.label+'"><span>'+c.icon+' '+c.label+'</span><span class="sub">'+_sub+'</span></button>'; }
   });
   list.innerHTML = html;
   list.addEventListener("click", function(e){
