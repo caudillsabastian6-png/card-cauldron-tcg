@@ -951,27 +951,21 @@
     <div class="decor" aria-hidden="true"><i style="width:70px;height:70px;top:6%;right:-16px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#ff6b9d 55%);"></i></div>
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>My Binders</h2>
-    <p class="lead" style="margin-top:6px;">In the full app, every card you check files itself by verdict — you never file by hand. This demo binder is just to look around: the cards below are labeled samples, not yours, and nothing here saves.</p>
+    <p class="lead" style="margin-top:6px;">Every card you check files itself by verdict — you never file by hand. Cards you scan and say yes to the pool land below as PENDING: photos saved, still under review, no verdict claimed. Reviewed cards file into Genuine or Replica; anything undecided waits in the pocket.</p>
     <div class="band band-navy mt">
       <h3>🗂️ All your binders</h3>
-      <p class="sub2">Demo shelf: 2 sample cards filed — 1 genuine · 1 replica · plus the undecided pocket.</p>
+      <p class="sub2" id="opBinderSummary">Your scanned cards live here — see the pocket below.</p>
     </div>
 
     <div class="mt-lg">
       <div class="binder-head" style="background:linear-gradient(135deg,#0b4f4a,#12836f);">
         <h3 style="color:#fff;">🏅 Genuine Binder</h3>
         <p class="sub2">Every card the checkers sign Likely Genuine lives here.</p>
-        <p style="font-weight:900;margin-top:8px;">1 sample card filed here</p>
+        <p style="font-weight:900;margin-top:8px;">No cards filed here yet</p>
       </div>
-      <div class="entry">
-        <div class="thumb" style="background:linear-gradient(150deg,#ffe878,#6fd0fc);">🔥</div>
-        <div>
-          <span class="pill sample">SAMPLE</span>
-          <p class="nm" style="margin-top:6px;">Sample card — fiery friend</p>
-          <p class="meta">Pokémon Card · Sample case · Verdict: Likely Genuine</p>
-          <p class="meta">Market value not checked in demo</p>
-          <p class="meta">Signed: Lens 🔎 ✍️ · Gauge 📏 ✍️</p>
-        </div>
+      <div class="card center" style="margin-top:12px;">
+        <p style="font-size:32px;" aria-hidden="true">🏅</p>
+        <p style="font-weight:800;margin-top:6px;">Nothing here yet — cards the checkers sign Likely Genuine file here. Reviewed pool scans move here from the pocket below.</p>
       </div>
     </div>
 
@@ -979,17 +973,11 @@
       <div class="binder-head" style="background:linear-gradient(135deg,#3d1566,#6d28a8);">
         <h3 style="color:#fff;">🍑 Replica Binder</h3>
         <p class="sub2">Cards signed Likely Counterfeit — kept safe, lesson and all. Soft peach, never alarm colors.</p>
-        <p style="font-weight:900;margin-top:8px;">1 sample card filed here</p>
+        <p style="font-weight:900;margin-top:8px;">No cards filed here yet</p>
       </div>
-      <div class="entry">
-        <div class="thumb" style="background:linear-gradient(150deg,#ffd9ae,#ffb26b);">⚡</div>
-        <div>
-          <span class="pill peach">SAMPLE</span>
-          <p class="nm" style="margin-top:6px;">Sample card — sparky lookalike</p>
-          <p class="meta">Pokémon Card · Sample case · Verdict: Likely Counterfeit</p>
-          <p class="meta">Market value not checked in demo</p>
-          <p class="meta">Signed: Lens 🔎 ✍️ · Gauge 📏 ✍️</p>
-        </div>
+      <div class="card center" style="margin-top:12px;">
+        <p style="font-size:32px;" aria-hidden="true">🍑</p>
+        <p style="font-weight:800;margin-top:6px;">Nothing here yet — cards the checkers sign Likely Counterfeit file here, lesson and all.</p>
       </div>
     </div>
 
@@ -997,12 +985,9 @@
       <div class="binder-head" style="background:linear-gradient(135deg,#23235f,#33509e);">
         <h3 style="color:#fff;">🫧 Undecided Pocket</h3>
         <p class="sub2">Inconclusive verdicts wait here — nothing files under a guess.</p>
-        <p style="font-weight:900;margin-top:8px;">No sample cards here</p>
+        <p style="font-weight:900;margin-top:8px;" id="opPocketCount">Your scans, under review</p>
       </div>
-      <div class="card center" style="margin-top:12px;">
-        <p style="font-size:32px;" aria-hidden="true">🫧</p>
-        <p style="font-weight:800;margin-top:6px;">Nothing here yet — in the full app, cards that need one clearer photo wait in this pocket.</p>
-      </div>
+      <div id="opMyScans"></div>
     </div>
 
     <div class="card mt-lg" id="binderTracker"><p class="small dim">Session tracker loads on the games shelf.</p></div>
@@ -1131,12 +1116,17 @@
 <section class="screen" id="scr-settings">
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>Settings &amp; Profile</h2>
-    <p class="small dim">Demo only: everything here saves on this device only (local storage). No real account, no server, nothing leaves this device.</p>
+    <p class="small dim">Demo only: your profile settings save on this device only (local storage). No real account. The one exception is Pool sharing below — only when it is ON do your scans leave this device.</p>
     <div class="card mt"><h3>Profile</h3>
     <label class="op-field">Display name <input type="text" id="opDisplayName" placeholder="Name shown in the app" autocomplete="off"></label>
     <label class="op-field">Bio / tagline <input type="text" id="opBio" placeholder="A short line about you" autocomplete="off"></label>
     <button type="button" class="bubble-btn b-gold" onclick="opSaveProfile()"><span>Save profile (this device only)</span></button>
     <p class="small dim" id="opProfileSaved" hidden>Saved on this device.</p></div>
+    <div class="card mt"><h3>Pool sharing</h3>
+    <p class="small dim">Asked once, remembered on this device — you are not asked again at every scan. ON sends your scans to the pending pool (see the <a href="/pool-privacy.html" target="_blank" rel="noopener" style="color:#f5c542;">pool privacy page</a>). OFF keeps every scan on this phone only. Change it any time, right here.</p>
+    <p style="font-weight:800;margin:8px 0;" id="opPoolShareState">Pool sharing: not set yet — you will be asked once, at your first scan.</p>
+    <button type="button" class="bubble-btn b-gold" onclick="poolShareSet(true)"><span>Pool sharing ON</span></button>
+    <button type="button" class="bubble-btn b-white" onclick="poolShareSet(false)"><span>Pool sharing OFF</span></button></div>
     <div class="card mt"><h3>Login — local demo only</h3>
     <p class="small dim">This is NOT a real account login. It only remembers a name so the top bubble shows who is signed in. No password, no server, nothing leaves this device, nothing is saved to an account.</p>
     <label class="op-field">Login name <input type="text" id="opLoginName" placeholder="Username for this demo" autocomplete="off"></label>
@@ -1586,6 +1576,15 @@ function capStartLive(openPickerOnFail){
   } else { var g2=$("capGot"); if(g2) g2.textContent="Camera is not available in this browser — tap Take the photo to open your phone camera picker, or use Upload a file."; if(openPickerOnFail) $("capCamFile").click(); }
 }
 var poolOptinAsked = false, poolOptinYes = false;
+/* Pool ask is ONE-TIME per device (owner, Oct 29): the Yes/No answer is
+   remembered on this device and never re-asked. Change it any time in
+   Profile / Settings ("Pool sharing"). */
+try{ var _ps = localStorage.getItem("cc_pool_share"); if(_ps === "yes"){ poolOptinYes = true; poolOptinAsked = true; } else if(_ps === "no"){ poolOptinYes = false; poolOptinAsked = true; } }catch(e){}
+function poolShareSet(v){
+  poolOptinYes = !!v; poolOptinAsked = true;
+  try{ localStorage.setItem("cc_pool_share", v ? "yes" : "no"); }catch(e){}
+  var _b = document.getElementById("opPoolShareState"); if(_b) _b.textContent = v ? "ON — my scans go to the pending pool" : "OFF — my scans stay on this phone only";
+}
 function poolOptinShow(next){
   if(poolOptinAsked){ next(); return; }
   poolOptinAsked = true;
@@ -1594,12 +1593,12 @@ function poolOptinShow(next){
   pop.style.cssText = "position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px;";
   pop.innerHTML = '<div style="background:#2a2138;border:2px solid #f5c542;border-radius:16px;padding:20px;max-width:360px;text-align:center;color:#fff8e7;">'
     + '<h3 style="color:#f5c542;">Help the pool?</h3>'
-    + '<p>Send this scan to the pending pool, anonymized, deletable.<br>Yes = send to pool.<br>No = just check my card, don\'t save anything.</p>'
+    + '<p>Send this scan to the pending pool, anonymized, deletable.<br>Yes = send to pool.<br>No = just check my card, don\'t save anything.<br><span class="small dim">Asked once — your answer is remembered on this device. Change it any time in Profile / Settings.</span></p>'
     + '<p><a href="/pool-privacy.html" target="_blank" rel="noopener" style="color:#f5c542;">Read the pool privacy agreement</a></p>'
     + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;"><button type="button" class="bubble-btn b-gold" id="poolYes"><span>Yes, send to pool</span></button><button type="button" class="bubble-btn b-white" id="poolNo"><span>No, just check</span></button></div></div>';
   document.body.appendChild(pop);
-  document.getElementById("poolYes").addEventListener("click", function(){ poolOptinYes = true; pop.remove(); next(); });
-  document.getElementById("poolNo").addEventListener("click", function(){ poolOptinYes = false; pop.remove(); next(); });
+  document.getElementById("poolYes").addEventListener("click", function(){ poolShareSet(true); pop.remove(); next(); });
+  document.getElementById("poolNo").addEventListener("click", function(){ poolShareSet(false); pop.remove(); next(); });
 }
 var poolFrontImg = null, poolBackImg = null, poolSubmittedId = null;
 function poolAutoLabelHTML(label, sid){
@@ -1624,6 +1623,7 @@ function poolSubmitAndConfirm(){
     .then(function(res){
       if(!res.ok || !res.d || !res.d.submission_id){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; return; }
       poolSubmittedId = res.d.submission_id;
+      try{ poolSaveMyScan(res.d.submission_id, poolFrontImg); }catch(e){}
       var pop = document.createElement("div");
       pop.id = "poolConfirmPop";
       pop.style.cssText = "position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px;";
@@ -1636,6 +1636,40 @@ function poolSubmitAndConfirm(){
       document.getElementById("poolLabelYes").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Thanks — auto-label confirmed. Your pending scan is saved as " + poolSubmittedId + "."; });
       document.getElementById("poolLabelNo").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Got it — we dropped the label to UNKNOWN. Potion will fix it. Your pending scan is still saved as " + poolSubmittedId + "."; var _l2 = document.getElementById("capLabelLine"); if(_l2) _l2.textContent = "Labelled: UNKNOWN — you said the auto-label was not right, Potion will fix it — pool: YES, pending, " + poolSubmittedId; });
     }).catch(function(){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; });
+}
+/* My scans — this device's own pool scans, shown in My Binders > Undecided
+   Pocket as PENDING (owner, Oct 29: binders show real scanned cards, not
+   sample cards). Front thumbnail is downscaled before storing so local
+   storage stays small. PENDING forever here — review happens pool-side. */
+function poolSaveMyScan(sid, frontDataUrl){
+  var recs = []; try{ recs = JSON.parse(localStorage.getItem("cc_my_scans") || "[]"); }catch(e){ recs = []; }
+  if(recs.some(function(r){ return r.id === sid; })) return;
+  var save = function(thumb){
+    recs.unshift({ id: sid, when: new Date().toISOString(), thumb: thumb || "" });
+    recs = recs.slice(0, 30);
+    try{ localStorage.setItem("cc_my_scans", JSON.stringify(recs)); }catch(e){}
+  };
+  if(frontDataUrl && frontDataUrl.indexOf("data:image") === 0){
+    var im = new Image();
+    im.onload = function(){ try{ var cv = document.createElement("canvas"); var sc = Math.min(1, 180 / (im.width || 180)); cv.width = Math.round((im.width || 180) * sc); cv.height = Math.round((im.height || 252) * sc); cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height); save(cv.toDataURL("image/jpeg", 0.7)); }catch(e){ save(""); } };
+    im.onerror = function(){ save(""); };
+    im.src = frontDataUrl;
+  } else save("");
+}
+function renderMyScans(){
+  var host = document.getElementById("opMyScans"); if(!host) return;
+  var recs = []; try{ recs = JSON.parse(localStorage.getItem("cc_my_scans") || "[]"); }catch(e){ recs = []; }
+  var cnt = document.getElementById("opPocketCount"); if(cnt) cnt.textContent = recs.length ? (recs.length + (recs.length === 1 ? " scan" : " scans") + " of yours, under review") : "Your scans, under review";
+  var sum = document.getElementById("opBinderSummary"); if(sum) sum.textContent = recs.length ? ("You have " + recs.length + (recs.length === 1 ? " scan" : " scans") + " in the pocket, under review — reviewed cards file into Genuine or Replica.") : "No scans yet — scan a card in Check and say yes to the pool, and it files here while it is reviewed.";
+  if(!recs.length){
+    host.innerHTML = '<div class="card center" style="margin-top:12px;"><p style="font-size:32px;" aria-hidden="true">🫧</p><p style="font-weight:800;margin-top:6px;">Nothing here yet — scan a card and say yes to the pool, and your card waits in this pocket while it is reviewed. Nothing files under a guess.</p></div>';
+    return;
+  }
+  host.innerHTML = recs.map(function(r){
+    var d = ""; try{ d = new Date(r.when).toLocaleString(); }catch(e){}
+    var img = r.thumb ? '<img src="' + r.thumb + '" alt="Your scanned card front" style="width:64px;height:90px;object-fit:cover;border-radius:8px;">' : '<div class="thumb" style="background:linear-gradient(150deg,#ffe878,#6fd0fc);">🃏</div>';
+    return '<div class="entry">' + img + '<div><span class="pill sample">PENDING</span><p class="nm" style="margin-top:6px;">Your scanned card — under review</p><p class="meta">Sent to the pending pool · ' + r.id + '</p><p class="meta">' + d + ' · Name and number are filled in during review — unknown stays unknown, nothing is guessed.</p></div></div>';
+  }).join("");
 }
 $("capTake").addEventListener("click", function(){
   if(capLive){ var v=$("capVideo"); var c=document.createElement("canvas"); c.width=v.videoWidth||640; c.height=v.videoHeight||480; c.getContext("2d").drawImage(v,0,0,c.width,c.height); var img=$("capImg"); img.src=c.toDataURL("image/jpeg",0.85); img.alt=capCat.steps[capStep].cap+" — your photo (stays on your device)"; img.classList.remove("hidden"); $("capSample").classList.add("hidden"); capStopLive(); $("capTake").innerHTML="<span>"+capCat.steps[capStep].take+"</span>"; capPhotoReady(); return; }
@@ -3342,6 +3376,8 @@ function opRenderAvatar(){
   var cards = document.querySelectorAll('.op-avatar-card'); cards.forEach(function(c){ c.classList.toggle('on', c.getAttribute('data-creature') === opProfile.avatarBase); });
   opRenderHumanAvatarPicker();
   opRenderCoins();
+  try{ renderMyScans(); }catch(e){}
+  try{ var _pss = document.getElementById("opPoolShareState"); if(_pss){ var _sv = localStorage.getItem("cc_pool_share"); _pss.textContent = _sv === "yes" ? "Pool sharing: ON — my scans go to the pending pool" : (_sv === "no" ? "Pool sharing: OFF — my scans stay on this phone only" : "Pool sharing: not set yet — you will be asked once, at your first scan."); } }catch(e){}
 }
 function opBuildAvatarPicker(){
   var host = document.getElementById('opAvatarPickerCards'); if(!host) return;
