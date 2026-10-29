@@ -183,9 +183,11 @@
   .trail-stops{position:absolute; inset:0; display:flex; justify-content:space-between; align-items:flex-start; padding:0 2px; z-index:2;}
   .trail-stop{display:flex; flex-direction:column; align-items:center; background:none; border:none; cursor:pointer; font:inherit; flex-shrink:0;}
   .trail-stop .ball{
+    /* CC-TRAILFIX (Oct 29): backface hardening - without it a promoted
+       layer's raster can be culled mid-scroll (SCAN-TRUTH-REPORT Q1). */
     width:70px; height:70px; min-width:70px; min-height:70px; flex-shrink:0; border-radius:50%; display:flex; align-items:center; justify-content:center;
     font-size:29px; border:2px solid rgba(255,255,255,.9); box-shadow:0 8px 18px rgba(0,0,0,.45); animation:bob 3.4s ease-in-out infinite;
-    position:relative; z-index:3; opacity:1 !important; visibility:visible !important; overflow:hidden;
+    position:relative; z-index:3; opacity:1 !important; visibility:visible !important; overflow:hidden; backface-visibility:hidden; -webkit-backface-visibility:hidden;
   }
   .trail-stop .lbl{margin-top:6px; font-size:13px; font-weight:900; color:#fff;}
   @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
@@ -4752,10 +4754,17 @@ document.addEventListener("click", function(e){
     wAudio = $('ccWelcomeAudio');
     if (!wAudio) return;
     wAudio.volume = 0.7;
+    /* CC-MUTE-BEGIN h4: the welcome starts PAUSED, explicitly, at the
+       element level - never left to autoplay policy or chance. */
+    try { wAudio.pause(); } catch (e) {}
+    /* CC-MUTE-END h4 */
     var banner = document.querySelector('.top-banner');
     if (banner) {
       var tap = function(){ wPlay(); };
-      banner.addEventListener('click', tap);
+      /* CC-MUTE-BEGIN h2: tapping the banner picture used to (re)start
+         the welcome (banner click -> wPlay). Removed: the play/pause
+         button is the ONLY control that can start the welcome. */
+      /* CC-MUTE-END h2 */
       removers.push(function(){ banner.removeEventListener('click', tap); });
     }
     var playBtn = $('ccMallowPlay');
@@ -4806,10 +4815,14 @@ document.addEventListener("click", function(e){
     }
     if (wPlayed) return;
     wPlayed = true;
-    /* CC-POLISH2 (Juno): the welcome never starts before a first tap.
-       The first-tap listener is armed directly instead of attempting
-       autoplay and falling back when the browser blocks it. */
-    if (!wArm) {
+    /* CC-MUTE-BEGIN h3: the first-tap arm is DISABLED (the CC-POLISH2
+       note here used to say the welcome "never starts before a first
+       tap" and armed a document pointerdown listener that called
+       wPlay()). That arm is the Oct 29 live failure: the owner's FIRST
+       tap anywhere - a menu tap, a scroll touch - started Mallow
+       talking, which reads as "she starts on her own when I open the
+       app". The welcome now starts ONLY from the play/pause button. */
+    if (false && !wArm) {
       wArm = function(){ document.removeEventListener('pointerdown', wArm, true); wArm = null; wPlay(); };
       document.addEventListener('pointerdown', wArm, true);
     }
@@ -5808,5 +5821,1423 @@ if (typeof document !== "undefined") (function(){
     }
   } catch (e) { /* the gate must never break the flow it guards */ }
 })();
-</script></body>
+</script>
+<!-- CC-MUTE-APPEND-BEGIN -->
+<style id="ccMuteStyle">
+/* CC-MUTE: the master mute button. Same round-button family as the
+   Mallow play button (it reuses .cc-mallow-play, its disc and its
+   label), parked immediately to the LEFT of the play button over the
+   hero banner; a muted disc takes a deep plum tint so the state reads
+   at a glance. */
+.cc-mallow-mute{right:84px;}
+.cc-mallow-mute-glyph{font-size:27px;line-height:1;filter:drop-shadow(0 1px 3px rgba(0,0,0,.6));}
+.cc-mallow-mute.cc-is-muted .cc-mallow-play-disc{background:rgba(96,22,48,.68);}
+</style>
+<script id="ccMuteScript">
+/* =====================================================================
+   CC-MUTE - the master mute (owner ask, Oct 29, 2026)
+
+   The owner, live-testing on his phone: the welcome started on its
+   own, Pause did not pause, and he asked for (1) play AND pause,
+   (2) the app to START PAUSED, (3) a MUTE button beside the play
+   button. A live exam the same afternoon pinned the mechanism: the
+   welcome is a VOICE, and it was started by the first tap anywhere
+   (the sign-in tap, in the exam) - not by a play control. The
+   in-file triggers are removed beside this block (marked CC-MUTE):
+   the first-tap pointerdown arm is disabled (h3), the banner-tap
+   replay is removed (h2), the welcome element is paused explicitly
+   at wire time (h4). The hero video stays a muted, autoplaying
+   VISUAL - it was never the sound - and this block enforces its
+   silence at the property level. This block adds the rest, and it
+   governs BOTH audible paths (the welcome element AND
+   speechSynthesis), so whichever one is sounding, the buttons
+   and the mute control it:
+
+   ONE master state, window.ccMuted, persisted in localStorage
+   "cc_muted" ("1" = muted). It drives the app's existing WebAudio
+   master `soundOn` (every blip SFX and the Bubble Beat step check
+   it), and it also governs the three things soundOn never covered:
+   the welcome <audio> element, the MUSIC melody (whose note function
+   never checked soundOn), and speechSynthesis (ccSpeak). While
+   muted, NOTHING in the app can sound:
+   - muting sweeps: welcome paused at once (the play button re-syncs
+     itself from the audio's own pause event, so its glyph stays
+     truthful), speech cancelled, melody toggled off through its own
+     toggle (label stays truthful), AudioContext suspended;
+   - ccSpeak is wrapped to no-op and the melody toggle is wrapped to
+     unmute first - a tap on a sound control while muted means "let
+     me hear", never a back door for sound while the state says mute;
+   - pressing the hero PLAY button while muted unmutes first, then
+     the button's own toggle plays (same reasoning);
+   - the pre-existing soundBtn (pop-sounds toggle) and this button
+     are two faces of the one state: whichever is tapped, both
+     icons are re-painted from the master.
+   Unmuting restarts nothing on its own; it hands control back to
+   the play/pause button and the MUSIC toggle.
+   ===================================================================== */
+(function(){
+  "use strict";
+  var KEY = "cc_muted";
+  var playBtn = document.getElementById("ccMallowPlay");
+  var wAudio = document.getElementById("ccWelcomeAudio");
+  var heroV = document.getElementById("ccHeroVideo");
+  var rawToggleMusic = (typeof window.opToggleMusic === "function") ? window.opToggleMusic : null;
+  var muted = false;
+  try { muted = localStorage.getItem(KEY) === "1"; } catch (e) {}
+
+  /* Rest state at the ELEMENT level, whatever ran before this block:
+     the welcome is paused; the hero video is muted by property. */
+  try { if (wAudio) wAudio.pause(); } catch (e) {}
+  try { if (heroV) { heroV.muted = true; heroV.defaultMuted = true; } } catch (e) {}
+
+  var muteBtn = null, glyph = null, mLabel = null;
+  function paint(){
+    if (glyph) glyph.textContent = muted ? "\uD83D\uDD07" : "\uD83D\uDD0A";
+    if (mLabel) mLabel.textContent = muted ? "Muted" : "Sound";
+    if (muteBtn) {
+      muteBtn.setAttribute("aria-label", muted ? "Unmute all sounds" : "Mute all sounds");
+      muteBtn.setAttribute("aria-pressed", muted ? "true" : "false");
+      muteBtn.classList.toggle("cc-is-muted", muted);
+    }
+    var sb = document.getElementById("soundBtn");
+    if (sb) {
+      sb.textContent = muted ? "\uD83D\uDD07" : "\uD83D\uDD0A";
+      sb.setAttribute("aria-label", muted ? "Unmute pop sounds" : "Mute pop sounds");
+    }
+  }
+  function sweep(){
+    if (wAudio && !wAudio.paused) { try { wAudio.pause(); } catch (e) {} }
+    try { if (window.ccStopSpeak) window.ccStopSpeak(); } catch (e) {}
+    try { if (window.opMusicOn && rawToggleMusic) rawToggleMusic(); } catch (e) {}
+    try { if (window.actx && window.actx.suspend) window.actx.suspend(); } catch (e) {}
+  }
+  function ccSetMuted(m){
+    m = !!m;
+    var changed = (m !== muted);
+    muted = m;
+    window.ccMuted = muted;
+    try { localStorage.setItem(KEY, m ? "1" : "0"); } catch (e) {}
+    try { window.soundOn = !m; } catch (e) {}
+    if (m && changed) sweep();
+    paint();
+  }
+
+  /* Speech governance for the play/pause button. The button's own
+     toggle derives its state from the welcome AUDIO element; if the
+     audible welcome is speech (or speech is somehow active), a tap
+     must stop the speech - and must NOT fall through to the toggle,
+     which would read "not playing" and start the audio instead.
+     The capture listener on the banner (below) gets first say on
+     every hero-button tap for exactly that reason. */
+  function speechActive(){
+    try { return !!(window.speechSynthesis && (window.speechSynthesis.speaking || window.speechSynthesis.pending)); } catch (e) { return false; }
+  }
+  function syncBtnOff(){
+    if (!playBtn) return;
+    try { playBtn.classList.remove("cc-is-playing"); } catch (e) {}
+    try { playBtn.setAttribute("aria-label", "Hear Mallow!"); } catch (e) {}
+    var lb = null;
+    try { lb = playBtn.querySelector(".cc-mallow-play-label"); } catch (e) {}
+    if (lb) lb.textContent = "Hear Mallow!";
+  }
+  function stopAllAudible(){
+    try { if (window.ccStopSpeak) window.ccStopSpeak(); } catch (e) {}
+    if (wAudio && !wAudio.paused) { try { wAudio.pause(); } catch (e) {} }
+  }
+  var watchId = null, watchTicks = 0;
+  function watchSpeechEnd(){
+    if (watchId) return;
+    watchTicks = 0;
+    watchId = setInterval(function(){
+      watchTicks++;
+      var mp3 = !!(wAudio && !wAudio.paused && !wAudio.ended);
+      if (mp3) { clearInterval(watchId); watchId = null; return; }
+      if (!speechActive() && watchTicks > 1) { syncBtnOff(); clearInterval(watchId); watchId = null; return; }
+      if (watchTicks > 150) { clearInterval(watchId); watchId = null; }
+    }, 400);
+  }
+
+  if (playBtn && playBtn.parentNode) {
+    muteBtn = document.createElement("button");
+    muteBtn.type = "button";
+    muteBtn.id = "ccMuteBtn";
+    muteBtn.className = "cc-mallow-play cc-mallow-mute";
+    var disc = document.createElement("span");
+    disc.className = "cc-mallow-play-disc";
+    disc.setAttribute("aria-hidden", "true");
+    glyph = document.createElement("span");
+    glyph.className = "cc-mallow-mute-glyph";
+    glyph.textContent = "\uD83D\uDD0A";
+    disc.appendChild(glyph);
+    mLabel = document.createElement("span");
+    mLabel.className = "cc-mallow-play-label";
+    mLabel.setAttribute("aria-hidden", "true");
+    mLabel.textContent = "Sound";
+    muteBtn.appendChild(disc);
+    muteBtn.appendChild(mLabel);
+    playBtn.parentNode.insertBefore(muteBtn, playBtn.nextSibling);
+    muteBtn.addEventListener("click", function(ev){
+      if (ev && ev.stopPropagation) ev.stopPropagation();
+      ccSetMuted(!muted);
+    });
+    /* Capture on the parent runs before the play button's own
+       toggle, so this block gets first say on every hero tap:
+       - muted: unmute first, then the toggle plays as normal;
+       - speech active: this tap means pause - stop the speech AND
+         the welcome element here, and keep the toggle out of it
+         (it would read "audio not playing" and start the audio);
+       - otherwise: let the toggle do its play/pause, and watch for
+         a spoken welcome ending so the label settles truthfully. */
+    playBtn.parentNode.addEventListener("click", function(ev){
+      if (!ev.target || (ev.target !== playBtn && !(playBtn.contains && playBtn.contains(ev.target)))) return;
+      if (muted) { ccSetMuted(false); return; }
+      if (speechActive()) {
+        if (ev.stopPropagation) ev.stopPropagation();
+        if (ev.preventDefault) ev.preventDefault();
+        stopAllAudible();
+        syncBtnOff();
+        return;
+      }
+      watchSpeechEnd();
+    }, true);
+  }
+
+  var sb = document.getElementById("soundBtn");
+  if (sb) sb.addEventListener("click", function(){
+    /* The original soundBtn handler was attached long before this
+       one, so soundOn has already flipped: adopt it as the master. */
+    try { ccSetMuted(!window.soundOn); } catch (e) {}
+  });
+
+  if (typeof window.ccSpeak === "function" && !window.ccSpeak.__ccMute) {
+    var origSpeak = window.ccSpeak;
+    var wrappedSpeak = function(t){ if (muted) return false; return origSpeak(t); };
+    wrappedSpeak.__ccMute = true;
+    window.ccSpeak = wrappedSpeak;
+  }
+  if (rawToggleMusic && !rawToggleMusic.__ccMute) {
+    var wrappedTog = function(){ if (muted) ccSetMuted(false); return rawToggleMusic(); };
+    wrappedTog.__ccMute = true;
+    window.opToggleMusic = wrappedTog;
+  }
+
+  window.ccSetMuted = ccSetMuted;
+  window.ccMuted = muted;
+  try { window.soundOn = !muted; } catch (e) {}
+  paint();
+  window.__ccMute = { setMuted: ccSetMuted, destroy: function(){ if (muteBtn && muteBtn.parentNode) muteBtn.parentNode.removeChild(muteBtn); } };
+})();
+</script>
+<!-- CC-MUTE-APPEND-END --><script id="ccBinderGridScript">
+/* =====================================================================
+   BINDER PAGES — Oct 29, 2026 (owner's design order: real binder pages)
+
+   WHY THIS EXISTS: filed cards in My Binders rendered as a vertical
+   list of wide rows — one card under another, nothing like a binder.
+   The owner ordered real binder pages, then refined it twice by voice:
+
+     * cards start at the TOP of a page and fill a 3x3 GRID (columns
+       side by side, left-to-right, top-to-bottom), NINE per page,
+       further cards flow onto the next page automatically;
+     * each page must LOOK like a binder page — a card-sleeve sheet:
+       a page panel, the nine pockets visibly delineated with sleeve
+       borders and a plastic sheen, a spine cue down the left edge;
+     * flipping must FEEL like turning a binder page — Prev / Next
+       trigger a quick page-turn animation (transform + opacity only),
+       direction-aware, and never an instant swap (under the app's
+       reduced-motion convention the flip collapses to a soft fade);
+     * Prev / Next sit TOGETHER, centered, at the bottom of the page
+       area:  < Prev · Page X of Y · Next >;
+     * every card gets a DETAILS STRIP — Market price / Real or fake /
+       Condition — typeset clean in the app's style.
+
+   HONESTY FENCE (absolute, owner's standing rule): details values come
+   ONLY from the card's own record. Authenticity = its filing status
+   ("Under review" for a pending scan; a record's own verdict label if
+   it ever carries one). Price renders ONLY if the record carries a
+   real price, otherwise the words "Not priced yet". Condition likewise
+   "Not graded yet" unless the record carries one. Nothing is ever
+   fabricated — no invented prices, verdicts, or grades.
+
+   HOW IT WORKS (appended-block, observe-don't-rewrite): the only
+   dynamic filed-card list in the demo is the Undecided Pocket —
+   renderMyScans() writes localStorage["cc_my_scans"] records into
+   #opMyScans as .entry rows. Genuine / Replica binders have NO data
+   path at all (static empty-state panels only; nothing in the demo
+   ever files a card there), so there is nothing to grid in them yet.
+   This block wraps renderMyScans: the original runs FIRST, untouched
+   (header counts, binder summary and the empty-state panel are all
+   still the original's own words), and only when the pocket actually
+   holds records does this block re-render #opMyScans from the SAME
+   records into binder pages. No existing code is edited; remove this
+   one block and the binders are exactly what they were without it.
+
+   CELL: front photo, a PENDING chip (the existing .pill.sample style),
+   a short label ("Your scanned card — under review", or the card's
+   name if a record ever carries one), the details strip, and a small
+   date line — the same toLocaleString() date the old row showed, plus
+   the pool id. The old row's long sentence ("Name and number are
+   filled in during review — unknown stays unknown, nothing is
+   guessed.") is NOT dropped: it is condensed to ONE section-level
+   note under the page, and the pocket header above already carries
+   "nothing files under a guess."
+
+   PAGE STATE: kept per content fingerprint (the record ids). New or
+   removed cards reset the pocket to page 1; a plain re-render of the
+   same cards keeps the reader's page. Prev/Next are disabled at the
+   ends, and the whole pager is omitted when the pocket fits one page.
+   ===================================================================== */
+var CCBG = (function(){
+  "use strict";
+
+  var PAGE_SIZE = 9; /* 3 x 3 — the owner's binder page */
+  var LABEL_PENDING = "Your scanned card \u2014 under review";
+  var NOTE = "Name and number are filled in during review \u2014 unknown stays unknown, nothing is guessed.";
+  var NOT_PRICED = "Not priced yet";
+  var NOT_GRADED = "Not graded yet";
+  var UNDER_REVIEW = "Under review";
+
+  function esc(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  function pageCount(n){
+    n = Math.max(0, n | 0);
+    return n === 0 ? 0 : Math.ceil(n / PAGE_SIZE);
+  }
+
+  function clampPage(page, n){
+    var pages = Math.max(1, pageCount(n));
+    page = page | 0;
+    if (page < 1) page = 1;
+    if (page > pages) page = pages;
+    return page;
+  }
+
+  /* records in their stored order (newest first, exactly as the old
+     list showed them) -> array of pages, each an array of records,
+     filled left-to-right, top-to-bottom */
+  function paginate(recs){
+    var pages = [];
+    for (var i = 0; i < recs.length; i += PAGE_SIZE) pages.push(recs.slice(i, i + PAGE_SIZE));
+    return pages;
+  }
+
+  function fmtDate(when){
+    try { return new Date(when).toLocaleString(); } catch (e) { return ""; }
+  }
+
+  function fingerprint(recs){
+    return recs.length + ":" + recs.map(function(r){ return r && r.id; }).join(",");
+  }
+
+  /* ---- details strip values: the record's truth, or the honest
+     placeholder words. These are the ONLY sources a value can have. */
+  function priceText(r){
+    if (r && typeof r.price === "number" && isFinite(r.price)) return "$" + r.price.toFixed(2);
+    if (r && typeof r.price === "string" && r.price.trim()) return r.price;
+    return NOT_PRICED;
+  }
+  function verdictText(r){
+    if (r && typeof r.verdict === "string" && r.verdict) return r.verdict;
+    return UNDER_REVIEW; /* a pending scan's filing status */
+  }
+  function conditionText(r){
+    if (r && typeof r.condition === "string" && r.condition) return r.condition;
+    if (r && typeof r.grade === "string" && r.grade) return r.grade;
+    return NOT_GRADED;
+  }
+  function detailsHTML(r){
+    return '<div class="ccbg-details">' +
+      '<div class="ccbg-drow"><span class="ccbg-dlab">Market price</span><span class="ccbg-dval">' + esc(priceText(r)) + '</span></div>' +
+      '<div class="ccbg-drow"><span class="ccbg-dlab">Real or fake</span><span class="ccbg-dval">' + esc(verdictText(r)) + '</span></div>' +
+      '<div class="ccbg-drow"><span class="ccbg-dlab">Condition</span><span class="ccbg-dval">' + esc(conditionText(r)) + '</span></div>' +
+      '</div>';
+  }
+
+  function cellHTML(r){
+    r = r || {};
+    var photo = r.thumb
+      ? '<img class="ccbg-photo" src="' + esc(r.thumb) + '" alt="Your scanned card front">'
+      : '<div class="ccbg-photo ccbg-nophoto" aria-hidden="true">\uD83C\uDCCF</div>';
+    var chip = r.status ? esc(r.status) : "PENDING";
+    var label = (typeof r.name === "string" && r.name) ? esc(r.name) : LABEL_PENDING;
+    var d = fmtDate(r.when);
+    return '<div class="ccbg-cell">' + photo +
+      '<span class="pill sample ccbg-chip">' + chip + '</span>' +
+      '<p class="ccbg-nm">' + label + '</p>' +
+      detailsHTML(r) +
+      (d ? '<p class="ccbg-meta">' + esc(d) + '</p>' : '') +
+      (r.id ? '<p class="ccbg-meta ccbg-id">' + esc(r.id) + '</p>' : '') +
+      '</div>';
+  }
+
+  function gridHTML(recs, page){
+    var pages = paginate(recs);
+    if (!pages.length) return "";
+    var p = clampPage(page, recs.length);
+    return '<div class="ccbg-grid" data-ccbg-page="' + p + '">' +
+      pages[p - 1].map(cellHTML).join("") + '</div>';
+  }
+
+  /* one binder page: perspective book > sheet (the sleeve page) > grid.
+     cls carries only module-generated transition classes ("" normally,
+     "ccbg-in-next" / "ccbg-in-prev" / "ccbg-fadein" right after a flip) */
+  function sheetHTML(recs, page, cls){
+    var inner = gridHTML(recs, page);
+    if (!inner) return "";
+    return '<div class="ccbg-book"><div class="ccbg-sheet' + (cls ? " " + esc(cls) : "") + '">' +
+      inner + '</div></div>';
+  }
+
+  function noteHTML(){
+    return '<p class="ccbg-note">' + NOTE + '</p>';
+  }
+
+  /* "" when the pocket fits on one page — the owner asked for no
+     extra furniture in that case. Otherwise one centered trio:
+     < Prev · Page X of Y · Next > */
+  function pagerHTML(page, pages){
+    if (!pages || pages < 2) return "";
+    var p = Math.min(Math.max(1, page | 0), pages);
+    return '<div class="ccbg-pager">' +
+      '<button type="button" class="ccbg-btn" data-ccbg-prev' + (p <= 1 ? " disabled" : "") + '>\u2039 Prev</button>' +
+      '<span class="ccbg-pageno">Page ' + p + ' of ' + pages + '</span>' +
+      '<button type="button" class="ccbg-btn" data-ccbg-next' + (p >= pages ? " disabled" : "") + '>Next \u203A</button>' +
+      '</div>';
+  }
+
+  return {
+    PAGE_SIZE: PAGE_SIZE,
+    LABEL_PENDING: LABEL_PENDING,
+    NOTE: NOTE,
+    NOT_PRICED: NOT_PRICED,
+    NOT_GRADED: NOT_GRADED,
+    UNDER_REVIEW: UNDER_REVIEW,
+    esc: esc,
+    pageCount: pageCount,
+    clampPage: clampPage,
+    paginate: paginate,
+    fmtDate: fmtDate,
+    fingerprint: fingerprint,
+    priceText: priceText,
+    verdictText: verdictText,
+    conditionText: conditionText,
+    detailsHTML: detailsHTML,
+    cellHTML: cellHTML,
+    gridHTML: gridHTML,
+    sheetHTML: sheetHTML,
+    noteHTML: noteHTML,
+    pagerHTML: pagerHTML
+  };
+})();
+
+if (typeof module !== "undefined" && module.exports) module.exports = CCBG;
+
+/* =================== Part B — browser integration ===================
+   Appended-block pattern only: wraps the one renderer that writes
+   filed cards, edits no existing code. Runs only in a real DOM. */
+if (typeof document !== "undefined" && typeof window !== "undefined") (function(){
+  "use strict";
+  try {
+    var CSS = [
+      /* --- the binder page (sleeve sheet) --- */
+      ".ccbg-book{perspective:1100px;margin-top:12px;}",
+      ".ccbg-sheet{position:relative;background:linear-gradient(165deg,#1d1533 0%,#130e24 58%,#0e0a1a 100%);border:1.5px solid rgba(179,136,255,.38);border-radius:1.35rem;padding:14px 12px 14px 22px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 12px 0 20px -10px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);transform-origin:left center;}",
+      ".ccbg-sheet::before{content:\"\";position:absolute;left:7px;top:12px;bottom:12px;width:4px;border-radius:2px;background:repeating-linear-gradient(180deg,rgba(255,215,106,.55) 0 7px,rgba(255,215,106,0) 7px 16px);}",
+      "body.neon .ccbg-sheet{border-color:rgba(179,136,255,.6);box-shadow:0 0 16px rgba(179,136,255,.16),inset 0 1px 0 rgba(255,255,255,.07),inset 12px 0 20px -10px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);}",
+      ".ccbg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}",
+      /* --- the pockets: sleeve-delineated cells with a plastic sheen --- */
+      ".ccbg-cell{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.16);border-radius:.9rem;padding:7px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.28),inset 0 2px 7px rgba(0,0,0,.35);display:flex;flex-direction:column;min-width:0;overflow:hidden;}",
+      ".ccbg-cell::after{content:\"\";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%);pointer-events:none;}",
+      "body.neon .ccbg-cell{border-color:rgba(179,136,255,.35);}",
+      ".ccbg-photo{width:100%;aspect-ratio:5/7;object-fit:cover;border-radius:.7rem;display:block;background:#0c0c0e;border:1px solid rgba(0,0,0,.35);}",
+      ".ccbg-nophoto{display:flex;align-items:center;justify-content:center;font-size:30px;background:linear-gradient(150deg,#ffe878,#6fd0fc);}",
+      ".ccbg-chip{align-self:flex-start;margin-top:8px;}",
+      ".ccbg-nm{font-size:13px;font-weight:800;line-height:1.3;margin-top:6px;}",
+      ".ccbg-meta{font-size:11.5px;font-weight:600;color:var(--dim);line-height:1.35;margin-top:2px;}",
+      ".ccbg-id{font-size:10.5px;letter-spacing:.02em;word-break:break-all;}",
+      /* --- details strip --- */
+      ".ccbg-details{margin-top:8px;border-top:1px solid rgba(255,255,255,.10);padding-top:6px;display:flex;flex-direction:column;gap:4px;}",
+      ".ccbg-drow{display:flex;flex-direction:column;}",
+      ".ccbg-dlab{font-size:9.5px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:var(--gold,#ffd76a);opacity:.85;}",
+      ".ccbg-dval{font-size:12px;font-weight:700;color:#fff8e7;line-height:1.3;}",
+      ".ccbg-note{font-size:12.5px;font-weight:600;color:var(--dim);line-height:1.45;margin-top:10px;}",
+      /* --- pager: one centered trio under the page --- */
+      ".ccbg-pager{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px;}",
+      ".ccbg-pageno{font-size:13.5px;font-weight:800;}",
+      ".ccbg-btn{border-radius:999px;padding:9px 18px;font-size:14px;font-weight:900;color:#fff8e7;background:linear-gradient(180deg,#2c2825 0%,#171412 100%);border:1.5px solid rgba(255,197,61,.35);cursor:pointer;font-family:inherit;}",
+      ".ccbg-btn:disabled{opacity:.35;cursor:default;}",
+      /* --- the flip: transform + opacity only, quick and light --- */
+      "@keyframes ccbgOutNext{from{transform:rotateY(0deg) translateX(0);opacity:1}to{transform:rotateY(-26deg) translateX(-14px);opacity:0}}",
+      "@keyframes ccbgInNext{from{transform:rotateY(17deg) translateX(16px);opacity:0}to{transform:rotateY(0deg) translateX(0);opacity:1}}",
+      "@keyframes ccbgOutPrev{from{transform:rotateY(0deg) translateX(0);opacity:1}to{transform:rotateY(26deg) translateX(14px);opacity:0}}",
+      "@keyframes ccbgInPrev{from{transform:rotateY(-17deg) translateX(-16px);opacity:0}to{transform:rotateY(0deg) translateX(0);opacity:1}}",
+      "@keyframes ccbgFadeIn{from{opacity:0}to{opacity:1}}",
+      ".ccbg-out-next{animation:ccbgOutNext .17s ease-in forwards;transform-origin:left center;}",
+      ".ccbg-in-next{animation:ccbgInNext .2s ease-out;transform-origin:left center;}",
+      ".ccbg-out-prev{animation:ccbgOutPrev .17s ease-in forwards;transform-origin:right center;}",
+      ".ccbg-in-prev{animation:ccbgInPrev .2s ease-out;transform-origin:right center;}",
+      ".ccbg-fadein{animation:ccbgFadeIn .12s ease-out;}",
+      "@media (prefers-reduced-motion: reduce){.ccbg-out-next,.ccbg-in-next,.ccbg-out-prev,.ccbg-in-prev{animation:none !important;}}"
+    ].join("\n");
+
+    if (!document.getElementById("ccBinderGridStyle")) {
+      var st = document.createElement("style");
+      st.id = "ccBinderGridStyle";
+      st.textContent = CSS;
+      (document.head || document.body).appendChild(st);
+    }
+
+    var FLIP_MS = 170; /* the old page turns out; the new one swings in */
+    var state = { fp: null, page: 1 };
+    var flipping = false, flipTimer = null;
+
+    function reducedMotion(){
+      try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+      catch (e) { return false; }
+    }
+
+    function currentRecs(){
+      var recs = [];
+      try { recs = JSON.parse(localStorage.getItem("cc_my_scans") || "[]"); } catch (e) { recs = []; }
+      return Array.isArray(recs) ? recs : [];
+    }
+
+    /* Render #opMyScans as a binder page from the same records the
+       original renderer just used. Empty pocket: do nothing — the
+       original's empty-state panel stands, word for word. enterCls is
+       the transition class a flip leaves on the incoming page (""). */
+    function render(enterCls){
+      var host = document.getElementById("opMyScans");
+      if (!host) return;
+      var recs = currentRecs();
+      if (!recs.length) { state.fp = CCBG.fingerprint(recs); state.page = 1; return; }
+      var fp = CCBG.fingerprint(recs);
+      if (fp !== state.fp) { state.fp = fp; state.page = 1; } /* content changed: back to page 1 */
+      state.page = CCBG.clampPage(state.page, recs.length);
+      var pages = CCBG.pageCount(recs.length);
+      host.innerHTML = CCBG.sheetHTML(recs, state.page, enterCls || "") + CCBG.noteHTML() + CCBG.pagerHTML(state.page, pages);
+      bindPager(host);
+    }
+
+    /* Plain render (the wrapped renderMyScans path): any flip in
+       flight is superseded by the fresh render. */
+    function applyGrid(){
+      if (flipTimer) { clearTimeout(flipTimer); flipTimer = null; }
+      flipping = false;
+      render("");
+    }
+
+    /* Turn the binder page. Direction-aware: "next" turns out around
+       the spine (left edge) and the new page swings in from the right;
+       "prev" mirrors it. Reduced motion (the app's own convention):
+       no flip — the new page fades in softly instead. */
+    function goTo(target, dir){
+      if (flipping) return;
+      var recs = currentRecs();
+      if (!recs.length) return;
+      target = CCBG.clampPage(target, recs.length);
+      if (target === state.page) return;
+      var host = document.getElementById("opMyScans");
+      if (!host) return;
+      if (reducedMotion()) {
+        state.page = target;
+        render("ccbg-fadein");
+        return;
+      }
+      var sheet = (host.querySelector && host.querySelector(".ccbg-sheet")) || null;
+      if (!sheet || !sheet.classList) { state.page = target; render("ccbg-in-" + dir); return; }
+      flipping = true;
+      sheet.classList.add("ccbg-out-" + dir);
+      flipTimer = setTimeout(function(){
+        flipTimer = null;
+        state.page = target;
+        render("ccbg-in-" + dir);
+        flipping = false;
+      }, FLIP_MS);
+    }
+
+    function bindPager(host){
+      var btns = host.querySelectorAll("button");
+      for (var i = 0; i < btns.length; i++) (function(btn){
+        var isPrev = btn.getAttribute("data-ccbg-prev") != null;
+        var isNext = btn.getAttribute("data-ccbg-next") != null;
+        if (!isPrev && !isNext) return;
+        btn.addEventListener("click", function(ev){
+          if (ev && ev.preventDefault) ev.preventDefault();
+          if (isPrev) goTo(state.page - 1, "prev");
+          if (isNext) goTo(state.page + 1, "next");
+        });
+      })(btns[i]);
+    }
+
+    /* renderMyScans is the ONLY writer of #opMyScans (the host id is
+       referenced nowhere else), and its callers call it as a bare
+       global — so replacing the global wraps every render path:
+       first the original (counts, summary, empty state, all its own
+       copy), then the grid. The original's return/flow is untouched. */
+    if (typeof window.renderMyScans === "function" && !window.renderMyScans.__ccbgWrapped) {
+      var orig = window.renderMyScans;
+      var wrapped = function(){
+        var r = orig.apply(this, arguments);
+        try { applyGrid(); } catch (e) { /* grid must never break the binders */ }
+        return r;
+      };
+      wrapped.__ccbgWrapped = true;
+      window.renderMyScans = wrapped;
+      try { window.renderMyScans(); } catch (e) {} /* grid the pocket from the start */
+    }
+  } catch (e) { /* decoration must never break the app */ }
+})();
+</script>
+<script id="ccMallowFloatScript">
+/* =====================================================================
+   FLOATING AVATAR — MALLOW, THE HELPER'S BODY (PREP BUILD, Oct 29 2026)
+   Status: PREP ONLY. This file is NOT in index.html and changes nothing
+   live. It is built to be inlined later as ONE marked appended block
+   (CC-MALLOW-FLOAT) before </body>, house gate-pattern: observe, never
+   rewrite; removable as a unit; strip test = remove the block and the
+   file is byte-for-byte what it was.
+
+   Owner's order (Oct 29): "I want a AI avatar floating on everything
+   on the app." This avatar is Mallow — the helper's body. Companion
+   specs: HELPER-SPEC.md (her job: walk people through a check step by
+   step) + KNOWLEDGE-BOOK.md v1 (the ONLY source her answers come
+   from). Owner decisions folded in: she SPEAKS from v1, tap-only and
+   mute-ruled (Oct 29 ~3:51 PM); the panel starts with the DEFAULT
+   QUESTIONS (the spec's per-step chips) answered locally from the
+   book — instant, offline, $0 — and v1 has NO free-text input at all
+   (Oct 29 ~3:52 PM). The ASK endpoint stays a later phase; the only
+   seam kept for it is the ASK_ENDPOINT config constant below — code,
+   not UI. Nothing visible promises anything that does not work.
+
+   SOUND LAW (post-bug, absolute): she never speaks or plays anything
+   on appearance, on screen change, or on panel open/close. The ONLY
+   speech starts are explicit speaker taps inside this panel (routed
+   through window.ccSpeak, the app's own speak function) and the hero
+   play button (the welcome — not this module's business). Speech is
+   hard-governed by window.ccMuted (the mute build's master state):
+   while muted, speaker controls render disabled/"Muted" and no
+   ccSpeak call can fire from this module. This module touches NO
+   media element (no audio/video play/pause, ever).
+
+   FENCES (KNOWLEDGE-BOOK §1/§9, carried structurally): her copy never
+   contains a verdict or a hint of one, never a price, never a grade.
+   A card's only status words here are the filing facts: under review,
+   not yet reviewed, unknown.
+
+   FACE: her face is the hero poster art the demo already embeds (the
+   data-URI <img> the hero video fades in over, in .top-banner) —
+   cloned at runtime, zero new requests, no invented art. Crop math
+   from the master art (hero-poster.webp, 2400x1018 working view):
+   Mallow's face centroid sits at ~30% x / ~38% y; her head spans
+   ~10–46% x. If that img is ever removed by another pass, the avatar
+   falls back to a clearly-marked placeholder disc (mint, cat glyph,
+   gold ring) and FLOATING-AVATAR-REPORT.md specs the dedicated crop
+   to cut (from the poster master: x 240–1080, y 110–950, square,
+   resize 224x224 -> ../assets/mallow-face.webp).
+   ===================================================================== */
+
+/* ==================== Part A — content + pure logic ====================
+   No DOM in this part. The harness imports it directly. Guide lines for
+   the check flow are HELPER-SPEC §3 verbatim. Default-question answers
+   are condensed from KNOWLEDGE-BOOK.md v1 (section cited per context);
+   two-to-four sentences, her voice, per Book §1. */
+
+var CCMF_CONTENT = {
+
+  /* ---- the check flow (HELPER-SPEC §3) ---- */
+
+  picker: {
+    title: "Starting a check",
+    line: "First things first — what are we looking at today? Tap the kind of treasure you've got. 🫧 Each kind asks for its own photos, so picking right here saves retakes later.",
+    qa: [
+      ["What kinds of things can I check?",
+       "Pokémon cards, Pokémon plush, and graded slabs — PSA, CGC, TAG, and BGS. Each kind asks for its own photo steps, because what the checkers look for changes with the treasure. Pick the one that matches what's in your hand."],
+      ["I have a Pokémon card — which do I pick?",
+       "Tap Pokémon Card. Its steps are the classic pair: front photo first, then the back of the same card. Pokémon cards also get an optional Light Test along the way — hold it to the light for one more tell. Skipping that is always allowed."],
+      ["Can I check more than one card?",
+       "One card at a time on this path — a check is a matched pair, one front and one back. To line up several cards in one pass, look for Pip's Batch Check; it runs up to five cards through the photo steps together."],
+      ["What is the pool?",
+       "The pool is our shared library of card photo pairs — it's what teaches and calibrates the checkers, and what human reviewers work from. Joining is always your choice: the app asks once, before your first photo is sent, and No is a complete answer."]
+    ]
+  },
+
+  captureFront: {
+    title: "Front photo",
+    line: "Now the front of your card, in the guide, nice and steady. Get close enough that the little printed number at the bottom is easy to read — that number is the card's name tag, and the checkers lean on it hard.",
+    qa: [
+      ["How close should I get?",
+       "Fill the whole guide with the card, edges included — no cropping. Close enough that the printed number at the bottom reads easily. Don't pinch-zoom from far away; walk the card to the camera instead."],
+      ["The number is blurry — what do I do?",
+       "Blur is the enemy of numbers. Rest your elbows on the table, tap the card on the screen to focus, and hold still for one breath before you tap. Bright, even light helps too — daylight near a window is perfect."],
+      ["Can I upload a photo instead of taking one?",
+       "Yes — “Upload a file instead” sits right under the frame, and a sample photo button is there too if you just want to practice the steps. The same photo rules apply: whole card, number readable."],
+      ["What did the gate measure?",
+       "The quality gate measures the photo itself — never the card — on the device, the moment you take it. It can name one of four things: the photo is too small to examine, too dark, hit by glare burned pure white, or too blurry to read. It always fires before any check is spent."],
+      ["What does “use it anyway” mean?",
+       "Your photo is kept exactly as taken, the gate's note stays with it, and the flow continues. It's your call. Weak photos make weak evidence, so if the card ever matters, a retake is the cheapest upgrade there is — but the choice is yours."],
+      ["Why only one reason?",
+       "The gate names the first clear problem it finds, in fix-it order: size, then darkness, then glare, then blur. One fix at a time keeps it simple — cure that one, and if another is hiding behind it, the gate will name it next round."]
+    ]
+  },
+
+  captureBack: {
+    title: "Back photo",
+    line: "Flip it over — same card, back side now. Front and back of the same card is the whole trick. A front from one card and a back from another can't be checked together.",
+    qa: [
+      ["Why do you need the back too?",
+       "Checking compares a matched pair — the back is half the evidence. The right back design belongs with the front's language and era, and the checkers weigh the pairing as one of the tells. One card, both sides, is the whole trick."],
+      ["What if my card is in a slab or sleeve?",
+       "Photograph it as it sits — a penny sleeve is fine, and a graded slab can be shot whole, just as it is. Plastic adds glare, so tilt the card a little and let the light bounce away from the camera."],
+      ["I took the wrong back — can I redo it?",
+       "Yes — Retake is right there, and it costs nothing. Only the pair you Finish with counts, so take the moment and match the back to the front. Retakes before Finish are always free."],
+      ["What did the gate measure?",
+       "The quality gate measures the photo itself — never the card — on the device, the moment you take it. It can name one of four things: the photo is too small to examine, too dark, hit by glare burned pure white, or too blurry to read. It always fires before any check is spent."],
+      ["What does “use it anyway” mean?",
+       "Your photo is kept exactly as taken, the gate's note stays with it, and the flow continues. It's your call. Weak photos make weak evidence, so if the card ever matters, a retake is the cheapest upgrade there is — but the choice is yours."],
+      ["Why only one reason?",
+       "The gate names the first clear problem it finds, in fix-it order: size, then darkness, then glare, then blur. One fix at a time keeps it simple — cure that one, and if another is hiding behind it, the gate will name it next round."]
+    ]
+  },
+
+  captureStep: {
+    title: "Photo step",
+    line: "", /* composed at runtime from the step's own title + guidance */
+    qa: [
+      ["How close should I get?",
+       "Fill the whole guide with the item, edges included — no cropping, and close enough that the fine print reads easily. Don't pinch-zoom from far away; walk the item to the camera instead."],
+      ["The photo is blurry — what do I do?",
+       "Rest your elbows on the table, tap the item on the screen to focus, and hold still for one breath before you tap. Bright, even light helps too — daylight near a window is perfect."],
+      ["What if there's glare?",
+       "A shiny patch burned pure white hides whatever is under it. Tilt the item a little, or move so the lamp isn't reflecting straight into the camera, and shoot again."],
+      ["What did the gate measure?",
+       "The quality gate measures the photo itself — never the item — on the device, the moment you take it. It can name one of four things: the photo is too small to examine, too dark, hit by glare burned pure white, or too blurry to read. It always fires before any check is spent."]
+    ]
+  },
+
+  captureFinish: {
+    title: "Finish",
+    line: "That's the pair — front and back, same card. Hit Finish when you're happy with them. Finish is the moment a check gets spent — one of your free checks — so give the pair one last look first.",
+    qa: [
+      ["What does Finish actually do?",
+       "Finish spends one of your free checks and sends the pair on its way. If you told the pool yes, the pair also files into the pending pool, and you'll find it later in your Binders, under review. If you said no, nothing is kept or sent anywhere."],
+      ["How many free checks do I get?",
+       "Everyone starts with 10 free checks — in the full app, 5 more float in on the 1st of every month. In this demo the count is real but kind: when your checks run out, they restart, so you can keep watching how it works."],
+      ["Can I undo a check?",
+       "There's no undo button in the demo. Before Finish, everything is free to redo — retake any photo as often as you like. After Finish, a pool-yes pair stays filed as it is, marked under review; a pool-no check simply leaves nothing behind."]
+    ]
+  },
+
+  lightTest: {
+    title: "The Light Test",
+    line: "Bonus round, Pokémon trainers: the Light Test is optional — hold your card to the light like the guide shows. Skip is always allowed; it just adds one more tell when you do it.",
+    qa: [
+      ["What does the Light Test add?",
+       "One more tell. How light passes through a card is something the checkers can weigh with the others — no single tell decides anything, but each honest one helps. That's why it's offered, and why skipping costs you nothing but the tell."],
+      ["Can I skip it?",
+       "Always. Skip is a complete answer here, same as No at the pool question. The check works without it; the test just adds evidence when you feel like it."]
+    ]
+  },
+
+  gate: {
+    title: "The honest gate",
+    line: "And here's the honest part: full checks open at launch. In the full app your photos go to two checkers — Lens 🔎 and Gauge 📏 — who compare them tell by tell and sign one verdict together. This demo stops here on purpose. Nothing about your card has been judged — not real, not fake, not anything in between.",
+    qa: [
+      ["When do full checks open?",
+       "At launch. Until then, full checks are not open for anyone, on any card — anyone showing a “result” from this demo is showing the pre-written sample. The wait is deliberate: a verdict is only worth anything once the checkers have proven themselves against cards whose truth is already known."],
+      ["What is a SAMPLE verdict?",
+       "A SAMPLE verdict is a pre-written example of how a finished verdict and its receipt will look — the same example for everyone. It was not produced from your photos, it says nothing about your card, and it's labeled on its face: SAMPLE VERDICT — NOT A REAL CHECK."],
+      ["Who are Lens and Gauge?",
+       "The two checkers of the full app. Lens 🔎 studies how the card looks; Gauge 📏 studies how it measures. They compare your card tell by tell and sign one verdict together — in the full app. In this demo, they're still backstage."],
+      ["Is my card real?",
+       "That's the one question I can't answer — and in this demo, nothing can. Full checks open at launch. What I can do is walk you through the best photos possible, so when the checkers open, your card gets its fairest look."]
+    ]
+  },
+
+  bindersYes: {
+    title: "Your Binders",
+    line: "Your card is filed — look for it in your Binders, in the Undecided Pocket, marked under review. 🫧 That pocket means exactly what it says: real people and checkers review it by hand, and its name and number get filled in during review. Unknown stays unknown until then — nothing is guessed, ever.",
+    qa: null /* bindersQa below */
+  },
+  bindersNo: {
+    title: "Your Binders",
+    line: "All done — and because you kept this one private, nothing was saved or sent anywhere. Your photos lived only on this screen. That's a promise the app keeps.",
+    qa: null
+  },
+  bindersNew: {
+    title: "Your Binders",
+    line: "These are your Binders — where filed cards live, sorted into pockets by status. In this demo, a scan you share with the pool lands in the Undecided Pocket, marked under review. Nothing files under a guess.",
+    qa: null
+  },
+
+  sampleVerdict: {
+    title: "SAMPLE verdict",
+    line: "This is the SAMPLE verdict — how a finished one will look. It was not made from your photos, and it isn't about any card in your hands.",
+    qa: [
+      ["What is a SAMPLE verdict?",
+       "A SAMPLE verdict is a pre-written example of how a finished verdict and its receipt will look — the same example for everyone. It was not produced from your photos, it says nothing about your card, and it's labeled on its face: SAMPLE VERDICT — NOT A REAL CHECK."],
+      ["Is my card real?",
+       "That's the one question I can't answer — and in this demo, nothing can. Full checks open at launch. What I can do is walk you through the best photos possible, so when the checkers open, your card gets its fairest look."],
+      ["When do full checks open?",
+       "At launch. Until then, full checks are not open for anyone, on any card — anyone showing a “result” from this demo is showing the pre-written sample. The wait is deliberate: a verdict is only worth anything once the checkers have proven themselves against cards whose truth is already known."]
+    ]
+  },
+
+  sampleReceipt: {
+    title: "SAMPLE receipt",
+    line: "The sample receipt — example entries in the shape a finished check leaves behind. Same example for everyone; nothing here is a finding about a real card.",
+    qa: [
+      ["What is a SAMPLE verdict?",
+       "A SAMPLE verdict is a pre-written example of how a finished verdict and its receipt will look — the same example for everyone. It was not produced from your photos, it says nothing about your card, and it's labeled on its face: SAMPLE VERDICT — NOT A REAL CHECK."],
+      ["Who are Lens and Gauge?",
+       "The two checkers of the full app. Lens 🔎 studies how the card looks; Gauge 📏 studies how it measures. They compare your card tell by tell and sign one verdict together — in the full app. In this demo, they're still backstage."],
+      ["When do full checks open?",
+       "At launch. Until then, full checks are not open for anyone, on any card — anyone showing a “result” from this demo is showing the pre-written sample. The wait is deliberate: a verdict is only worth anything once the checkers have proven themselves against cards whose truth is already known."]
+    ]
+  }
+};
+
+/* Step 7's default questions — shared by all three binders states (Book §5). */
+var CCMF_BINDERS_QA = [
+  ["What does “under review” mean?",
+   "Your pair reached the pending pool with its own pending ID and timestamp, and real review happens pool-side, by people and checkers. During review, the card's name and number get filled in from the printed number on the card itself. Until then, it waits — honestly blank."],
+  ["Where did my card go?",
+   "If you said yes to the pool, it's filed right here: My Binders, Undecided Pocket, as a pending card showing its front photo, its pending ID, and its time. If you said no to the pool, it went nowhere — by design, nothing was saved."],
+  ["When will I know the answer?",
+   "I can't promise a date — review happens by hand, pool-side, and guessing a time would be inventing one. What I can promise is the rule your card waits under: unknown stays unknown until a reviewer fills it in. Nothing is guessed, ever."],
+  ["Why is the name blank?",
+   "Because nobody has read it yet. A filed scan's record is just three things — its pending ID, its time, and its front photo. The name and number are filled in during review, from the printed number on the card. A blank name is the app telling the truth."]
+];
+CCMF_CONTENT.bindersYes.qa = CCMF_BINDERS_QA;
+CCMF_CONTENT.bindersNo.qa = CCMF_BINDERS_QA;
+CCMF_CONTENT.bindersNew.qa = CCMF_BINDERS_QA;
+
+/* ---- every other screen: one line for where you are + default questions.
+   Lines are written from the app's own screen copy; answers stay inside
+   KNOWLEDGE-BOOK.md v1 (§2, §5, §6, §7, §8) or plain UI facts of the
+   screen the user is looking at. ---- */
+
+CCMF_CONTENT.home = {
+  title: "Home",
+  line: "Welcome in — I'm Mallow, your guide. 🫧 The big gold button starts a check; your Binders keep what you file; the games below are the bubbly way to learn the tells. Tap me on any screen when a step puzzles you.",
+  qa: [
+    ["How do checks work?",
+     "Photograph a card's front and back, and the app measures the photos on the spot. In the full app, two checkers then compare the card tell by tell. In this demo the photo steps are live and full checks open at launch, so a check today ends at the honest gate screen."],
+    ["What kinds of things can I check?",
+     "Pokémon cards, Pokémon plush, and graded slabs — PSA, CGC, TAG, and BGS. Each kind asks for its own photo steps, because what the checkers look for changes with the treasure. Pick the one that matches what's in your hand."],
+    ["What is the pool?",
+     "The pool is our shared library of card photo pairs — it's what teaches and calibrates the checkers, and what human reviewers work from. Joining is always your choice: the app asks once, before your first photo is sent, and No is a complete answer."]
+  ]
+};
+
+CCMF_CONTENT.games = {
+  title: "Mini Games",
+  line: "Thirteen bubbly games — every one sneaks in a tell the checkers use, from print dots to price memory. Pick one and warm up; best scores live just for this visit.",
+  qa: [
+    ["Do games affect my checks?",
+     "Not a bit. Games are free, checks are spent only when you Finish a card pair, and the two never touch. Coins from games spend in the Reward Shop — demo sparkle only."],
+    ["Which game teaches the tells?",
+     "Tell or Tale? is the pure knowledge one — real tell or tall tale, no photos. Zoom Pop trains your eye on holo patterns up close, and Message Relay is Wick's pinned-memo practice. They're all tells in costume."],
+    ["What do coins do?",
+     "Coins you earn in games spend in the Reward Shop, on demo items and a little sparkle. They never buy checks and never change a verdict — there's no verdict in this demo to change."]
+  ]
+};
+
+CCMF_CONTENT.game = {
+  title: "Mini Game",
+  line: "", /* composed at runtime with the game's own title */
+  qa: [
+    ["What does this game teach?",
+     "Every game here is a tell in costume — pattern, pairing, print, or price memory, the same small clues the checkers weigh together. No single game (or tell) decides anything; they train the eye that notices."],
+    ["Can you play it for me?",
+     "I can't — and beating your warm-up wouldn't teach your eye a thing. The first round of most games here is a gentle warm-up on purpose. Take it slow; the bubbles will wait."],
+    ["Do game scores save?",
+     "Best scores show for this visit only — demo rules. The Leaderboard keeps the bragging rights while you're here; nothing follows you home."]
+  ]
+};
+
+CCMF_CONTENT.tells = {
+  title: "Tells",
+  line: "The tells library — every clue the checkers compare, told plainly, one by one. Read a few and your own eye starts catching them on real cards.",
+  qa: [
+    ["What is a tell?",
+     "A tell is one small thing a checker looks at on a card — its printed number, its print dots, its holo pattern, its pairing. No single tell decides anything; in the full app, verdicts come from tells weighed together."],
+    ["Which tell matters most?",
+     "The printed number is the key — it says exactly which card and printing this is, and everything else keys off it. But most important isn't decisive: number, dots, holo, pairing — they're weighed together, never alone."],
+    ["What are print dots?",
+     "Real printing lays ink down in a tiny, orderly dot pattern — the rosette. Under magnification, genuine print shows that pattern cleanly; many replicas smear or print a different one. It's one tell, never a verdict by itself."]
+  ]
+};
+
+CCMF_CONTENT.plan = {
+  title: "Checks & Plan",
+  line: "Checks & Plan — the tiers of the full app, laid out honestly. In this demo nothing is charged, ever; your free checks are the real currency.",
+  qa: [
+    ["How many free checks do I get?",
+     "Everyone starts with 10 free checks — in the full app, 5 more float in on the 1st of every month. In this demo the count is real but kind: when your checks run out, they restart, so you can keep watching how it works."],
+    ["When is a check spent?",
+     "Exactly once, at Finish, when a completed pair is sent on its way. Never for a photo problem the quality gate catches — the gate fires before any spending — and never for browsing, games, or looking at samples."],
+    ["How much are the tiers?",
+     "The tiers live right here on the Checks & Plan screen — this page always has the current numbers, so I point here instead of quoting from memory. In the demo, whichever you preview, nothing is charged."]
+  ]
+};
+
+CCMF_CONTENT.rewards = {
+  title: "Reward Shop",
+  line: "The Reward Shop — coins earned in games spend here, on demo treasures. Owning anything in this shop never changes a check.",
+  qa: [
+    ["Where do coins come from?",
+     "From playing the mini-games — pop well, earn coins. They live in this demo only, and the shop is their whole world."],
+    ["Does the shop affect checks?",
+     "Never. Shop items are demo sparkle; checks run on photos and tells. Nothing you can own here buys a verdict — and in this demo there are no verdicts to buy."],
+    ["Is any of this real money?",
+     "No. The demo charges nothing, sells nothing, and saves nothing to an account. Coins are game points with a nice shine."]
+  ]
+};
+
+CCMF_CONTENT.website = {
+  title: "Our Website",
+  line: "Our website screen — one tap opens Card Cauldron TCG on the web, in your browser.",
+  qa: [
+    ["What is Card Cauldron TCG?",
+     "The crew behind Real or Replica — a little card shop and studio that built this app to help collectors check cards honestly. This demo is their workshop window: look around, play, and watch the checks being built."],
+    ["Can I check a card on the website?",
+     "The checking itself lives here, in the app flow — photos, the quality gate, the pool. The website is the shop's front porch; this app is where cards get their pictures taken."]
+  ]
+};
+
+CCMF_CONTENT.condition = {
+  title: "Condition Grader",
+  line: "The Card Condition Grader — its own little window with its own rules: a front photo, then a back, and it speaks only about condition. It never, ever calls a card real or fake.",
+  qa: [
+    ["What does the grader look at?",
+     "Corners, edges, surface, and centering — the wear-and-tear family — and it speaks in the Mint-to-Damaged range. Condition only: a beautiful card can still be a replica, and a worn one can be genuine, which is why this window never judges real or fake."],
+    ["How many free grades do I get?",
+     "Five free condition grades to start — a pool of their own. After those, grading is the paid Condition Pass, its own separate option. Grades and checks never take from each other."],
+    ["Can it tell me if my card is real?",
+     "It cannot — that's deliberate. The grader judges condition and stays silent on authenticity, the same way I do. Real-or-fake belongs to the checkers, and full checks open at launch."]
+  ]
+};
+
+CCMF_CONTENT.batch = {
+  title: "Batch Check",
+  line: "Pip's Batch Check — line up to five cards and run their photo steps in one pass. Have your five ready, then open the batch camera.",
+  qa: [
+    ["How many cards can I batch?",
+     "Up to five in one pass. Each still gets its own front and back — batch is about rhythm, not shortcuts."],
+    ["Is batch the same as a single check?",
+     "The photo steps rhyme, but the single-check path is the full one — quality gate, Finish, and filing to your Binders when you say yes to the pool. Batch is a demo run-through for several cards at once."]
+  ]
+};
+
+CCMF_CONTENT.batchCam = {
+  title: "Batch Camera",
+  line: "Fill each guide with one card, steady and close — the same photo rules as the single check: whole card, number readable, glare tilted away.",
+  qa: [
+    ["How close should I get?",
+     "Fill the whole guide with the card, edges included — no cropping. Close enough that the printed number at the bottom reads easily. Don't pinch-zoom from far away; walk the card to the camera instead."],
+    ["What if there's glare?",
+     "A shiny patch burned pure white hides whatever is under it. Tilt the card a little, or move so the lamp isn't reflecting straight into the camera, and shoot again."],
+    ["The photo is blurry — what do I do?",
+     "Rest your elbows on the table, tap the card on the screen to focus, and hold still for one breath before you tap. Bright, even light helps too — daylight near a window is perfect."]
+  ]
+};
+
+CCMF_CONTENT.settings = {
+  title: "Profile & Settings",
+  line: "Profile & Settings — your demo name and avatar live here, and so does your pool-sharing choice. It all stays on this device; there's no real account behind it.",
+  qa: [
+    ["Can I change my pool choice?",
+     "Any time. You were asked once, before your first photo was sent, and the answer is remembered on this device — flip it here whenever you like. It only changes what happens to future scans."],
+    ["Does anything leave this device?",
+     "Only one thing can: a photo pair you said yes to sending to the pool. Everything else — your name, your scans, your scores — lives on this device for this demo. No password, no server, nothing else leaves."]
+  ]
+};
+
+CCMF_CONTENT.leaderboard = {
+  title: "Leaderboard",
+  line: "The Leaderboard — mini-game high scores and visit bragging rights. Pick a game at the top to see its board.",
+  qa: [
+    ["Do scores save?",
+     "Best scores show for this visit only — demo rules. The Leaderboard keeps the bragging rights while you're here; nothing follows you home."],
+    ["How do I get on the board?",
+     "Play the mini-games — your best run at each one is what shows. Warm-up rounds are gentle on purpose; the score that counts is the one your eye earns."]
+  ]
+};
+
+CCMF_CONTENT.feedback = {
+  title: "Feedback & Ideas",
+  line: "Feedback & Ideas — the crew's suggestion box. If something felt broken or brilliant, it belongs here; real eyes read these.",
+  qa: [
+    ["Who reads this?",
+     "The crew who build the app — this box exists so testers can talk straight to them. Short and specific travels furthest: what you tapped, what you expected, what happened."]
+  ]
+};
+
+CCMF_CONTENT.chatroom = {
+  title: "Chat Room",
+  line: "The Chat Room — collectors and crew talking shop in the demo. Say hello, keep it kind, and never share anything personal.",
+  qa: [
+    ["Who's in here?",
+     "Fellow collectors trying the demo, and the crew who built it. It's a demo room — the names here are display names, not accounts. Say hello."]
+  ]
+};
+
+CCMF_CONTENT.lightLearn = {
+  title: "The Light Test, explained",
+  line: "The Light Test, explained before you try it: hold a card up to a bright light and the light itself becomes a tell. Read here, then try it on a card of your own.",
+  qa: [
+    ["What does the light show?",
+     "How the card's stock and print behave against the light — one more piece of evidence the checkers can weigh with the rest. On its own it decides nothing; tells work together."],
+    ["Is the Light Test required?",
+     "Never. It's optional every time it appears — skip is always allowed. It adds a tell when you do it, and costs nothing when you don't."]
+  ]
+};
+
+CCMF_CONTENT.generic = {
+  title: "Mallow",
+  line: "I'm Mallow — I float along every screen. 🫧 This spot doesn't have its own walk-through yet, but the big questions work everywhere.",
+  qa: [
+    ["How do checks work?",
+     "Photograph a card's front and back, and the app measures the photos on the spot. In the full app, two checkers then compare the card tell by tell. In this demo the photo steps are live and full checks open at launch, so a check today ends at the honest gate screen."],
+    ["What is the pool?",
+     "The pool is our shared library of card photo pairs — it's what teaches and calibrates the checkers, and what human reviewers work from. Joining is always your choice: the app asks once, before your first photo is sent, and No is a complete answer."],
+    ["How many free checks do I get?",
+     "Everyone starts with 10 free checks — in the full app, 5 more float in on the 1st of every month. In this demo the count is real but kind: when your checks run out, they restart, so you can keep watching how it works."]
+  ]
+};
+
+/* Pure context resolver. screenKey = .screen id minus the "scr-" prefix.
+   step (capture only), all fields optional:
+     { isCard, capLabel, isLast, finishShown }
+   pool (binders only): "yes" | "no" | anything else (unset). */
+function ccmfResolveContext(screenKey, step, pool) {
+  if (!screenKey) return "generic";
+  if (screenKey === "capture") {
+    if (!step) return "captureStep";
+    if (step.finishShown) return "captureFinish";
+    if (step.isCard) {
+      if (/front/i.test(step.capLabel || "")) return "captureFront";
+      if (/back/i.test(step.capLabel || "")) return "captureBack";
+    }
+    return "captureStep";
+  }
+  if (screenKey === "binders") {
+    if (pool === "yes") return "bindersYes";
+    if (pool === "no") return "bindersNo";
+    return "bindersNew";
+  }
+  if (screenKey === "picker") return "picker";
+  if (screenKey === "lightTest") return "lightTest";
+  if (screenKey === "gate") return "gate";
+  if (screenKey.indexOf("game") === 0 && screenKey !== "games") return "game";
+  if (Object.prototype.hasOwnProperty.call(CCMF_CONTENT, screenKey)) return screenKey;
+  return "generic";
+}
+
+/* Stage-2 seam (code only — no UI exists for this in v1, per the owner's
+   default-questions decision): when the ASK endpoint phase lands, the
+   panel renderer may consult this constant; null = local answers only. */
+var CCMF_ASK_ENDPOINT = null;
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    CONTENT: CCMF_CONTENT,
+    resolveContext: ccmfResolveContext,
+    ASK_ENDPOINT: CCMF_ASK_ENDPOINT
+  };
+}
+
+/* ==================== Part B — browser integration ====================
+   Appended-block pattern only: creates its own elements, observes the
+   app's state read-only, edits no existing code. Runs only in a real
+   DOM. Z-ORDER (measured from index.html, Oct 29 build 2e0f6738…):
+   screens z 1 · dock z 60 · menu panel z 61 · celebration layer z 300
+   · rewards pops z 998 (LOWEST modal layer) · continue pop z 999 ·
+   login gate / pool / Chris pops z 3000 · quality-gate pop z 3100.
+   Avatar + sheet sit at z 900, scrim at 898 — above all chrome, below
+   every pop, so a pop always covers Mallow. */
+
+if (typeof document !== "undefined") (function () {
+  "use strict";
+  try {
+    if (window.__ccMallowFloat && window.__ccMallowFloat.destroy) window.__ccMallowFloat.destroy();
+  } catch (e) {}
+  try { init(); } catch (e) { /* decoration must never break the app */ }
+
+  function init() {
+    var Z_SHEET = 900, Z_AVATAR = 900, Z_SCRIM = 898;
+    var DIM_QUIET_MS = 3500;
+
+    /* ---------- styles ---------- */
+    var style = document.createElement("style");
+    style.id = "ccMallowFloatStyle";
+    style.textContent =
+      "#ccMallowFloatBtn{position:fixed;right:max(12px,calc(50% - 203px));bottom:calc(88px + env(safe-area-inset-bottom,0px));" +
+      "width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,215,106,.85);background:#1d1430;padding:0;margin:0;" +
+      "cursor:pointer;z-index:" + Z_AVATAR + ";-webkit-tap-highlight-color:transparent;" +
+      "box-shadow:0 0 0 3px rgba(179,136,255,.35),0 0 18px rgba(255,122,200,.45),0 8px 20px rgba(0,0,0,.55);" +
+      "transition:opacity .35s ease,filter .35s ease;}" +
+      "#ccMallowFloatBtn.ccmf-dim{opacity:.4;filter:saturate(.6);}" +
+      ".ccmf-face{display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;animation:ccmfBob 3.4s ease-in-out infinite;}" +
+      ".ccmf-face img{display:block;width:100%;height:100%;object-fit:cover;object-position:14% 22%;transform:scale(1.45);transform-origin:30% 36%;}" +
+      ".ccmf-ph{display:flex;width:100%;height:100%;align-items:center;justify-content:center;font-size:26px;" +
+      "background:radial-gradient(circle at 35% 30%,#eafff3,#57ffb0 62%,#2ea36f);}" +
+      "@keyframes ccmfBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}" +
+      "#ccMallowFloatBtn.ccmf-still .ccmf-face{animation:none;}" +
+      "#ccMallowFloatScrim{position:fixed;inset:0;background:rgba(10,6,18,.45);z-index:" + Z_SCRIM + ";}" +
+      "#ccMallowFloatSheet{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:430px;max-height:64vh;" +
+      "overflow-y:auto;background:linear-gradient(180deg,#1d1430,#140e20);border:1.5px solid rgba(255,215,106,.5);border-bottom:none;" +
+      "border-radius:20px 20px 0 0;padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px));color:#fff8e7;z-index:" + Z_SHEET + ";" +
+      "box-shadow:0 -12px 34px rgba(0,0,0,.6);animation:ccmfSheetIn .18s ease;box-sizing:border-box;}" +
+      "@keyframes ccmfSheetIn{from{opacity:0}to{opacity:1}}" +
+      ".ccmf-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}" +
+      ".ccmf-mini{flex:0 0 auto;width:34px;height:34px;border-radius:50%;overflow:hidden;border:1.5px solid rgba(255,215,106,.8);background:#1d1430;}" +
+      ".ccmf-mini img{display:block;width:100%;height:100%;object-fit:cover;object-position:14% 22%;transform:scale(1.45);transform-origin:30% 36%;}" +
+      ".ccmf-kicker{font-size:11px;font-weight:900;letter-spacing:.08em;color:#ffd76a;text-transform:uppercase;}" +
+      ".ccmf-ctx{font-size:16px;font-weight:900;line-height:1.2;}" +
+      ".ccmf-close{margin-left:auto;flex:0 0 auto;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,248,231,.35);" +
+      "background:rgba(255,248,231,.08);color:#fff8e7;font-size:15px;cursor:pointer;}" +
+      ".ccmf-line{font-size:15px;line-height:1.5;margin:2px 0 10px;white-space:pre-line;}" +
+      ".ccmf-speak{display:inline-flex;align-items:center;gap:6px;border-radius:999px;border:1.5px solid rgba(255,215,106,.75);" +
+      "background:rgba(255,215,106,.12);color:#fff8e7;font:inherit;font-size:13px;font-weight:800;padding:6px 12px;cursor:pointer;}" +
+      ".ccmf-speak[disabled]{opacity:.55;border-style:dashed;cursor:default;}" +
+      ".ccmf-qlabel{font-size:11px;font-weight:900;letter-spacing:.08em;color:#b388ff;text-transform:uppercase;margin:14px 0 8px;}" +
+      ".ccmf-chips{display:flex;flex-wrap:wrap;gap:8px;}" +
+      ".ccmf-chip{border-radius:999px;border:1.5px solid rgba(179,136,255,.55);background:rgba(179,136,255,.12);color:#fff8e7;" +
+      "font:inherit;font-size:13.5px;font-weight:700;padding:8px 12px;cursor:pointer;text-align:left;}" +
+      ".ccmf-answer{margin-top:12px;background:rgba(87,255,176,.08);border:1px solid rgba(87,255,176,.35);border-radius:12px;padding:10px 12px;}" +
+      ".ccmf-aq{font-size:12px;font-weight:900;color:#ffd76a;margin-bottom:4px;}" +
+      ".ccmf-atext{font-size:14.5px;line-height:1.5;white-space:pre-line;}" +
+      ".ccmf-answer .ccmf-speak{margin-top:8px;}" +
+      "@media (prefers-reduced-motion: reduce){.ccmf-face{animation:none;}#ccMallowFloatSheet{animation:none;}}";
+    document.body.appendChild(style);
+
+    /* ---------- face: clone the hero poster the page already embeds ---------- */
+    function faceSrc() {
+      try {
+        var img = document.querySelector(".top-banner img");
+        if (img) {
+          var s = img.currentSrc || img.src || "";
+          if (s) return s;
+        }
+      } catch (e) {}
+      return "";
+    }
+    function faceEl(cls) {
+      var wrap = document.createElement("span");
+      wrap.className = cls;
+      var src = faceSrc();
+      if (src) {
+        var im = document.createElement("img");
+        im.src = src;
+        im.alt = "";
+        im.setAttribute("aria-hidden", "true");
+        im.addEventListener("error", function () {
+          wrap.removeChild(im);
+          wrap.appendChild(phEl());
+        });
+        wrap.appendChild(im);
+      } else {
+        wrap.appendChild(phEl());
+      }
+      return wrap;
+    }
+    function phEl() {
+      var ph = document.createElement("span");
+      ph.className = "ccmf-ph";
+      ph.textContent = "🐱";
+      ph.setAttribute("data-ccmf-placeholder", "1");
+      return ph;
+    }
+
+    /* ---------- avatar button ---------- */
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "ccMallowFloatBtn";
+    btn.setAttribute("aria-label", "Ask Mallow — your guide");
+    btn.appendChild(faceEl("ccmf-face"));
+    document.body.appendChild(btn);
+
+    /* ---------- scrim + sheet ---------- */
+    var scrim = document.createElement("div");
+    scrim.id = "ccMallowFloatScrim";
+    scrim.style.display = "none";
+    document.body.appendChild(scrim);
+
+    var sheet = document.createElement("section");
+    sheet.id = "ccMallowFloatSheet";
+    sheet.setAttribute("role", "dialog");
+    sheet.setAttribute("aria-label", "Mallow, your guide");
+    sheet.style.display = "none";
+
+    var head = document.createElement("div"); head.className = "ccmf-head";
+    var mini = faceEl("ccmf-mini");
+    var headText = document.createElement("div");
+    var kicker = document.createElement("div"); kicker.className = "ccmf-kicker"; kicker.textContent = "Mallow · your guide";
+    var ctxTitle = document.createElement("div"); ctxTitle.className = "ccmf-ctx";
+    headText.appendChild(kicker); headText.appendChild(ctxTitle);
+    var closeBtn = document.createElement("button");
+    closeBtn.type = "button"; closeBtn.className = "ccmf-close";
+    closeBtn.setAttribute("aria-label", "Close Mallow's panel");
+    closeBtn.textContent = "✕";
+    head.appendChild(mini); head.appendChild(headText); head.appendChild(closeBtn);
+    sheet.appendChild(head);
+
+    var lineEl = document.createElement("p"); lineEl.className = "ccmf-line";
+    sheet.appendChild(lineEl);
+
+    var guideSpeak = document.createElement("button");
+    guideSpeak.type = "button"; guideSpeak.className = "ccmf-speak";
+    sheet.appendChild(guideSpeak);
+
+    var qLabel = document.createElement("div"); qLabel.className = "ccmf-qlabel"; qLabel.textContent = "Default questions";
+    sheet.appendChild(qLabel);
+    var chipsEl = document.createElement("div"); chipsEl.className = "ccmf-chips";
+    sheet.appendChild(chipsEl);
+
+    var answerWrap = document.createElement("div"); answerWrap.className = "ccmf-answer"; answerWrap.style.display = "none";
+    var answerQ = document.createElement("div"); answerQ.className = "ccmf-aq";
+    var answerText = document.createElement("div"); answerText.className = "ccmf-atext";
+    var answerSpeak = document.createElement("button");
+    answerSpeak.type = "button"; answerSpeak.className = "ccmf-speak";
+    answerWrap.appendChild(answerQ); answerWrap.appendChild(answerText); answerWrap.appendChild(answerSpeak);
+    sheet.appendChild(answerWrap);
+
+    /* Stage-2 seam is code-only (CCMF_ASK_ENDPOINT) — v1 renders no
+       input and no placeholder for one, per the owner's decision. */
+    document.body.appendChild(sheet);
+
+    /* ---------- state ---------- */
+    var open = false;
+    var currentCtx = null;
+    var currentLine = "";
+    var currentAnswer = "";
+    var lastGameMut = 0;
+    var lastScreenKey = null;
+    var destroyed = false;
+
+    var reduceMotion = false;
+    try {
+      reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    } catch (e) {}
+    if (reduceMotion) btn.classList.add("ccmf-still");
+
+    /* ---------- read-only state gathering ---------- */
+    function activeScreenEl() {
+      try { return document.querySelector(".screen.active"); } catch (e) { return null; }
+    }
+    function activeKey() {
+      var scr = activeScreenEl();
+      if (!scr || !scr.id || scr.id.indexOf("scr-") !== 0) return "";
+      return scr.id.slice(4);
+    }
+    function gatherStep() {
+      var step = null;
+      try {
+        var cat = window.capCat, idx = window.capStep;
+        if (cat && cat.steps && cat.steps[idx]) {
+          var st = cat.steps[idx];
+          step = {
+            isCard: cat.label === "Pokémon Card",
+            capLabel: st.cap || "",
+            isLast: idx >= cat.steps.length - 1,
+            finishShown: false,
+            title: st.title || "",
+            guidance: st.guidance || ""
+          };
+          var nx = document.getElementById("capNext");
+          if (nx && !nx.classList.contains("hidden") && /finish/i.test(nx.textContent || "")) step.finishShown = true;
+        }
+      } catch (e) {}
+      return step;
+    }
+    function poolVal() {
+      try {
+        var v = window.localStorage.getItem("cc_pool_share");
+        if (v === "yes") return "yes";
+        if (v === "no") return "no";
+      } catch (e) {}
+      return null;
+    }
+    function gameTitle(key) {
+      try {
+        var gs = window.GAMES;
+        if (gs && gs.length) {
+          for (var i = 0; i < gs.length; i++) if (gs[i].scr === key) return gs[i].title || "";
+        }
+      } catch (e) {}
+      return "";
+    }
+    function composeLine(ctxKey, screenKey) {
+      var c = CCMF_CONTENT[ctxKey] || CCMF_CONTENT.generic;
+      if (ctxKey === "captureStep") {
+        var step = gatherStep();
+        if (step && (step.title || step.guidance)) {
+          return (step.title ? step.title + ". " : "") + (step.guidance || "") +
+            " I'm right here if a photo fights you — tap a question below.";
+        }
+        return "This photo step wants one good photo: whole item in the guide, fine print readable, glare tilted away. I'm right here if it fights you.";
+      }
+      if (ctxKey === "game") {
+        var t = gameTitle(screenKey);
+        return "You're playing " + (t || "a mini game") + ". I dim right down while a round is live so I never steal a bubble — tap me between rounds and I'll light back up.";
+      }
+      return c.line;
+    }
+
+    /* ---------- speech: explicit taps only, mute-governed ---------- */
+    function muted() { return window.ccMuted === true; }
+    function speak(text) {
+      if (muted()) return false;
+      if (!text) return false;
+      if (typeof window.ccSpeak === "function") return window.ccSpeak(text);
+      return false;
+    }
+    function paintSpeak(btnEl, label) {
+      if (muted()) {
+        btnEl.disabled = true;
+        btnEl.textContent = "🔇 Muted";
+        btnEl.setAttribute("aria-disabled", "true");
+      } else {
+        btnEl.disabled = false;
+        btnEl.textContent = label;
+        btnEl.removeAttribute("aria-disabled");
+      }
+    }
+    function paintSpeaks() {
+      paintSpeak(guideSpeak, "🔊 Hear this");
+      paintSpeak(answerSpeak, "🔊 Hear this answer");
+    }
+    guideSpeak.addEventListener("click", function () { speak(currentLine); });
+    answerSpeak.addEventListener("click", function () { speak(currentAnswer); });
+
+    /* ---------- panel render / open / close (no media touched) ---------- */
+    function renderPanel() {
+      var key = activeKey();
+      var ctxKey = ccmfResolveContext(key, gatherStep(), poolVal());
+      currentCtx = ctxKey;
+      var c = CCMF_CONTENT[ctxKey] || CCMF_CONTENT.generic;
+      ctxTitle.textContent = c.title || "Mallow";
+      currentLine = composeLine(ctxKey, key);
+      lineEl.textContent = currentLine;
+      while (chipsEl.firstChild) chipsEl.removeChild(chipsEl.firstChild);
+      (c.qa || []).forEach(function (pair) {
+        var chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "ccmf-chip";
+        chip.textContent = pair[0];
+        chip.addEventListener("click", function () {
+          answerQ.textContent = pair[0];
+          answerText.textContent = pair[1];
+          currentAnswer = pair[1];
+          answerWrap.style.display = "block";
+          paintSpeaks();
+        });
+        chipsEl.appendChild(chip);
+      });
+      answerWrap.style.display = "none";
+      currentAnswer = "";
+      paintSpeaks();
+    }
+    function openPanel() {
+      renderPanel();
+      open = true;
+      scrim.style.display = "block";
+      sheet.style.display = "block";
+      evaluateDim();
+    }
+    function closePanel() {
+      open = false;
+      scrim.style.display = "none";
+      sheet.style.display = "none";
+      evaluateDim();
+      try { btn.focus(); } catch (e) {}
+    }
+    btn.addEventListener("click", openPanel);
+    closeBtn.addEventListener("click", closePanel);
+    scrim.addEventListener("click", closePanel);
+    function onKey(e) { if (open && (e.key === "Escape" || e.keyCode === 27)) closePanel(); }
+    document.addEventListener("keydown", onKey);
+    function onStorage(e) { if (open && e && e.key === "cc_muted") paintSpeaks(); }
+    window.addEventListener("storage", onStorage);
+
+    /* ---------- game-round dimming ----------
+       Observable signals only: a game screen is active AND the active
+       game has registered its cleanup (window.gameCleanup — set while
+       a game's timers are live) AND the game screen's DOM has mutated
+       within the last DIM_QUIET_MS (a live round re-renders scores /
+       timers constantly; a paused or finished round goes quiet).
+       Approximation, honestly: a slow moment inside a round with no
+       re-render for 3.5 s can brighten her early; a game that keeps
+       animating its end screen keeps her dim. She never dims anywhere
+       else, and opening the panel always brightens her. */
+    function isGameKey(key) { return !!key && key.indexOf("game") === 0 && key !== "games"; }
+    function evaluateDim() {
+      var key = activeKey();
+      var live = false;
+      if (!open && isGameKey(key) && typeof window.gameCleanup === "function") {
+        live = (Date.now() - lastGameMut) < DIM_QUIET_MS;
+      }
+      btn.classList.toggle("ccmf-dim", live);
+    }
+    var dimTimer = setInterval(evaluateDim, 700);
+
+    /* ---------- screen observation (scroll-images pattern) ---------- */
+    var rafPending = false;
+    function scheduleRefresh() {
+      if (rafPending || destroyed) return;
+      rafPending = true;
+      var run = function () { rafPending = false; refresh(); };
+      if (typeof window.requestAnimationFrame === "function") window.requestAnimationFrame(run);
+      else setTimeout(run, 30);
+    }
+    function refresh() {
+      if (destroyed) return;
+      var key = activeKey();
+      if (key !== lastScreenKey) {
+        lastScreenKey = key;
+        if (isGameKey(key)) lastGameMut = Date.now();
+        if (open) renderPanel();
+      }
+      evaluateDim();
+    }
+    var mo = null;
+    if (typeof MutationObserver !== "undefined") {
+      mo = new MutationObserver(function (muts) {
+        var scr = activeScreenEl();
+        if (scr && isGameKey(activeKey())) {
+          for (var i = 0; i < muts.length; i++) {
+            var t = muts[i].target;
+            if (t === scr || (t && scr.contains && scr.contains(t))) { lastGameMut = Date.now(); break; }
+          }
+        }
+        scheduleRefresh();
+      });
+      mo.observe(document.body, { attributes: true, attributeFilter: ["class"], childList: true, subtree: true });
+    }
+    refresh();
+
+    /* ---------- destroy: removes every trace ---------- */
+    function destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      try { clearInterval(dimTimer); } catch (e) {}
+      try { if (mo) mo.disconnect(); } catch (e) {}
+      try { document.removeEventListener("keydown", onKey); } catch (e) {}
+      try { window.removeEventListener("storage", onStorage); } catch (e) {}
+      [style, btn, scrim, sheet].forEach(function (el) {
+        try { if (el && el.parentNode) el.parentNode.removeChild(el); } catch (e) {}
+      });
+      try { delete window.__ccMallowFloat; } catch (e) { window.__ccMallowFloat = undefined; }
+    }
+    window.__ccMallowFloat = { destroy: destroy, open: openPanel, close: closePanel };
+  }
+})();
+</script>
+</body>
 </html>
