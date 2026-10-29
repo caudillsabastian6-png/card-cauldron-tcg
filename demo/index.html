@@ -4900,5 +4900,253 @@ document.addEventListener("click", function(e){
   };
 })();
 </script>
+<script>/* =====================================================================
+   POOL SUBMITTER + OPTIONAL CARD LABEL POP-UP — Oct 29, 2026 (block #17)
+
+   Feature 1 — submitter (owner order): every pool submission carries
+   the member's login/profile name automatically, so the pool files
+   who sent what and testing can be tracked per person. The name is
+   the one the app itself shows in the top bubble — profile display
+   name first, then login name (opProfile.displayName ||
+   opProfile.username, persisted in localStorage "op_profile_v1").
+   Guests (no name set) send nothing: the field is omitted entirely,
+   never sent empty. No UI, no typing — it rides along silently on
+   every submit, every time.
+
+   Feature 2 — Chris's option (owner-approved): at the submit moment,
+   a themed pop-up in the pool pop-ups' own language (plum card, gold
+   border, gold primary button, lavender-ringed inputs) offers two
+   OPTIONAL fields — card name, card number — with [Add & send] and
+   [Skip]. Skip (or the ✕) sends the scan exactly as before, labels
+   UNKNOWN. Add merges the typed values into the SAME submission
+   (backend fields "name" / "number"; the backend stores them and
+   echoes them in its label response, which the frozen confirmation
+   pop-up already renders) and, when that confirmation pop-up
+   appears, this block appends one line at the bottom of it — what
+   got filed under the scanner's photos. Typing is NEVER required:
+   the pop-up cannot trap the flow (build failure falls back to
+   sending as-is).
+
+   Hook: the submit payload and its fetch live in frozen script 1
+   (poolSubmitAndConfirm). Nothing frozen is edited. This block wraps
+   window.fetch and intercepts ONLY the pool submit call (a POST to
+   /pool/submit-pending carrying the pool payload's signature:
+   opt_in + front_image). Every other fetch — leaderboard, chat,
+   rewards, blob: photo reads — passes through untouched.
+   ===================================================================== */
+(function(){
+  "use strict";
+
+  var SUBMIT_MARK = "/pool/submit-pending";
+  var NAME_MAX = 80, NUMBER_MAX = 20, SUBMITTER_MAX = 40;
+
+  function clean(v, max){
+    var s = (v === null || v === undefined) ? "" : String(v);
+    s = s.replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
+    return s.length > max ? s.slice(0, max) : s;
+  }
+
+  /* The member's login/profile name, resolved exactly the way the
+     app's own top bubble renders it. Live profile object first (it is
+     the app's source of truth in memory), persisted copy as fallback.
+     Returns "" for a guest — the caller then omits the field. */
+  function profileName(){
+    var p = null;
+    try { if (typeof opProfile !== "undefined" && opProfile) p = opProfile; } catch (e) { p = null; }
+    if (!p && typeof window !== "undefined" && window.opProfile) p = window.opProfile;
+    if (!p){
+      try {
+        var raw = localStorage.getItem("op_profile_v1");
+        if (raw) p = JSON.parse(raw);
+      } catch (e) { p = null; }
+    }
+    if (!p) return "";
+    var n = clean(p.displayName || p.username || "", SUBMITTER_MAX);
+    if (!n || n === "Guest") return "";
+    return n;
+  }
+
+  var realFetch = (typeof window !== "undefined" && typeof window.fetch === "function") ? window.fetch : null;
+  if (!realFetch) return;
+
+  var lastFiled = null;   /* {name, number} from the latest Add — for the confirmation line */
+  var pendingPop = null;  /* in-flight pop-up promise (double-tap guard) */
+  var inFlight = null;    /* in-flight intercepted submit promise */
+  var observers = [];
+  var pollTimer = null;
+
+  /* ---------------- Feature 2: the pop-up ---------------- */
+  function askCardLabel(){
+    if (pendingPop) return pendingPop;
+    pendingPop = new Promise(function(resolve){
+      var pop = null;
+      var done = false;
+      function finish(val){
+        if (done) return; done = true;
+        try { if (pop && pop.parentNode) pop.parentNode.removeChild(pop); else if (pop && pop.remove) pop.remove(); } catch (e) {}
+        pendingPop = null;
+        resolve(val);
+      }
+      try {
+        pop = document.createElement("div");
+        pop.id = "ccCardLabelPop";
+        pop.setAttribute("style", "position:fixed;inset:0;z-index:3100;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px;");
+        var card = document.createElement("div");
+        card.setAttribute("style", "position:relative;background:#2a2138;border:2px solid #f5c542;border-radius:16px;padding:20px;max-width:360px;width:100%;box-sizing:border-box;text-align:center;color:#fff8e7;box-shadow:0 0 0 2px rgba(179,136,255,.45),0 18px 50px rgba(0,0,0,.5);");
+        var close = document.createElement("button");
+        close.type = "button";
+        close.id = "ccCardLabelClose";
+        close.setAttribute("aria-label", "Skip — send without a name or number");
+        close.setAttribute("style", "position:absolute;top:8px;right:10px;background:none;border:none;color:#cfc4e8;font-size:20px;line-height:1;cursor:pointer;padding:4px;");
+        close.textContent = "\u2715";
+        var h = document.createElement("h3");
+        h.setAttribute("style", "color:#f5c542;margin:2px 0 8px;");
+        h.textContent = "Add the name & number?";
+        var p1 = document.createElement("p");
+        p1.textContent = "Optional — type the card's name and number and they get filed with your photos. Skip sends the scan just the same, labelled UNKNOWN for Potion to finish.";
+        card.appendChild(close);
+        card.appendChild(h);
+        card.appendChild(p1);
+        function mkField(labelText, id, max, ph){
+          var lab = document.createElement("label");
+          lab.setAttribute("style", "display:block;text-align:left;font-weight:800;font-size:13px;color:#cfc4e8;margin-top:10px;");
+          lab.textContent = labelText;
+          var inp = document.createElement("input");
+          inp.type = "text";
+          inp.id = id;
+          inp.maxLength = max;
+          inp.placeholder = ph;
+          inp.setAttribute("autocomplete", "off");
+          inp.setAttribute("style", "width:100%;box-sizing:border-box;margin-top:6px;padding:10px 12px;border-radius:10px;border:1.5px solid #b388ff;background:#1d1530;color:#fff8e7;font:inherit;font-weight:600;");
+          lab.appendChild(inp);
+          card.appendChild(lab);
+          return inp;
+        }
+        var nameIn = mkField("Card name", "ccCardNameInput", NAME_MAX, "e.g. Charizard");
+        var numIn = mkField("Card number", "ccCardNumberInput", NUMBER_MAX, "e.g. 4/102");
+        var row = document.createElement("div");
+        row.setAttribute("style", "display:flex;gap:10px;justify-content:center;margin-top:16px;");
+        var add = document.createElement("button");
+        add.type = "button";
+        add.className = "bubble-btn b-gold";
+        add.id = "ccCardLabelAdd";
+        var addSpan = document.createElement("span");
+        addSpan.textContent = "Add & send";
+        add.appendChild(addSpan);
+        var skip = document.createElement("button");
+        skip.type = "button";
+        skip.className = "bubble-btn b-white";
+        skip.id = "ccCardLabelSkip";
+        var skipSpan = document.createElement("span");
+        skipSpan.textContent = "Skip";
+        skip.appendChild(skipSpan);
+        row.appendChild(add);
+        row.appendChild(skip);
+        card.appendChild(row);
+        pop.appendChild(card);
+        document.body.appendChild(pop);
+        add.addEventListener("click", function(){
+          finish({ name: clean(nameIn.value, NAME_MAX), number: clean(numIn.value, NUMBER_MAX) });
+        });
+        skip.addEventListener("click", function(){ finish(null); });
+        close.addEventListener("click", function(){ finish(null); });
+        var onKey = function(ev){
+          if (ev && (ev.key === "Enter" || ev.keyCode === 13) && ev.preventDefault){ ev.preventDefault(); add.click(); }
+        };
+        nameIn.addEventListener("keydown", onKey);
+        numIn.addEventListener("keydown", onKey);
+      } catch (e) {
+        /* Building the pop-up must never trap the flow: send as-is. */
+        pendingPop = null;
+        resolve(null);
+      }
+    });
+    return pendingPop;
+  }
+
+  /* ------ confirmation bottom line: what got filed ------ */
+  function noteFiledLine(){
+    if (!lastFiled) return;
+    var pop = null;
+    try { pop = document.getElementById("poolConfirmPop"); } catch (e) { pop = null; }
+    if (!pop || pop.getAttribute("data-cc-filed")) return;
+    var card = pop.firstElementChild || pop.firstChild;
+    if (!card || !card.appendChild) return;
+    var parts = [];
+    if (lastFiled.name) parts.push("Name: " + lastFiled.name);
+    if (lastFiled.number) parts.push("Number: " + lastFiled.number);
+    if (!parts.length){ lastFiled = null; return; }
+    try {
+      var line = document.createElement("p");
+      line.id = "ccFiledLine";
+      line.setAttribute("style", "margin:10px 0 0;border-top:1px solid rgba(245,197,66,.35);padding-top:10px;font-weight:800;");
+      line.textContent = "Filed under your photos \u2014 " + parts.join(" \u00B7 ");
+      card.appendChild(line);
+      pop.setAttribute("data-cc-filed", "1");
+    } catch (e) {}
+    lastFiled = null;
+  }
+  if (typeof MutationObserver !== "undefined" && typeof document !== "undefined" && document.body){
+    var mo = new MutationObserver(noteFiledLine);
+    mo.observe(document.body, { childList: true });
+    observers.push(mo);
+  } else if (typeof setInterval !== "undefined"){
+    pollTimer = setInterval(noteFiledLine, 300);
+  }
+
+  /* ---------------- the fetch hook ---------------- */
+  function isPoolSubmit(input, init){
+    try {
+      var url = "";
+      if (typeof input === "string") url = input;
+      else if (input && typeof input.url === "string") url = input.url;
+      if (!url || url.indexOf(SUBMIT_MARK) === -1) return false;
+      if (!init || typeof init.body !== "string") return false;
+      var body = JSON.parse(init.body);
+      return !!(body && body.opt_in && body.front_image);
+    } catch (e) { return false; }
+  }
+
+  window.fetch = function(input, init){
+    if (!isPoolSubmit(input, init)) return realFetch.apply(window, arguments);
+    if (inFlight) return inFlight;
+    var payload = null;
+    try { payload = JSON.parse(init.body); } catch (e) { return realFetch.apply(window, arguments); }
+    var sub = profileName();
+    if (sub) payload.submitter = sub;
+    var run = askCardLabel().then(function(entered){
+      lastFiled = null;
+      if (entered){
+        if (entered.name) payload.name = entered.name;
+        if (entered.number) payload.number = entered.number;
+        if (entered.name || entered.number) lastFiled = { name: entered.name, number: entered.number };
+      }
+      var newInit = {};
+      for (var k in init) { if (Object.prototype.hasOwnProperty.call(init, k)) newInit[k] = init[k]; }
+      newInit.body = JSON.stringify(payload);
+      return realFetch.call(window, input, newInit);
+    });
+    inFlight = run;
+    var clear = function(){ if (inFlight === run) inFlight = null; };
+    run.then(clear, clear);
+    return run;
+  };
+
+  window.__ccSubmitterPopup = {
+    profileName: profileName,
+    clean: clean,
+    ask: askCardLabel,
+    noteFiledLine: noteFiledLine,
+    getLastFiled: function(){ return lastFiled; },
+    destroy: function(){
+      try { window.fetch = realFetch; } catch (e) {}
+      observers.forEach(function(o){ try { o.disconnect(); } catch (e) {} });
+      observers = [];
+      if (pollTimer !== null){ try { clearInterval(pollTimer); } catch (e) {} pollTimer = null; }
+      try { delete window.__ccSubmitterPopup; } catch (e) { window.__ccSubmitterPopup = undefined; }
+    }
+  };
+})();
+</script>
 </body>
 </html>
