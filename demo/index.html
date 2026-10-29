@@ -808,6 +808,76 @@ body.neon .top-banner{
 @media (prefers-reduced-motion: reduce){
   body.neon .top-banner{animation:none;}
 }
+/* ---- Reward Shop grid (Oct 29, Workstream 3: circle thumbs + boxed cards) ----
+   opRenderShop() emits one row div per OP_SHOP item, in data order, into #shopList.
+   These rules restyle those rows into a 2-up grid of neon cards — presentation only.
+   The circle is the row's ::before; its emoji is keyed by :nth-child to the OP_SHOP
+   order (tee, hoodie, smartjacket, headphones, glasses, hats, pet-mallow, pet-ember,
+   anim-bg, frame-gold, frame-crown, bubble-tint, gold-name, badge-hunter, hint-mystery,
+   zoom-time, poppath-guide, double-coins, streak-freeze, mystery-rounds, emoji-pack,
+   sticker-pack, victory-sounds, home-banner). If OP_SHOP is ever reordered, this
+   emoji table must be reordered to match. */
+body.neon #shopList{
+  display:grid !important;
+  grid-template-columns:repeat(2, 1fr);
+  gap:10px !important;
+  margin-top:12px !important;
+}
+body.neon #shopList > div{
+  flex-direction:column !important;
+  justify-content:flex-start !important;
+  align-items:center !important;
+  text-align:center;
+  gap:8px !important;
+  padding:16px 10px 14px !important;
+  border-radius:18px !important;
+  background:rgba(20,14,32,.72) !important;
+  border:1.5px solid rgba(179,136,255,.45);
+  box-shadow:0 0 0 1px rgba(255,215,106,.10), 0 8px 20px rgba(0,0,0,.45), inset 0 0 18px rgba(138,92,255,.12);
+}
+body.neon #shopList > div::before{
+  content:"";
+  width:68px; height:68px; flex:none;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:34px; line-height:1;
+  background:radial-gradient(circle at 32% 28%, rgba(255,248,231,.30), rgba(138,92,255,.18) 55%, rgba(13,10,20,.65));
+  border:2px solid #b388ff;
+  box-shadow:0 0 12px rgba(179,136,255,.45), inset 0 0 10px rgba(255,122,200,.25);
+}
+body.neon #shopList > div > span:first-child{display:block;}
+body.neon #shopList > div > span + span{
+  background:rgba(87,255,176,.12);
+  border:1.5px solid rgba(87,255,176,.60);
+  border-radius:999px;
+  padding:5px 14px;
+}
+body.neon #shopList .bubble-btn{min-width:104px;}
+body.neon #shopList > div:nth-child(1)::before{content:"\1F455";}
+body.neon #shopList > div:nth-child(2)::before{content:"\1F9E5";}
+body.neon #shopList > div:nth-child(3)::before{content:"\1F9E2";}
+body.neon #shopList > div:nth-child(4)::before{content:"\1F3A7";}
+body.neon #shopList > div:nth-child(5)::before{content:"\1F453";}
+body.neon #shopList > div:nth-child(6)::before{content:"\1F3A9";}
+body.neon #shopList > div:nth-child(7)::before{content:"\1F98A";}
+body.neon #shopList > div:nth-child(8)::before{content:"\1F409";}
+body.neon #shopList > div:nth-child(9)::before{content:"\1F386";}
+body.neon #shopList > div:nth-child(10)::before{content:"\1FAE7";}
+body.neon #shopList > div:nth-child(11)::before{content:"\1F451";}
+body.neon #shopList > div:nth-child(12)::before{content:"\1F4AC";}
+body.neon #shopList > div:nth-child(13)::before{content:"\2728";}
+body.neon #shopList > div:nth-child(14)::before{content:"\1F396\FE0F";}
+body.neon #shopList > div:nth-child(15)::before{content:"\2B50";}
+body.neon #shopList > div:nth-child(16)::before{content:"\23F1\FE0F";}
+body.neon #shopList > div:nth-child(17)::before{content:"\1F9ED";}
+body.neon #shopList > div:nth-child(18)::before{content:"\1F4B0";}
+body.neon #shopList > div:nth-child(19)::before{content:"\1F9CA";}
+body.neon #shopList > div:nth-child(20)::before{content:"\1F3B2";}
+body.neon #shopList > div:nth-child(21)::before{content:"\1F600";}
+body.neon #shopList > div:nth-child(22)::before{content:"\1F3F7\FE0F";}
+body.neon #shopList > div:nth-child(23)::before{content:"\1F50A";}
+body.neon #shopList > div:nth-child(24)::before{content:"\1F5BC\FE0F";}
+
 /* ============ NEON LINE THEME ends ============ */
 </style>
 </head>
@@ -1057,11 +1127,11 @@ body.neon .top-banner{
     <input type="file" id="ltCamFile" accept="image/*" capture="environment" class="hidden" />
     <!-- Buttons moved directly under the photo, Oct 28 owner order: no words interrupting picture -> buttons. Honest-limits + optional text moved below the buttons, still present, not deleted. -->
     <div class="stack" style="margin-top:10px;padding-top:4px;">
-      <button type="button" class="bubble-btn b-gold" id="ltTake">💡 Take the light photo</button>
+      <button type="button" class="bubble-btn b-gold hidden" id="ltKeep">Keep it — finish the demo steps →</button>
+      <button type="button" class="bubble-btn b-white" id="ltTake">💡 Take the light photo</button>
       <button type="button" class="bubble-btn b-white small" id="ltUploadFile">Upload a file instead</button>
       <button type="button" class="bubble-btn b-white small" id="ltUseSample">Use a sample photo instead</button>
       <button type="button" class="bubble-btn b-white small" id="ltSkip">Skip — straight to the finish</button>
-      <button type="button" class="bubble-btn b-lime hidden" id="ltKeep">Keep it — finish the demo steps →</button>
       <button type="button" class="bubble-btn b-white small hidden" id="ltLeave">Leave it out after all</button>
     </div>
     <div class="gold-box mt">
@@ -4188,6 +4258,219 @@ document.addEventListener("click", function(e){
     resize();
     if (reduceMotion) { drawFrame(); }        // one static frame, no loop
     else if (!document.hidden) { start(); }   // pause while the tab is hidden
+  }
+})();
+</script>
+<script>
+/* SCROLL IMAGES — Oct 29 (decoration only)
+   A fixed layer of portrait image cards that glide in and out behind the UI
+   as the page scrolls, floating over the wireframe canvas (script #13). It
+   creates ONLY its own layer div and img elements: it reads window.scrollY
+   and (read-only, via MutationObserver) which .screen is active; it touches
+   no app state, no storage, and no app code. Screen blend on the LAYER makes
+   each image's dark parts vanish so only the neon glow shows. Remove this
+   one block (or call window.__ccScrollImages.destroy()) and the demo is
+   exactly what it was without it. */
+(function () {
+  'use strict';
+  try {
+    if (window.__ccScrollImages && window.__ccScrollImages.destroy) { window.__ccScrollImages.destroy(); }
+  } catch (e) {}
+  try { init(); } catch (e) { /* decoration must never break the app */ }
+
+  function init() {
+    /* ---------- image set (ONE marked prefix constant) ----------
+       Live mapping: these files are staged in this build folder's bg/ and
+       are uploaded to the site repo's assets/bg/ folder; the demo is served
+       from /demo/, so ../assets/bg/<name> resolves to /assets/bg/<name>. */
+    var IMAGE_PREFIX = '../assets/bg/';
+    var IMAGES = [
+      IMAGE_PREFIX + '01-wireframe-world.webp',
+      IMAGE_PREFIX + '02-cauldron-horizon.webp',
+      IMAGE_PREFIX + '03-drift-depth.webp',
+      IMAGE_PREFIX + '04-ring-world.webp',
+      IMAGE_PREFIX + '05-crystal-ascent.webp',
+      IMAGE_PREFIX + '06-ember-bubbles.webp'
+    ];
+
+    /* ---------- tuning constants ---------- */
+    var SLOTS = 4;              // image cards alive at once
+    var SPEED = 0.6;            // card travel per scrolled px
+    var IDLE = 8;               // idle drift, px per second
+    var SMOOTHING = 0.0008;     // scroll lerp, pow form (smaller = floatier)
+    var SCOPE_SMOOTHING = 0.002; // master fade lerp toward the scope target
+    var MAX_OPACITY = 0.65;     // cap so UI text always stays readable
+    var FADE = 0.3;             // fraction of each trip spent fading in/out
+    var HEIGHT_VH = 0.62;       // card height as a share of viewport height
+    var LANES = [0.06, 0.62, 0.3, 0.9];  // horizontal lane per slot, 0..1
+    var DEPTHS = [1, 0.8, 1.15, 0.9];    // parallax multiplier per slot
+
+    /* ---------- screen scoping ----------
+       The cards show ONLY on the long, calm, scrolling content screens.
+       On every other screen (mini-games and their JS-built shells, the
+       capture/camera flow, verdicts, the chat room, short dialogs) the
+       master fade eases to zero and the layer is effectively gone. */
+    var SCOPED_SCREENS = {
+      'scr-home': 1,        // the long Explore scroll: banner, bands, trail
+      'scr-binders': 1,     // My Binders: a long scrolling collection list
+      'scr-plan': 1,        // Checks & Plan: a long scrolling reference list
+      'scr-tells': 1,       // Tells: a long scrolling reference list
+      'scr-rewards': 1,     // Reward shop: a long scrolling grid
+      'scr-website': 1      // Website screen: a scrolling info page
+    };
+
+    var reduceMotion = false;
+    try { reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) {}
+
+    /* Preload every image (async decode) so a swap never pops in late. */
+    for (var p = 0; p < IMAGES.length; p++) {
+      try { var pre = new Image(); pre.decoding = 'async'; pre.src = IMAGES[p]; } catch (e) {}
+    }
+
+    var layer = document.createElement('div');
+    layer.id = 'ccScrollImages';
+    layer.setAttribute('aria-hidden', 'true');
+    layer.style.cssText =
+      'position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;mix-blend-mode:screen;';
+
+    /* Layering: same stacking family as the wireframe canvas (#ccScrollBg).
+       Both fixed background layers sit at z-index 0; screens are z-index 1
+       and chrome is z 60+. Paint order inside the family is DOM order, so
+       the layer is inserted immediately AFTER the canvas (and the canvas
+       sits after the opaque .logo-bg): backdrop art < canvas < image cards
+       < every screen. pointer-events:none: it can never take a tap. */
+    var anchor = document.querySelector('#ccScrollBg') || document.querySelector('.logo-bg');
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(layer, anchor.nextSibling);
+    } else if (document.body) {
+      document.body.insertBefore(layer, document.body.firstChild);
+    } else {
+      return;
+    }
+
+    var FEATHER = 'radial-gradient(ellipse at center,#000 55%,transparent 100%)';
+    var slots = [];
+    for (var i = 0; i < SLOTS; i++) {
+      var el = document.createElement('img');
+      el.alt = '';
+      el.decoding = 'async';
+      el.draggable = false;
+      el.style.cssText =
+        'position:absolute;left:0;top:0;object-fit:cover;border-radius:20px;opacity:0;' +
+        'will-change:transform,opacity;backface-visibility:hidden;' +
+        '-webkit-mask-image:' + FEATHER + ';mask-image:' + FEATHER + ';';
+      layer.appendChild(el);
+      slots.push({ el: el, idx: -1 });
+    }
+
+    function mod(v, m) { return ((v % m) + m) % m; }
+    function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+    function smooth(x) { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); }
+
+    var vw = 0, vh = 0, cardW = 0, cardH = 0, spacing = 0, total = 0;
+    function layout() {
+      vw = window.innerWidth || 0;
+      vh = window.innerHeight || 0;
+      cardH = vh * HEIGHT_VH;
+      cardW = Math.min(cardH * 9 / 16, vw * 0.85);
+      spacing = cardH * 1.1;          // > cardH, so wraps happen off-screen
+      total = SLOTS * spacing;
+      for (var i = 0; i < slots.length; i++) {
+        slots[i].el.style.width = cardW + 'px';
+        slots[i].el.style.height = cardH + 'px';
+      }
+    }
+
+    /* ----- scope state: which screen is active, observed read-only ----- */
+    function scopeForActiveScreen() {
+      var el = document.querySelector('.screen.active');
+      return (el && SCOPED_SCREENS[el.id]) ? 1 : 0;
+    }
+    var scopeTarget = scopeForActiveScreen();
+    var scopeFade = scopeTarget;      // starts settled; eases on screen flips
+    var observer = null;
+    if (window.MutationObserver && document.body) {
+      observer = new window.MutationObserver(function () { scopeTarget = scopeForActiveScreen(); });
+      observer.observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: true });
+    }
+
+    var current = window.scrollY || 0;
+    var t = 0, last = 0, raf = 0, running = false, destroyed = false;
+
+    function render() {
+      for (var i = 0; i < slots.length; i++) {
+        var s = slots[i];
+        var depth = DEPTHS[i % DEPTHS.length];
+        var raw = i * spacing - (current * SPEED + t * IDLE) * depth;
+        var cycle = Math.floor(raw / total);
+        var y = raw - cycle * total - spacing;   // -spacing .. total-spacing
+
+        var u = (y + cardH) / (vh + cardH);      // 0 entering .. 1 leaving
+        var f = smooth(Math.min(u, 1 - u) / FADE);
+        /* Swap only while THIS card is fully faded (f === 0). A hard fling
+           can step a wrapped card straight into the fade zone in one frame;
+           the cycle-derived index is therefore applied only when the
+           fade factor is exactly 0 (the first-ever assignment at startup is
+           exempt — nothing is on screen yet). The old image simply rides
+           around until the next fully-faded stretch, which both ends of
+           every trip provide. */
+        var want = mod(i + cycle * SLOTS, IMAGES.length);
+        if (want !== s.idx && (s.idx === -1 || f === 0)) { s.el.src = IMAGES[want]; s.idx = want; }
+        var x = LANES[i % LANES.length] * (vw - cardW) + Math.sin(t * 0.4 + i * 2) * 10;
+        var rot = (u - 0.5) * 6;
+        var scale = 0.9 + 0.1 * f;
+
+        s.el.style.opacity = (f * MAX_OPACITY * scopeFade).toFixed(3);
+        s.el.style.transform =
+          'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)' +
+          ' rotate(' + rot.toFixed(2) + 'deg) scale(' + scale.toFixed(3) + ')';
+      }
+    }
+
+    function frame(now) {
+      if (!running) { return; }
+      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
+      last = now;
+      t += dt;
+      var targetY = window.scrollY || 0;
+      current += (targetY - current) * (1 - Math.pow(SMOOTHING, dt));
+      scopeFade += (scopeTarget - scopeFade) * (1 - Math.pow(SCOPE_SMOOTHING, dt));
+      if (Math.abs(scopeTarget - scopeFade) < 0.001) { scopeFade = scopeTarget; }
+      render();
+      raf = requestAnimationFrame(frame);
+    }
+
+    function start() {
+      if (running || reduceMotion || destroyed) { return; }
+      running = true; last = 0;
+      raf = requestAnimationFrame(frame);
+    }
+    function stop() { running = false; if (raf) { cancelAnimationFrame(raf); raf = 0; } }
+
+    function onVis() { if (document.hidden) { stop(); } else { start(); } }
+    function onResize() { layout(); if (!running) { render(); } }
+
+    window.__ccScrollImages = {
+      layer: layer,
+      destroy: function () {
+        if (destroyed) { return; }
+        destroyed = true;
+        stop();
+        window.removeEventListener('resize', onResize);
+        document.removeEventListener('visibilitychange', onVis);
+        if (observer) { observer.disconnect(); observer = null; }
+        if (layer.parentNode) { layer.parentNode.removeChild(layer); }
+        if (window.__ccScrollImages && window.__ccScrollImages.layer === layer) {
+          try { delete window.__ccScrollImages; } catch (e) { window.__ccScrollImages = undefined; }
+        }
+      }
+    };
+
+    layout();
+    window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVis);
+    if (reduceMotion) { render(); }          // static cards, gently faded, no loop
+    else if (!document.hidden) { start(); }  // pause while the tab is hidden
   }
 })();
 </script>
