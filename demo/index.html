@@ -1504,6 +1504,7 @@ function renderCaptureStep(){
     dots += '<i class="'+(i<capStep?"done":(i===capStep?"now":""))+'"></i>';
   }
   $("capDots").innerHTML = dots;
+  if(capStep===0 && !capHas){ poolFrontImg = null; poolBackImg = null; poolSubmittedId = null; }
 }
 function capPhotoReady(){
   capHas = true;
@@ -1515,6 +1516,15 @@ function capPhotoReady(){
   var _lbl = document.getElementById("capLabelLine");
   if(!_lbl){ _lbl = document.createElement("p"); _lbl.id = "capLabelLine"; _lbl.style.cssText = "text-align:center;font-weight:800;margin-top:10px;background:#2a2138;border:1px solid #f5c542;border-radius:12px;padding:10px;"; var _got = $("capGot"); if(_got && _got.parentNode) _got.parentNode.insertBefore(_lbl, _got.nextSibling); }
   var _side = (typeof capCat !== "undefined" && capCat.steps && capCat.steps[capStep]) ? capCat.steps[capStep].cap : "photo";
+  try{
+    var _img = $("capImg");
+    if(_img && _img.src && poolOptinYes){
+      var _isFront = /front/i.test(_side), _isBack = /back/i.test(_side);
+      var _store = function(durl){ if(_isFront) poolFrontImg = durl; if(_isBack) poolBackImg = durl; };
+      if(_img.src.indexOf("data:image") === 0) _store(_img.src);
+      else if(_img.src.indexOf("blob:") === 0){ fetch(_img.src).then(function(r){ return r.blob(); }).then(function(b){ var fr = new FileReader(); fr.onload = function(){ _store(fr.result); }; fr.readAsDataURL(b); }).catch(function(){}); }
+    }
+  }catch(e){}
   _lbl.textContent = "Labelled: " + _side + " photo captured — name: UNKNOWN, number: UNKNOWN, pool: " + (poolOptinYes ? "YES, pending pool" : "NO, on-screen only") + " — not a verdict.";
   $("capGot").textContent = "POP! Got it. 🎉";
   var step = capCat.steps[capStep];
@@ -1558,6 +1568,42 @@ function poolOptinShow(next){
   document.body.appendChild(pop);
   document.getElementById("poolYes").addEventListener("click", function(){ poolOptinYes = true; pop.remove(); next(); });
   document.getElementById("poolNo").addEventListener("click", function(){ poolOptinYes = false; pop.remove(); next(); });
+}
+var poolFrontImg = null, poolBackImg = null, poolSubmittedId = null;
+function poolAutoLabelHTML(label, sid){
+  return '<b>Labelled automatically:</b><br>Number: ' + label.number + ' (most important — bottom of card)<br>Set logo: ' + label.set_logo + '<br>Name: ' + label.name + '<br>Pool: YES, pending<br>Submission: ' + sid;
+}
+function poolSubmitAndConfirm(){
+  if(!poolOptinYes || poolSubmittedId || !poolFrontImg) return;
+  var statusEl = $("capGot"); if(statusEl) statusEl.textContent = "Sending your scan to the pending pool…";
+  /* Backend input budget is 2,000,000 characters; mobile JPEG dataURLs can exceed it.
+     If the captured card data exceeds it, do not fake a successful upload. */
+  var frontWire = String(poolFrontImg || "");
+  var backWire = String(poolBackImg || "");
+  if(frontWire.length > 1900000) {
+    if(statusEl) statusEl.textContent = "Your captured card was too large to send. The scan was not sent to the pool.";
+    if(capNext) capNext.dataset.poolAttempted = "1";
+    return;
+  }
+  if(backWire.length > 700000) backWire = "";
+  var _payload = {opt_in:true, front_image:frontWire, back_image:(backWire || null), number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"};
+  fetch("https://api.cardcauldrontcg.com/pool/submit-pending", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(_payload)})
+    .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+    .then(function(res){
+      if(!res.ok || !res.d || !res.d.submission_id){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; return; }
+      poolSubmittedId = res.d.submission_id;
+      var pop = document.createElement("div");
+      pop.id = "poolConfirmPop";
+      pop.style.cssText = "position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px;";
+      pop.innerHTML = '<div style="background:#2a2138;border:2px solid #f5c542;border-radius:16px;padding:20px;max-width:360px;text-align:center;color:#fff8e7;">'
+        + '<h3 style="color:#f5c542;">Your scan went to the pending pool ✓</h3>'
+        + '<p>' + poolAutoLabelHTML(res.d.label || {number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"}, res.d.submission_id) + '</p>'
+        + '<p>Is this correct?</p>'
+        + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;"><button type="button" class="bubble-btn b-gold" id="poolLabelYes"><span>Yes, that\'s right</span></button><button type="button" class="bubble-btn b-white" id="poolLabelNo"><span>No, that\'s not right</span></button></div></div>';
+      document.body.appendChild(pop);
+      document.getElementById("poolLabelYes").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Thanks — auto-label confirmed. Your pending scan is saved as " + poolSubmittedId + "."; });
+      document.getElementById("poolLabelNo").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Got it — we dropped the label to UNKNOWN. Potion will fix it. Your pending scan is still saved as " + poolSubmittedId + "."; var _l2 = document.getElementById("capLabelLine"); if(_l2) _l2.textContent = "Labelled: UNKNOWN — you said the auto-label was not right, Potion will fix it — pool: YES, pending, " + poolSubmittedId; });
+    }).catch(function(){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; });
 }
 $("capTake").addEventListener("click", function(){
   if(capLive){ var v=$("capVideo"); var c=document.createElement("canvas"); c.width=v.videoWidth||640; c.height=v.videoHeight||480; c.getContext("2d").drawImage(v,0,0,c.width,c.height); var img=$("capImg"); img.src=c.toDataURL("image/jpeg",0.85); img.alt=capCat.steps[capStep].cap+" — your photo (stays on your device)"; img.classList.remove("hidden"); $("capSample").classList.add("hidden"); capStopLive(); $("capTake").innerHTML="<span>"+capCat.steps[capStep].take+"</span>"; capPhotoReady(); return; }
@@ -1605,6 +1651,7 @@ $("capNext").addEventListener("click", function(){
   if(!capHas) return;
   popSnd();
   if(capStep >= capCat.steps.length-1){
+    if(poolOptinYes) poolSubmitAndConfirm();
     /* Pokémon Cards get the optional Light Test offer after the back
        photo, exactly like the full app — every other category goes
        straight to the finish. */
