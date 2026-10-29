@@ -410,7 +410,7 @@
   .op-menupanel button.bubble-btn span,.op-menupanel a.bubble-btn span{display:block;width:100%;text-align:center;white-space:nowrap}
   .op-menupanel[hidden]{display:none !important}
   .op-profilebubble{display:flex;align-items:center;gap:8px;background:rgba(41,37,36,.9);border:1.5px solid rgba(255,197,61,.35);border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--text);font-weight:800}
-  .op-profilebubble img{width:32px;height:32px;border-radius:50%;object-fit:contain}
+  .op-profilebubble img{width:32px;height:32px;border-radius:50%;object-fit:contain}   .op-human-avatar-btn{padding:4px;border-radius:50%;border:2px solid rgba(255,197,61,.3);background:rgba(41,37,36,.9);cursor:pointer;line-height:0}   .op-human-avatar-btn.on{border-color:#ffd93d;box-shadow:0 0 0 3px #ffd93d,0 0 14px rgba(255,217,61,.55)}   .op-human-avatar-btn img{display:block}
   .op-coins{font-weight:900;color:#ffd97a;white-space:nowrap}
   .op-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:transparent;transform:translateY(calc(var(--bgScroll,0) * -0.15px));will-change:transform}
   .op-bg::after{content:"";position:absolute;left:-50%;top:-50%;width:200%;height:200%;background-image:radial-gradient(circle at 20% 30%,rgba(56,189,248,.22) 0 32px,transparent 34px),radial-gradient(circle at 70% 20%,rgba(255,197,61,.20) 0 42px,transparent 44px),radial-gradient(circle at 40% 70%,rgba(255,107,157,.18) 0 28px,transparent 30px),radial-gradient(circle at 85% 75%,rgba(127,227,127,.18) 0 36px,transparent 38px);background-size:640px 480px;animation:opScroll 36s linear infinite}
@@ -1137,6 +1137,24 @@
     <button type="button" class="bubble-btn b-gold" onclick="opSettingsLogin()"><span>Log in locally (demo only)</span></button>
     <button type="button" class="bubble-btn b-white" onclick="opLogout()"><span>Log out (clear local login)</span></button>
     <p class="small dim" id="opLoginState"></p></div>
+    <div class="card mt"><h3>Your avatar — pick yours (FREE)</h3>
+    <button type="button" class="bubble-btn b-gold" id="opHumanAvatarToggle" aria-expanded="false" onclick="opToggleHumanAvatarPicker()"><span>Choose your avatar ▾ — FREE</span></button>
+    <div id="opHumanAvatarGrid" style="display:none;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px;">
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-01-original.webp" aria-label="Original base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-01-original.webp')"><img src="assets/avatars/avatar-01-original.webp" alt="Original base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-02-female.webp" aria-label="Female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-02-female.webp')"><img src="assets/avatars/avatar-02-female.webp" alt="Female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-03-african-american.webp" aria-label="African American base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-03-african-american.webp')"><img src="assets/avatars/avatar-03-african-american.webp" alt="African American base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-04-chinese.webp" aria-label="Chinese base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-04-chinese.webp')"><img src="assets/avatars/avatar-04-chinese.webp" alt="Chinese base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-05-blonde-white.webp" aria-label="Blonde hair, white skin base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-05-blonde-white.webp')"><img src="assets/avatars/avatar-05-blonde-white.webp" alt="Blonde hair, white skin base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-06-red-light-female.webp" aria-label="Red hair, light skin, female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-06-red-light-female.webp')"><img src="assets/avatars/avatar-06-red-light-female.webp" alt="Red hair, light skin, female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-07-blackhair-black-female.webp" aria-label="Black hair, Black skin, female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-07-blackhair-black-female.webp')"><img src="assets/avatars/avatar-07-blackhair-black-female.webp" alt="Black hair, Black skin, female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-08-darkbrown-tan.webp" aria-label="Dark brown hair, tan skin base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-08-darkbrown-tan.webp')"><img src="assets/avatars/avatar-08-darkbrown-tan.webp" alt="Dark brown hair, tan skin base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-09-longblonde-female.webp" aria-label="Long blonde hair, female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-09-longblonde-female.webp')"><img src="assets/avatars/avatar-09-longblonde-female.webp" alt="Long blonde hair, female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-10-longblonde-male.webp" aria-label="Long blonde hair, male base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-10-longblonde-male.webp')"><img src="assets/avatars/avatar-10-longblonde-male.webp" alt="Long blonde hair, male base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-11-curlybrown-female.webp" aria-label="Curly brown hair, female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-11-curlybrown-female.webp')"><img src="assets/avatars/avatar-11-curlybrown-female.webp" alt="Curly brown hair, female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+      <button type="button" class="op-human-avatar-btn" data-file="avatar-12-shortblack-asian-male.webp" aria-label="Short black hair, East Asian male base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-12-shortblack-asian-male.webp')"><img src="assets/avatars/avatar-12-shortblack-asian-male.webp" alt="Short black hair, East Asian male base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"></button>
+    </div>
+    <p class="small dim" id="opHumanAvatarNote" style="margin-top:10px;"></p>
+    <p class="small">All 12 bases are FREE. Hair, hats, clothes and accessories are bought with coins in Rewards — bases and skin tones are never sold.</p></div>
     <div class="card mt"><h3>Avatar — pick yours first</h3>
     <p class="small dim">NEW illustrated original creatures (Mallow/Ember-style). Never official Pokémon art, never real card photos. Pick a creature, then customise: colour by tinting the illustration AND/OR by choosing a pre-coloured variant, plus an accessory and a background colour. Your avatar shows in the top bubble, in games, in Binders, and in rewards.</p>
     <p class="center"><span style="position:relative;display:inline-block"><img id="opAvatarPreviewImg" style="width:96px;height:96px;object-fit:contain;border-radius:50%"><img id="opAvatarAccessoryImg" style="display:none;position:absolute;right:0;top:0;width:32px;height:32px"></span></p>
@@ -1257,6 +1275,10 @@
       <p class="small">🎮 Bubble Beat finish — +50 coins<br>💬 Tell or Tale? pass (60%+) — +50 coins<br>📅 Daily check-in — +10 coins<br>🃏 Scan a card (front + back) — +10 coins per scan, max 50 a day from scans<br>Other games give leaderboard scores for now, not coins yet.</p>
       <button type="button" class="bubble-btn b-white" data-nav="games"><span>Play games</span></button>
       <button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button>
+    </div>
+    <div class="card mt">
+      <h3 style="margin:0;">👤 Avatar bases &amp; looks</h3>
+      <p class="small">Avatar bases are picked free in Profile / Settings, and avatar looks/accessories live in the shop below.</p>
     </div>
     <div class="card mt">
       <h3 style="margin:0;">🛍️ Reward Shop — all 24, spend your coins here</h3>
@@ -3246,7 +3268,7 @@ var OP_CREATURE_NAMES = {mallow:'Mallow — fluffy cub',ember:'Ember — fire dr
 var opProfile = {username:'',displayName:'',bio:'',avatarBase:'mallow',avatarTint:'none',avatarVariant:'original',avatarAccessory:'',avatarBg:'#3a2c12',loggedIn:false};
 try{ var _opSaved = localStorage.getItem('op_profile_v1'); if(_opSaved) opProfile = Object.assign(opProfile, JSON.parse(_opSaved)); }catch(e){}
 function opSaveProfileData(){ try{ localStorage.setItem('op_profile_v1', JSON.stringify(opProfile)); }catch(e){} }
-function opAvatarSrc(){ return OP_AVATAR_DATA[opProfile.avatarBase+'-'+opProfile.avatarVariant] || OP_AVATAR_DATA['mallow-original']; }
+function opAvatarSrc(){ var human = opHumanAvatarSrc(); if(human) return human; return OP_AVATAR_DATA[opProfile.avatarBase+'-'+opProfile.avatarVariant] || OP_AVATAR_DATA['mallow-original']; }
 var opCoins = 0;
 try{ opCoins = parseInt(localStorage.getItem('op_coins')||'0',10) || 0; }catch(e){}
 function opRenderCoins(){ var el = document.getElementById('opTopCoins'); if(el) el.textContent = '🪙 ' + opCoins; }
@@ -3295,15 +3317,24 @@ function opBuyShop(id){
   opRenderCoins(); if(typeof opRenderRewards === 'function') opRenderRewards(); opRenderShop();
 }
 document.addEventListener('DOMContentLoaded', function(){ setTimeout(opRenderShop, 500); });
+var OP_HUMAN_AVATARS = ['avatar-01-original.webp','avatar-02-female.webp','avatar-03-african-american.webp','avatar-04-chinese.webp','avatar-05-blonde-white.webp','avatar-06-red-light-female.webp','avatar-07-blackhair-black-female.webp','avatar-08-darkbrown-tan.webp','avatar-09-longblonde-female.webp','avatar-10-longblonde-male.webp','avatar-11-curlybrown-female.webp','avatar-12-shortblack-asian-male.webp'];
+function opHumanAvatarFile(){ try{ var f = localStorage.getItem('cc_demo_human_avatar') || ''; return OP_HUMAN_AVATARS.indexOf(f) >= 0 ? f : ''; }catch(e){ return ''; } }
+function opHumanAvatarSrc(){ var f = opHumanAvatarFile(); return f ? 'assets/avatars/' + f : ''; }
+function opToggleHumanAvatarPicker(){ var g = document.getElementById('opHumanAvatarGrid'); if(!g) return; var open = g.style.display === 'grid'; g.style.display = open ? 'none' : 'grid'; var b = document.getElementById('opHumanAvatarToggle'); if(b) b.setAttribute('aria-expanded', open ? 'false' : 'true'); }
+function opRenderHumanAvatarPicker(){ var f = opHumanAvatarFile(); document.querySelectorAll('.op-human-avatar-btn').forEach(function(btn){ var on = btn.getAttribute('data-file') === f; btn.classList.toggle('on', on); btn.style.borderColor = on ? '#ffd93d' : 'rgba(255,197,61,.3)'; btn.style.boxShadow = on ? '0 0 0 3px #ffd93d,0 0 14px rgba(255,217,61,.55)' : ''; btn.setAttribute('aria-pressed', on ? 'true' : 'false'); }); var n = document.getElementById('opHumanAvatarNote'); if(n) n.textContent = f ? 'This base is now showing in the top bubble, in games, and in Binders.' : 'No human base picked yet — the companion avatar below is showing.'; }
+function opPickHumanAvatar(file){ if(OP_HUMAN_AVATARS.indexOf(file) < 0) return; try{ localStorage.setItem('cc_demo_human_avatar', file); }catch(e){} opRenderAvatar(); }
+function opClearHumanAvatar(){ try{ localStorage.removeItem('cc_demo_human_avatar'); }catch(e){} }
 function opRenderAvatar(){
-  var top = document.getElementById('opTopAvatar'); if(top){ top.src = opAvatarSrc(); top.style.filter = OP_TINTS[opProfile.avatarTint] || 'none'; }
+  var human = !!opHumanAvatarFile(); var avatarSrc = opAvatarSrc();
+  var top = document.getElementById('opTopAvatar'); if(top){ top.src = avatarSrc; top.style.filter = human ? 'none' : (OP_TINTS[opProfile.avatarTint] || 'none'); top.style.objectFit = human ? 'cover' : 'contain'; }
   var nm = document.getElementById('opTopName'); if(nm) nm.textContent = opProfile.displayName || opProfile.username || 'Guest';
-  var pv = document.getElementById('opAvatarPreviewImg'); if(pv){ pv.src = opAvatarSrc(); pv.style.filter = OP_TINTS[opProfile.avatarTint] || 'none'; }
-  var ai = document.getElementById('opAvatarAccessoryImg'); if(ai){ if(opProfile.avatarAccessory){ ai.src = OP_AVATAR_DATA['acc-'+opProfile.avatarAccessory] || ''; ai.style.display = 'block'; } else { ai.style.display = 'none'; } }
-  var line = 'Your avatar <img src="'+opAvatarSrc()+'" style="width:32px;height:32px;border-radius:50%;object-fit:contain;vertical-align:middle" alt="Your avatar"> is playing as '+(opProfile.displayName || opProfile.username || 'Guest')+'.';
+  var pv = document.getElementById('opAvatarPreviewImg'); if(pv){ pv.src = avatarSrc; pv.style.filter = human ? 'none' : (OP_TINTS[opProfile.avatarTint] || 'none'); pv.style.objectFit = human ? 'cover' : 'contain'; }
+  var ai = document.getElementById('opAvatarAccessoryImg'); if(ai){ if(!human && opProfile.avatarAccessory){ ai.src = OP_AVATAR_DATA['acc-'+opProfile.avatarAccessory] || ''; ai.style.display = 'block'; } else { ai.style.display = 'none'; } }
+  var line = 'Your avatar <img src="'+avatarSrc+'" style="width:32px;height:32px;border-radius:50%;object-fit:'+(human ? 'cover' : 'contain')+';vertical-align:middle" alt="Your avatar"> is playing as '+(opProfile.displayName || opProfile.username || 'Guest')+'.';
   var ga = document.getElementById('opGamesAvatarLine'); if(ga) ga.innerHTML = line;
   var ba = document.getElementById('opBindersAvatarLine'); if(ba) ba.innerHTML = line;
   var cards = document.querySelectorAll('.op-avatar-card'); cards.forEach(function(c){ c.classList.toggle('on', c.getAttribute('data-creature') === opProfile.avatarBase); });
+  opRenderHumanAvatarPicker();
   opRenderCoins();
 }
 function opBuildAvatarPicker(){
@@ -3317,7 +3348,7 @@ function opUpdateAvatarPreview(){
   opRenderAvatar();
 }
 function opApplyAvatar(){
-  opUpdateAvatarPreview(); opSaveProfileData(); opRenderAvatar();
+  opClearHumanAvatar(); opUpdateAvatarPreview(); opSaveProfileData(); opRenderAvatar();
   var n = document.getElementById('opBuilderNote'); if(n) n.textContent = 'Avatar saved on this device: '+opProfile.avatarBase+' ('+opProfile.avatarVariant+', tint '+opProfile.avatarTint+') — now in the top bubble, in games, and in Binders.';
 }
 function opFillSettings(){
