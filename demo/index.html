@@ -630,7 +630,8 @@
     <div class="dots" id="capDots" aria-hidden="true" style="margin-top:10px;"></div>
     <input type="file" id="capFile" accept="image/*" class="hidden" />
     <input type="file" id="capCamFile" accept="image/*" capture="environment" class="hidden" />
-    <div class="stack" style="margin-top:auto;padding-top:16px;">
+    <!-- Buttons directly under the camera frame, Oct 28 owner order: Take/Retake always right under the live feed, Next right under that, no pushing to the bottom of the screen. -->
+    <div class="stack" style="margin-top:10px;padding-top:4px;">
       <button type="button" class="bubble-btn b-sky" id="capTake">Take the photo</button>
       <button type="button" class="bubble-btn b-white small" id="capUploadFile">Upload a file instead</button>
       <button type="button" class="bubble-btn b-white small" id="capUseSample">Use a sample photo instead</button>
@@ -1496,6 +1497,7 @@ function renderCaptureStep(){
   $("capNext").classList.add("hidden");
   $("capBack").textContent = capStep===0 ? "← Pick a category" : "← "+capCat.steps[capStep-1].cap;
   var _pop = $("capContinuePop"); if(_pop) { _pop.hidden = true; _pop.style.display = "none"; }
+  if(capStep===0 && !poolOptinAsked){ try{ poolOptinShow(function(){}); }catch(e){} }
   /* Upload #12: camera opens by itself when the step appears. No tap
      needed to get the live feed. If it cannot start, the message below
      the frame says so in plain words and the Take button still works. */
