@@ -12,6 +12,9 @@
 <link rel="manifest" href="manifest.json" />
 <link rel="stylesheet" href="upscale.css" />
 <meta name="theme-color" content="#0b0908" />
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 <link rel="apple-touch-icon" href="icon-192.png" />
 <style>
   :root{
@@ -883,7 +886,7 @@ body.neon .top-banner{position:relative;}
 #ccHeroVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .7s ease;cursor:pointer;}
 #ccHeroVideo.on{opacity:1;}
 .bc-frame{position:relative;width:100%;aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:#0d0a14;border:1.5px solid rgba(179,136,255,.45);box-shadow:0 10px 24px rgba(0,0,0,.35);}
-.bc-frame video,.bc-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.bc-frame video,.bc-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
 .bc-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;}
 .bc-guide{position:absolute;inset:0;pointer-events:none;z-index:3;}
 .bc-guide i{position:absolute;width:29%;height:40%;border:2px dashed rgba(255,248,231,.5);border-radius:12px;}
@@ -897,6 +900,7 @@ body.neon .top-banner{position:relative;}
 .cc-mallow-play{position:absolute;right:10px;bottom:10px;z-index:5;display:flex;flex-direction:column;align-items:center;gap:3px;margin:0;padding:0;background:none;border:none;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .cc-mallow-play-disc{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(20,14,32,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:2px solid #b388ff;box-shadow:0 0 0 2px rgba(255,215,106,.9),0 0 18px rgba(255,215,106,.5),0 6px 16px rgba(0,0,0,.45);animation:ccMallowPulse 2.6s ease-in-out infinite;}
 .cc-mallow-play-tri{width:0;height:0;margin-left:5px;border-left:17px solid #ffd76a;border-top:11px solid transparent;border-bottom:11px solid transparent;filter:drop-shadow(0 1px 3px rgba(0,0,0,.55));}
+.cc-mallow-play.cc-is-playing .cc-mallow-play-tri{width:6px;height:24px;margin-left:0;border-top:none;border-bottom:none;border-left:8px solid #ffd76a;border-right:8px solid #ffd76a;}
 .cc-mallow-play-label{font-size:11px;font-weight:800;letter-spacing:.02em;color:#fff8e7;text-shadow:0 1px 4px rgba(0,0,0,.85),0 0 10px rgba(0,0,0,.55);}
 .cc-mallow-play:focus-visible{outline:2px solid #ffd76a;outline-offset:3px;border-radius:18px;}
 @keyframes ccMallowPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
@@ -913,7 +917,7 @@ body.neon .top-banner{position:relative;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #15-polish-wave1 · Oct 29, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -1035,7 +1039,7 @@ body.neon .top-banner{position:relative;}
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>What are we checking?</h2>
     <p class="lead" style="margin-top:8px;" id="pickerIntro">Pick the thing in your hand first. Each kind gets its own photo steps, so the checkers always know exactly what they're looking at — there's no scan-anything button, on purpose.</p>
-    <button type="button" class="bubble-btn b-white" data-nav="batch" style="min-height:64px;padding:16px 22px;font-size:13.5px;letter-spacing:0;text-transform:none;border-radius:20px;line-height:1.4;white-space:normal;"><span style="display:block;width:100%;text-align:center;">🗂️ Do you want to scan more than one card at once?</span><span class="sub" style="display:block;width:100%;text-align:center;font-size:12.5px;line-height:1.4;">Click here for batch check — up to 5 cards in one pass</span></button>
+    <button type="button" class="bubble-btn b-white" data-nav="batch" style="min-height:64px;padding:16px 22px;font-size:13.5px;letter-spacing:0;text-transform:none;border-radius:20px;line-height:1.4;white-space:normal;"><span style="display:block;width:100%;text-align:center;">🗂️ Do you want to check more than one card at once?</span><span class="sub" style="display:block;width:100%;text-align:center;font-size:12.5px;line-height:1.4;">Click here for batch check — up to 5 cards in one pass</span></button>
     <p class="small center" style="margin-top:6px;">⭐ Pokémon Card is our #1 pool — it has the most verified cards, so it checks best right now. Other kinds join as their pools grow.</p>
     <div class="stack mt" id="pickerList"></div>
     
@@ -1056,7 +1060,7 @@ body.neon .top-banner{position:relative;}
         <p class="small dim" style="margin-top:8px;" id="capHint"></p>
       </div>
       <img id="capImg" class="hidden" alt="" loading="lazy" decoding="async" />
-      <video id="capVideo" autoplay playsinline muted style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000"></video>
+      <video id="capVideo" autoplay playsinline muted style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000"></video>
       <div class="sample-art hidden" id="capSample"><span class="big" id="capSampleEmoji">🃏</span><span class="cap" id="capSampleCap">Sample photo</span><span class="pill sample">SAMPLE — demo illustration</span></div>
     </div>
     <p class="center" style="margin-top:10px;font-weight:800;" id="capGot"></p>
@@ -1350,7 +1354,7 @@ body.neon .top-banner{position:relative;}
         <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="off"></i>
       </div>
       <p style="font-weight:700;margin-top:10px;">Pretty confident — most tells point the same way</p>
-      <p class="lead" style="font-size:16.5px;margin-top:14px;text-align:left;" id="verdictSummary">In this sample, the print, the holo pattern, and the lettering all line up with what the checkers expect from a genuine card, and nothing on the back raises a worry. That's the shape of a genuine verdict — in the full app, this paragraph is written from <em>your</em> photos.</p>
+      <p class="lead" style="font-size:18px;margin-top:14px;text-align:left;" id="verdictSummary">What we found: in this sample, the print, the holo pattern, and the lettering all line up with a genuine card.<br>What it's based on: both checkers comparing the front and the back, tell by tell.<br>What it can't tell you: a check is an opinion from photos — not a grade, not a certificate, never a guarantee.</p>
     </div>
     <div class="card mt">
       <p style="font-weight:800;">Signed by both checkers:</p>
@@ -2073,7 +2077,17 @@ function poolSubmitAndConfirm(){
     if(capNext) capNext.dataset.poolAttempted = "1";
     return;
   }
-  if(backWire.length > 700000) backWire = "";
+  /* Back-photo fix (Oct 29, BACKFIX pass): an oversized back used to be
+     silently dropped on this line — the front sent alone and the pair
+     filed front-only with NO warning. It now behaves exactly like the
+     front above: name the photo, say plainly that nothing was sent,
+     and stop BEFORE the send, so a pair can never file incomplete
+     by silence. */
+  if(backWire.length > 700000) {
+    if(statusEl) statusEl.textContent = "Your back photo was too large to send. The scan was not sent to the pool — retake the back photo and try again.";
+    if(capNext) capNext.dataset.poolAttempted = "1";
+    return;
+  }
   var _payload = {opt_in:true, front_image:frontWire, back_image:(backWire || null), number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"};
   fetch("https://api.cardcauldrontcg.com/pool/submit-pending", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(_payload)})
     .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
@@ -2117,9 +2131,9 @@ function renderMyScans(){
   var host = document.getElementById("opMyScans"); if(!host) return;
   var recs = []; try{ recs = JSON.parse(localStorage.getItem("cc_my_scans") || "[]"); }catch(e){ recs = []; }
   var cnt = document.getElementById("opPocketCount"); if(cnt) cnt.textContent = recs.length ? (recs.length + (recs.length === 1 ? " scan" : " scans") + " of yours, under review") : "Your scans, under review";
-  var sum = document.getElementById("opBinderSummary"); if(sum) sum.textContent = recs.length ? ("You have " + recs.length + (recs.length === 1 ? " scan" : " scans") + " in the pocket, under review — reviewed cards file into Genuine or Replica.") : "No scans yet — scan a card in Check and say yes to the pool, and it files here while it is reviewed.";
+  var sum = document.getElementById("opBinderSummary"); if(sum) sum.textContent = recs.length ? ("You have " + recs.length + (recs.length === 1 ? " scan" : " scans") + " in the pocket, under review — reviewed cards file into Genuine or Replica.") : "No scans yet — check a card and say yes to the pool, and it files here while it is reviewed.";
   if(!recs.length){
-    host.innerHTML = '<div class="card center" style="margin-top:12px;"><p style="font-size:32px;" aria-hidden="true">🫧</p><p style="font-weight:800;margin-top:6px;">Nothing here yet — scan a card and say yes to the pool, and your card waits in this pocket while it is reviewed. Nothing files under a guess.</p></div>';
+    host.innerHTML = '<div class="card center" style="margin-top:12px;"><p style="font-size:32px;" aria-hidden="true">🫧</p><p style="font-weight:800;margin-top:6px;">Nothing here yet — check a card and say yes to the pool, and your card waits in this pocket while it is reviewed. Nothing files under a guess.</p></div>';
     return;
   }
   host.innerHTML = recs.map(function(r){
@@ -2384,8 +2398,8 @@ var PW_TEXT = {
     plain: "10 Real checks to start. Then 5 more checks every month. No SAM, no Grade. Unused checks never roll over."
   },
   verdictSummary: {
-    normal: "In this sample, the print, the holo pattern, and the lettering all line up with what the checkers expect from a genuine card, and nothing on the back raises a worry. That's the shape of a genuine verdict — in the full app, this paragraph is written from <em>your</em> photos.",
-    plain: "Both checkers looked at the sample photos one by one. All the key parts matched. In the full app, this part is written from <em>your</em> photos."
+    normal: "What we found: in this sample, the print, the holo pattern, and the lettering all line up with a genuine card.<br>What it's based on: both checkers comparing the front and the back, tell by tell.<br>What it can't tell you: a check is an opinion from photos — not a grade, not a certificate, never a guarantee.",
+    plain: "What we found: in this sample, the print, the shine pattern, and the letters all match a real card.<br>What it's based on: both checkers looked at the front and the back, one tell at a time.<br>What it can't tell you: it is an opinion from photos — not a grade, and not a promise."
   },
   plainCardText1: {
     normal: "When this is on, the words around your check get simpler — shorter sentences, everyday words, and hard words explained or left out. Only the explaining words change. Try it: the picker, the plan, and the sample verdict all switch.",
@@ -2514,7 +2528,7 @@ function opPostScore(game, score, nm, onDone, onFail){
     .catch(function(e){ if(onFail) onFail(e); });
 }
 
-var LB_GAMES=[{id:"rapid",label:"Rapid Fire"},{id:"fit",label:"Perfect Fit"},{id:"match",label:"Match Audit"},{id:"beat",label:"Bubble Beat"},{id:"poppath",label:"Pop Path"},{id:"coin",label:"Coin Catch"},{id:"mystery",label:"Mystery Pack"},{id:"ziggy",label:"Ziggy"},{id:"brew",label:"Brew"},{id:"relay",label:"Message Relay"},{id:"zoom",label:"Zoom Pop"},{id:"shelf",label:"Shelf"}];
+var LB_GAMES=[{id:"rapid",label:"Rapid Fire"},{id:"fit",label:"Perfect Fit"},{id:"match",label:"Match Audit"},{id:"beat",label:"Bubble Beat"},{id:"poppath",label:"Pop Path"},{id:"coin",label:"Coin Catch"},{id:"mystery",label:"Mystery Bubble"},{id:"ziggy",label:"Ziggy Zap"},{id:"brew",label:"Bubble Brew"},{id:"relay",label:"Message Relay"},{id:"zoom",label:"Zoom Pop"},{id:"shelf",label:"Sorts the Shelf"}];
 function loadTotalBoard(){
   var st=document.getElementById("lbTotalStatus"), box=document.getElementById("lbTotalTop");
   if(!st || !box) return; st.textContent = "Loading total scores…"; box.innerHTML = "";
@@ -2693,7 +2707,7 @@ function startRapid(){
   function render(){
     var card = deck[round];
     body.innerHTML =
-      '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Card '+(round+1)+' of '+deck.length+'</p>'
+      '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Card '+(round+1)+' of '+deck.length+(round===0?' · Warm-up — take your time to look':'')+'</p>'
       + '<div class="card center mt" id="rfCard">'
       + (card.img ? '<div style="width:170px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);"><img src="'+card.img+'" alt="'+card.name+'" style="display:block;width:100%;aspect-ratio:5/7;object-fit:cover;"><div style="padding:8px 6px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim">'+card.set+'</div><div class="small dim">Game card — demo pool photo · game only, never a real check</div></div></div>'
       : '<div style="width:170px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);padding:18px 12px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim">'+card.set+(card.num ? ' · '+card.num : '')+'</div><div class="small dim">Game card — text card, your card identity · game only, never a real check, photo not shown</div></div>')
@@ -2708,8 +2722,9 @@ function startRapid(){
   bag.every(function(){
     if(locked || over) return;
     elapsed += 100;
-    var bar = $("rfBar"); if(bar) bar.style.width = clamp((6000-elapsed)/6000*100,0,100)+"%";
-    if(elapsed >= 6000) timeout();
+    var lim = (round===0 ? 12000 : 6000);
+    var bar = $("rfBar"); if(bar) bar.style.width = clamp((lim-elapsed)/lim*100,0,100)+"%";
+    if(elapsed >= lim) timeout();
   }, 100);
   function feedback(ok, text){
     locked = true;
@@ -2844,7 +2859,7 @@ function startBeat(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
   var LV = OP_BEAT_LEVELS[OP_BEAT_LEVEL-1]; var TOTAL = LV.total, TRAVEL = LV.travel, GAP = LV.gap, PERFECT = LV.perfect, ONBEAT = LV.onbeat, FIELD_H = 420, RING_Y = 90, beatClean = true;
   var bubbles = [], spawned = 0, score = 0, streak = 0, nextId = 1, finished = false;
-  var beatMusicOn = true, beatStep = 0, lastBeatAt = 0;
+  var beatMusicOn = soundOn, beatStep = 0, lastBeatAt = 0; /* CC-POLISH2 (Juno): born in step with the master sound switch */
   function beatKick(){
     if(!soundOn || !beatMusicOn) return;
     var ctx = audioCtx(); if(!ctx) return;
@@ -2877,13 +2892,14 @@ function startBeat(){
   body.innerHTML = '<div class="field" id="beatField" style="height:'+FIELD_H+'px;" role="img" aria-label="Bubbles rising toward a gold beat ring">'
     + '<div id="beatRing" aria-hidden="true" style="position:absolute;left:0;right:0;top:'+(RING_Y-4)+'px;height:8px;border-radius:999px;background:linear-gradient(90deg,#ffc53d,#f0a91e);box-shadow:0 0 0 4px rgba(255,197,61,.35);"></div>'
     + '<p aria-hidden="true" style="position:absolute;right:12px;top:'+(RING_Y-28)+'px;font-size:13px;font-weight:900;">GOLD BEAT RING</p>'
-    + '<p id="beatNote" role="status" style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-weight:800;padding:0 12px;">Tap each bubble exactly as it crosses the gold ring!</p>'
+    + '<p id="beatNote" role="status" style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-weight:800;padding:0 12px;">Warm-up — the first bubble rises slowly. Tap each bubble exactly as it crosses the gold ring!</p>'
     + '</div>'
     + '<p class="scorebar" role="status" id="beatBar">Score 0 · Streak 0 · Bubble 0 of '+TOTAL+'</p>'
     + '<div style="margin-top:12px;"><button type="button" class="bubble-btn b-gold small" id="beatMusicBtn"><span>🎵 Beat music: ON</span></button></div>'
     + opBeatPickerHTML();
   var field = $("beatField");
   var mb = $("beatMusicBtn");
+  if(mb) mb.innerHTML = "<span>🎵 Beat music: "+(beatMusicOn ? "ON" : "OFF")+"</span>"; /* CC-POLISH2 (Juno): the button is born telling the truth */
   if(mb) mb.addEventListener("click", function(){
     beatMusicOn = !beatMusicOn;
     mb.innerHTML = "<span>🎵 Beat music: "+(beatMusicOn ? "ON" : "OFF")+"</span>";
@@ -2893,7 +2909,7 @@ function startBeat(){
     if(spawned >= TOTAL || finished) return;
     spawned++;
     var colors = ["#38bdf8","#ff6b9d","#ffd93d","#7fe37f"];
-    var b = { id: nextId++, lane: 12+Math.random()*68, born: vnow, color: colors[spawned % colors.length], rang: false };
+    var b = { id: nextId++, lane: 12+Math.random()*68, born: vnow, travel: (spawned===1 ? Math.round(TRAVEL*1.7) : TRAVEL), color: colors[spawned % colors.length], rang: false };
     bubbles.push(b);
     var el = document.createElement("button");
     el.type = "button"; el.setAttribute("aria-label","Tap this bubble on the beat");
@@ -2902,10 +2918,10 @@ function startBeat(){
     b.el = el; field.appendChild(el);
     updateBar();
   }
-  function updateBar(){ var bar = $("beatBar"); if(bar) bar.textContent = "Score "+score+" · Streak "+streak+" · Bubble "+Math.min(spawned,TOTAL)+" of "+TOTAL; }
+  function updateBar(){ var bar = $("beatBar"); if(bar) bar.textContent = "Score "+score+" · Streak "+streak+" · Bubble "+Math.min(spawned,TOTAL)+" of "+TOTAL+(spawned<=1?" · Warm-up":""); }
   function tap(b, el){
     if(finished) return;
-    var p = (vnow-b.born)/TRAVEL, y = 400 - p*430, dist = Math.abs(y - RING_Y);
+    var p = (vnow-b.born)/b.travel, y = 400 - p*430, dist = Math.abs(y - RING_Y);
     bubbles = bubbles.filter(function(x){ return x.id !== b.id; });
     if(el.parentNode) el.parentNode.removeChild(el);
     var note = $("beatNote");
@@ -2917,10 +2933,10 @@ function startBeat(){
   function tick(){
     if(finished) return;
     vnow += 50; beatMusicTick(vnow);
-    if(spawned < TOTAL && vnow >= nextSpawn){ spawn(); nextSpawn = vnow + GAP; }
+    if(spawned < TOTAL && vnow >= nextSpawn){ spawn(); nextSpawn = vnow + (spawned===1 ? Math.round(GAP*1.7) : GAP); }
     var kept = [];
     bubbles.forEach(function(b){
-      var p = (vnow - b.born)/TRAVEL;
+      var p = (vnow - b.born)/b.travel;
       if(!b.rang && p >= (400 - RING_Y)/430){
         b.rang = true; beatKick();
         var ring = $("beatRing");
@@ -2967,9 +2983,9 @@ function startPopPath(){
     var pts = pathPoints();
     var d = pts.map(function(p,i){ return (i===0?"M":"L")+" "+p.x.toFixed(1)+" "+p.y.toFixed(1); }).join(" ");
     var live = coverage(pts, drawn, TOLS[level]);
-    var op = calm ? 0.9 : Math.max(0.22, 1 - (vnow/FADES[level])*0.78);
+    var op = calm ? 0.9 : Math.max(0.22, 1 - (vnow/(level===0?24000:FADES[level]))*0.78);
     body.innerHTML =
-      '<p class="scorebar" role="status">Score '+total+' · Level '+(level+1)+' of '+LEVELS+' · Trail '+(level+1)+' of '+LEVELS+' · Trail covered: '+Math.round(live.cov*100)+'%</p>'
+      '<p class="scorebar" role="status">Score '+total+' · Level '+(level+1)+' of '+LEVELS+' · Trail '+(level+1)+' of '+LEVELS+' · Trail covered: '+Math.round(live.cov*100)+'%'+(level===0?' · Warm-up pace — this trail fades slowly':'')+'</p>'
       + '<div class="card mt" style="padding:12px;">'
       + '<svg id="ppSvg" viewBox="0 0 340 260" style="width:100%;touch-action:none;user-select:none;" role="img" aria-label="A winding glowing trail to trace with your finger">'
       + '<path d="'+d+'" fill="none" stroke="#38bdf8" stroke-width="'+Math.max(14,TOLS[level])+'" stroke-linecap="round" stroke-linejoin="round" opacity="'+op+'"/>'
@@ -3001,7 +3017,7 @@ function startPopPath(){
     if(fin) fin.addEventListener("click", function(){
       var res = coverage(pathPoints(), drawn, TOLS[level]);
       var took = vnow;
-      var gain = Math.round(res.cov*100) + (drawn.length ? Math.round(Math.max(0, 1 - res.avg/(TOLS[level]*2.2))*20) : 0) + Math.round(Math.max(0, 1 - took/FADES[level])*20);
+      var gain = Math.round(res.cov*100) + (drawn.length ? Math.round(Math.max(0, 1 - res.avg/(TOLS[level]*2.2))*20) : 0) + Math.round(Math.max(0, 1 - took/(level===0?24000:FADES[level]))*20);
       total += gain; goodSnd();
       note = "Trail "+(level+1)+" traced — "+Math.round(res.cov*100)+"% of the path covered. +"+gain;
       if(level+1 >= LEVELS){
@@ -3018,7 +3034,7 @@ function startPopPath(){
   bag.every(function(){
     if(note) return;
     vnow += 700;
-    var svg = $("ppSvg"); if(svg){ var paths = svg.querySelectorAll("path"); var op = calm ? 0.9 : Math.max(0.22, 1-(vnow/FADES[level])*0.78); paths.forEach(function(p){ p.setAttribute("opacity", op); }); }
+    var svg = $("ppSvg"); if(svg){ var paths = svg.querySelectorAll("path"); var op = calm ? 0.9 : Math.max(0.22, 1-(vnow/(level===0?24000:FADES[level]))*0.78); paths.forEach(function(p){ p.setAttribute("opacity", op); }); }
   }, 700);
 }
 
@@ -3050,12 +3066,12 @@ function startCoin(){
   bag.every(function(){
     if(finished) return;
     vnow += 100;
-    if(vnow < GAME_MS && vnow-lastSpawn >= 800 && coins.length < 18){
+    if(vnow < GAME_MS && vnow-lastSpawn >= (vnow<6000?1300:800) && coins.length < 18){
       lastSpawn = vnow;
       var shiny = Math.random() < 0.68;
       var candX = 8+Math.random()*84, tries = 0;
       while(tries < 12 && coins.some(function(c){ return Math.abs(c.x - candX) < 18; })){ candX = 8+Math.random()*84; tries++; }
-      var nc = { id: nextId++, x: candX, born: vnow, speed: 118+Math.random()*82, shiny: shiny };
+      var nc = { id: nextId++, x: candX, born: vnow, speed: (vnow<6000?0.65:1)*(118+Math.random()*82), shiny: shiny };
       var el = document.createElement("span");
       el.setAttribute("aria-hidden","true");
       el.style.cssText = "position:absolute;width:48px;height:48px;margin-left:-24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 4px 10px rgba(51,48,94,.18);left:"+nc.x+"%;top:0;background:"+(shiny ? "radial-gradient(circle at 32% 30%, rgba(255,255,255,.95) 0%, #ffd970 55%, #f0a91e 100%)" : "radial-gradient(circle at 32% 30%, rgba(255,255,255,.7) 0%, #cfc8ea 55%, #b3aad6 100%)")+";";
@@ -3079,7 +3095,7 @@ function startCoin(){
     });
     coins = kept;
     var left = Math.max(0, Math.ceil((GAME_MS-vnow)/1000));
-    $("coinBar").textContent = "Score "+score+" · Caught "+caught+" · Missed "+missed+" · Time left "+left+"s";
+    $("coinBar").textContent = "Score "+score+" · Caught "+caught+" · Missed "+missed+" · Time left "+left+"s"+(vnow<6000?" · Warm-up — coins fall slowly":"");
     $("coinDull").textContent = dull>0 ? "Dull tokens caught so far: "+dull+" — gentle oops, just dodge the next ones." : "";
     if(vnow >= GAME_MS){
       finished = true; bag.clear(); gameCleanup = null;
@@ -3102,7 +3118,7 @@ function startMystery(){
   var slotOf = [0,1,2], picked = null, lastOk = null, score = 0, streak = 0, bestStreak = 0, snap = false, built = false;
   var body = $("gameMystery-body"), balls = [];
   function phaseLine(){
-    if(phase==="peek") return "⭐ See the star? Watch that bubble!";
+    if(phase==="peek") return round===0 ? "Warm-up — take your time to look. ⭐ See the star? Watch that bubble!" : "⭐ See the star? Watch that bubble!";
     if(phase==="shuffle") return "Shuffling — follow the star bubble with your eyes…";
     if(phase==="pick") return "Your pick — which bubble hides the star?";
     if(phase==="reveal") return lastOk ? "You tracked it! ⭐" : "So close — the star was in the glowing bubble. Fresh round coming up.";
@@ -3132,14 +3148,14 @@ function startMystery(){
   }
   function update(){
     if(!built) build();
-    var bar = $("mysteryBar"); if(bar) bar.textContent = "Score "+score+" · Streak "+streak+" · Round "+(round+1)+" of "+ROUNDS;
+    var bar = $("mysteryBar"); if(bar) bar.textContent = "Score "+score+" · Streak "+streak+" · Round "+(round+1)+" of "+ROUNDS+(round===0?" · Warm-up":"");
     var ph = $("mysteryPhase"); if(ph) ph.textContent = phaseLine();
     for(var id=0; id<3; id++){
       var slot = slotOf[id];
       var showsStar = (phase==="peek"||phase==="reveal") && id===starId;
       var el = balls[id];
       el.style.left = "calc("+slot+" * (100% - 104px) / 2)";
-      el.style.transition = (snap||calm) ? "none" : "";
+      el.style.transition = (snap||calm) ? "none" : (round===0 ? "left 1000ms cubic-bezier(.45,0,.25,1)" : "");
       el.disabled = (phase!=="pick");
       el.className = "mystery-ball"
         + (showsStar ? " star" : "")
@@ -3151,7 +3167,7 @@ function startMystery(){
   }
   function beginPeek(){
     phase = "peek"; update();
-    bag.set(function(){ phase = "shuffle"; update(); doShuffle(); }, calm ? 1300 : LV.peek);
+    bag.set(function(){ phase = "shuffle"; update(); doShuffle(); }, calm ? 1300 : (round===0 ? Math.round(LV.peek*1.8) : LV.peek));
   }
   function doShuffle(){
     var total = Math.min(12, LV.swaps + Math.floor(round/2) + Math.min(2, streak));
@@ -3172,10 +3188,10 @@ function startMystery(){
           bag.set(function(){ a.classList.remove("swap-flash"); bEl.classList.remove("swap-flash"); }, GLIDE);
         })(balls[idA], balls[idB]);
       }
-      if(fired >= total) bag.set(function(){ phase = "pick"; update(); }, calm ? 500 : GLIDE+240);
-      else bag.set(fire, calm ? 500 : GAP);
+      if(fired >= total) bag.set(function(){ phase = "pick"; update(); }, calm ? 500 : (round===0 ? Math.round(GLIDE*1.8)+240 : GLIDE+240));
+      else bag.set(fire, calm ? 500 : (round===0 ? Math.round(GAP*1.8) : GAP));
     }
-    bag.set(fire, calm ? 350 : 450);
+    bag.set(fire, calm ? 350 : (round===0 ? 800 : 450));
   }
   function pick(id){
     if(phase!=="pick") return;
@@ -3218,10 +3234,10 @@ function startZiggy(){
   bag.every(function(){
     if(finished) return;
     vnow += 250;
-    if(vnow < GAME_MS && vnow-lastSpawn >= 900 && bubbles.length < 12){
+    if(vnow < GAME_MS && vnow-lastSpawn >= (vnow<6000?1400:900) && bubbles.length < 12){
       lastSpawn = vnow;
       var golden = Math.random() < 0.2;
-      var b = { id: nextId++, x: 4+Math.random()*76, y: 12+Math.random()*68, golden: golden, born: vnow, size: 68+Math.floor(Math.random()*18) };
+      var b = { id: nextId++, x: 4+Math.random()*76, y: 12+Math.random()*68, golden: golden, born: vnow, life: (vnow<6000 ? 4200 : LIFE), size: 68+Math.floor(Math.random()*18) };
       var el = document.createElement("button");
       el.type = "button";
       el.setAttribute("aria-label", golden ? "Pop the golden bubble — 30 points" : "Pop the bubble — 10 points");
@@ -3242,7 +3258,7 @@ function startZiggy(){
     }
     var kept = [];
     bubbles.forEach(function(b){
-      if(vnow-b.born >= LIFE){ if(b.el.parentNode) b.el.parentNode.removeChild(b.el); }
+      if(vnow-b.born >= b.life){ if(b.el.parentNode) b.el.parentNode.removeChild(b.el); }
       else kept.push(b);
     });
     bubbles = kept; updateBar();
@@ -3255,7 +3271,7 @@ function startZiggy(){
   }, 250);
   function updateBar(){
     var left = Math.max(0, Math.ceil((GAME_MS-vnow)/1000));
-    var bar = $("zzBar"); if(bar) bar.textContent = "Score "+score+" · Popped "+pops+" · Time left "+left+"s";
+    var bar = $("zzBar"); if(bar) bar.textContent = "Score "+score+" · Popped "+pops+" · Time left "+left+"s"+(vnow<6000?" · Warm-up":"");
     var tm = $("zzTimer"); if(tm) tm.style.width = (left/30*100)+"%";
   }
 }
@@ -3280,7 +3296,7 @@ function startBrew(){
       return '<button type="button" class="brew-ball'+(lit===i?" lit":"")+'" data-ing="'+i+'" '+(phase!=="input"?"disabled":"")+' aria-label="Ingredient bubble: '+ing.full+'" style="background:radial-gradient(circle at 32% 30%, rgba(255,255,255,.95) 0%, '+ing.color+' 55%, '+ing.deep+' 100%);"><span class="em" aria-hidden="true">'+ing.emoji+'</span><span class="nm">'+ing.name+'</span></button>';
     }).join("");
     body.innerHTML =
-      '<p class="scorebar" role="status">Score '+score+' · Rounds brewed '+rounds+' · Brew length '+(seq.length||"—")+'</p>'
+      '<p class="scorebar" role="status">Score '+score+' · Rounds brewed '+rounds+' · Brew length '+(seq.length||"—")+(rounds===0&&seq.length<=1?' · Warm-up — first brew plays slowly':'')+'</p>'
       + '<div class="card center mt" style="'+(missed?"background:#3a2a1c;":"")+'"><span style="font-size:52px;" aria-hidden="true">🍲</span>'
       + '<p style="font-weight:800;margin-top:4px;min-height:26px;" role="status">'+note+'</p>'
       + '<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px;min-height:14px;" aria-hidden="true">'+dots+'</div></div>'
@@ -3296,7 +3312,7 @@ function startBrew(){
   }
   function playSeq(s){
     phase = "watch"; note = "Watch the bubbles light up over the cauldron…"; tapped = 0; render();
-    var step = calm ? 850 : 760;
+    var step = calm ? 850 : (s.length===1 ? 1150 : 760);
     s.forEach(function(ing, i){
       bag.set(function(){ lit = ing; popSnd(); render(); }, 550 + i*step);
       bag.set(function(){ lit = -1; render(); }, 550 + i*step + step*0.62);
@@ -3354,7 +3370,7 @@ function startRelay(){
   function render(){
     var cur = deck[round];
     var head =
-      '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Message '+(round+1)+' of '+deck.length+'</p>';
+      '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Message '+(round+1)+' of '+deck.length+(round===0?' · Warm-up — extra time to read and pick':'')+'</p>';
     if(phase==="show"){
       body.innerHTML = head
         + '<div class="card center mt cc-qcard"><span style="font-size:38px;" aria-hidden="true">💬</span>'
@@ -3365,6 +3381,7 @@ function startRelay(){
         return '<button type="button" class="bubble-btn '+variants[i%3]+' cc-opt" data-opt="'+i+'" '+(phase==="feedback"?"disabled":"")+' aria-label="Relay this message: '+opt.replace(/"/g,"&quot;")+'" style="animation-delay:'+(0.15+i*0.15).toFixed(2)+'s;"><span style="font-size:18px;">'+opt+'</span></button>';
       }).join("");
       body.innerHTML = head
+        + '<div class="cc-relay-pin" role="note">'+(phase==="pick"?"🎯 Relay this one: ":"🎯 The message was: ")+'“'+cur.target+'”</div>'
         + '<div class="card center mt cc-qcard" style="'+(wasOk===false?"background:#3a2a1c;":"")+'"><p style="font-size:20px;font-weight:900;">'+(phase==="feedback"?"Relay check":"Which message did Wick pass you?")+'</p>' + (phase==="pick" ? ccHearHTML("Which message did Wick pass you? Options: " + cur.options.join(". ") + ".") : "")
         + '<div class="timerbar blue" role="img" aria-label="Time left"><i id="relBar" style="width:100%;"></i></div>'
         + '<p style="font-weight:800;margin-top:10px;min-height:24px;" role="status">'+(phase==="feedback"?feedback:"Pick the matching message!")+'</p></div>'
@@ -3398,15 +3415,15 @@ function startRelay(){
     } else { round++; phase = "show"; render(); armShow(); }
   }
   function armShow(){
-    bag.set(function(){ phase = "pick"; pickElapsed = 0; render(); armPick(); }, MEMO);
+    bag.set(function(){ phase = "pick"; pickElapsed = 0; render(); armPick(); }, round===0 ? 9000 : MEMO);
   }
   function armPick(){
     /* Virtual clock: one cascade beat = 100ms of pick time. */
     bag.every(function(){
       if(phase!=="pick") return;
       pickElapsed += 100;
-      var left = PICK - pickElapsed;
-      var bar = $("relBar"); if(bar) bar.style.width = clamp(left/PICK*100,0,100)+"%";
+      var left = (round===0 ? 18000 : PICK) - pickElapsed;
+      var bar = $("relBar"); if(bar) bar.style.width = clamp(left/(round===0 ? 18000 : PICK)*100,0,100)+"%";
       if(left<=0) resolve(false, true);
     }, 100);
   }
@@ -3651,10 +3668,10 @@ var GAME_STARTERS = {
 /* ================= tells checklist (plain-website addition, no backend) ================= */
 (function(){
   var TELLS = [
-    {id:"font", name:"Font", hint:"Letter shapes, thickness, and spacing of the card name and attack text."},
-    {id:"backcolor", name:"Back color", hint:"The blue on the card back — too light, too dark, or washed out?"},
-    {id:"foil", name:"Foil pattern", hint:"Holo / reverse-holo pattern — does it match this set, and sit where it should?"},
     {id:"setsymbol", name:"Set symbol", hint:"The little set mark — right shape, right place, crisp?"},
+    {id:"foil", name:"Foil pattern", hint:"Holo / reverse-holo pattern — does it match this set, and sit where it should?"},
+    {id:"backcolor", name:"Back color", hint:"The blue on the card back — too light, too dark, or washed out?"},
+    {id:"font", name:"Font", hint:"Letter shapes, thickness, and spacing of the card name and attack text."},
     {id:"spacing", name:"Text spacing", hint:"Gaps between letters, lines, and boxes — cramped, stretched, or uneven?"},
     {id:"layering", name:"Layering / light test", hint:"Shine a light through it: real cards layer and block light a certain way; fakes often glow through or look flat."},
     {id:"label", name:"Label finish (slabs only)", hint:"If it is a slab: label texture, print sharpness, and case seal. Skip / Can't tell for raw cards."}
@@ -3752,7 +3769,7 @@ var GAME_STARTERS = {
 
 <script src="ssd-adapter.js"></script>
 <script src="upscale.js"></script>
-<script>if("serviceWorker" in navigator){ window.addEventListener("load", function(){ navigator.serviceWorker.register("./sw.js").catch(function(){}); }); }</script>
+<script>if("serviceWorker" in navigator){ window.addEventListener("load", function(){ navigator.serviceWorker.register("./sw.js").then(function(r){ if(r && r.update){ try{ r.update(); }catch(e){} } }).catch(function(){}); }); }</script>
 
 <script>
 "use strict";
@@ -4496,6 +4513,11 @@ document.addEventListener("click", function(e){
       scopeFade += (scopeTarget - scopeFade) * (1 - Math.pow(SCOPE_SMOOTHING, dt));
       if (Math.abs(scopeTarget - scopeFade) < 0.001) { scopeFade = scopeTarget; }
       render();
+      /* CC-POLISH2 (Penny): a fully faded off-scope layer goes
+         visibility:hidden, so its full-screen blend stops costing
+         paint on screens it doesn't serve; it returns as the fade rises. */
+      var lv = scopeFade < 0.02 ? "hidden" : "visible";
+      if (layer.style.visibility !== lv) { layer.style.visibility = lv; }
       raf = requestAnimationFrame(frame);
     }
 
@@ -4738,23 +4760,59 @@ document.addEventListener("click", function(e){
     }
     var playBtn = $('ccMallowPlay');
     if (playBtn) {
+      /* Play/PAUSE toggle (owner fix, Oct 29): this button owns both
+         the welcome audio and the hero video. While she is audibly
+         playing, the disc shows pause bars and a tap silences BOTH;
+         while quiet, it shows the play triangle and a tap plays -
+         resuming mid-line where she paused, or from the top when she
+         finished or never started. Button state is derived from the
+         audio (the audible half); the muted hero video follows. */
+      var wSyncBtn = function(){
+        var playing = !!(wAudio && !wAudio.paused && !wAudio.ended);
+        playBtn.classList.toggle('cc-is-playing', playing);
+        playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Hear Mallow!');
+        var lb = playBtn.querySelector('.cc-mallow-play-label');
+        if (lb) lb.textContent = playing ? 'Pause' : 'Hear Mallow!';
+      };
       var playTap = function(ev){
         if (ev && ev.stopPropagation) ev.stopPropagation(); /* keep this press out of the banner's own tap-replay */
-        wPlayRestart(); /* an explicit play press restarts her line, even mid-line */
         var hv = $('ccHeroVideo');
-        if (hv && hv.paused && hv.play) { var hp = hv.play(); if (hp && hp.catch) hp.catch(function(){}); }
+        if (wAudio && !wAudio.paused && !wAudio.ended) {
+          try { wAudio.pause(); } catch (e) {}
+          if (hv && !hv.paused && hv.pause) { try { hv.pause(); } catch (e) {} }
+        } else {
+          if (wAudio) {
+            if (wAudio.ended || !wAudio.currentTime) { try { wAudio.currentTime = 0; } catch (e) {} }
+            var ap = wAudio.play(); if (ap && ap.catch) ap.catch(function(){});
+          }
+          if (hv && hv.paused && hv.play) { var hp = hv.play(); if (hp && hp.catch) hp.catch(function(){}); }
+        }
+        wSyncBtn();
       };
       playBtn.addEventListener('click', playTap);
       removers.push(function(){ playBtn.removeEventListener('click', playTap); });
+      /* Stay in sync when playback changes without this button
+         (banner tap, the first-tap fallback, the clip ending). */
+      var wSyncEvt = function(){ wSyncBtn(); };
+      wAudio.addEventListener('play', wSyncEvt);
+      wAudio.addEventListener('pause', wSyncEvt);
+      wAudio.addEventListener('ended', wSyncEvt);
+      removers.push(function(){
+        wAudio.removeEventListener('play', wSyncEvt);
+        wAudio.removeEventListener('pause', wSyncEvt);
+        wAudio.removeEventListener('ended', wSyncEvt);
+      });
+      wSyncBtn();
     }
     if (wPlayed) return;
     wPlayed = true;
-    var p = wAudio.play();
-    if (p && p.catch) p.catch(function(){
-      if (wArm) return;
+    /* CC-POLISH2 (Juno): the welcome never starts before a first tap.
+       The first-tap listener is armed directly instead of attempting
+       autoplay and falling back when the browser blocks it. */
+    if (!wArm) {
       wArm = function(){ document.removeEventListener('pointerdown', wArm, true); wArm = null; wPlay(); };
       document.addEventListener('pointerdown', wArm, true);
-    });
+    }
   }
 
   try { bcWire(); } catch (e) {}
@@ -4927,6 +4985,12 @@ document.addEventListener("click", function(e){
    the pop-up cannot trap the flow (build failure falls back to
    sending as-is).
 
+   Gate (owner direction, Oct 29): the pop-up appears ONLY for
+   Chris — when the resolved sender name starts with "chris"
+   (Chris / Christopher / Christopher Golliver). Everyone else's
+   submit proceeds immediately with no pop-up; their automatic
+   submitter stamp is unchanged and nothing is added.
+
    Hook: the submit payload and its fetch live in frozen script 1
    (poolSubmitAndConfirm). Nothing frozen is edited. This block wraps
    window.fetch and intercepts ONLY the pool submit call (a POST to
@@ -4964,6 +5028,15 @@ document.addEventListener("click", function(e){
     var n = clean(p.displayName || p.username || "", SUBMITTER_MAX);
     if (!n || n === "Guest") return "";
     return n;
+  }
+
+  /* The pop-up gate (owner direction, Oct 29): the sender name,
+     already cleaned and trimmed by profileName, lowercased, must
+     START WITH "chris" — covers "Chris", "Christopher" and
+     "Christopher Golliver". Any other name, and guests ("" from
+     profileName), get no pop-up at all. */
+  function isChrisName(name){
+    return !!name && name.toLowerCase().indexOf("chris") === 0;
   }
 
   var realFetch = (typeof window !== "undefined" && typeof window.fetch === "function") ? window.fetch : null;
@@ -5114,7 +5187,10 @@ document.addEventListener("click", function(e){
     try { payload = JSON.parse(init.body); } catch (e) { return realFetch.apply(window, arguments); }
     var sub = profileName();
     if (sub) payload.submitter = sub;
-    var run = askCardLabel().then(function(entered){
+    /* Chris only: for everyone else the label step resolves null
+       immediately — no pop-up, nothing added, submit as-is. */
+    var ask = isChrisName(sub) ? askCardLabel() : Promise.resolve(null);
+    var run = ask.then(function(entered){
       lastFiled = null;
       if (entered){
         if (entered.name) payload.name = entered.name;
@@ -5136,6 +5212,7 @@ document.addEventListener("click", function(e){
     profileName: profileName,
     clean: clean,
     ask: askCardLabel,
+    isChris: isChrisName,
     noteFiledLine: noteFiledLine,
     getLastFiled: function(){ return lastFiled; },
     destroy: function(){
@@ -5148,5 +5225,588 @@ document.addEventListener("click", function(e){
   };
 })();
 </script>
-</body>
+<style id="ccPolish1Style">
+/* CC-POLISH1 - state line (App Polish Vote item 1: Potion, with Pip rider) */
+.cc-state-line{
+  flex:0 0 auto; align-self:stretch; box-sizing:border-box;
+  margin:0 0 10px; padding:8px 12px;
+  border:1px solid var(--border); border-radius:12px;
+  background:rgba(28,25,23,.88);
+  color:var(--text); font-size:14px; line-height:1.35; font-weight:600;
+  text-align:left; position:relative; z-index:2;
+}
+.cc-state-line b{ color:var(--gold); font-weight:900; }
+</style>
+<script>
+/* =====================================================================
+   APP POLISH WAVE 1 - ITEM 1: STATE LINE ON EVERY SCREEN
+   (App Polish Vote #1 - Potion, 40 pts; rider: Pip's plain-short-words)
+   One consistent line at the top of every existing screen: what the
+   screen is, whether it is SAMPLE or live, and the next tap. This block
+   only OBSERVES .screen activation (the existing show() switcher keeps
+   doing navigation); it never moves, hides, or rewrites any screen.
+   ===================================================================== */
+(function(){
+  "use strict";
+  var LINES = {
+    home:         ["Home", "live demo - games, card checks, and the pool start here. Next tap: pick one to begin."],
+    picker:       ["Start a check", "SAMPLE mode - pick the thing in your hand; each kind gets its own photo steps."],
+    capture:      ["Card check", "SAMPLE mode - this step needs one photo. Next tap: take it or upload it."],
+    gate:         ["Demo gate", "SAMPLE checks pause here on purpose - in the full app, the real check starts at this point."],
+    lightLearn:   ["The Light Test, explained", "live guide - read how it works, then try it on a card of your own."],
+    lightTest:    ["The Light Test", "hands-on - hold your card in front of a bright light. Next tap: take the photo."],
+    batch:        ["Batch check", "demo - line up to 5 cards here. Next tap: open the batch camera."],
+    batchCam:     ["Batch camera", "DEMO photos - fill the guides with your cards. Next tap: take the photo."],
+    condition:    ["Condition Grader", "demo window - add the front photo, then the back photo."],
+    sampleVerdict:["SAMPLE verdict", "an example result, not a finding about your card. Next: see what the checkers looked at."],
+    sampleReceipt:["SAMPLE receipt", "example entries show the format - not findings about a real card."],
+    binders:      ["My Binders", "saved on this device - every card you check files itself here by verdict."],
+    plan:         ["Upgrade", "plans for the full app - nothing is charged in this demo. Next tap: pick a tier to preview it."],
+    games:        ["Mini Games", "live and free - tap a game to play. Best scores show for this visit only."],
+    tells:        ["Tells", "learn to check a card yourself, tell by tell. Next tap: pick a tell and read it."],
+    settings:     ["Settings & Profile", "demo only - saves on this device; no real account."],
+    leaderboard:  ["Leaderboard", "mini-game scores - pick a game to see its board."],
+    website:      ["Our website", "Card Cauldron on the web. Next tap: open it in your browser."],
+    feedback:     ["Feedback & Ideas", "tell the crew what to fix. Next: write yours, then send it."],
+    chatroom:     ["Chat Room", "talk with the crew and other collectors. Next: tap in and say hello."],
+    rewards:      ["Rewards", "demo shop - spend the coins you earn in games. Next tap: pick an item to look closer."],
+    gameRapid:    ["Rapid Fire", "live game - real or fake? Decide before the bubble pops. First card is a warm-up."],
+    gameFit:      ["Perfect Fit", "live game - pick the card size that fits the slot."],
+    gameMatch:    ["Match Audit", "live game - flip two cards at a time and find every matching pair."],
+    gameBeat:     ["Bubble Beat", "live game - tap each bubble right on the beat. First bubble is a warm-up."],
+    gamePopPath:  ["Pop Path", "live game - trace the glowing trail before it fades. First trail is a warm-up."],
+    gameCoin:     ["Coin Catch", "live game - catch the falling coins, dodge the dull ones. First seconds are a warm-up."],
+    gameMystery:  ["Mystery Bubble", "live game - watch the star bubble, follow it through the shuffle. First round is a warm-up."],
+    gameZiggy:    ["Ziggy Zap", "live game - pop the bubbles before they vanish. First seconds are a warm-up."],
+    gameBrew:     ["Bubble Brew", "live game - watch the brew order, then tap it back the same way. First brew is a warm-up."],
+    gameRelay:    ["Message Relay", "live game - memorize the message, then pick its match. First message is a warm-up."],
+    gameZoom:     ["Zoom Pop", "live game - name the pattern in the zoomed-in crop. No clock - take your time."],
+    gameShelf:    ["Sorts the Shelf", "live game - file each card into its right set before time runs out."],
+    gameGuess:    ["Guess the Price", "live game - pick the price the card really sold for. No clock."],
+    gameTell:     ["Tell or Tale?", "live game - decide if each tell is a real check or a tall tale. No clock."]
+  };
+  function findLine(scr){
+    for(var i=0;i<scr.children.length;i++){
+      if(scr.children[i].className === "cc-state-line") return scr.children[i];
+    }
+    return null;
+  }
+  function paint(scr){
+    if(!scr || !scr.id || scr.id.indexOf("scr-") !== 0) return;
+    var pair = LINES[scr.id.slice(4)];
+    if(!pair) return;
+    var line = findLine(scr);
+    if(!line){
+      line = document.createElement("div");
+      line.className = "cc-state-line";
+      line.setAttribute("role", "note");
+      var b = document.createElement("b");
+      b.textContent = pair[0];
+      line.appendChild(b);
+      line.appendChild(document.createTextNode(" - " + pair[1]));
+      scr.insertBefore(line, scr.firstChild);
+    }
+  }
+  function paintActive(){
+    var act = document.querySelector(".screen.active");
+    if(act) paint(act);
+  }
+  var mo = null;
+  if(typeof MutationObserver !== "undefined"){
+    mo = new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++){
+        var tg = muts[i].target;
+        if(tg && tg.classList && tg.classList.contains("screen") && tg.classList.contains("active")) paint(tg);
+      }
+    });
+  }
+  function watch(scr){
+    if(mo && scr) mo.observe(scr, { attributes:true, attributeFilter:["class"] });
+  }
+  var bodyMo = null;
+  if(typeof MutationObserver !== "undefined"){
+    bodyMo = new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++){
+        var added = muts[i].addedNodes || [];
+        for(var j=0;j<added.length;j++){
+          var n = added[j];
+          if(n && n.classList && n.classList.contains("screen")){
+            watch(n);
+            if(n.classList.contains("active")) paint(n);
+          }
+        }
+      }
+    });
+  }
+  function init(){
+    var screens = document.querySelectorAll(".screen");
+    for(var i=0;i<screens.length;i++) watch(screens[i]);
+    if(bodyMo && document.body) bodyMo.observe(document.body, { childList:true, subtree:true });
+    paintActive();
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+</script>
+<style id="ccPolish3Style">
+/* CC-POLISH3 - pool finish pair labels (App Polish Vote item 3 rider: Latch) */
+.cc-pair-row{display:flex;gap:10px;justify-content:center;margin:12px 0 4px;}
+.cc-pair-cell{flex:1 1 0;max-width:150px;text-align:center;}
+.cc-pair-cell img{width:100%;height:118px;object-fit:contain;background:#000;border:2px solid var(--gold,#f5c542);border-radius:10px;display:block;}
+.cc-pair-none{height:118px;border:2px dashed rgba(255,248,231,.4);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--dim,#d6c7a8);font-size:13px;padding:6px;}
+.cc-pair-cap{margin-top:6px;font-weight:900;letter-spacing:.14em;color:var(--gold,#f5c542);font-size:14px;}
+.cc-pair-head{margin:10px 0 0;font-size:13.5px;color:var(--text,#fff8e7);font-weight:700;}
+</style>
+<script>
+/* =====================================================================
+   APP POLISH WAVE 1 - ITEM 3 RIDER: FRONT / BACK ON THE FINISH POP
+   (App Polish Vote #3 rider - Latch, 1 pt: "Front. Back. Read it
+   before it files.") The pool-submit confirmation pop (#poolConfirmPop)
+   showed no photos at all. This block watches for that pop and dresses
+   it with the two photos the user actually captured - read from the
+   app's own globals poolFrontImg / poolBackImg - each labeled FRONT or
+   BACK in words, above the "Is this correct?" prompt, so a mispaired
+   set is visible to the person sending it before it files. It never
+   touches the submit itself, the payload, or the save path.
+   ===================================================================== */
+(function(){
+  "use strict";
+  function cell(src, word){
+    var wrap = document.createElement("div");
+    wrap.className = "cc-pair-cell";
+    if(src){
+      var img = document.createElement("img");
+      img.src = src;
+      img.alt = "Your scanned card " + word.toLowerCase();
+      wrap.appendChild(img);
+    } else {
+      var none = document.createElement("div");
+      none.className = "cc-pair-none";
+      none.textContent = "no photo";
+      wrap.appendChild(none);
+    }
+    var cap = document.createElement("div");
+    cap.className = "cc-pair-cap";
+    cap.textContent = word;
+    wrap.appendChild(cap);
+    return wrap;
+  }
+  function dress(pop){
+    if(!pop || pop.getAttribute("data-cc-pair") === "1") return;
+    var card = null;
+    for(var i=0;i<pop.children.length;i++){ if(pop.children[i].tagName === "DIV"){ card = pop.children[i]; break; } }
+    if(!card) return;
+    var front = null, back = null;
+    try { front = window.poolFrontImg || null; } catch(e){}
+    try { back = window.poolBackImg || null; } catch(e){}
+    if(!front && !back) return;
+    pop.setAttribute("data-cc-pair", "1");
+    var head = document.createElement("p");
+    head.className = "cc-pair-head";
+    head.textContent = "Check the pair before it files:";
+    var row = document.createElement("div");
+    row.className = "cc-pair-row";
+    row.appendChild(cell(front, "FRONT"));
+    row.appendChild(cell(back, "BACK"));
+    var h3 = null;
+    for(var j=0;j<card.children.length;j++){ if(card.children[j].tagName === "H3"){ h3 = card.children[j]; break; } }
+    var ref = h3 ? h3.nextSibling : card.firstChild;
+    card.insertBefore(head, ref);
+    card.insertBefore(row, ref);
+  }
+  function scan(){
+    var pop = document.getElementById("poolConfirmPop");
+    if(pop) dress(pop);
+  }
+  if(typeof MutationObserver !== "undefined" && document.body){
+    var mo = new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++){
+        var added = muts[i].addedNodes || [];
+        for(var j=0;j<added.length;j++){
+          if(added[j] && added[j].id === "poolConfirmPop") dress(added[j]);
+        }
+      }
+    });
+    mo.observe(document.body, { childList:true });
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", scan);
+  else scan();
+})();
+</script>
+<style id="ccPolish2WickStyle">
+/* CC-POLISH2 - Wick (App Polish Vote #9): the Relay memo stays put.
+   The pinned strip sits in the same slot (right under the scorebar) in
+   both the pick and feedback renders, so the message never floats away
+   while the choices are up. */
+.cc-relay-pin{margin-top:10px;background:#1d1430;border:2px solid #ffd76a;color:#fff8e7;border-radius:14px;padding:10px 14px;font-weight:800;font-size:16.5px;line-height:1.35;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.45);}
+</style>
+<style id="ccPolish2NoorStyle">
+/* CC-POLISH2 - Noor (App Polish Vote #7): text you can actually read.
+   (1) The smallest captions in the app step up a size - dock labels,
+   tile subtitles, banner fine print, game-piece labels. Nothing below
+   12px survives in chrome. (2) On the six screens with moving image
+   backgrounds, the bare headings / intro / footer lines that used to
+   float directly on the artwork get the same translucent backing
+   panel the wave-1 state line uses - tells and Upgrade first, then
+   the rest of the scoped screens. Words and layout are unchanged. */
+.dock button .tx{font-size:12px;}
+.cc-mallow-play-label{font-size:12.5px;}
+.brew-ball .nm{font-size:12.5px;}
+.demo-banner span{font-size:13.5px;}
+.cat-tile .s{font-size:13.5px;}
+.trail-stop .lbl{font-size:14px;}
+.fit-opt .mm{font-size:13.5px;}
+.cc-pair-none{font-size:14px;}
+#scr-plan>h2,#scr-plan>.lead,#scr-plan>.small,
+#scr-tells>h2,#scr-tells>.lead,
+#scr-binders>h2,#scr-binders>.lead,#scr-binders>.small,
+#scr-rewards>h2,#scr-rewards>.small,
+#scr-website>h2,#scr-website>.small,
+#scr-home>.small,
+#scr-home .toggle-row h2,#scr-home .toggle-row .lead{
+  background:rgba(18,12,30,.66);border-radius:14px;padding:8px 14px;
+}
+#scr-plan>.backlink,#scr-binders>.backlink,#scr-rewards>.backlink,#scr-website>.backlink{
+  background:rgba(18,12,30,.66);border-radius:999px;padding:6px 14px;
+}
+</style>
+<style id="ccPolish2PennyStyle">
+/* CC-POLISH2 - Penny (App Polish Vote #10): motion diet, CSS half.
+   Landscape phones only (same media query family as upload #13):
+   the banner sway - the literal sway testers feel in landscape -
+   stops; the two logo loops run at half speed; the play disc's
+   backdrop-blur pulse stops. Portrait keeps the full look. */
+@media (orientation:landscape) and (max-height:540px){
+  body.neon .top-banner{animation:none;}
+  .logo-glow{animation-duration:13s;}
+  .logo-wrap{animation-duration:22s;}
+  .cc-mallow-play-disc{animation:none;}
+}
+</style>
+<script id="ccPolish2PennyMedia">
+/* CC-POLISH2 - Penny: motion diet, media half. The hero video used to
+   loop forever inside the hidden home screen. Now it pauses when Home
+   is left or the tab hides, and resumes only if it was playing when
+   this block paused it - a pause the user made with the Mallow button
+   is never overridden. */
+(function(){
+  "use strict";
+  var hero = document.getElementById("ccHeroVideo");
+  if (!hero) return;
+  var owed = false;
+  function homeActive(){ var h = document.getElementById("scr-home"); return !!(h && h.classList.contains("active")); }
+  function playing(){ return !!(hero && hero.isConnected !== false && !hero.paused && !hero.ended); }
+  function pauseHero(){ if (playing()) { owed = true; try { hero.pause(); } catch (e) {} } }
+  function resumeHero(){
+    if (owed && homeActive() && !document.hidden) {
+      owed = false;
+      if (!playing() && hero.play) { var p = hero.play(); if (p && p.catch) p.catch(function(){}); }
+    }
+  }
+  var home = document.getElementById("scr-home");
+  if (home && typeof MutationObserver !== "undefined") {
+    var mo = new MutationObserver(function(){ if (!homeActive()) pauseHero(); else resumeHero(); });
+    mo.observe(home, { attributes: true, attributeFilter: ["class"] });
+  }
+  document.addEventListener("visibilitychange", function(){ if (document.hidden) pauseHero(); else resumeHero(); });
+  window.addEventListener("pagehide", pauseHero);
+})();
+</script>
+<script id="ccPolish2Juno">
+/* CC-POLISH2 - Juno (App Polish Vote #6): sound that behaves.
+   One governor for the sustained sounds (Mallow's welcome voice, the
+   background melody, speech):
+   - while the voice or speech owns the speakers, the melody ducks out
+     entirely (through its own start/stop; its toggle state is not
+     touched) and returns when the speakers are free again;
+   - the welcome voice stops dead when Home is left;
+   - the melody stops dead on any screen change, through its own
+     toggle, so its label keeps telling the truth;
+   - voice and speech stop when the tab hides (the melody already had
+     its own hide handlers).
+   Pop/blip UI feedback is untouched: tenth-of-a-second taps, not
+   sustained audio. */
+(function(){
+  "use strict";
+  var wAudio = document.getElementById("ccWelcomeAudio");
+  var ducked = false, watchTimer = null;
+  function musicOn(){ try { return !!window.opMusicOn; } catch (e) { return false; } }
+  function speechBusy(){ try { return !!(window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending)); } catch (e) { return false; } }
+  function voiceBusy(){ return !!(wAudio && !wAudio.paused && !wAudio.ended); }
+  function duck(){ if (musicOn() && !ducked) { ducked = true; try { opMusicStop(); } catch (e) {} } }
+  function unduck(){
+    if (!ducked) return;
+    if (voiceBusy() || speechBusy()) return;
+    ducked = false;
+    if (musicOn()) { try { opMusicStart(); } catch (e) {} }
+  }
+  function watchSpeech(){
+    if (watchTimer) return;
+    watchTimer = setInterval(function(){
+      if (!speechBusy()) { clearInterval(watchTimer); watchTimer = null; unduck(); }
+    }, 250);
+  }
+  if (wAudio) {
+    wAudio.addEventListener("play", function(){ try { if (window.ccStopSpeak) ccStopSpeak(); } catch (e) {} duck(); });
+    wAudio.addEventListener("pause", unduck);
+    wAudio.addEventListener("ended", unduck);
+  }
+  if (typeof window.ccSpeak === "function" && !window.ccSpeak.__ccP2) {
+    var origSpeak = window.ccSpeak;
+    var wrapped = function(t){ duck(); var r = origSpeak(t); watchSpeech(); return r; };
+    wrapped.__ccP2 = true;
+    window.ccSpeak = wrapped;
+  }
+  if (typeof window.ccStopSpeak === "function" && !window.ccStopSpeak.__ccP2) {
+    var origStop = window.ccStopSpeak;
+    var wrappedStop = function(){ var r = origStop(); watchSpeech(); return r; };
+    wrappedStop.__ccP2 = true;
+    window.ccStopSpeak = wrappedStop;
+  }
+  function activeScreenId(){
+    var act = document.querySelector(".screen.active");
+    return act ? act.id : null;
+  }
+  var lastScreen = activeScreenId();
+  function onScreenChange(){
+    var id = activeScreenId();
+    if (id === lastScreen) return;
+    lastScreen = id;
+    if (id !== "scr-home" && voiceBusy()) { try { wAudio.pause(); } catch (e) {} }
+    if (musicOn()) { try { opMusicStopForBackground(); } catch (e) {} ducked = false; }
+  }
+  if (typeof MutationObserver !== "undefined") {
+    var screens = document.querySelectorAll(".screen");
+    for (var i = 0; i < screens.length; i++) {
+      new MutationObserver(onScreenChange).observe(screens[i], { attributes: true, attributeFilter: ["class"] });
+    }
+  }
+  function onHidden(){
+    if (voiceBusy()) { try { wAudio.pause(); } catch (e) {} }
+    try { if (window.ccStopSpeak) ccStopSpeak(); } catch (e) {}
+  }
+  document.addEventListener("visibilitychange", function(){ if (document.hidden) onHidden(); });
+  window.addEventListener("pagehide", onHidden);
+})();
+</script>
+<script id="ccQualityGateScript">/* =====================================================================
+   GAUGE'S PHOTO QUALITY GATE — Oct 29, 2026 (App Polish Wave 1, item 4,
+   built as its own pass on the owner's order)
+
+   WHY THIS EXISTS: wave 1 found NO quality gate in this build at all —
+   any photo, however dark, blurry or tiny, passed with "POP! Got it."
+   Gauge's pitch ("a retake reason, not a rejection") is only honest if
+   the reason is MEASURED. This block measures, on this device:
+
+     * pixel dimensions of the captured photo itself
+     * mean luminance of a downscaled read        -> too dark
+     * fraction of pixels blown to pure white     -> glare
+     * Laplacian variance (edge energy)           -> blurry
+
+   WHEN IT RUNS: the moment a checker photo (front or back) is captured,
+   while the card is still in the user's hand and retaking is one tap —
+   and always BEFORE any free check is spent (a check is spent only when
+   #scr-gate activates, at the very end of the flow; this gate never
+   touches that path).
+
+   WHAT IT DOES ON A CLEAR FAILURE: names the ONE specific measured
+   reason in plain words and offers [Retake this photo] / [Use it
+   anyway]. It blocks nothing: "Use it anyway" proceeds exactly as
+   before, and any measurement error fails open (no pop, flow untouched).
+
+   THRESHOLDS (calibrated Oct 29, 2026 — see QUALITY-GATE-REPORT.md):
+   set from the 40 known-good approved pool photos (all 480x640) with
+   synthetic known-bad copies (blur / dark / glare / tiny) confirming
+   the failing side. Good vs bad distributions did not overlap on any
+   metric; each threshold sits inside the empty gap, failing only
+   clear failures:
+     minDim   < 240     good 480        synthetic tiny 120
+     meanY    < 60      good 93..139    synthetic dark max 42
+     clipFrac > 0.06    good <= 0.001   synthetic glare 0.212
+     lapVar   < 90      good 204..1046  synthetic blur max 47
+   ===================================================================== */
+var CCQG = (function(){
+  "use strict";
+  var ANALYSIS = 256; /* long side of the downscaled read, px */
+  var TH = { minDim: 240, meanY: 60, clipFrac: 0.06, lapVar: 90 };
+
+  /* data: RGBA pixel array (Uint8ClampedArray or plain array) of the
+     ALREADY-downscaled analysis image, w x h. Returns the 3 metrics. */
+  function measure(data, w, h){
+    var n = w * h, i, p;
+    var Y = new Float32Array(n);
+    var sum = 0, clip = 0;
+    for (i = 0; i < n; i++){
+      p = i * 4;
+      var r = data[p], g = data[p + 1], b = data[p + 2];
+      var y = 0.299 * r + 0.587 * g + 0.114 * b;
+      Y[i] = y;
+      sum += y;
+      if (r >= 250 && g >= 250 && b >= 250) clip++;
+    }
+    var lapMean = 0, cnt = 0;
+    var lap = new Float32Array(n);
+    for (var yy = 1; yy < h - 1; yy++){
+      for (var xx = 1; xx < w - 1; xx++){
+        var idx = yy * w + xx;
+        var v = -4 * Y[idx] + Y[idx - w] + Y[idx + w] + Y[idx - 1] + Y[idx + 1];
+        lap[idx] = v;
+        lapMean += v;
+        cnt++;
+      }
+    }
+    var lapVar = 0;
+    if (cnt > 0){
+      lapMean /= cnt;
+      var acc = 0;
+      for (var j = 1; j < h - 1; j++){
+        for (var k = 1; k < w - 1; k++){
+          var d = lap[j * w + k] - lapMean;
+          acc += d * d;
+        }
+      }
+      lapVar = acc / cnt;
+    }
+    return {
+      meanY: sum / n,
+      clipFrac: n ? clip / n : 0,
+      lapVar: lapVar
+    };
+  }
+
+  var TEXT = {
+    small: function(w, h){ return "This photo is very small (" + w + "\u00D7" + h + "), so the fine details and the writing can\u2019t really be examined. A closer photo works better."; },
+    dark: function(){ return "This photo is quite dark, so the details and the writing could be unreadable when it\u2019s examined. More light on the card will help."; },
+    glare: function(){ return "A big patch of this photo is blown out to pure white by glare, and whatever is under it can\u2019t be examined. Tilting the card a little, or moving the light, usually fixes it."; },
+    blur: function(){ return "This photo looks blurry, so the writing and the fine details could be unreadable. Hold the phone steady and tap the card to focus before snapping."; }
+  };
+
+  /* m: measure() result; origW/origH: the captured photo's own pixels.
+     Returns null (pass) or {reason, text} — ONE reason, the first that
+     applies in fix-it order: size, light, glare, focus. */
+  function verdict(m, origW, origH){
+    if (Math.min(origW || 0, origH || 0) < TH.minDim)
+      return { reason: "small", text: TEXT.small(origW, origH) };
+    if (m.meanY < TH.meanY)
+      return { reason: "dark", text: TEXT.dark() };
+    if (m.clipFrac > TH.clipFrac)
+      return { reason: "glare", text: TEXT.glare() };
+    if (m.lapVar < TH.lapVar)
+      return { reason: "blur", text: TEXT.blur() };
+    return null;
+  }
+
+  return { ANALYSIS: ANALYSIS, THRESHOLDS: TH, measure: measure, verdict: verdict };
+})();
+
+if (typeof module !== "undefined" && module.exports) module.exports = CCQG;
+
+/* =================== Part B — browser integration ===================
+   Appended-block pattern only: observes the existing capture screen,
+   edits no existing code. Runs only in a real DOM. */
+if (typeof document !== "undefined") (function(){
+  "use strict";
+  try {
+    var img = document.getElementById("capImg");
+    var sample = document.getElementById("capSample");
+    if (!img) return;
+
+    var seenKey = null;        /* photo currently measured / being measured */
+    var overrideKey = null;    /* photo the user chose to use anyway */
+    var popOpen = false;
+    var pendingFail = null;    /* {fail, side} waiting for a pop slot */
+
+    function photoKey(src){ return src.length + ":" + src.slice(0, 48) + ":" + src.slice(-48); }
+
+    function sideName(){
+      try {
+        if (typeof capCat !== "undefined" && capCat && capCat.steps &&
+            typeof capStep !== "undefined" && capCat.steps[capStep])
+          return String(capCat.steps[capStep].cap || "photo").toLowerCase();
+      } catch (e) {}
+      return "photo";
+    }
+
+    function maybeMeasure(){
+      try {
+        if (!img.src || img.classList.contains("hidden")) return;
+        if (sample && !sample.classList.contains("hidden")) return; /* sample art: never gated */
+        var key = photoKey(img.src);
+        if (key === seenKey || key === overrideKey) return;
+        seenKey = key;
+        var src = img.src, side = sideName();
+        var probe = new Image();
+        probe.onload = function(){
+          try {
+            var ow = probe.naturalWidth || probe.width || 0;
+            var oh = probe.naturalHeight || probe.height || 0;
+            var sc = Math.min(1, CCQG.ANALYSIS / Math.max(ow || 1, oh || 1));
+            var cw = Math.max(1, Math.round(ow * sc)), ch = Math.max(1, Math.round(oh * sc));
+            var cv = document.createElement("canvas");
+            cv.width = cw; cv.height = ch;
+            var cx = cv.getContext("2d");
+            cx.drawImage(probe, 0, 0, cw, ch);
+            var data = cx.getImageData(0, 0, cw, ch).data;
+            var m = CCQG.measure(data, cw, ch);
+            var fail = CCQG.verdict(m, ow, oh);
+            if (!fail) return;
+            if (key === overrideKey) return;
+            /* only nag while the user is still on the capture screen */
+            var scr = document.getElementById("scr-capture");
+            if (!scr || !scr.classList.contains("active")) return;
+            if (popOpen) { pendingFail = { fail: fail, side: side, key: key }; return; }
+            showPop(fail, side, key);
+          } catch (e) { /* fail open: no measurement, no pop, flow untouched */ }
+        };
+        probe.onerror = function(){ /* fail open */ };
+        probe.src = src;
+      } catch (e) {}
+    }
+
+    function showPop(fail, side, key){
+      popOpen = true;
+      var pop = document.createElement("div");
+      pop.id = "ccQualityPop";
+      pop.style.cssText = "position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px;";
+      pop.innerHTML =
+        '<div style="background:#2a2138;border:2px solid #f5c542;border-radius:16px;padding:20px;max-width:360px;text-align:center;color:#fff8e7;">' +
+        '<div style="font-size:40px;" aria-hidden="true">\uD83D\uDCF7</div>' +
+        '<h3 style="color:#f5c542;">Quick check on your ' + side + ' photo</h3>' +
+        '<p>' + fail.text + '</p>' +
+        '<p class="small dim">No check has been used yet \u2014 this is just a heads-up, while retaking is easy.</p>' +
+        '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;">' +
+        '<button type="button" class="bubble-btn b-gold" id="ccQualityRetake"><span>Retake this photo</span></button>' +
+        '<button type="button" class="bubble-btn b-white" id="ccQualityAnyway"><span>Use it anyway</span></button>' +
+        '</div></div>';
+      document.body.appendChild(pop);
+      function close(){
+        pop.remove();
+        popOpen = false;
+        if (pendingFail && pendingFail.key !== overrideKey) {
+          var pf = pendingFail; pendingFail = null;
+          var scr = document.getElementById("scr-capture");
+          if (scr && scr.classList.contains("active")) showPop(pf.fail, pf.side, pf.key);
+        }
+      }
+      document.getElementById("ccQualityRetake").addEventListener("click", close);
+      document.getElementById("ccQualityAnyway").addEventListener("click", function(){
+        overrideKey = key;
+        if (pendingFail && pendingFail.key === key) pendingFail = null;
+        close();
+      });
+    }
+
+    var timer = null;
+    function schedule(){
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(maybeMeasure, 30);
+    }
+    if (typeof MutationObserver !== "undefined") {
+      var mo = new MutationObserver(schedule);
+      mo.observe(img, { attributes: true, attributeFilter: ["src", "class"] });
+      if (sample) mo.observe(sample, { attributes: true, attributeFilter: ["class"] });
+    }
+  } catch (e) { /* the gate must never break the flow it guards */ }
+})();
+</script></body>
 </html>
