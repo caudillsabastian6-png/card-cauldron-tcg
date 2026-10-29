@@ -475,6 +475,12 @@
   .cc-drop-list{display:none;}
   @media (prefers-reduced-motion: reduce){ .cc-qcard,.cc-opt{animation:none !important;} }
   .calm .cc-qcard,.calm .cc-opt{animation:none !important;}
+  /* ---------- leaderboard lists: gold box, centered, bold italic (owner Oct 29) ---------- */
+  .cc-lb{list-style:none; margin:14px auto 4px; padding:14px 16px; max-width:430px; border:3px solid #f0b23e; border-radius:1.2rem; background:#2b2210; box-shadow:0 0 0 2px rgba(240,178,62,.25), 0 6px 18px rgba(0,0,0,.45); text-align:center;}
+  .cc-lb li{font-size:19px; font-weight:800; font-style:italic; color:#fff8e7; line-height:1.35; padding:7px 4px; letter-spacing:.2px;}
+  .cc-lb li + li{border-top:1px solid rgba(240,178,62,.35);}
+  .cc-lb li .lbrk{color:#ffd97a; font-weight:900; font-style:normal; text-shadow:0 1px 6px rgba(240,178,62,.45);}
+  .cc-lb li.lb-first{font-size:22px; color:#ffd97a;}
 </style>
 </head>
 <body>
@@ -1184,7 +1190,7 @@
     <div class="card mt"><h3>Global board — live</h3>
     <p class="small dim" id="opGlobalStatus">Pick a game from the dropdown, then its top scores load live from the backend.</p>
     <div id="opLbPicker" style="margin-top:10px;"></div>
-    <ol id="opGlobalTop" style="text-align:left;margin-top:12px;"></ol>
+    <ol id="opGlobalTop" class="cc-lb" style="display:none;"></ol>
     <p class="small dim">Play a game, and when you finish, post your score from the end screen — it will appear here, by display name only.</p></div>
     <div class="card mt"><h3>Your scores this visit</h3>
     <p id="opLocalBoard">Play a game and your best score for this visit will show here.</p>
@@ -2030,7 +2036,7 @@ function loadTotalBoard(){
     st.textContent = "Total leaderboard — most points from all games combined, at the top:";
     var first = rows[0];
     var html = '<div style="border:3px solid #f0b23e;border-radius:1.2rem;padding:14px;background:#2b2210;margin-bottom:10px;"><p style="font-size:22px;font-weight:900;margin:0;">#1 '+first.name+' — '+first.total+'</p><p class="small dim" style="margin:6px 0 0;">Top total player, in the gold box.</p></div>';
-    if(rows.length>1){ html += '<ol style="text-align:left;margin-top:10px;">' + rows.slice(1).map(function(r,i){ return "<li>#"+(i+2)+" "+r.name+" — "+r.total+"</li>"; }).join("") + "</ol>"; }
+    if(rows.length>1){ html += '<ol class="cc-lb">' + rows.slice(1).map(function(r,i){ return "<li><span class=\"lbrk\">#"+(i+2)+"</span> "+r.name+" — "+r.total+"</li>"; }).join("") + "</ol>"; }
     box.innerHTML = html;
   }).catch(function(){ st.textContent = "Total leaderboard is offline right now — try again later."; });
 }
@@ -2042,10 +2048,10 @@ function loadGlobalBoard(game){
   if(!st || !top) return; st.textContent = "Loading top scores for " + game + "…"; top.innerHTML = "";
   fetch(API_BASE + "/leaderboard/top?game=" + encodeURIComponent(game) + "&limit=10").then(function(r){ return r.json(); }).then(function(d){
     var list = d.scores || [];
-    if(!list.length){ st.textContent = "No global scores yet for this game — be the first! Play it and post from the end screen."; return; }
+    if(!list.length){ top.style.display = "none"; st.textContent = "No global scores yet for this game — be the first! Play it and post from the end screen."; return; }
     st.textContent = "Top scores for " + game + ", live from the backend:";
-    top.innerHTML = list.map(function(s,i){ return "<li>#"+(i+1)+" "+String(s.name||"Anonymous")+" — "+s.score+"</li>"; }).join("");
-  }).catch(function(){ st.textContent = "Leaderboard is offline right now — try again later."; });
+    top.style.display = "block"; top.innerHTML = list.map(function(s,i){ return "<li"+(i===0?" class=\"lb-first\"":"")+"><span class=\"lbrk\">#"+(i+1)+"</span> "+String(s.name||"Anonymous")+" — "+s.score+"</li>"; }).join("");
+  }).catch(function(){ top.style.display = "none"; st.textContent = "Leaderboard is offline right now — try again later."; });
 }
 function endBoardInit(){
   var board = document.getElementById('endBoard'); if(!board) return;
@@ -2056,7 +2062,7 @@ function endBoardInit(){
   try{ if(nameEl) nameEl.value = (typeof opProfile!=='undefined' && (opProfile.displayName || opProfile.username)) || ''; }catch(e){}
   function showTop(list){
     if(!list || !list.length){ topEl.innerHTML = '<li>No global scores yet for this game — be the first!</li>'; rankEl.textContent = 'You would be #1 with '+score+' — post it below to claim it.'; return; }
-    topEl.innerHTML = list.map(function(s,i){ return '<li>#'+(i+1)+' '+String(s.name||'Anonymous')+' — '+s.score+'</li>'; }).join('');
+    topEl.innerHTML = list.map(function(s,i){ return '<li'+(i===0?' class="lb-first"':'')+'><span class="lbrk">#'+(i+1)+'</span> '+String(s.name||'Anonymous')+' — '+s.score+'</li>'; }).join('');
     var above = list.filter(function(s){ return s.score > score; }).length;
     if(above < list.length){ rankEl.textContent = 'Where you are at: #'+(above+1)+' with '+score+'.'; }
     else { rankEl.textContent = 'Where you are at: outside the top '+list.length+' with '+score+' — post it and climb!'; }
@@ -2139,7 +2145,7 @@ function doneHTML(score, line){
     + '<button type="button" class="bubble-btn b-brightpink" id="againBtn"><span>▶ Play again</span></button>'
     + '<div class="card mt" id="endBoard" style="padding:12px;"><h3 style="font-size:18px;">🏆 Leaderboard — where you are at</h3>'
     + '<p id="endRank" style="font-weight:800;">Checking the leaderboard…</p>'
-    + '<ol id="endTop" style="text-align:left;margin:6px 0;"></ol>'
+    + '<ol id="endTop" class="cc-lb" style="margin:10px auto;"></ol>'
     + '<label style="display:block;font-weight:800;margin-top:6px;">Name or nickname<br><input id="endName" type="text" maxlength="40" placeholder="Type your name or nickname" style="width:100%;padding:8px;border-radius:10px;margin-top:4px;"></label>'
     + '<button type="button" class="bubble-btn b-gold" id="endSubmit" style="margin-top:6px;"><span>Post my score to the leaderboard</span></button>'
     + '<label style="display:block;font-weight:700;margin-top:6px;"><input type="checkbox" id="endAutoPost"> Post my future scores automatically too (checking this saves it — you can turn it off anytime)</label>'
