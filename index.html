@@ -879,6 +879,126 @@
   ]
 }
 </script>
+<style>
+/* ============================================================
+   NEON LINE SITE SKIN — Oct 29, 2026
+   Skin ONLY over the site's existing design system: the locked
+   Neon Line palette (Potion purple #b388ff, pink #ff7ac8, Ember
+   #ffb347, gold #ffd76a, cauldron green #57ffb0, plum-dark
+   #140e20→#0d0a14, cream #fff8e7) as glass fills + lit-line
+   borders + soft glows. No layout, content, link, media, form
+   or script changes — every rule below restyles surfaces the
+   base stylesheet already defines.
+   ============================================================ */
+:root{
+  --bg:#0d0a14; --bg2:#140e20;
+  --panel:rgba(24,17,48,.84); --panel2:rgba(31,24,64,.86);
+  --violet:#b388ff; --ember:#ffb347; --teal:#57ffb0;
+  --gold2:#ffd76a;
+  --line:rgba(255,215,106,.38); --cardline:rgba(179,136,255,.30);
+}
+::selection{background:#b388ff; color:#140e20}
+.web-topbar{
+  background:linear-gradient(180deg, rgba(27,16,48,.88), rgba(13,10,20,.94));
+  border-bottom:1.5px solid rgba(179,136,255,.55);
+  box-shadow:0 2px 14px rgba(179,136,255,.16), 0 2px 12px rgba(0,0,0,.5);
+}
+.brand{text-shadow:0 0 10px rgba(179,136,255,.45)}
+.store-btn{
+  background:linear-gradient(180deg,#ffd76a,#ffb347);
+  box-shadow:0 0 12px rgba(255,215,106,.45), 0 6px 16px rgba(0,0,0,.45);
+}
+.web-menu-panel{
+  background:rgba(20,14,32,.96); border:1.5px solid rgba(255,215,106,.55);
+  box-shadow:0 0 16px rgba(255,215,106,.22), 0 12px 30px rgba(0,0,0,.55);
+}
+.web-bg-btn[aria-pressed="true"]{
+  background:rgba(179,136,255,.16);
+  box-shadow:inset 0 0 0 1.5px rgba(179,136,255,.55), 0 0 8px rgba(179,136,255,.25);
+}
+.web-dock{
+  background:rgba(20,14,32,.92); border:1.5px solid rgba(179,136,255,.55);
+  box-shadow:0 0 14px rgba(179,136,255,.28), 0 10px 26px rgba(0,0,0,.6);
+}
+.btn{
+  background:linear-gradient(180deg, rgba(179,136,255,.16), rgba(20,14,32,.55));
+  border:1.5px solid rgba(179,136,255,.7); color:#fff8e7;
+  box-shadow:0 0 10px rgba(179,136,255,.4), inset 0 0 14px rgba(179,136,255,.09), 0 8px 20px rgba(0,0,0,.55);
+  text-shadow:0 0 8px rgba(179,136,255,.3), 0 2px 5px rgba(0,0,0,.9);
+}
+.btn-gold{
+  background:linear-gradient(105deg,#ffe9a8 0%,#ffd76a 38%,#ffb347 72%,#ffd76a 100%);
+  border-color:#ffd76a; color:#221503;
+  box-shadow:0 0 16px rgba(255,215,106,.55), inset 0 0 10px rgba(255,255,255,.25), 0 8px 20px rgba(0,0,0,.55);
+  text-shadow:none;
+}
+.btn-ghost{
+  background:rgba(20,14,32,.6); border-color:rgba(207,196,232,.55); color:#fff8e7;
+  box-shadow:0 0 9px rgba(179,136,255,.28), inset 0 0 14px rgba(207,196,232,.06), 0 8px 20px rgba(0,0,0,.55);
+}
+.soundcard,.qcard,.linkcard,.crew-card,.rate-card,.cardbox,.review,.tile,.cat,
+.cal-item,.cauldron-panel,.hon-card,.motion-card,.packbox,.slab,.fakefig,.grader,
+.qrbox,.cfg-item,.drop-alert,.odds-wrap,.wick-entry,.human-rail{
+  border-color:rgba(179,136,255,.45);
+  box-shadow:0 0 10px rgba(179,136,255,.18), inset 0 0 18px rgba(179,136,255,.05), 0 12px 26px rgba(0,0,0,.5);
+}
+.sec-head h2{text-shadow:0 0 14px rgba(179,136,255,.35), 0 2px 6px rgba(0,0,0,.8)}
+input,textarea,select{
+  background:rgba(13,10,20,.75); border:1.5px solid rgba(179,136,255,.5); color:#fff8e7;
+  box-shadow:inset 0 0 10px rgba(179,136,255,.06);
+}
+input:focus,textarea:focus,select:focus{
+  border-color:#ffd76a; outline:none;
+  box-shadow:0 0 0 3px rgba(255,215,106,.3), 0 0 12px rgba(255,215,106,.3);
+}
+#soundToggle{
+  border:1.5px solid rgba(255,215,106,.6);
+  box-shadow:0 0 14px rgba(255,215,106,.3), 0 12px 30px rgba(0,0,0,.5);
+}
+footer{
+  border-top:1.5px solid rgba(179,136,255,.5);
+  box-shadow:0 -6px 24px rgba(179,136,255,.14);
+}
+.ref-banner{box-shadow:0 0 16px rgba(255,215,106,.35), 0 8px 20px rgba(0,0,0,.5)}
+@media print{#ccScrollBg{display:none !important}}
+/* Homepage lyrics fold (used on index only) */
+.lyrics-fold > summary{
+  display:block; cursor:pointer; list-style:none;
+  text-shadow:0 0 10px rgba(179,136,255,.3);
+}
+.lyrics-fold > summary::-webkit-details-marker{display:none}
+.lyrics-fold .fold-hint{
+  font-size:.68em; color:#b388ff; letter-spacing:.08em; font-weight:700;
+  text-shadow:0 0 8px rgba(179,136,255,.4);
+}
+.lyrics-fold[open ] > summary{margin-bottom:.5rem}
+</style>
+<style>
+/* ============================================================
+   HOMEPAGE TIGHTENING — Oct 29, 2026 (index only)
+   Pure-air cuts: hero height/padding + section padding.
+   The mobile hero compaction in the base stylesheet
+   (@media max-width:640px) is left exactly as it was.
+   ============================================================ */
+@media (min-width:641px){
+  .hero{min-height:84svh; padding-top:4.2rem; padding-bottom:3rem}
+}
+section:not(#binderlabels){
+  padding-top:clamp(2.3rem,6vw,4.2rem);
+  padding-bottom:clamp(2.3rem,6vw,4.2rem);
+}
+.soundcard{margin-top:1.4rem}
+.anthem-extras{margin-top:1rem}
+/* Follow-up folds — Oct 29, 2026 (index only): Reviews + Calendar
+   behind tap-to-open expanders, same pattern as the lyrics fold. */
+.sec-fold > summary{display:block; cursor:pointer; list-style:none}
+.sec-fold > summary::-webkit-details-marker{display:none}
+.sec-fold .fold-hint-line{margin:.45rem 0 0}
+.sec-fold .fold-hint{
+  font-size:.68em; color:#b388ff; letter-spacing:.08em; font-weight:700;
+  text-shadow:0 0 8px rgba(179,136,255,.4);
+}
+</style>
 </head>
 <body>
 
@@ -1043,12 +1163,14 @@
 
   <!-- ============ WHAT BUYERS SAY ============ -->
   <section id="reviews">
-    <div class="sec-head">
+    <details class="sec-fold">
+    <summary class="sec-head">
       <div class="num">// WORD OF MOUTH</div>
       <h2>What buyers <em>say</em></h2>
       <p>Real feedback from real orders, copied word for word from our eBay feedback page.</p>
       <p class="reviews-score">98.1% positive · feedback score 78 on eBay</p>
-    </div>
+      <p class="fold-hint-line"><span class="fold-hint">— TAP TO OPEN ▾</span></p>
+    </summary>
     <div class="reviews-grid">
       <figure class="review">
         <blockquote><p>The communication with the seller was excellent. The shipping was done pristinely and the packaging was done so carefully. The card quality was exactly as described and came to me when I actually needed it. I appreciate that very much.</p></blockquote>
@@ -1086,15 +1208,18 @@
     <div class="reviews-more">
       <a href="https://www.ebay.com/fdbk/feedback_profile/buckeyebinder" target="_blank" rel="noopener">Read them all on eBay ↗</a>
     </div>
+    </details>
   </section>
 
   <!-- ============ RELEASE CALENDAR ============ -->
   <section id="calendar">
-    <div class="sec-head pop">
+    <details class="sec-fold">
+    <summary class="sec-head pop">
       <div class="num">// 08 — NEW-RELEASE INTAKE CALENDAR</div>
       <h2>What's <em>landing next</em></h2>
       <p>The releases we're covering, and how. Everything we sell from a new set is <b>opened from our own sealed product</b> and scanned before it lists — so coverage lands release week, not release minute.</p>
-    </div>
+      <p class="fold-hint-line"><span class="fold-hint">— TAP TO OPEN ▾</span></p>
+    </summary>
     <div class="cal-list">
       <div class="cal-item pop">
         <div class="cal-date">Nov 6<small>2026</small></div>
@@ -1122,6 +1247,7 @@
       </div>
     </div>
     <p class="byline">Kept by Index 🗂️ — dates are the announced release dates; if a release moves, this page moves with it. Updated October 21, 2026.</p>
+    </details>
   </section>
 
   <!-- ============ DROP-DAY COUNTDOWN ============ -->
@@ -1168,86 +1294,15 @@
     <p class="byline">Timed by Ziggy ⚡ — dates are the announced release dates, the same ones on the intake calendar above; if a release moves, the timers move with it.</p>
   </section>
 
-  <!-- ============ SOUNDS LIBRARY ============ -->
+  <!-- ============ SOUND VAULT (now its own page: sounds.html) ============ -->
   <section id="sounds">
-    <div class="sec-head pop">
-      <div class="num">// 13 — THE SOUND VAULT</div>
-      <h2>The Card Cauldron <em>Anthem</em></h2>
-      <p>Our theme, free to take with you. Play it here, download the MP3, drop it under your Shorts and pack-rip videos — or set it as your ringtone and let the whole room know a pull video is about to start.</p>
-    </div>
     <div class="soundcard pop">
-      <h3>🎵 The Card Cauldron Anthem</h3>
-      <p class="meta">MP3 · 2:12 · OUR OWN THEME — RECORDED FOR THE SHOP</p>
-      <audio id="anthemPlayer" controls preload="metadata" src="assets/cauldron-anthem.mp3">Your browser can't play the anthem inline — use the download button below instead.</audio>
+      <h3>🎵 The Sound Vault</h3>
+      <p>Our anthem, the Shorts, and the words — all in one room.</p>
       <div>
-        <a class="btn btn-gold" href="assets/cauldron-anthem.mp3" download="card-cauldron-anthem.mp3">⬇ Download the MP3</a>
-      </div>
-      <p><b>For Shorts &amp; videos:</b> use it anywhere — no strings, no claim forms. Just tag <b>@CardCauldronTCG</b> so we can hear where it travels.</p>
-      <p><b>As a ringtone:</b> it's a plain MP3 — on Android it drops straight in through Settings → Sound. On iPhone, pull the file into GarageBand's ringtone flow.</p>
-      <p><b>While you shop:</b> the 🔊 Cauldron Sound button in the corner plays this same anthem while you browse — off until you tap it, always.</p>
-    </div>
-
-    <div class="anthem-extras pop">
-      <h3 class="ae-title">📜 The Words — Sing Along</h3>
-      <div class="lyrics">
-        <h4>Hook</h4>
-        <p>Card Cauldron cookin', yeah we stirrin' up the pot,<br>
-        Singles, slabs and sealed — tell me what you got,<br>
-        Buckeye Binder on the grind and we never gonna stop,<br>
-        From Van Wert to your doorstep, we risin' to the top.</p>
-        <h4>Verse 1 — The Shop</h4>
-        <p>Step into the Cauldron, take a look at what we sellin',<br>
-        Holos by the hundreds, every pull is so compellin',<br>
-        Reverse holos shinin', full arts flexin' hard,<br>
-        Illustration rares — yeah we dealin' every card.<br>
-        PSA tens on the shelf lookin' clean,<br>
-        CGC, BGS — graded slabs, know what I mean,<br>
-        Sealed boxes stacked, ETBs on deck,<br>
-        30th Celebration — better come correct.<br>
-        Mystery packs loaded with the heat inside,<br>
-        Holo every three, take the bulk for a ride,<br>
-        Dollar forty-nine get you started on the chase,<br>
-        Best offers on — put a smile on your face.</p>
-        <h4>Verse 2 — Sabastian</h4>
-        <p>Yeah it's Sabastian, started out with nothin' in my pocket,<br>
-        Turned a binder full of cardboard into profit — watch me rock it,<br>
-        Every night I'm listin', every morning I'm shippin',<br>
-        Envelope in the mailbox, yeah the orders keep on drippin'.<br>
-        Seventy-two sales and we climbin' to five hundred,<br>
-        Milestone giveaways — yeah the people really want it,<br>
-        For my son JJ, that's the reason that I grind,<br>
-        Every dollar got a purpose, leave the struggle behind.</p>
-        <h4>Verse 3 — Hobbies</h4>
-        <p>Off the clock I'm printin' on the Ender, layer after layer,<br>
-        Modded Switch in my hand, I'm a legendary player,<br>
-        In the garden with the compost, greenest thumb in town,<br>
-        Smokey and Zoey on the couch, yeah my cats hold it down,<br>
-        Bumpin' Eminem and Weezer while I'm sortin' through the stacks,<br>
-        Mike on the playlist when I'm packin' up the packs,<br>
-        Ohio born and raised, Van Wert is where I stay,<br>
-        Card Cauldron forever — we gon' make it one day.</p>
-        <h4>Outro</h4>
-        <p>Smash that subscribe button, join the Card Cauldron fam,<br>
-        Please subscribe to the channel — that's the master plan,<br>
-        Milestone rewards and giveaways in every drop,<br>
-        Free gifts at fifty, a hundred, we ain't gonna stop,<br>
-        Grand prize an ETB for one lucky name,<br>
-        Five hundred sales the goal — come and play the game.</p>
-      </div>
-      <h3 class="ae-title">🎬 The Anthem Shorts</h3>
-      <p class="ae-note">The anthem cut for vertical — the two Cauldron Shorts, straight from Juno's sound desk. Same song as the player above; press play and hear fifteen seconds turn into the whole thing.</p>
-      <div class="shorts-row">
-        <figure>
-          <video controls preload="none" playsinline src="assets/anthem-short-1.mp4">Your browser can't play this Short inline.</video>
-          <figcaption>Cauldron Short No. 1</figcaption>
-        </figure>
-        <figure>
-          <video controls preload="none" playsinline src="assets/anthem-short-2.mp4">Your browser can't play this Short inline.</video>
-          <figcaption>Cauldron Short No. 2</figcaption>
-        </figure>
+        <a class="btn btn-gold" href="sounds.html">Enter the Sound Vault →</a>
       </div>
     </div>
-    <p class="byline">From Juno's 🎧 sound desk — the first shelf of the vault; more shop sounds land here as they're recorded.</p>
   </section>
 
 </main>
@@ -1266,6 +1321,7 @@
   </nav>
   <p><a href="/about.html#contact">Need help? Talk to a human →</a></p>
   <p><a href="/privacy.html">Privacy Policy</a></p>
+  <p><a href="/sounds.html">🎵 The Sound Vault</a></p>
   <p>Brewed fresh daily in Van Wert, Ohio. Every purchase supports a real collector — and milestone customers win real prizes.</p>
   <p>Sound: our own Card Cauldron Anthem — off until you tap.</p>
   <p>Pokémon and all respective names are trademark &amp; © of Nintendo, Creatures Inc. and GAME FREAK inc. This is an independent reseller shop, not affiliated with Nintendo or The Pokémon Company.</p>
@@ -1765,6 +1821,235 @@
       rd.readAsDataURL(f);
     }
   });
+})();
+</script>
+<script>
+/* SCROLL BACKGROUND — Oct 29 (website port, decoration only)
+   A fixed canvas that paints a neon wireframe world (perspective grid floor
+   + floating wireframe polygons) behind the app. It creates ONLY its own
+   canvas: it reads window.scrollY, touches no app state, no storage, and no
+   existing DOM node beyond inserting that canvas. Palette = the locked Neon
+   Line hexes only. Remove this one block (or call window.__ccScrollBg.destroy())
+   and the demo is exactly what it was without it. */
+(function () {
+  'use strict';
+  try {
+    if (window.__ccScrollBg && window.__ccScrollBg.destroy) { window.__ccScrollBg.destroy(); }
+  } catch (e) {}
+  try { init(); } catch (e) { /* decoration must never break the app */ }
+
+  function init() {
+    /* ---------- tuning constants ---------- */
+    var SHAPE_COUNT = 20;      // floating wireframe polygons
+    var GRID_ROWS = 14;        // horizontal floor lines
+    var GRID_COLS = 18;        // vertical fan lines (drawn -9..+9)
+    var DPR_CAP = 2;           // devicePixelRatio cap for phone GPUs
+    var PARALLAX = 0.35;       // shape travel per scrolled px, scaled by depth
+    var GRID_SCROLL = 0.0016;  // floor-line travel per scrolled px
+    var SMOOTH = 7.5;          // lerp rate toward the real scroll position (per sec)
+    var IDLE_DRIFT = 0.010;    // grid travel per second when not scrolling
+    var IDLE_RISE = 4;         // shape rise per second at depth 1
+    var BASE_ALPHA = 0.88;     // plum wash opacity (logo backdrop ghosts through)
+    var HORIZON = 0.60;        // horizon height, fraction of viewport height
+
+    /* ---------- locked palette (Neon Line theme) ---------- */
+    var PALETTE = ['#b388ff', '#ff7ac8', '#ffb347', '#ffd76a', '#57ffb0'];
+    var GRID_A = '#57ffb0';    // cauldron green — floor lines
+    var GRID_B = '#b388ff';    // Potion purple — fan lines
+    var HORIZON_C = '#ffb347'; // Ember — horizon line
+    var BASE_TOP = '#140e20';  // plum-dark base (matches the neon skin)
+    var BASE_MID = '#0d0a14';
+    var BASE_BOT = '#08060e';
+
+    var reduceMotion = false;
+    try { reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) {}
+
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext && canvas.getContext('2d');
+    if (!ctx) { return; }
+    canvas.id = 'ccScrollBg';
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;';
+
+    /* Layering (website port): the page's own ambient layers
+       (.glowfield, #embers) are position:fixed at z-index 0, and all
+       content sits in main/footer (z-index 1) or chrome (topbar 50,
+       dock 55, sound toggle 56, referral banner 60). The canvas goes
+       immediately AFTER .glowfield, so it paints BELOW #embers: the
+       owner's picked ambient effects (flames / bubbles / stars /
+       ember sparks / waves / mist) stay fully on top, untouched,
+       while the wireframe world glows through behind the page. It is
+       drawn translucent (BASE_ALPHA), and pointer-events:none means
+       it can never take a tap. */
+    var anchor = document.querySelector('.glowfield');
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(canvas, anchor.nextSibling);
+    } else if (document.body) {
+      document.body.insertBefore(canvas, document.body.firstChild);
+    } else {
+      return;
+    }
+
+    var W = 0, H = 0, baseGrad = null;
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+      W = window.innerWidth || 0;
+      H = window.innerHeight || 0;
+      canvas.width = Math.max(1, Math.round(W * dpr));
+      canvas.height = Math.max(1, Math.round(H * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      baseGrad = ctx.createLinearGradient(0, 0, 0, H);
+      baseGrad.addColorStop(0, BASE_TOP);
+      baseGrad.addColorStop(0.55, BASE_MID);
+      baseGrad.addColorStop(1, BASE_BOT);
+      if (reduceMotion) { drawFrame(); }
+    }
+
+    /* Deterministic pseudo-random: the same world on every load. */
+    var seed = 20261029;
+    function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+    var shapes = [];
+    for (var i = 0; i < SHAPE_COUNT; i++) {
+      shapes.push({
+        x: rnd(), y: rnd(),
+        z: 0.25 + rnd() * 0.75,              // depth: 0.25 far .. 1 near
+        size: 16 + rnd() * 58,
+        sides: [3, 4, 6][Math.floor(rnd() * 3)],
+        rot: rnd() * Math.PI * 2,
+        spin: (rnd() - 0.5) * 0.35,
+        sway: rnd() * Math.PI * 2,
+        color: PALETTE[Math.floor(rnd() * PALETTE.length)]
+      });
+    }
+
+    var target = window.scrollY || 0;
+    var current = target, prev = target, vel = 0;
+    var t = 0, last = 0, raf = 0, running = false, destroyed = false;
+
+    function wrap(v, m) { return ((v % m) + m) % m; }
+
+    /* Glow without shadowBlur (too slow on phones): a wide low-alpha pass
+       under a thin bright pass, composited additively by the caller. */
+    function strokeLine(x1, y1, x2, y2, color, alpha, width) {
+      ctx.globalAlpha = alpha * 0.22;
+      ctx.lineWidth = width * 4;
+      ctx.strokeStyle = color;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = width;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    }
+
+    function drawGrid(boost) {
+      var horizon = H * HORIZON, cx = W / 2, i, p, y;
+      var travel = current * GRID_SCROLL + t * IDLE_DRIFT;
+      for (i = 0; i < GRID_ROWS; i++) {
+        p = wrap(i / GRID_ROWS + travel, 1);
+        y = horizon + (H - horizon) * p * p;
+        strokeLine(0, y, W, y, GRID_A, (0.05 + p * 0.42) * boost, 0.6 + p * 1.1);
+      }
+      for (i = -GRID_COLS / 2; i <= GRID_COLS / 2; i++) {
+        strokeLine(cx, horizon, cx + i * (W * 0.16), H, GRID_B, 0.26 * boost, 1);
+      }
+      strokeLine(0, horizon, W, horizon, HORIZON_C, 0.55 * boost, 1.4);
+    }
+
+    function drawShape(s, boost) {
+      var span = H * 1.5;
+      var y = wrap(s.y * span - current * PARALLAX * s.z - t * IDLE_RISE * s.z, span) - H * 0.25;
+      var x = s.x * W + Math.sin(t * 0.3 + s.sway) * 14 * s.z;
+      var r = s.size * (0.35 + s.z * 0.65);
+      var stretch = 1 + Math.min(Math.abs(vel) * 0.00012, 0.5) * s.z;
+      var a = (0.16 + s.z * 0.5) * boost;
+      var rot = s.rot + t * s.spin;
+      var pts = [], i, ang;
+      for (i = 0; i < s.sides; i++) {
+        ang = rot + (i / s.sides) * Math.PI * 2;
+        pts.push([Math.cos(ang) * r, Math.sin(ang) * r]);
+      }
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(1, stretch);
+      ctx.beginPath();
+      for (i = 0; i < pts.length; i++) {
+        if (i) { ctx.lineTo(pts[i][0], pts[i][1]); } else { ctx.moveTo(pts[i][0], pts[i][1]); }
+      }
+      ctx.closePath();
+      ctx.globalAlpha = a * 0.07;                    // glass fill
+      ctx.fillStyle = s.color;
+      ctx.fill();
+      ctx.strokeStyle = s.color;
+      ctx.globalAlpha = a * 0.25; ctx.lineWidth = 4.5 * s.z; ctx.stroke();  // glow pass
+      ctx.globalAlpha = a;        ctx.lineWidth = 1.1;       ctx.stroke();  // core pass
+      ctx.restore();
+    }
+
+    function drawFrame() {
+      if (!baseGrad || !W || !H) { return; }
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalAlpha = BASE_ALPHA;
+      ctx.fillStyle = baseGrad;
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.lineCap = 'round';
+      var boost = 1 + Math.min(Math.abs(vel) * 0.0004, 0.7);
+      drawGrid(boost);
+      for (var i = 0; i < shapes.length; i++) { drawShape(shapes[i], boost); }
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function frame(now) {
+      if (destroyed) { return; }
+      if (!last) { last = now; }
+      var dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      t += dt;
+      target = window.scrollY || 0;
+      current += (target - current) * (1 - Math.exp(-SMOOTH * dt));  // glide, never snap
+      vel = dt > 0 ? (current - prev) / dt : 0;
+      prev = current;
+      drawFrame();
+      if (running) { raf = requestAnimationFrame(frame); }
+    }
+    function start() {
+      if (running || destroyed || reduceMotion) { return; }
+      running = true; last = 0;
+      raf = requestAnimationFrame(frame);
+    }
+    function stop() {
+      running = false;
+      if (raf) { cancelAnimationFrame(raf); }
+      raf = 0;
+    }
+    function onVis() { if (document.hidden) { stop(); } else { start(); } }
+    function onResize() { resize(); }
+
+    window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVis);
+
+    window.__ccScrollBg = {
+      canvas: canvas,
+      destroy: function () {
+        if (destroyed) { return; }
+        destroyed = true;
+        stop();
+        window.removeEventListener('resize', onResize);
+        document.removeEventListener('visibilitychange', onVis);
+        if (canvas.parentNode) { canvas.parentNode.removeChild(canvas); }
+        if (window.__ccScrollBg && window.__ccScrollBg.canvas === canvas) {
+          try { delete window.__ccScrollBg; } catch (e) { window.__ccScrollBg = undefined; }
+        }
+      }
+    };
+
+    resize();
+    if (reduceMotion) { drawFrame(); }        // one static frame, no loop
+    else if (!document.hidden) { start(); }   // pause while the tab is hidden
+  }
 })();
 </script>
 </body>
