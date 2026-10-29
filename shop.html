@@ -821,6 +821,15 @@
   .web-dock a:hover{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#221503;}
   body{padding-bottom:76px;}
 
+  /* ---------- CC-DOCKFIX 2026-10-29: two-stack dock, full word labels (<=760px) ----------
+     Owner order Oct 29: keep the icons, show the whole word, two rows.
+     Desktop (>760px) keeps the single-row dock; its labels already fit. */
+  @media (max-width:760px){
+    .web-dock{flex-wrap:wrap;border-radius:26px;row-gap:.3rem}
+    .web-dock a{flex:1 1 22%;font-size:.8rem;padding:.55rem .05rem;overflow:visible;text-overflow:clip}
+    body{padding-bottom:128px}
+  }
+
   /* ---------- shop compact: less scroll, denser tiles ---------- */
   section{padding:clamp(1.5rem,4vw,2.5rem) clamp(1rem,4vw,2.5rem);}
   .chips{margin:1rem 0 .8rem;}
