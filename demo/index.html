@@ -150,6 +150,8 @@
   .bubble-btn .sub{font-family:Georgia,"Times New Roman",serif; text-transform:none; letter-spacing:0; font-size:14.5px; font-weight:700; opacity:.92; line-height:1.35; text-shadow:0 1px 3px rgba(0,0,0,.8);}
   .b-sky{background:linear-gradient(180deg,#71879f 0%,#46586e 52%,#2e3d4f 100%); color:#fff8e7;}
   .b-pink{background:linear-gradient(180deg,#ff9ec2 0%,#f06292 52%,#d6336c 100%); color:#fff8e7;}
+  .b-brightpink{background:linear-gradient(180deg,#ff7ac0 0%,#ff2e88 52%,#e6006e 100%); color:#ffffff;}
+  .b-red{background:linear-gradient(180deg,#ff6b5e 0%,#e53935 52%,#b71c1c 100%); color:#ffffff;}
   .b-lemon{background:linear-gradient(180deg,#ffe878 0%,#ffd93d 52%,#e0a916 100%); color:var(--gold-ink); text-shadow:0 1px 0 rgba(255,255,255,.35);}
   .b-lime{background:linear-gradient(180deg,#9ccb8f 0%,#5f9e52 52%,#3f7038 100%); color:#fff8e7;}
   .b-gold{background:linear-gradient(105deg,#ffe9a8 0%,#ffc53d 38%,#c99312 72%,#ffd76a 100%); color:var(--gold-ink); text-shadow:0 1px 0 rgba(255,255,255,.35);}
@@ -1502,6 +1504,14 @@ function renderCaptureStep(){
 function capPhotoReady(){
   capHas = true;
   $("capEmpty").classList.add("hidden");
+  /* On-scan label: shows what was just captured, so the scanner can see the
+     label right away. This is a capture label only — NOT a genuine/fake
+     verdict, NOT a grade. Name/number stay UNKNOWN unless the scanner typed
+     them; Potion finalizes labels later, clear only, else UNKNOWN. */
+  var _lbl = document.getElementById("capLabelLine");
+  if(!_lbl){ _lbl = document.createElement("p"); _lbl.id = "capLabelLine"; _lbl.style.cssText = "text-align:center;font-weight:800;margin-top:10px;background:#2a2138;border:1px solid #f5c542;border-radius:12px;padding:10px;"; var _got = $("capGot"); if(_got && _got.parentNode) _got.parentNode.insertBefore(_lbl, _got.nextSibling); }
+  var _side = (typeof capCat !== "undefined" && capCat.steps && capCat.steps[capStep]) ? capCat.steps[capStep].cap : "photo";
+  _lbl.textContent = "Labelled: " + _side + " photo captured — name: UNKNOWN, number: UNKNOWN, pool: " + (poolOptinYes ? "YES, pending pool" : "NO, on-screen only") + " — not a verdict.";
   $("capGot").textContent = "POP! Got it. 🎉";
   var step = capCat.steps[capStep];
   $("capTake").innerHTML = "<span>"+step.take.replace("Take","Retake")+"</span>";
@@ -1529,9 +1539,25 @@ function capStartLive(openPickerOnFail){
     navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(st){ capStream=st; var v=$("capVideo"); v.srcObject=st; v.style.display="block"; v.play(); capLive=true; $("capTake").innerHTML="<span>\uD83D\uDCF8 Snap this photo</span>"; var g=$("capGot"); if(g) g.textContent="Live camera is on — line the card up inside the frame, then tap Snap."; }).catch(function(){ var g=$("capGot"); if(g) g.textContent="Camera did not start here — tap Take the photo to open your phone camera picker, or use Upload a file. If nothing opens, open this demo in Chrome."; if(openPickerOnFail) $("capCamFile").click(); });
   } else { var g2=$("capGot"); if(g2) g2.textContent="Camera is not available in this browser — tap Take the photo to open your phone camera picker, or use Upload a file."; if(openPickerOnFail) $("capCamFile").click(); }
 }
+var poolOptinAsked = false, poolOptinYes = false;
+function poolOptinShow(next){
+  if(poolOptinAsked){ next(); return; }
+  poolOptinAsked = true;
+  var pop = document.createElement("div");
+  pop.id = "poolOptinPop";
+  pop.style.cssText = "position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px;";
+  pop.innerHTML = '<div style="background:#2a2138;border:2px solid #f5c542;border-radius:16px;padding:20px;max-width:360px;text-align:center;color:#fff8e7;">'
+    + '<h3 style="color:#f5c542;">Help the pool?</h3>'
+    + '<p>Send this scan to the pending pool, anonymized, deletable.<br>Yes = send to pool.<br>No = just check my card, don\'t save anything.</p>'
+    + '<p><a href="/pool-privacy.html" target="_blank" rel="noopener" style="color:#f5c542;">Read the pool privacy agreement</a></p>'
+    + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;"><button type="button" class="bubble-btn b-gold" id="poolYes"><span>Yes, send to pool</span></button><button type="button" class="bubble-btn b-white" id="poolNo"><span>No, just check</span></button></div></div>';
+  document.body.appendChild(pop);
+  document.getElementById("poolYes").addEventListener("click", function(){ poolOptinYes = true; pop.remove(); next(); });
+  document.getElementById("poolNo").addEventListener("click", function(){ poolOptinYes = false; pop.remove(); next(); });
+}
 $("capTake").addEventListener("click", function(){
   if(capLive){ var v=$("capVideo"); var c=document.createElement("canvas"); c.width=v.videoWidth||640; c.height=v.videoHeight||480; c.getContext("2d").drawImage(v,0,0,c.width,c.height); var img=$("capImg"); img.src=c.toDataURL("image/jpeg",0.85); img.alt=capCat.steps[capStep].cap+" — your photo (stays on your device)"; img.classList.remove("hidden"); $("capSample").classList.add("hidden"); capStopLive(); $("capTake").innerHTML="<span>"+capCat.steps[capStep].take+"</span>"; capPhotoReady(); return; }
-  capStartLive(true);
+  poolOptinShow(function(){ capStartLive(true); });
 });
 $("capContinueBtn").addEventListener("click", function(){
   var p=$("capContinuePop"); if(p) { p.hidden=true; p.style.display="none"; }
@@ -1975,6 +2001,38 @@ function endBoardInit(){
         noteEl.textContent = 'Could not post — leaderboard is offline. Your score is still saved for this visit.'; subEl.disabled = false;
       });
   }
+  /* Auto-post visibility: when auto-post is ON for the name in the box, hide the
+     post form (name box, Post button, checkbox) so future plays show only the
+     ON line + turn-off button. The form comes back only if auto-post is off
+     or the name changes. Checking the box itself saves auto-post — no extra
+     Post tap is needed to make it stick. */
+  function hidePostForm(onName){
+    try{
+      if(nameEl && nameEl.parentElement) nameEl.parentElement.style.display='none';
+      if(subEl) subEl.style.display='none';
+      var cb=document.getElementById('endAutoPost'); if(cb && cb.parentElement) cb.parentElement.style.display='none';
+      var ab=document.getElementById('endAutoOff'); if(ab) ab.style.display='inline-block';
+      if(noteEl) noteEl.textContent = 'Auto-post is ON for '+onName+' — this score and future scores post automatically. No Post tap needed.';
+    }catch(e){}
+  }
+  function showPostForm(){
+    try{
+      if(nameEl && nameEl.parentElement) nameEl.parentElement.style.display='block';
+      if(subEl) subEl.style.display='';
+      var cb=document.getElementById('endAutoPost'); if(cb && cb.parentElement) cb.parentElement.style.display='block';
+    }catch(e){}
+  }
+  try{
+    var autoCb = document.getElementById('endAutoPost');
+    if(autoCb) autoCb.addEventListener('change', function(){
+      if(!autoCb.checked) return;
+      var nm = (nameEl ? nameEl.value.trim() : '') || '';
+      if(!nm || nm==='Anonymous'){ noteEl.textContent = 'Type your name first, then check the box — auto-post needs a name to post under.'; autoCb.checked=false; return; }
+      opSetAutoPost(true, nm);
+      hidePostForm(nm);
+      doPost(nm, false);
+    });
+  }catch(e){}
   if(subEl) subEl.addEventListener('click', function(){
     var nm = (nameEl ? nameEl.value.trim() : '') || 'Anonymous';
     var wantAuto = false; try{ var cb = document.getElementById('endAutoPost'); wantAuto = !!(cb && cb.checked); }catch(e){}
@@ -1985,12 +2043,12 @@ function endBoardInit(){
      If the name box was changed to a different name, do NOT auto-post under the old name — ask again. */
   try{
     var autoBtn = document.getElementById('endAutoOff');
-    if(autoBtn) autoBtn.addEventListener('click', function(){ opSetAutoPost(false); noteEl.textContent = 'Auto-post turned off. Tap Post my score to post this score only.'; autoBtn.style.display='none'; var cb=document.getElementById('endAutoPost'); if(cb) cb.checked=false; });
+    if(autoBtn) autoBtn.addEventListener('click', function(){ opSetAutoPost(false); noteEl.textContent = 'Auto-post turned off. Tap Post my score to post this score only.'; autoBtn.style.display='none'; showPostForm(); var cb=document.getElementById('endAutoPost'); if(cb) cb.checked=false; });
     if(OP_AUTO_POST && OP_AUTO_POST_NAME && nameEl && nameEl.value.trim() === OP_AUTO_POST_NAME){
-      if(autoBtn) autoBtn.style.display='inline-block';
+      hidePostForm(OP_AUTO_POST_NAME);
       doPost(OP_AUTO_POST_NAME, true);
     } else if(OP_AUTO_POST && OP_AUTO_POST_NAME && nameEl && nameEl.value.trim() !== OP_AUTO_POST_NAME){
-      noteEl.textContent = 'Auto-post is saved for '+OP_AUTO_POST_NAME+'. Change the name back, or post this score by hand — a new name needs a new first Post tap.';
+      noteEl.textContent = 'Auto-post is saved for '+OP_AUTO_POST_NAME+'. Change the name back, or post this score by hand — a new name needs a new checkmark.';
     }
   }catch(e){}
 }
@@ -1998,19 +2056,19 @@ function doneHTML(score, line){
   lastGameScore = score;
   setTimeout(function(){ rewardsShowGameOnce(); }, 2000);
   setTimeout(endBoardInit, 0);
-  return '<div class="gdone"><p class="big" aria-hidden="true">🎉</p>'
-    + '<h3 style="font-size:25px;">Final score: '+score+'</h3>'
-    + '<p class="lead" style="font-size:16.5px;">'+line+'</p>'
-    + '<div class="card mt" id="endBoard"><h3>🏆 Leaderboard — where you are at</h3>'
+  return '<div class="gdone" style="gap:8px;margin-top:10px;"><p class="big" aria-hidden="true" style="font-size:32px;">🎉</p>'
+    + '<h3 style="font-size:21px;">Final score: '+score+'</h3>'
+    + '<p class="lead" style="font-size:15px;">'+line+'</p>'
+    + '<button type="button" class="bubble-btn b-brightpink" id="againBtn"><span>▶ Play again</span></button>'
+    + '<div class="card mt" id="endBoard" style="padding:12px;"><h3 style="font-size:18px;">🏆 Leaderboard — where you are at</h3>'
     + '<p id="endRank" style="font-weight:800;">Checking the leaderboard…</p>'
-    + '<ol id="endTop" style="text-align:left;"></ol>'
-    + '<label style="display:block;font-weight:800;margin-top:10px;">Name or nickname<br><input id="endName" type="text" maxlength="40" placeholder="Type your name or nickname" style="width:100%;padding:10px;border-radius:10px;margin-top:6px;"></label>'
-    + '<button type="button" class="bubble-btn b-gold" id="endSubmit" style="margin-top:10px;"><span>Post my score to the leaderboard</span></button>'
-    + '<label style="display:block;font-weight:700;margin-top:10px;"><input type="checkbox" id="endAutoPost"> Post my future scores automatically too (only after this first Post tap — you can turn it off anytime)</label>'
-    + '<button type="button" class="bubble-btn" id="endAutoOff" style="margin-top:8px;display:none;"><span>Auto-post is ON — turn it off</span></button>'
+    + '<ol id="endTop" style="text-align:left;margin:6px 0;"></ol>'
+    + '<label style="display:block;font-weight:800;margin-top:6px;">Name or nickname<br><input id="endName" type="text" maxlength="40" placeholder="Type your name or nickname" style="width:100%;padding:8px;border-radius:10px;margin-top:4px;"></label>'
+    + '<button type="button" class="bubble-btn b-gold" id="endSubmit" style="margin-top:6px;"><span>Post my score to the leaderboard</span></button>'
+    + '<label style="display:block;font-weight:700;margin-top:6px;"><input type="checkbox" id="endAutoPost"> Post my future scores automatically too (checking this saves it — you can turn it off anytime)</label>'
+    + '<button type="button" class="bubble-btn b-red" id="endAutoOff" style="margin-top:6px;display:none;"><span>⚠️ Auto-post is ON — turn it off</span></button>'
     + '<p class="small dim" id="endNote">Posting shows your name and score to everybody, nothing else. If you do not post, this score stays for this visit only.</p><p class="small dim">Tap “Post my score” even while it still says “Checking the leaderboard…” — posting works while the top list loads.</p></div>'
-    + '<p class="small dim">Scores are bragging rights only — they never touch your free checks.</p>'
-    + '<button type="button" class="bubble-btn b-pink" id="againBtn"><span>Play again</span></button></div>';
+    + '<p class="small dim">Scores are bragging rights only — they never touch your free checks.</p></div>';
 }
 function timersBag(){
   var ids = [], gen = 0;
@@ -2206,7 +2264,7 @@ function startBeat(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
   var LV = OP_BEAT_LEVELS[OP_BEAT_LEVEL-1]; var TOTAL = LV.total, TRAVEL = LV.travel, GAP = LV.gap, PERFECT = LV.perfect, ONBEAT = LV.onbeat, FIELD_H = 420, RING_Y = 90, beatClean = true;
   var bubbles = [], spawned = 0, score = 0, streak = 0, nextId = 1, finished = false;
-  var beatMusicOn = true;
+  var beatMusicOn = true, beatStep = 0, lastBeatAt = 0;
   function beatKick(){
     if(!soundOn || !beatMusicOn) return;
     var ctx = audioCtx(); if(!ctx) return;
@@ -2215,10 +2273,22 @@ function startBeat(){
       var o = ctx.createOscillator(), g = ctx.createGain();
       o.type = "sine"; o.frequency.setValueAtTime(130, t0);
       o.frequency.exponentialRampToValueAtTime(52, t0+0.2);
-      g.gain.setValueAtTime(0.16, t0); g.gain.exponentialRampToValueAtTime(0.001, t0+0.22);
+      g.gain.setValueAtTime(0.25, t0); g.gain.exponentialRampToValueAtTime(0.001, t0+0.22);
       o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0+0.24);
-      blip(1500, 2100, 0.05, 0.03, "sine");
+      blip(1500, 2100, 0.05, 0.06, "sine");
     }catch(e){}
+  }
+  /* Continuous, audible beat music (the old game only thumped once when a
+     bubble hit the ring — a low 130Hz kick phone speakers barely play, so
+     it sounded like no music at all). Now a kick + a melody note from this
+     level's own beat pattern plays on a steady tempo, every beatMs. */
+  function beatMusicTick(nowMs){
+    if(!soundOn || !beatMusicOn || finished) return;
+    if(nowMs - lastBeatAt < LV.beatMs) return;
+    lastBeatAt = nowMs; beatKick();
+    var notes = LV.notes || [523,659];
+    var f = notes[beatStep % notes.length]; beatStep++;
+    try{ var ctx = audioCtx(); if(!ctx) return; var t0 = ctx.currentTime; var o = ctx.createOscillator(), g = ctx.createGain(); o.type = "triangle"; o.frequency.setValueAtTime(f, t0); g.gain.setValueAtTime(0.08, t0); g.gain.exponentialRampToValueAtTime(0.001, t0+0.4); o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0+0.42); }catch(e){}
   }
   var vnow = 0, nextSpawn = 350; /* virtual clock, advanced by the tick cascade */
   var body = $("gameBeat-body");
@@ -2266,7 +2336,7 @@ function startBeat(){
   }
   function tick(){
     if(finished) return;
-    vnow += 50;
+    vnow += 50; beatMusicTick(vnow);
     if(spawned < TOTAL && vnow >= nextSpawn){ spawn(); nextSpawn = vnow + GAP; }
     var kept = [];
     bubbles.forEach(function(b){
@@ -2285,7 +2355,7 @@ function startBeat(){
   function checkEnd(){
     if(!finished && spawned >= TOTAL && bubbles.length === 0){
       finished = true; bag.clear(); gameCleanup = null;
-      var unlockMsg = ""; if(beatClean && OP_BEAT_LEVEL < 6 && OP_BEAT_LEVEL >= OP_BEAT_UNLOCKED){ OP_BEAT_UNLOCKED = OP_BEAT_LEVEL + 1; try{ localStorage.setItem("cc_demo_beat_unlocked", String(OP_BEAT_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_BEAT_UNLOCKED + " unlocked!"; opAddCoins(50); } else if(beatClean){ opAddCoins(50); }
+      var unlockMsg = ""; if(beatClean && OP_BEAT_LEVEL < 10 && OP_BEAT_LEVEL >= OP_BEAT_UNLOCKED){ OP_BEAT_UNLOCKED = OP_BEAT_LEVEL + 1; try{ localStorage.setItem("cc_demo_beat_unlocked", String(OP_BEAT_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_BEAT_UNLOCKED + " unlocked!"; opAddCoins(50); } else if(beatClean){ opAddCoins(50); }
       recordBest("beat", score);
       body.innerHTML = doneHTML(score, "You kept the beat floating!" + (beatClean ? " Clean finish! +50 coins (device-local only, never money)." : " Missed a bubble — no clean-finish unlock this run.") + unlockMsg);
       $("againBtn").addEventListener("click", function(){ popSnd(); startBeat(); });
@@ -2297,12 +2367,12 @@ function startBeat(){
 /* ================= 5. Pop Path ================= */
 function startPopPath(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var LEVELS = 3, TOLS = [52,40,28], FADES = [14000,11500,9000];
+  var LEVELS = 10, TOLS = [52,48,44,40,36,32,28,24,20,18], FADES = [16000,15000,14000,13000,12000,11000,10000,9000,8000,7000];
   var level = 0, total = 0, drawn = [], drawing = false, vnow = 0, note = null;
   var body = $("gamePopPath-body");
   function pathPoints(){
-    var pts = [], waves = 1.6 + level*0.5, amp = 56 - level*6;
-    for(var i=0;i<=40;i++){ var t=i/40; pts.push({ x: 18 + t*304, y: 130 + Math.sin(t*Math.PI*waves + level*0.9)*amp + Math.sin(t*Math.PI*5+level)*10 }); }
+    var pts = [], waves = 1.6 + level*0.7, amp = 56 - level*3, n = 40 + level*4;
+    for(var i=0;i<=n;i++){ var t=i/n; pts.push({ x: 18 + t*304, y: 130 + Math.sin(t*Math.PI*waves + level*0.9)*amp + Math.sin(t*Math.PI*5+level)*(10+level*2) }); }
     return pts;
   }
   function coverage(pts, drawnPts, tol){
@@ -2319,7 +2389,7 @@ function startPopPath(){
     var live = coverage(pts, drawn, TOLS[level]);
     var op = calm ? 0.9 : Math.max(0.22, 1 - (vnow/FADES[level])*0.78);
     body.innerHTML =
-      '<p class="scorebar" role="status">Score '+total+' · Trail '+(level+1)+' of '+LEVELS+' · Trail covered: '+Math.round(live.cov*100)+'%</p>'
+      '<p class="scorebar" role="status">Score '+total+' · Level '+(level+1)+' of '+LEVELS+' · Trail '+(level+1)+' of '+LEVELS+' · Trail covered: '+Math.round(live.cov*100)+'%</p>'
       + '<div class="card mt" style="padding:12px;">'
       + '<svg id="ppSvg" viewBox="0 0 340 260" style="width:100%;touch-action:none;user-select:none;" role="img" aria-label="A winding glowing trail to trace with your finger">'
       + '<path d="'+d+'" fill="none" stroke="#38bdf8" stroke-width="'+Math.max(14,TOLS[level])+'" stroke-linecap="round" stroke-linejoin="round" opacity="'+op+'"/>'
@@ -2356,7 +2426,7 @@ function startPopPath(){
       note = "Trail "+(level+1)+" traced — "+Math.round(res.cov*100)+"% of the path covered. +"+gain;
       if(level+1 >= LEVELS){
         recordBest("poppath", total);
-        body.innerHTML = '<p role="status" class="center" style="background:#1e3a1e;border-radius:1.4rem;padding:12px 16px;font-weight:800;">'+note+'</p>' + doneHTML(total, "Trails traced — fancy footwork, fox style.");
+        body.innerHTML = '<p role="status" class="center" style="background:#1e3a1e;border-radius:1.4rem;padding:12px 16px;font-weight:800;">'+note+'</p>' + doneHTML(total, "All 10 trails traced — fancy footwork, fox style.");
         $("againBtn").addEventListener("click", function(){ popSnd(); startPopPath(); });
       } else render();
     });
@@ -2446,7 +2516,8 @@ function startCoin(){
 /* ================= 7. Mystery Bubble ================= */
 function startMystery(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var ROUNDS = 10, GLIDE = 560, GAP = 680;
+  var LV = OP_MYSTERY_LEVELS[OP_MYSTERY_LEVEL-1];
+  var ROUNDS = 10, GLIDE = LV.glide, GAP = LV.gap;
   var round = 0, phase = "peek", starId = Math.floor(Math.random()*3);
   var slotOf = [0,1,2], picked = null, lastOk = null, score = 0, streak = 0, bestStreak = 0, snap = false, built = false;
   var body = $("gameMystery-body"), balls = [];
@@ -2459,19 +2530,19 @@ function startMystery(){
   }
   /* Parity fix: the three bubble elements are created ONCE and never rebuilt.
      A shuffle only changes each element's left position, so the 560ms CSS glide
-     actually animates. Each bubble keeps its own fixed number (its identity),
-     never the slot number — a bubble that moves keeps its number with it. */
+     actually animates. No bubble numbers: all three bubbles look identical, so
+     tracking is by eye only, not by a label. */
   function build(){
-    body.innerHTML =
-      '<p class="scorebar" role="status" id="mysteryBar"></p>'
+    body.innerHTML = opMysteryPickerHTML()
+      + '<p class="scorebar" role="status" id="mysteryBar"></p>'
       + '<p class="center" style="margin-top:14px;font-size:17.5px;font-weight:900;min-height:26px;" role="status" id="mysteryPhase"></p>'
       + '<div class="mystery-stage" role="group" aria-label="Three bubbles — one of them hides the star" id="mysteryStage"></div>'
-      + '<p class="small dim center" style="margin-top:14px;">Correct picks score 100, plus 15 for each step of your streak. The shuffle glides slowly on purpose — follow it with your eyes. Each bubble keeps its own number as it moves.</p>';
+      + '<p class="small dim center" style="margin-top:14px;">Correct picks score 100, plus 15 for each step of your streak. The shuffle glides slowly on purpose — follow it with your eyes. All three bubbles look the same, no labels.</p>';
     var stage = $("mysteryStage");
     for(var id=0; id<3; id++){
       var b = document.createElement("button");
       b.type = "button"; b.className = "mystery-ball"; b.setAttribute("data-ball", id);
-      b.innerHTML = '<span class="st" aria-hidden="true">🫧</span><span class="num">Bubble '+(id+1)+'</span>';
+      b.innerHTML = '<span class="st" aria-hidden="true">🫧</span>';
       (function(bb, bid){
         bb.addEventListener("click", function(){ pick(bid); });
       })(b, id);
@@ -2495,15 +2566,15 @@ function startMystery(){
         + (phase==="reveal" && id===starId ? " good" : "")
         + (phase==="reveal" && picked===id && !lastOk && id!==starId ? " miss" : "");
       el.querySelector(".st").textContent = showsStar ? "⭐" : "🫧";
-      el.setAttribute("aria-label", (phase==="pick" ? "Pick bubble " : "Bubble ")+(id+1)+(showsStar ? " — the star is here" : ""));
+      el.setAttribute("aria-label", (phase==="pick" ? "Pick a bubble" : "A bubble")+(showsStar ? " — the star is here" : ""));
     }
   }
   function beginPeek(){
     phase = "peek"; update();
-    bag.set(function(){ phase = "shuffle"; update(); doShuffle(); }, calm ? 1300 : 1700);
+    bag.set(function(){ phase = "shuffle"; update(); doShuffle(); }, calm ? 1300 : LV.peek);
   }
   function doShuffle(){
-    var total = Math.min(9, 4 + Math.floor(round/2) + Math.min(2, streak));
+    var total = Math.min(12, LV.swaps + Math.floor(round/2) + Math.min(2, streak));
     var fired = 0;
     function fire(){
       fired++;
@@ -2536,7 +2607,9 @@ function startMystery(){
     bag.set(function(){
       if(round+1 >= ROUNDS){
         recordBest("mystery", score);
-        body.innerHTML = doneHTML(score, "Best tracking streak: "+bestStreak+" in a row.");
+        var unlockMsg = "";
+        if(OP_MYSTERY_LEVEL < 10 && OP_MYSTERY_LEVEL >= OP_MYSTERY_UNLOCKED){ OP_MYSTERY_UNLOCKED = OP_MYSTERY_LEVEL + 1; try{ localStorage.setItem("cc_demo_mystery_unlocked", String(OP_MYSTERY_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_MYSTERY_UNLOCKED + " unlocked!"; }
+        body.innerHTML = doneHTML(score, "Level "+OP_MYSTERY_LEVEL+" — "+LV.name+". Best tracking streak: "+bestStreak+" in a row."+unlockMsg);
         $("againBtn").addEventListener("click", function(){ popSnd(); startMystery(); });
       } else {
         round++; snap = true; slotOf = [0,1,2]; starId = Math.floor(Math.random()*3); picked = null; lastOk = null;
@@ -3199,16 +3272,35 @@ document.addEventListener('visibilitychange', function(){ if(document.hidden) op
 window.addEventListener('pagehide', opMusicStopForBackground);
 window.addEventListener('blur', opMusicStopForBackground);
 var OP_BEAT_LEVELS = [
-  {n:1,name:"Keep the beat",total:16,travel:3700,gap:900,perfect:30,onbeat:65},
-  {n:2,name:"Faster bubbles",total:20,travel:3200,gap:800,perfect:30,onbeat:65},
-  {n:3,name:"Double time",total:24,travel:2700,gap:700,perfect:30,onbeat:65},
-  {n:4,name:"Crowded sky",total:30,travel:2300,gap:600,perfect:30,onbeat:65},
-  {n:5,name:"Gold rush",total:36,travel:1900,gap:500,perfect:30,onbeat:65},
-  {n:6,name:"Beat master",total:44,travel:1600,gap:450,perfect:25,onbeat:55}];
+  {n:1,name:"Keep the beat",total:24,travel:3700,gap:900,perfect:30,onbeat:65,beatMs:600,notes:[523,659]},
+  {n:2,name:"Faster bubbles",total:28,travel:3200,gap:800,perfect:30,onbeat:65,beatMs:575,notes:[523,587,659]},
+  {n:3,name:"Double time",total:32,travel:2700,gap:700,perfect:30,onbeat:65,beatMs:550,notes:[523,587,659,784]},
+  {n:4,name:"Crowded sky",total:36,travel:2300,gap:600,perfect:30,onbeat:65,beatMs:525,notes:[587,659,784,880]},
+  {n:5,name:"Gold rush",total:40,travel:1900,gap:500,perfect:30,onbeat:65,beatMs:500,notes:[659,784,880,1046]},
+  {n:6,name:"Beat master",total:44,travel:1600,gap:450,perfect:25,onbeat:55,beatMs:475,notes:[523,659,784,1046,1318]},
+  {n:7,name:"Turbo beat",total:48,travel:1450,gap:420,perfect:25,onbeat:55,beatMs:450,notes:[587,784,880,1174]},
+  {n:8,name:"Hyper beat",total:52,travel:1300,gap:400,perfect:25,onbeat:55,beatMs:425,notes:[659,880,1046,1318]},
+  {n:9,name:"Frenzy",total:56,travel:1150,gap:380,perfect:25,onbeat:55,beatMs:400,notes:[784,1046,1174,1318]},
+  {n:10,name:"Master of beat",total:60,travel:1000,gap:360,perfect:25,onbeat:55,beatMs:375,notes:[880,1046,1318,1568]}];
 var OP_BEAT_LEVEL = 1, OP_BEAT_UNLOCKED = 1;
-try{ OP_BEAT_UNLOCKED = Math.max(1, Math.min(6, parseInt(localStorage.getItem('cc_demo_beat_unlocked')||'1',10) || 1)); }catch(e){}
+try{ OP_BEAT_UNLOCKED = Math.max(1, Math.min(10, parseInt(localStorage.getItem('cc_demo_beat_unlocked')||'1',10) || 1)); }catch(e){}
 function opBeatPickerHTML(){ return '<p class="small dim">Bubble Beat — regular style, gold ring at 90px, 420px field. Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' · Highest unlocked: Level '+OP_BEAT_UNLOCKED+' · Clean finish (no missed bubble) unlocks the next level.</p><div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' \u25BE</span></button><div class="stack mt cc-drop-list">' + OP_BEAT_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_BEAT_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_BEAT_UNLOCKED?'disabled':'')+' onclick="opSetBeatLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+'</span><span class="sub">'+l.total+' bubbles · '+l.travel+'ms travel'+(l.n>OP_BEAT_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div></div>'; }
 function opSetBeatLevel(n){ if(n > OP_BEAT_UNLOCKED) return; OP_BEAT_LEVEL = n; startBeat(); }
+var OP_MYSTERY_LEVELS = [
+  {n:1,name:"Slow shuffle",glide:560,gap:680,peek:1700,swaps:4},
+  {n:2,name:"Quicker shuffle",glide:520,gap:620,peek:1600,swaps:5},
+  {n:3,name:"Faster shuffle",glide:480,gap:560,peek:1500,swaps:6},
+  {n:4,name:"Brisk shuffle",glide:440,gap:500,peek:1400,swaps:6},
+  {n:5,name:"Swift shuffle",glide:420,gap:460,peek:1300,swaps:7},
+  {n:6,name:"Speedy shuffle",glide:380,gap:420,peek:1200,swaps:7},
+  {n:7,name:"Rapid shuffle",glide:350,gap:390,peek:1100,swaps:8},
+  {n:8,name:"Blur shuffle",glide:320,gap:360,peek:1000,swaps:8},
+  {n:9,name:"Lightning shuffle",glide:300,gap:340,peek:900,swaps:9},
+  {n:10,name:"Master shuffle",glide:280,gap:320,peek:850,swaps:10}];
+var OP_MYSTERY_LEVEL = 1, OP_MYSTERY_UNLOCKED = 1;
+try{ OP_MYSTERY_UNLOCKED = Math.max(1, Math.min(10, parseInt(localStorage.getItem('cc_demo_mystery_unlocked')||'1',10) || 1)); }catch(e){}
+function opMysteryPickerHTML(){ return '<p class="small dim">Milo\'s Mystery Bubble — Level '+OP_MYSTERY_LEVEL+' — '+OP_MYSTERY_LEVELS[OP_MYSTERY_LEVEL-1].name+' · Highest unlocked: Level '+OP_MYSTERY_UNLOCKED+' · Finish a level to unlock the next one.</p><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">' + OP_MYSTERY_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_MYSTERY_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_MYSTERY_UNLOCKED?'disabled':'')+' onclick="opSetMysteryLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+(l.n>OP_MYSTERY_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div>'; }
+function opSetMysteryLevel(n){ if(n > OP_MYSTERY_UNLOCKED) return; OP_MYSTERY_LEVEL = n; startMystery(); }
 var OP_TELL_LEVELS={
  1:[
   {q:'Which is a real V2 tell? A) The card feels lucky B) Border colour measured against the reference',a:1},
