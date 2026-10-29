@@ -482,8 +482,336 @@
   .cc-lb li .lbrk{color:#ffd97a; font-weight:900; font-style:normal; text-shadow:0 1px 6px rgba(240,178,62,.45);}
   .cc-lb li.lb-first{font-size:22px; color:#ffd97a;}
 </style>
+<style>
+/* ============================================================
+   NEON LINE THEME — Oct 29, 2026 (owner-approved re-theme)
+   Skin ONLY: colours, borders, glows, glass fills, rings, frames,
+   featured hero tilt+sway. No logic, no copy, no layout changes.
+   Palette (theme study, Card Cauldron colours):
+     Potion purple #b388ff · Potion pink #ff7ac8
+     Ember orange #ffb347 · Gold #ffd76a · Cauldron green #57ffb0
+     Deep plum-dark #0d0a14 / #140e20 · Cream text #fff8e7
+   Everything is scoped under body.neon so the base sheet is
+   untouched and the skin can be lifted by removing one class.
+   ============================================================ */
+body.neon{
+  --bg:#0d0a14; --surface:#140e20; --dim:#cfc4e8;
+  --border:rgba(179,136,255,.35);
+  --gold:#ffd76a; --gold-deep:#ffb347;
+  --stone-edge:rgba(179,136,255,.5);
+  --stone-card:linear-gradient(180deg, rgba(36,21,56,.55) 0%, rgba(20,14,32,.6) 55%, rgba(13,10,20,.66) 100%);
+  --shadow-stone:0 0 12px rgba(179,136,255,.28), inset 0 0 18px rgba(179,136,255,.05), 0 12px 26px rgba(0,0,0,.5);
+  background:#0d0a14;
+}
+
+/* ---------- backdrop: same background system, neon-plum base ----------
+   (.logo-bg gradients + .op-bg picker patterns keep their mechanics;
+    only the colours move into the palette. z-order unchanged:
+    background layers stay at z 0, screens above at z 1.) */
+body.neon .logo-bg{
+  background:
+    radial-gradient(ellipse 90% 45% at 50% -5%, rgba(179,136,255,.16), transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 112%, rgba(255,179,71,.12), transparent 60%),
+    radial-gradient(ellipse 120% 90% at 50% 45%, transparent 45%, rgba(0,0,0,.55) 100%),
+    linear-gradient(180deg,#140e20 0%,#0d0a14 55%,#08060e 100%);
+}
+body.neon .logo-bg::before{
+  background:radial-gradient(ellipse 75% 42% at 50% 16%, rgba(255,215,106,.05), transparent 62%);
+}
+body.neon .logo-glow{
+  background:radial-gradient(circle, rgba(255,179,71,.15) 0%, rgba(179,136,255,.06) 45%, transparent 70%);
+}
+/* default bubble pattern: sky dots become Potion purple; gold/pink/green stay */
+body.neon .op-bg::after{
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(179,136,255,.22) 0 32px, transparent 34px),
+    radial-gradient(circle at 70% 20%, rgba(255,215,106,.20) 0 42px, transparent 44px),
+    radial-gradient(circle at 40% 70%, rgba(255,122,200,.18) 0 28px, transparent 30px),
+    radial-gradient(circle at 85% 75%, rgba(87,255,176,.18) 0 36px, transparent 38px);
+}
+/* waves pattern: sky -> purple, teal -> cauldron green (picker variants
+   stars / embers / mist already sit inside the palette, untouched) */
+body.neon .op-bg[data-bg="waves"]::after{
+  background-image:
+    radial-gradient(ellipse at 20% 40%, rgba(179,136,255,.38) 0 90px, transparent 95px),
+    radial-gradient(ellipse at 75% 60%, rgba(138,99,255,.38) 0 110px, transparent 115px),
+    radial-gradient(ellipse at 50% 85%, rgba(87,255,176,.30) 0 80px, transparent 85px);
+}
+
+/* ---------- panels & cards -> dark glass wireframe frames ---------- */
+body.neon .card{
+  background:linear-gradient(180deg, rgba(36,21,56,.55) 0%, rgba(20,14,32,.6) 55%, rgba(13,10,20,.66) 100%);
+  border:1.5px solid rgba(179,136,255,.55);
+  box-shadow:0 0 12px rgba(179,136,255,.28), inset 0 0 18px rgba(179,136,255,.05), 0 12px 26px rgba(0,0,0,.5);
+}
+body.neon .band{
+  background:rgba(20,14,32,.55);
+  box-shadow:0 0 12px rgba(179,136,255,.22), inset 0 0 16px rgba(179,136,255,.05), 0 10px 24px rgba(0,0,0,.5);
+}
+body.neon .band::before{background:rgba(255,255,255,.06);}
+body.neon .band-grape{border-color:rgba(179,136,255,.6);}
+body.neon .band-teal{border-color:rgba(87,255,176,.55);}
+body.neon .band-navy{border-color:rgba(179,136,255,.45);}
+body.neon .gold-box{
+  background:rgba(255,215,106,.05); border-color:rgba(255,215,106,.65);
+  box-shadow:0 0 12px rgba(255,215,106,.30), inset 0 0 14px rgba(255,215,106,.05);
+}
+body.neon .peach-box{
+  background:rgba(255,179,71,.06); border-color:rgba(255,179,71,.55);
+  box-shadow:0 0 10px rgba(255,179,71,.25), inset 0 0 12px rgba(255,179,71,.05);
+}
+body.neon .gold-frame{
+  background:linear-gradient(rgba(13,10,20,.88), rgba(13,10,20,.88)) padding-box,
+             linear-gradient(105deg,#ffe9a8 0%,#ffd76a 38%,#ffb347 72%,#ffd76a 100%) border-box;
+  box-shadow:0 0 16px rgba(255,215,106,.35), 0 10px 24px rgba(0,0,0,.6);
+}
+body.neon .entry{
+  background:linear-gradient(180deg, rgba(27,16,48,.6), rgba(13,10,20,.65));
+  border-color:rgba(179,136,255,.4);
+  box-shadow:0 0 10px rgba(179,136,255,.18), 0 8px 20px rgba(0,0,0,.5);
+}
+body.neon .binder-head{
+  box-shadow:inset 0 0 0 1.5px rgba(255,215,106,.35), 0 0 14px rgba(255,215,106,.18), 0 8px 20px rgba(0,0,0,.45);
+}
+body.neon .cc-qcard{
+  background:rgba(20,14,32,.6); border-color:#ffd76a;
+  box-shadow:0 0 12px rgba(255,215,106,.3), 0 10px 22px rgba(0,0,0,.5);
+}
+
+/* ---------- leaderboard: gold box -> neon gold frame (.cc-lb contract kept) ---------- */
+body.neon .cc-lb{
+  background:rgba(20,14,32,.6); border:2px solid #ffd76a;
+  box-shadow:0 0 14px rgba(255,215,106,.45), 0 0 0 2px rgba(255,215,106,.15), 0 8px 22px rgba(0,0,0,.5);
+}
+
+/* ---------- bubble buttons -> neon wireframe pills ----------
+   Primary (.b-gold) stays the one loud lit element, per the study. */
+body.neon .bubble-btn{
+  background:linear-gradient(180deg, rgba(179,136,255,.14), rgba(20,14,32,.55));
+  border:1.5px solid rgba(179,136,255,.65);
+  box-shadow:0 0 10px rgba(179,136,255,.35), inset 0 0 14px rgba(179,136,255,.08), 0 8px 20px rgba(0,0,0,.55);
+  text-shadow:0 0 8px rgba(179,136,255,.35), 0 2px 5px rgba(0,0,0,.9);
+}
+body.neon .bubble-btn::before{background:rgba(255,255,255,.10);}
+body.neon .bubble-btn:active{
+  box-shadow:0 0 6px rgba(179,136,255,.3), inset 0 0 18px rgba(179,136,255,.16), 0 3px 10px rgba(0,0,0,.6);
+}
+body.neon .b-gold{
+  background:linear-gradient(105deg,#ffe9a8 0%,#ffd76a 38%,#ffb347 72%,#ffd76a 100%);
+  border-color:#ffd76a;
+  box-shadow:0 0 16px rgba(255,215,106,.55), inset 0 0 10px rgba(255,255,255,.25), 0 8px 20px rgba(0,0,0,.55);
+}
+body.neon .b-gold:active{box-shadow:0 0 8px rgba(255,215,106,.5), inset 0 0 14px rgba(146,96,10,.35), 0 3px 10px rgba(0,0,0,.6);}
+body.neon .b-pink, body.neon .b-brightpink, body.neon .b-red{
+  background:linear-gradient(180deg, rgba(255,122,200,.16), rgba(20,14,32,.55));
+  border-color:rgba(255,122,200,.7);
+  box-shadow:0 0 10px rgba(255,122,200,.4), inset 0 0 14px rgba(255,122,200,.09), 0 8px 20px rgba(0,0,0,.55);
+  color:#fff8e7;
+}
+body.neon .b-lemon{
+  background:linear-gradient(180deg, rgba(255,215,106,.14), rgba(20,14,32,.55));
+  border-color:rgba(255,215,106,.7);
+  box-shadow:0 0 10px rgba(255,215,106,.4), inset 0 0 14px rgba(255,215,106,.08), 0 8px 20px rgba(0,0,0,.55);
+  color:#ffd76a; text-shadow:0 0 8px rgba(255,215,106,.4), 0 2px 5px rgba(0,0,0,.9);
+}
+body.neon .b-lime{
+  background:linear-gradient(180deg, rgba(87,255,176,.13), rgba(20,14,32,.55));
+  border-color:rgba(87,255,176,.65);
+  box-shadow:0 0 10px rgba(87,255,176,.35), inset 0 0 14px rgba(87,255,176,.08), 0 8px 20px rgba(0,0,0,.55);
+  color:#fff8e7;
+}
+body.neon .b-sky{
+  background:linear-gradient(180deg, rgba(179,136,255,.16), rgba(20,14,32,.55));
+  border-color:rgba(179,136,255,.75);
+  box-shadow:0 0 10px rgba(179,136,255,.45), inset 0 0 14px rgba(179,136,255,.1), 0 8px 20px rgba(0,0,0,.55);
+  color:#fff8e7;
+}
+body.neon .b-white{
+  background:linear-gradient(180deg, rgba(207,196,232,.10), rgba(20,14,32,.55));
+  border-color:rgba(207,196,232,.55);
+  box-shadow:0 0 9px rgba(179,136,255,.28), inset 0 0 14px rgba(207,196,232,.06), 0 8px 20px rgba(0,0,0,.55);
+  color:#fff8e7;
+}
+
+/* ---------- top row, menu, profile, dock ---------- */
+body.neon #opTopRow{
+  background:rgba(13,10,20,.85);
+  box-shadow:0 2px 14px rgba(179,136,255,.16), 0 2px 12px rgba(0,0,0,.5);
+}
+body.neon .op-menupanel{
+  background:rgba(20,14,32,.94); border-color:rgba(255,215,106,.6);
+  box-shadow:0 0 16px rgba(255,215,106,.25), 0 12px 30px rgba(0,0,0,.55);
+}
+body.neon .op-profilebubble{
+  background:rgba(20,14,32,.78); border:1.5px solid #ff7ac8;
+  box-shadow:0 0 10px rgba(255,122,200,.45), inset 0 0 10px rgba(255,122,200,.08);
+}
+body.neon .op-coins{color:#ffd76a; text-shadow:0 0 8px rgba(255,215,106,.5);}
+body.neon .dock{
+  background:linear-gradient(180deg, rgba(27,16,48,.88), rgba(13,10,20,.94));
+  border-top:1.5px solid rgba(179,136,255,.55);
+  box-shadow:0 -6px 24px rgba(179,136,255,.16), inset 0 1px 0 rgba(179,136,255,.25), 0 -10px 28px rgba(0,0,0,.65);
+}
+body.neon .dock button.on{
+  background:rgba(255,215,106,.14);
+  box-shadow:inset 0 0 0 1.5px rgba(255,215,106,.55), 0 0 10px rgba(255,215,106,.3);
+}
+body.neon .dock button.on .tx{color:#ffd76a;}
+
+/* ---------- avatar picker & profile furniture (grid display untouched) ---------- */
+body.neon .op-human-avatar-btn{
+  border-color:rgba(179,136,255,.5); background:rgba(20,14,32,.8);
+  box-shadow:0 0 8px rgba(179,136,255,.3);
+}
+body.neon .op-human-avatar-btn.on{
+  border-color:#ffd76a; box-shadow:0 0 0 3px #ffd76a, 0 0 16px rgba(255,215,106,.6);
+}
+body.neon .op-avatar-card{
+  background:rgba(20,14,32,.78); border-color:rgba(179,136,255,.45);
+  box-shadow:0 0 9px rgba(179,136,255,.22);
+}
+body.neon .op-avatar-card.on{outline-color:#ffd76a;}
+body.neon .icon-btn{
+  background:rgba(20,14,32,.72); border-color:rgba(179,136,255,.6);
+  box-shadow:0 0 10px rgba(179,136,255,.35), inset 0 0 10px rgba(179,136,255,.08), 0 8px 20px rgba(0,0,0,.6);
+}
+body.neon .pill{
+  background:rgba(20,14,32,.72); border-color:rgba(179,136,255,.45);
+  box-shadow:0 0 8px rgba(179,136,255,.22);
+}
+body.neon .pill.sample{background:#ffd76a; border-color:transparent; box-shadow:0 0 12px rgba(255,215,106,.5);}
+
+/* ---------- forms ---------- */
+body.neon .op-field input, body.neon .op-field select{
+  background:rgba(13,10,20,.72); border-color:rgba(179,136,255,.5);
+  box-shadow:inset 0 0 10px rgba(179,136,255,.06), 0 0 8px rgba(179,136,255,.15);
+}
+
+/* ---------- chat ---------- */
+body.neon .chat-bubble{
+  background:rgba(20,14,32,.78); border-color:rgba(179,136,255,.45);
+  box-shadow:0 0 9px rgba(179,136,255,.2);
+}
+body.neon .chat-bubble b{color:#ffd76a;}
+body.neon .chat-bubble.mine{
+  background:linear-gradient(180deg,#ffd76a,#ffb347); border-color:#ffd76a;
+  box-shadow:0 0 12px rgba(255,215,106,.45);
+}
+body.neon .chat-avatar{border-color:#ff7ac8; box-shadow:0 0 8px rgba(255,122,200,.5);}
+body.neon .chat-emoji-row button{
+  background:rgba(20,14,32,.78); border-color:rgba(179,136,255,.45);
+}
+
+/* ---------- category / game tiles ---------- */
+body.neon .cat-tile{
+  border:1.5px solid rgba(179,136,255,.5);
+  box-shadow:0 0 10px rgba(179,136,255,.25), 0 8px 18px rgba(0,0,0,.45);
+}
+body.neon .cat-tile::before{background:rgba(255,255,255,.08);}
+
+/* ---------- game boards & pieces ---------- */
+body.neon .field{
+  background:rgba(20,14,32,.55); border-color:rgba(179,136,255,.5);
+  box-shadow:0 0 12px rgba(179,136,255,.22), inset 0 0 22px rgba(0,0,0,.35), 0 8px 20px rgba(0,0,0,.5);
+}
+body.neon .timerbar{background:rgba(13,10,20,.8); box-shadow:inset 0 0 0 1.5px rgba(179,136,255,.35);}
+body.neon .timerbar i{background:linear-gradient(90deg,#ffd76a,#ff7ac8); box-shadow:0 0 8px rgba(255,122,200,.5);}
+body.neon .timerbar.blue i{background:linear-gradient(90deg,#b388ff,#ffd76a);}
+body.neon .score-track{background:rgba(13,10,20,.8); box-shadow:inset 0 0 0 1.5px rgba(179,136,255,.3);}
+body.neon .match-card{
+  background:rgba(255,179,71,.05);
+  box-shadow:0 0 9px rgba(255,179,71,.4), inset 0 0 12px rgba(255,179,71,.07), 0 6px 14px rgba(0,0,0,.5);
+}
+body.neon .match-card.up{
+  background:rgba(20,14,32,.72); border-color:rgba(179,136,255,.5);
+  box-shadow:0 0 9px rgba(179,136,255,.3), 0 6px 14px rgba(0,0,0,.5);
+}
+body.neon .match-card.done{
+  background:rgba(87,255,176,.14); border-color:rgba(87,255,176,.65);
+  box-shadow:0 0 10px rgba(87,255,176,.4);
+}
+body.neon .mystery-ball{
+  background:rgba(179,136,255,.08); border:2px solid rgba(179,136,255,.8);
+  box-shadow:0 0 12px rgba(179,136,255,.5), inset 0 0 14px rgba(179,136,255,.18), 0 10px 22px rgba(0,0,0,.4);
+}
+body.neon .mystery-ball.good{
+  background:rgba(87,255,176,.1); border-color:rgba(87,255,176,.85);
+  box-shadow:0 0 12px rgba(87,255,176,.55), inset 0 0 14px rgba(87,255,176,.2), 0 10px 22px rgba(0,0,0,.4);
+}
+body.neon .mystery-ball.miss{
+  background:rgba(255,179,71,.1); border-color:rgba(255,179,71,.85);
+  box-shadow:0 0 12px rgba(255,179,71,.55), inset 0 0 14px rgba(255,179,71,.2), 0 10px 22px rgba(0,0,0,.4);
+}
+body.neon .mystery-ball.star{
+  box-shadow:0 0 0 5px rgba(255,215,106,.95), 0 0 18px rgba(255,215,106,.6), 0 10px 22px rgba(0,0,0,.4);
+}
+body.neon .fit-opt i{
+  background:rgba(179,136,255,.1); border:2px solid rgba(179,136,255,.75);
+  box-shadow:0 0 9px rgba(179,136,255,.5), inset 0 0 9px rgba(179,136,255,.2);
+}
+body.neon .free-bubbles i{
+  background:rgba(179,136,255,.08); border:2px solid rgba(179,136,255,.7);
+  box-shadow:0 0 8px rgba(179,136,255,.5), inset 0 0 8px rgba(179,136,255,.25);
+}
+body.neon .free-bubbles.green i{
+  background:rgba(87,255,176,.08); border-color:rgba(87,255,176,.7);
+  box-shadow:0 0 8px rgba(87,255,176,.5), inset 0 0 8px rgba(87,255,176,.25);
+}
+body.neon .meter i.on{
+  background:rgba(255,215,106,.12); border:2px solid #ffd76a;
+  box-shadow:0 0 10px rgba(255,215,106,.6), inset 0 0 8px rgba(255,215,106,.3);
+}
+body.neon .meter i.off{
+  background:rgba(207,196,232,.05); border:2px solid rgba(207,196,232,.3);
+  box-shadow:none;
+}
+/* Pop Trail balls keep their forced-visible fills (trailfix) — the skin
+   adds only an outer neon glow ring, never a background. */
+body.neon .trail-stop .ball{
+  box-shadow:0 0 14px rgba(255,122,200,.45), 0 0 6px rgba(179,136,255,.4), 0 8px 18px rgba(0,0,0,.45);
+}
+body.neon .hero-badge{
+  background:rgba(255,215,106,.07); border:2px solid #ffd76a;
+  box-shadow:0 0 18px rgba(255,215,106,.55), inset 0 0 16px rgba(255,215,106,.18), 0 14px 30px rgba(0,0,0,.45);
+}
+body.neon .verdict-pill{
+  background:rgba(255,215,106,.1); border:1.5px solid rgba(255,215,106,.6);
+  box-shadow:0 0 10px rgba(255,215,106,.35); color:#ffd76a;
+}
+body.neon .grade-chip{
+  background:rgba(87,255,176,.1); border:1.5px solid rgba(87,255,176,.55);
+  box-shadow:0 0 10px rgba(87,255,176,.3);
+}
+body.neon .chip.pass{background:rgba(87,255,176,.14); box-shadow:inset 0 0 0 1px rgba(87,255,176,.4);}
+body.neon .chip.flag{background:rgba(255,179,71,.14); box-shadow:inset 0 0 0 1px rgba(255,179,71,.4);}
+body.neon .chip.cant{background:rgba(255,215,106,.13); box-shadow:inset 0 0 0 1px rgba(255,215,106,.4);}
+body.neon .dots i{background:rgba(207,196,232,.18); box-shadow:inset 0 0 0 1.5px rgba(207,196,232,.35);}
+body.neon .dots i.done{background:#57ffb0; box-shadow:0 0 8px rgba(87,255,176,.6);}
+body.neon .frame{
+  border-color:rgba(255,215,106,.7);
+  box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 0 30px rgba(255,215,106,.35);
+}
+
+/* ---------- featured hero: home banner tilt + slow sway ----------
+   (same motion the owner approved on the study's featured tile;
+    hero element only, for phone performance) */
+@keyframes neonSway{
+  from{transform:rotate(-.7deg) translateX(-3px);}
+  to{transform:rotate(.7deg) translateX(3px);}
+}
+body.neon .top-banner{
+  animation:neonSway 6.5s ease-in-out infinite alternate;
+  border-color:rgba(255,215,106,.6);
+  box-shadow:0 0 18px rgba(255,215,106,.35), 0 10px 24px rgba(0,0,0,.6);
+}
+.calm .top-banner{animation:none !important;}
+@media (prefers-reduced-motion: reduce){
+  body.neon .top-banner{animation:none;}
+}
+/* ============ NEON LINE THEME ends ============ */
+</style>
 </head>
-<body>
+<body class="neon">
 <div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first — local demo only. No password, no server, nothing leaves this device. This only remembers a name so the top bubble shows who is signed in.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Local demo only — not a real account.</p></div>
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
@@ -3634,6 +3962,234 @@ document.addEventListener("click", function(e){
   var t=e.target.closest("[data-nav]");
   if(t && t.getAttribute("data-nav")==="feedback"){ setTimeout(opRenderFeedbackList, 50); }
 });
+</script>
+<script>
+/* SCROLL BACKGROUND — Oct 29 (decoration only)
+   A fixed canvas that paints a neon wireframe world (perspective grid floor
+   + floating wireframe polygons) behind the app. It creates ONLY its own
+   canvas: it reads window.scrollY, touches no app state, no storage, and no
+   existing DOM node beyond inserting that canvas. Palette = the locked Neon
+   Line hexes only. Remove this one block (or call window.__ccScrollBg.destroy())
+   and the demo is exactly what it was without it. */
+(function () {
+  'use strict';
+  try {
+    if (window.__ccScrollBg && window.__ccScrollBg.destroy) { window.__ccScrollBg.destroy(); }
+  } catch (e) {}
+  try { init(); } catch (e) { /* decoration must never break the app */ }
+
+  function init() {
+    /* ---------- tuning constants ---------- */
+    var SHAPE_COUNT = 20;      // floating wireframe polygons
+    var GRID_ROWS = 14;        // horizontal floor lines
+    var GRID_COLS = 18;        // vertical fan lines (drawn -9..+9)
+    var DPR_CAP = 2;           // devicePixelRatio cap for phone GPUs
+    var PARALLAX = 0.35;       // shape travel per scrolled px, scaled by depth
+    var GRID_SCROLL = 0.0016;  // floor-line travel per scrolled px
+    var SMOOTH = 7.5;          // lerp rate toward the real scroll position (per sec)
+    var IDLE_DRIFT = 0.010;    // grid travel per second when not scrolling
+    var IDLE_RISE = 4;         // shape rise per second at depth 1
+    var BASE_ALPHA = 0.88;     // plum wash opacity (logo backdrop ghosts through)
+    var HORIZON = 0.60;        // horizon height, fraction of viewport height
+
+    /* ---------- locked palette (Neon Line theme) ---------- */
+    var PALETTE = ['#b388ff', '#ff7ac8', '#ffb347', '#ffd76a', '#57ffb0'];
+    var GRID_A = '#57ffb0';    // cauldron green — floor lines
+    var GRID_B = '#b388ff';    // Potion purple — fan lines
+    var HORIZON_C = '#ffb347'; // Ember — horizon line
+    var BASE_TOP = '#140e20';  // plum-dark base (matches the neon skin)
+    var BASE_MID = '#0d0a14';
+    var BASE_BOT = '#08060e';
+
+    var reduceMotion = false;
+    try { reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) {}
+
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext && canvas.getContext('2d');
+    if (!ctx) { return; }
+    canvas.id = 'ccScrollBg';
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;';
+
+    /* Layering: in this file BOTH background layers are position:fixed at
+       z-index 0, and .logo-bg (opaque plum gradient + logo art) comes AFTER
+       .op-bg in the DOM, so it paints on top of it. A canvas placed behind
+       .op-bg would be painted over by .logo-bg and never seen. The canvas
+       therefore sits immediately AFTER .logo-bg: above both background
+       layers, below every screen (z-index 1) and all chrome (top row z 60,
+       menu z 61, login gate z 3000). It is drawn translucent (BASE_ALPHA),
+       so the existing backdrop still ghosts through, and pointer-events:none
+       means it can never take a tap. */
+    var anchor = document.querySelector('.logo-bg');
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(canvas, anchor.nextSibling);
+    } else if (document.body) {
+      document.body.insertBefore(canvas, document.body.firstChild);
+    } else {
+      return;
+    }
+
+    var W = 0, H = 0, baseGrad = null;
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+      W = window.innerWidth || 0;
+      H = window.innerHeight || 0;
+      canvas.width = Math.max(1, Math.round(W * dpr));
+      canvas.height = Math.max(1, Math.round(H * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      baseGrad = ctx.createLinearGradient(0, 0, 0, H);
+      baseGrad.addColorStop(0, BASE_TOP);
+      baseGrad.addColorStop(0.55, BASE_MID);
+      baseGrad.addColorStop(1, BASE_BOT);
+      if (reduceMotion) { drawFrame(); }
+    }
+
+    /* Deterministic pseudo-random: the same world on every load. */
+    var seed = 20261029;
+    function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+    var shapes = [];
+    for (var i = 0; i < SHAPE_COUNT; i++) {
+      shapes.push({
+        x: rnd(), y: rnd(),
+        z: 0.25 + rnd() * 0.75,              // depth: 0.25 far .. 1 near
+        size: 16 + rnd() * 58,
+        sides: [3, 4, 6][Math.floor(rnd() * 3)],
+        rot: rnd() * Math.PI * 2,
+        spin: (rnd() - 0.5) * 0.35,
+        sway: rnd() * Math.PI * 2,
+        color: PALETTE[Math.floor(rnd() * PALETTE.length)]
+      });
+    }
+
+    var target = window.scrollY || 0;
+    var current = target, prev = target, vel = 0;
+    var t = 0, last = 0, raf = 0, running = false, destroyed = false;
+
+    function wrap(v, m) { return ((v % m) + m) % m; }
+
+    /* Glow without shadowBlur (too slow on phones): a wide low-alpha pass
+       under a thin bright pass, composited additively by the caller. */
+    function strokeLine(x1, y1, x2, y2, color, alpha, width) {
+      ctx.globalAlpha = alpha * 0.22;
+      ctx.lineWidth = width * 4;
+      ctx.strokeStyle = color;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = width;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    }
+
+    function drawGrid(boost) {
+      var horizon = H * HORIZON, cx = W / 2, i, p, y;
+      var travel = current * GRID_SCROLL + t * IDLE_DRIFT;
+      for (i = 0; i < GRID_ROWS; i++) {
+        p = wrap(i / GRID_ROWS + travel, 1);
+        y = horizon + (H - horizon) * p * p;
+        strokeLine(0, y, W, y, GRID_A, (0.05 + p * 0.42) * boost, 0.6 + p * 1.1);
+      }
+      for (i = -GRID_COLS / 2; i <= GRID_COLS / 2; i++) {
+        strokeLine(cx, horizon, cx + i * (W * 0.16), H, GRID_B, 0.26 * boost, 1);
+      }
+      strokeLine(0, horizon, W, horizon, HORIZON_C, 0.55 * boost, 1.4);
+    }
+
+    function drawShape(s, boost) {
+      var span = H * 1.5;
+      var y = wrap(s.y * span - current * PARALLAX * s.z - t * IDLE_RISE * s.z, span) - H * 0.25;
+      var x = s.x * W + Math.sin(t * 0.3 + s.sway) * 14 * s.z;
+      var r = s.size * (0.35 + s.z * 0.65);
+      var stretch = 1 + Math.min(Math.abs(vel) * 0.00012, 0.5) * s.z;
+      var a = (0.16 + s.z * 0.5) * boost;
+      var rot = s.rot + t * s.spin;
+      var pts = [], i, ang;
+      for (i = 0; i < s.sides; i++) {
+        ang = rot + (i / s.sides) * Math.PI * 2;
+        pts.push([Math.cos(ang) * r, Math.sin(ang) * r]);
+      }
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(1, stretch);
+      ctx.beginPath();
+      for (i = 0; i < pts.length; i++) {
+        if (i) { ctx.lineTo(pts[i][0], pts[i][1]); } else { ctx.moveTo(pts[i][0], pts[i][1]); }
+      }
+      ctx.closePath();
+      ctx.globalAlpha = a * 0.07;                    // glass fill
+      ctx.fillStyle = s.color;
+      ctx.fill();
+      ctx.strokeStyle = s.color;
+      ctx.globalAlpha = a * 0.25; ctx.lineWidth = 4.5 * s.z; ctx.stroke();  // glow pass
+      ctx.globalAlpha = a;        ctx.lineWidth = 1.1;       ctx.stroke();  // core pass
+      ctx.restore();
+    }
+
+    function drawFrame() {
+      if (!baseGrad || !W || !H) { return; }
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalAlpha = BASE_ALPHA;
+      ctx.fillStyle = baseGrad;
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.lineCap = 'round';
+      var boost = 1 + Math.min(Math.abs(vel) * 0.0004, 0.7);
+      drawGrid(boost);
+      for (var i = 0; i < shapes.length; i++) { drawShape(shapes[i], boost); }
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function frame(now) {
+      if (destroyed) { return; }
+      if (!last) { last = now; }
+      var dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      t += dt;
+      target = window.scrollY || 0;
+      current += (target - current) * (1 - Math.exp(-SMOOTH * dt));  // glide, never snap
+      vel = dt > 0 ? (current - prev) / dt : 0;
+      prev = current;
+      drawFrame();
+      if (running) { raf = requestAnimationFrame(frame); }
+    }
+    function start() {
+      if (running || destroyed || reduceMotion) { return; }
+      running = true; last = 0;
+      raf = requestAnimationFrame(frame);
+    }
+    function stop() {
+      running = false;
+      if (raf) { cancelAnimationFrame(raf); }
+      raf = 0;
+    }
+    function onVis() { if (document.hidden) { stop(); } else { start(); } }
+    function onResize() { resize(); }
+
+    window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVis);
+
+    window.__ccScrollBg = {
+      canvas: canvas,
+      destroy: function () {
+        if (destroyed) { return; }
+        destroyed = true;
+        stop();
+        window.removeEventListener('resize', onResize);
+        document.removeEventListener('visibilitychange', onVis);
+        if (canvas.parentNode) { canvas.parentNode.removeChild(canvas); }
+        if (window.__ccScrollBg && window.__ccScrollBg.canvas === canvas) {
+          try { delete window.__ccScrollBg; } catch (e) { window.__ccScrollBg = undefined; }
+        }
+      }
+    };
+
+    resize();
+    if (reduceMotion) { drawFrame(); }        // one static frame, no loop
+    else if (!document.hidden) { start(); }   // pause while the tab is hidden
+  }
+})();
 </script>
 </body>
 </html>
