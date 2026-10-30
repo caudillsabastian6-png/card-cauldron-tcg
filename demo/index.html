@@ -1048,7 +1048,7 @@ body.neon .top-banner{position:relative;}
 
 /* ——— the grid: columns by first letter, wrapping ——— */
 .cw-wrap #cw-gridWrap{flex:0 1 auto; max-height:37dvh; overflow-y:auto; overflow-x:hidden; padding:8px 6px 10px;
-  background:linear-gradient(180deg, rgba(179,136,255,.08), rgba(13,10,20,.25));
+  background:linear-gradient(180deg, rgba(179,136,255,.14), rgba(13,10,20,.48));
   border:1px solid rgba(179,136,255,.28); border-radius:18px;
   box-shadow:inset 0 0 24px rgba(179,136,255,.07);}
 .cw-wrap #cw-grid{display:flex; flex-wrap:wrap; gap:10px 14px; align-content:flex-start;}
@@ -1058,13 +1058,30 @@ body.neon .top-banner{position:relative;}
   border-radius:6px; padding:1px 6px; margin-bottom:1px;
   box-shadow:0 0 8px rgba(255,215,106,.45);}
 .cw-wrap .wrow{display:flex; gap:3px;}
+
+/* CC-FIX-22: found-words strip — compact, wraps, and height-bounded
+   (taller lists scroll inside the strip, never pushing the wheel). */
+.cw-wrap #cw-foundWrap{display:flex; align-items:flex-start; gap:7px; margin-top:8px; padding:6px 8px;
+  background:rgba(13,10,20,.55); border:1px solid rgba(179,136,255,.28); border-radius:10px;}
+.cw-wrap #cw-foundWrap .cw-found-label{flex:none; font-size:10.5px; font-weight:900; letter-spacing:.8px;
+  color:var(--gold); padding-top:3px; white-space:nowrap;}
+.cw-wrap #cw-foundList{display:flex; flex-wrap:wrap; gap:5px; flex:1; max-height:62px; overflow-y:auto;}
+.cw-wrap .cw-fchip{font-size:12.5px; font-weight:900; letter-spacing:.6px; color:var(--cream);
+  background:linear-gradient(160deg,#3a2566,#241547); border:1px solid rgba(255,215,106,.65);
+  border-radius:999px; padding:2px 9px;}
+.cw-wrap .cw-found-none{font-size:12px; font-weight:700; color:rgba(255,248,231,.55); padding-top:2px;}
 .cw-wrap .cell{width:23px; height:27px; flex:none; border-radius:6px; display:flex; align-items:center;
   justify-content:center; font-size:14.5px; font-weight:800;
   background:rgba(255,248,231,.07); border:1px solid rgba(255,248,231,.16); color:transparent;}
 .cw-wrap .cell.hinted{color:rgba(255,215,106,.85); border-color:rgba(255,215,106,.55);
   background:rgba(255,215,106,.08); text-shadow:0 0 6px rgba(255,215,106,.6);}
-.cw-wrap .wrow.found .cell{color:var(--ink); background:linear-gradient(160deg,#ffe9a8,var(--gold) 55%,var(--ember));
-  border-color:#ffe9a8; box-shadow:0 0 7px rgba(255,215,106,.4);}
+/* CC-FIX-22 (Sierra, via owner): found words were hard to read in the
+   pot — the pale gradient stop + soft outer glow washed the letters
+   out against the splash art behind the translucent grid. Same gold,
+   stronger: full-strength gold-to-ember backing, a defined dark-gold
+   rim instead of the glow, and heavier, slightly larger letters. */
+.cw-wrap .wrow.found .cell{color:var(--ink); background:linear-gradient(160deg,var(--gold) 0%,var(--ember) 100%);
+  border-color:#8a5a12; box-shadow:inset 0 0 0 1px rgba(255,233,168,.9); font-weight:900; font-size:15px;}
 .cw-wrap .wrow.pop .cell{animation:cwCellpop .45s ease both;}
 .cw-wrap .wrow.pop .cell:nth-child(2){animation-delay:.04s} .cw-wrap .wrow.pop .cell:nth-child(3){animation-delay:.08s}
 .cw-wrap .wrow.pop .cell:nth-child(4){animation-delay:.12s} .cw-wrap .wrow.pop .cell:nth-child(5){animation-delay:.16s}
@@ -1334,6 +1351,9 @@ body.neon .top-banner{position:relative;}
 }
 .cn-wrap *,.cn-wrap *::before,.cn-wrap *::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 .cn-wrap #cn-wrap{position:relative; width:100%; padding:4px 0 8px;}
+.cn-wrap #cn-fit{position:relative;}
+.cn-wrap #cn-fit.cn-fitted{margin:0 auto;}
+.cn-wrap #cn-fit.cn-fitted #cn-wrap{position:absolute; top:0; left:0; transform-origin:0 0;}
 .cn-wrap #cn-stage{position:relative; width:100%; border-radius:18px; overflow:hidden;
   box-shadow:0 0 0 2px rgba(179,136,255,.35), 0 0 34px rgba(179,136,255,.18), 0 18px 40px rgba(0,0,0,.55);}
 .cn-wrap #cn-cv{display:block; width:100%; height:auto; touch-action:none; background:#0d0a14;}
@@ -1666,7 +1686,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #21 · Oct 30, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #23 · Oct 30, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -3962,10 +3982,15 @@ function startMystery(){
      actually animates. No bubble numbers: all three bubbles look identical, so
      tracking is by eye only, not by a label. */
   function build(){
-    body.innerHTML = opMysteryPickerHTML()
-      + '<p class="scorebar" role="status" id="mysteryBar"></p>'
+    /* CC-FIX-22: play stage FIRST (owner phone exam, Oct 30): the level
+       picker used to stack above the stage and push the three bubbles
+       ~60% down the phone screen. Order is now HUD line + phase line +
+       stage at the top of the game body, level picker BELOW the stage.
+       Same elements, ids, handlers and explainer — reorder only. */
+    body.innerHTML = '<p class="scorebar" role="status" id="mysteryBar"></p>'
       + '<p class="center" style="margin-top:14px;font-size:17.5px;font-weight:900;min-height:26px;" role="status" id="mysteryPhase"></p>'
       + '<div class="mystery-stage" role="group" aria-label="Three bubbles — one of them hides the star" id="mysteryStage"></div>'
+      + opMysteryPickerHTML()
       + '<p class="small dim center" style="margin-top:14px;">Correct picks score 100, plus 15 for each step of your streak. The shuffle glides slowly on purpose — follow it with your eyes. All three bubbles look the same, no labels.</p>';
     var stage = $("mysteryStage");
     for(var id=0; id<3; id++){
@@ -5559,6 +5584,26 @@ function renderGrid(popWord){
   const total = S.level.words.length;
   foundCount.textContent = S.found.size + "/" + total;
   progFill.style.width = (total ? (S.found.size / total * 100) : 0) + "%";
+  /* CC-FIX-22 (Sierra, via owner): a visible found-words list — testers
+     could not remember which words they had already spelled. Rendered
+     here because every state change (submit, hint, level load) passes
+     through renderGrid, so the list can never drift from the grid. */
+  const fl = $("cw-foundList");
+  if (fl){
+    fl.innerHTML = "";
+    const fw = cwSortWords(S.level.words).filter(w => S.found.has(w));
+    if (!fw.length){
+      const s = document.createElement("span");
+      s.className = "cw-found-none"; s.textContent = "Words you brew will land here.";
+      fl.appendChild(s);
+    } else {
+      for (const w of fw){
+        const c = document.createElement("span");
+        c.className = "cw-fchip"; c.textContent = w;
+        fl.appendChild(c);
+      }
+    }
+  }
 }
 
 /* ================= WHEEL ================= */
@@ -5798,7 +5843,7 @@ paintMute(); buildChips(); loadLevel(selLevel, true);
 function startWords(){
   var body = $("gameWords-body"); if(!body) return;
   if(!body.querySelector(".cw-wrap")){
-    body.innerHTML = "<div class=\"cw-wrap\"><div class=\"lasers\"><i></i><i></i><i></i><i></i></div>\n<div id=\"cw-app\">\n  <header>\n    <div class=\"logo\">\ud83c\udf72</div>\n    <h1>Cauldron Words</h1>\n    <div class=\"spacer\"></div>\n    <div class=\"pill\">\u2b50 <b id=\"cw-score\">0</b></div>\n    <button class=\"iconbtn\" id=\"cw-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n    <button class=\"iconbtn\" id=\"cw-menuBtn\" title=\"Levels\">\u2630</button>\n  </header>\n\n  <div id=\"cw-lvlLine\">\n    <span class=\"lname\" id=\"cw-lvlName\">Level 1</span>\n    <div class=\"prog\"><i id=\"cw-progFill\"></i></div>\n    <span id=\"cw-foundCount\">0/0</span>\n  </div>\n\n  <div id=\"cw-gridWrap\"><div id=\"cw-grid\"></div></div>\n\n  <div id=\"cw-banner\"><div id=\"cw-bannerWord\"></div></div>\n  <div id=\"cw-toast\"></div>\n\n  <div id=\"cw-wheelZone\">\n    <div id=\"cw-wheel\">\n      <div id=\"cw-brewRing\"></div>\n      <svg id=\"cw-dragSvg\"><polyline id=\"cw-dragLine\" points=\"\"></polyline></svg>\n      <!-- letter bubbles injected by JS -->\n    </div>\n  </div>\n\n  <div id=\"cw-controls\">\n    <button class=\"cbtn\" id=\"cw-shuffleBtn\">\ud83d\udd00 Shuffle</button>\n    <button class=\"cbtn\" id=\"cw-hintBtn\">\ud83d\udca1 Hint <span class=\"n\" id=\"cw-hintN\">3</span></button>\n    <div id=\"cw-jar\">\ud83e\uddea Bonus jar \u00b7 <span id=\"cw-jarN\">0</span></div>\n  </div>\n</div>\n\n<!-- START overlay: the board + wheel sit visible behind it -->\n<div class=\"overlay\" id=\"cw-startOverlay\">\n  <div class=\"card\">\n    <div class=\"big\">\ud83c\udf72</div>\n    <h2>Cauldron Words</h2>\n    <p>Drag your finger through the letter bubbles to spell words. Fill the whole grid to brew the level!</p>\n    <p class=\"howto\">Three of a letter? Only if the wheel shows it twice. Extra words you find drop in the bonus jar. \ud83e\uddea</p>\n    <button id=\"cw-startBtn\">\u25b6 START</button>\n    <div class=\"chips\" id=\"cw-lvlChips\"></div>\n  </div>\n</div>\n\n<!-- VICTORY overlay -->\n<div class=\"overlay hidden\" id=\"cw-winOverlay\">\n  <div class=\"card\" id=\"cw-winCard\">\n    <div class=\"big\">\ud83c\udf89</div>\n    <h2>BREWED 'EM ALL!</h2>\n    <p id=\"cw-winLine\">Every word in the grid \u2014 found.</p>\n    <p style=\"margin-top:8px;\">Longest brew: <span id=\"cw-winWord\"></span></p>\n    <p style=\"margin-top:4px;\">Level score: <b id=\"cw-winScore\" style=\"color:var(--gold);\">0</b></p>\n    <button class=\"vbtn primary\" id=\"cw-nextBtn\">Next Level \u25b6</button>\n    <button class=\"vbtn\" id=\"cw-replayBtn\">\u21bb Replay this level</button>\n    <button class=\"vbtn\" id=\"cw-winMenuBtn\">\u2630 All levels</button>\n  </div>\n</div></div>";
+    body.innerHTML = "<div class=\"cw-wrap\"><div class=\"lasers\"><i></i><i></i><i></i><i></i></div>\n<div id=\"cw-app\">\n  <header>\n    <div class=\"logo\">\ud83c\udf72</div>\n    <h1>Cauldron Words</h1>\n    <div class=\"spacer\"></div>\n    <div class=\"pill\">\u2b50 <b id=\"cw-score\">0</b></div>\n    <button class=\"iconbtn\" id=\"cw-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n    <button class=\"iconbtn\" id=\"cw-menuBtn\" title=\"Levels\">\u2630</button>\n  </header>\n\n  <div id=\"cw-lvlLine\">\n    <span class=\"lname\" id=\"cw-lvlName\">Level 1</span>\n    <div class=\"prog\"><i id=\"cw-progFill\"></i></div>\n    <span id=\"cw-foundCount\">0/0</span>\n  </div>\n\n  <div id=\"cw-gridWrap\"><div id=\"cw-grid\"></div></div>\n\n  <div id=\"cw-foundWrap\"><span class=\"cw-found-label\">WORDS FOUND</span><div id=\"cw-foundList\"></div></div>\n\n  <div id=\"cw-banner\"><div id=\"cw-bannerWord\"></div></div>\n  <div id=\"cw-toast\"></div>\n\n  <div id=\"cw-wheelZone\">\n    <div id=\"cw-wheel\">\n      <div id=\"cw-brewRing\"></div>\n      <svg id=\"cw-dragSvg\"><polyline id=\"cw-dragLine\" points=\"\"></polyline></svg>\n      <!-- letter bubbles injected by JS -->\n    </div>\n  </div>\n\n  <div id=\"cw-controls\">\n    <button class=\"cbtn\" id=\"cw-shuffleBtn\">\ud83d\udd00 Shuffle</button>\n    <button class=\"cbtn\" id=\"cw-hintBtn\">\ud83d\udca1 Hint <span class=\"n\" id=\"cw-hintN\">3</span></button>\n    <div id=\"cw-jar\">\ud83e\uddea Bonus jar \u00b7 <span id=\"cw-jarN\">0</span></div>\n  </div>\n</div>\n\n<!-- START overlay: the board + wheel sit visible behind it -->\n<div class=\"overlay\" id=\"cw-startOverlay\">\n  <div class=\"card\">\n    <div class=\"big\">\ud83c\udf72</div>\n    <h2>Cauldron Words</h2>\n    <p>Drag your finger through the letter bubbles to spell words. Fill the whole grid to brew the level!</p>\n    <p class=\"howto\">Three of a letter? Only if the wheel shows it twice. Extra words you find drop in the bonus jar. \ud83e\uddea</p>\n    <button id=\"cw-startBtn\">\u25b6 START</button>\n    <div class=\"chips\" id=\"cw-lvlChips\"></div>\n  </div>\n</div>\n\n<!-- VICTORY overlay -->\n<div class=\"overlay hidden\" id=\"cw-winOverlay\">\n  <div class=\"card\" id=\"cw-winCard\">\n    <div class=\"big\">\ud83c\udf89</div>\n    <h2>BREWED 'EM ALL!</h2>\n    <p id=\"cw-winLine\">Every word in the grid \u2014 found.</p>\n    <p style=\"margin-top:8px;\">Longest brew: <span id=\"cw-winWord\"></span></p>\n    <p style=\"margin-top:4px;\">Level score: <b id=\"cw-winScore\" style=\"color:var(--gold);\">0</b></p>\n    <button class=\"vbtn primary\" id=\"cw-nextBtn\">Next Level \u25b6</button>\n    <button class=\"vbtn\" id=\"cw-replayBtn\">\u21bb Replay this level</button>\n    <button class=\"vbtn\" id=\"cw-winMenuBtn\">\u2630 All levels</button>\n  </div>\n</div></div>";
     buildWordsGame(body.querySelector(".cw-wrap"));
   } else { try{ if(window.__cw && window.__cw.start) window.__cw.start(); }catch(e){} }
 }
@@ -7133,6 +7178,7 @@ var CC_CANNON_CORE = (function(){
     particles=[]; floaters=[]; ballTrail=[];
     aimAngle=-0.72; aimPower=0; dragging=false;
     state = toMenu? "menu" : "aim";
+    schedulePresent(); /* CC-FIX-23: fit the whole stage inside the visible window -- no scrolling */
     objBar.firstChild.textContent = LEVELS[idx].banner+" ";
     updateHUD(true);
     hintEl.style.opacity = toMenu?0:1;
@@ -7471,6 +7517,62 @@ var CC_CANNON_CORE = (function(){
   cv.addEventListener("pointercancel", function(){ endDrag(false); });
   document.addEventListener("pointerdown", function(){ ensureAudio(); }, true);
 
+  /* CC-FIX-23: fit the WHOLE game screen into one viewport -- no
+     scrolling, ever. #22 scrolled the page so the stage's bottom sat
+     above the dock, but the owner, watching it played, ruled that a
+     game you must scroll to play is still broken: "make that whole
+     game screen smaller -- you see how long it is, you'll have to
+     scroll down the screen in order to be able to play the game."
+     So the scroll is gone. Instead, the Cannon screen (#cn-wrap:
+     stage + HUD + controls + footnote) is uniformly scaled to fit
+     the window between the app chrome above it and the fixed bottom
+     dock, inside a #cn-fit layout box sized to the scaled footprint.
+     Same art, same proportions, nothing cropped or redesigned.
+     Aim stays exact under the scale because canvasPos() already
+     converts pointer coordinates through getBoundingClientRect(),
+     which reports the scaled rect -- (clientX-rect.left)*W/rect.width
+     divides the scale back out. Verified by touch drags at both
+     phone viewports in FIX-23-REPORT.md. */
+  function fitStage(){
+    var fit = document.getElementById("cn-fit"),
+        inner = document.getElementById("cn-wrap");
+    if(!fit || !inner) return;
+    /* measure the natural (unscaled) size first */
+    fit.classList.remove("cn-fitted");
+    fit.style.width = ""; fit.style.height = "";
+    inner.style.width = ""; inner.style.transform = "";
+    var W0 = inner.offsetWidth, H0 = inner.offsetHeight;
+    if(!W0 || !H0) return;
+    /* the window the game must live in: from the fit box's place in
+       the document (the shell shows game screens scrolled to the
+       top, so its document top is its on-screen top) down to the
+       top edge of the fixed bottom dock. */
+    var docTop = fit.getBoundingClientRect().top + (window.scrollY || 0);
+    var limit = window.innerHeight - 6;
+    var dock = document.querySelector(".dock");
+    if(dock){
+      var dr = dock.getBoundingClientRect();
+      if(dr.height && dr.top > 0 && dr.top < limit) limit = dr.top - 6;
+    }
+    var avail = limit - docTop;
+    var sc = avail > 0 ? Math.min(1, avail / H0) : 1;
+    if(sc >= 0.995) return; /* natural size already fits: no scale */
+    fit.classList.add("cn-fitted");
+    fit.style.width = Math.round(W0 * sc) + "px";
+    fit.style.height = Math.round(H0 * sc) + "px";
+    inner.style.width = W0 + "px";
+    inner.style.transform = "scale(" + sc + ")";
+  }
+  function schedulePresent(){
+    /* Deferred twice, as in #22: the shell's show() queues its own
+       scroll-to-top for the same frame; fitting after it measures
+       the settled layout. Idempotent -- every run re-measures from
+       the natural (unscaled) size. Name kept from #22: presenting
+       the stage now means fitting it, never scrolling it. */
+    setTimeout(fitStage, 80);
+    setTimeout(fitStage, 420);
+  }
+
   /* ---------------- UI wiring ---------------- */
   function buildChips(){
     var box=$("cn-levelChips"); box.innerHTML="";
@@ -7498,6 +7600,7 @@ var CC_CANNON_CORE = (function(){
     ensureAudio();
     $("cn-startOverlay").classList.add("hidden");
     if(state==="menu"){ state="aim"; hintEl.style.opacity=1; updateHUD(); }
+    schedulePresent(); /* CC-FIX-23 */
   });
   $("cn-nextBtn").addEventListener("click", function(){
     $("cn-endOverlay").classList.add("hidden");
@@ -7573,6 +7676,8 @@ var CC_CANNON_CORE = (function(){
   /* ---------------- Boot ---------------- */
   buildChips();
   loadLevel(0, true);
+  schedulePresent(); /* CC-FIX-23 */
+  window.addEventListener("resize", schedulePresent);
   requestAnimationFrame(frame);
 
   window.__ccCannon={
@@ -7582,6 +7687,7 @@ var CC_CANNON_CORE = (function(){
       if(state!=="aim") return false;
       aimAngle=deg*Math.PI/180; aimPower=power; recoil=1; fire(); return true;
     },
+    present: schedulePresent, /* CC-FIX-23 */
     state:function(){ return state; },
     world:function(){ return world; },
     score:function(){ return score; }
@@ -7598,9 +7704,11 @@ var CC_CANNON_CORE = (function(){
 function startCannon(){
   var body = $("gameCannon-body"); if(!body) return;
   if(!body.querySelector(".cn-wrap")){
-    body.innerHTML = "<div class=\"cn-wrap\"><div id=\"cn-wrap\">\n  <div id=\"cn-stage\">\n    <canvas id=\"cn-cv\" width=\"390\" height=\"660\"></canvas>\n    <div id=\"cn-hud\">\n      <div id=\"cn-hudRow\">\n        <div class=\"pill\" id=\"cn-ballsPill\"></div>\n        <div class=\"pill\">SCORE <b id=\"cn-scoreVal\">0</b></div>\n      </div>\n      <div id=\"cn-objBar\">TOPPLE IT!<small id=\"cn-objSub\"></small></div>\n    </div>\n    <div id=\"cn-btnRow\">\n      <button class=\"iconBtn\" id=\"cn-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n      <button class=\"iconBtn\" id=\"cn-restartBtn\" title=\"Restart level\">\u21ba</button>\n    </div>\n    <div id=\"cn-hint\">Drag back from the cauldron\u2026 let go to fire!</div>\n\n    <div class=\"overlay\" id=\"cn-startOverlay\">\n      <div class=\"gameTitle\">Cauldron <span class=\"cc\">Cannon</span></div>\n      <div class=\"tagline\">Aim the potion cannon, find the weak spot, and bring the whole tower down. Kaboom responsibly.</div>\n      <div class=\"chips\" id=\"cn-levelChips\"></div>\n      <button class=\"bigStart\" id=\"cn-startBtn\">\u25b6 START</button>\n      <div class=\"tagline\" style=\"font-size:12px;opacity:.85\">Drag back to aim \u2014 the dotted line is your shot.<br>Longer drag = bigger boom.</div>\n    </div>\n\n    <div class=\"overlay hidden\" id=\"cn-endOverlay\">\n      <div class=\"endCard\">\n        <div class=\"endTitle\" id=\"cn-endTitle\">TOWER DOWN!</div>\n        <div class=\"endLine\" id=\"cn-endLine\"></div>\n        <div class=\"endScore\" id=\"cn-endScore\"></div>\n        <div class=\"btnRow2\">\n          <button class=\"miniBtn gold\" id=\"cn-nextBtn\">Next \u25b6</button>\n          <button class=\"miniBtn\" id=\"cn-retryBtn\">\u21ba Retry</button>\n          <button class=\"miniBtn\" id=\"cn-menuBtn\">Levels</button>\n        </div>\n      </div>\n    </div>\n  </div>\n  <div id=\"cn-footNote\">Cauldron Cannon \u2014 playground prototype. Best scores live on this device only.</div>\n</div></div>";
+    body.innerHTML = "<div class=\"cn-wrap\"><div id=\"cn-fit\"><div id=\"cn-wrap\">\n  <div id=\"cn-stage\">\n    <canvas id=\"cn-cv\" width=\"390\" height=\"660\"></canvas>\n    <div id=\"cn-hud\">\n      <div id=\"cn-hudRow\">\n        <div class=\"pill\" id=\"cn-ballsPill\"></div>\n        <div class=\"pill\">SCORE <b id=\"cn-scoreVal\">0</b></div>\n      </div>\n      <div id=\"cn-objBar\">TOPPLE IT!<small id=\"cn-objSub\"></small></div>\n    </div>\n    <div id=\"cn-btnRow\">\n      <button class=\"iconBtn\" id=\"cn-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n      <button class=\"iconBtn\" id=\"cn-restartBtn\" title=\"Restart level\">\u21ba</button>\n    </div>\n    <div id=\"cn-hint\">Drag back from the cauldron\u2026 let go to fire!</div>\n\n    <div class=\"overlay\" id=\"cn-startOverlay\">\n      <div class=\"gameTitle\">Cauldron <span class=\"cc\">Cannon</span></div>\n      <div class=\"tagline\">Aim the potion cannon, find the weak spot, and bring the whole tower down. Kaboom responsibly.</div>\n      <div class=\"chips\" id=\"cn-levelChips\"></div>\n      <button class=\"bigStart\" id=\"cn-startBtn\">\u25b6 START</button>\n      <div class=\"tagline\" style=\"font-size:12px;opacity:.85\">Drag back to aim \u2014 the dotted line is your shot.<br>Longer drag = bigger boom.</div>\n    </div>\n\n    <div class=\"overlay hidden\" id=\"cn-endOverlay\">\n      <div class=\"endCard\">\n        <div class=\"endTitle\" id=\"cn-endTitle\">TOWER DOWN!</div>\n        <div class=\"endLine\" id=\"cn-endLine\"></div>\n        <div class=\"endScore\" id=\"cn-endScore\"></div>\n        <div class=\"btnRow2\">\n          <button class=\"miniBtn gold\" id=\"cn-nextBtn\">Next \u25b6</button>\n          <button class=\"miniBtn\" id=\"cn-retryBtn\">\u21ba Retry</button>\n          <button class=\"miniBtn\" id=\"cn-menuBtn\">Levels</button>\n        </div>\n      </div>\n    </div>\n  </div>\n  <div id=\"cn-footNote\">Cauldron Cannon \u2014 playground prototype. Best scores live on this device only.</div>\n</div></div></div>";
     buildCannonGame(body.querySelector(".cn-wrap"));
-  } else { /* game keeps its own state + menu; nothing to restart on re-entry */ }
+  } else { /* game keeps its own state + menu; nothing to restart on re-entry */
+    if(window.__ccCannon && window.__ccCannon.present) window.__ccCannon.present(); /* CC-FIX-23 */
+  }
 }
 /* CC-FIX-19: startTell restored verbatim from build #14
    (index.frozen-14.html) — it was lost in the #17 fold while its
