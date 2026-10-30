@@ -955,15 +955,6 @@ body.neon .top-banner{position:relative;}
 #ccFreeCheckBubbles i.cc-off{background:rgba(207,196,232,.05);border:2px solid rgba(207,196,232,.32);box-shadow:none;opacity:.55;}
 /* ============ NEON LINE THEME ends ============ */
 </style>
-<style>
-/* ============================================================
-   CAULDRON STACK — module styles (game #14)
-   EVERY selector is scoped under .ccstack: the prototype's
-   generic classes (.card, .overlay, .title, .hidden) collide
-   with the demo's own stylesheet. Colours are the game's
-   approved palette — ink #fff8e7 = the demo's cream, gold
-   #ffd166 sits in the demo's gold family (#ffd76a).
-   Paste as its own <style> block directly before <!-- CC-STACKFIT-BEGIN -->
 <style id="cc-stackfit-2026-10-29">
 /* CC-STACKFIT (Oct 29, owner live catch on upload #16): on the
    Cauldron Stack screen ONLY, slim what sits above the field so
@@ -987,7 +978,15 @@ body.neon .top-banner{position:relative;}
 .cw-wrap{ background:url("assets/sweep/words/words-bg.webp") center/cover no-repeat; }
 .cm-wrap{ background:url("assets/sweep/tilematch/tilematch-bg.webp") center/cover no-repeat; }
 </style>
-</head>
+<style>
+/* ============================================================
+   CAULDRON STACK — module styles (game #14)
+   EVERY selector is scoped under .ccstack: the prototype's
+   generic classes (.card, .overlay, .title, .hidden) collide
+   with the demo's own stylesheet. Colours are the game's
+   approved palette — ink #fff8e7 = the demo's cream, gold
+   #ffd166 sits in the demo's gold family (#ffd76a).
+   Paste as its own <style> block directly before <!-- CC-STACKFIT-BEGIN -->
    (see INTEGRATION.md). No global rules in this file.
    ============================================================ */
 .ccstack{
@@ -1230,217 +1229,12 @@ body.neon .bubble-btn.cc-featured-game:active{
 
 </style>
 </head>
-   (see INTEGRATION.md). No global rules in this file.
-   ============================================================ */
-.ccstack{
-  --ccstack-ink:#fff8e7;
-  --ccstack-panel:rgba(16,18,34,.92);
-  --ccstack-line:rgba(255,248,231,.18);
-  color:var(--ccstack-ink);
-  font-family:Verdana,Geneva,Tahoma,sans-serif;
-  user-select:none;-webkit-user-select:none;
-}
-.ccstack-hidden{display:none !important;}
-
-/* ---------- HUD ---------- */
-.ccstack-hud{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  padding:8px 10px;
-  background:linear-gradient(180deg,rgba(20,22,44,.95),rgba(10,11,24,.85));
-  border:1px solid var(--ccstack-line);
-  border-radius:14px 14px 0 0;
-}
-.ccstack-hudbox{
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--ccstack-line);
-  border-radius:10px;
-  padding:4px 10px;
-  font-size:14px;white-space:nowrap;
-}
-.ccstack-hudbox b{font-size:17px;color:#ffd166;}
-.ccstack-spacer{flex:1;}
-#stackMusicBtn{
-  background:rgba(255,255,255,.08);
-  color:var(--ccstack-ink);
-  border:1px solid var(--ccstack-line);
-  border-radius:10px;
-  font-size:13px;font-weight:bold;font-family:inherit;
-  padding:8px 12px;cursor:pointer;white-space:nowrap;
-  min-height:44px; /* house touch-target floor */
-}
-#stackMusicBtn:active{transform:scale(.96);}
-
-/* ---------- standings ---------- */
-.ccstack-standings{
-  text-align:center;
-  font-size:14px;
-  padding:5px 10px;
-  color:#cfd6ff;
-  background:rgba(10,11,24,.6);
-  border-left:1px solid var(--ccstack-line);
-  border-right:1px solid var(--ccstack-line);
-  min-height:26px;
-}
-.ccstack-standings b{color:var(--ccstack-ink);}
-
-/* ---------- stage ----------
-   Prototype standalone used height:100dvh on <body>; in the
-   demo the game lives inside a scrolling screen under the
-   dock, so the stage is a fixed, generous window instead.
-   touch-action:none lives HERE only — never on body — so
-   the rest of the app still scrolls normally. */
-.ccstack-stage{
-  position:relative;
-  height:min(64dvh,600px);
-  min-height:420px;
-  overflow:hidden;
-  border:1px solid var(--ccstack-line);
-  border-top:none;
-  border-radius:0 0 18px 18px;
-  background:#05060f;
-  touch-action:none;
-}
-#stackCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
-
-/* ---------- grade flash ----------
-   Word size is clamp()ed (prototype: fixed 44px) so FLUSH
-   stays big on a phone without swamping a 320px screen;
-   the pop holds a touch longer at the back end (80% vs
-   75%) so the reward reads before it drifts away. */
-.ccstack-grade{
-  position:absolute;left:0;right:0;top:16%;
-  text-align:center;pointer-events:none;
-  opacity:0;z-index:4;
-}
-#stackGradeWord{
-  font-size:clamp(30px,11vw,44px);font-weight:bold;letter-spacing:1px;
-  text-shadow:0 0 14px currentColor,0 2px 0 rgba(0,0,0,.5);
-}
-#stackGradeSub{font-size:17px;margin-top:2px;color:var(--ccstack-ink);text-shadow:0 1px 3px #000;}
-.ccstack-grade.ccstack-pop{animation:ccstackGradePop 1.15s ease-out forwards;}
-@keyframes ccstackGradePop{
-  0%{opacity:0;transform:scale(.7);}
-  12%{opacity:1;transform:scale(1.08);}
-  25%{transform:scale(1);}
-  80%{opacity:1;}
-  100%{opacity:0;transform:scale(1) translateY(-10px);}
-}
-.ccstack-g-flush{color:#7dffb0;}
-.ccstack-g-off{color:#ffd166;}
-.ccstack-g-miss{color:#ff6b81;}
-.ccstack-prompt{
-  position:absolute;left:0;right:0;bottom:12%;
-  text-align:center;font-size:20px;font-weight:bold;
-  color:var(--ccstack-ink);text-shadow:0 0 12px rgba(255,209,102,.8),0 2px 3px #000;
-  pointer-events:none;z-index:4;
-  animation:ccstackPulse 1.4s ease-in-out infinite;
-}
-@keyframes ccstackPulse{0%,100%{opacity:.65;}50%{opacity:1;}}
-
-/* ---------- overlays (start + end) ---------- */
-.ccstack-overlay{
-  position:absolute;inset:0;z-index:6;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:rgba(4,5,14,.72);
-  padding:20px;text-align:center;
-  overflow-y:auto;
-}
-.ccstack-card{
-  background:var(--ccstack-panel);
-  border:1px solid var(--ccstack-line);
-  border-radius:18px;
-  padding:22px 22px 18px;
-  max-width:420px;width:100%;
-  box-shadow:0 0 34px rgba(80,90,255,.25);
-}
-.ccstack-card h3{margin:0 0 4px;font-size:26px;letter-spacing:.5px;}
-.ccstack-card h3 span{color:#ffd166;}
-.ccstack-card p{margin:8px 0;font-size:15px;line-height:1.45;color:#e8e4d2;}
-.ccstack-swatches{display:flex;gap:12px;justify-content:center;margin:14px 0 6px;flex-wrap:wrap;}
-.ccstack-swatch{
-  width:64px;height:64px;border-radius:14px;cursor:pointer;
-  border:3px solid rgba(255,255,255,.25);
-  background:rgba(255,255,255,.04);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
-  color:var(--ccstack-ink);font-family:inherit;
-}
-.ccstack-swatch .ccstack-chip{width:30px;height:22px;border-radius:5px;}
-.ccstack-swatch small{font-size:11px;font-weight:bold;letter-spacing:.4px;}
-.ccstack-swatch:active{transform:scale(.95);}
-.ccstack-bigbtn{
-  background:#ffd166;color:#221a05;
-  border:none;border-radius:14px;
-  font-size:19px;font-weight:bold;font-family:inherit;
-  padding:14px 30px;cursor:pointer;margin-top:12px;
-  min-height:52px;
-  box-shadow:0 0 18px rgba(255,209,102,.45);
-}
-.ccstack-bigbtn:active{transform:scale(.96);}
-.ccstack-statrow{
-  display:flex;justify-content:space-between;
-  font-size:16px;padding:7px 4px;
-  border-bottom:1px dashed rgba(255,248,231,.15);
-}
-.ccstack-statrow b{color:#ffd166;font-size:18px;}
-#stackNewBest{display:none;color:#7dffb0;font-weight:bold;font-size:16px;margin-top:8px;}
-.ccstack-fineprint{font-size:12px;color:#9aa0c3;margin-top:10px;line-height:1.4;}
-
-/* ---------- reduced motion (house motion rules) ---------- */
-@media (prefers-reduced-motion: reduce){
-  .ccstack-prompt{animation:none;opacity:.9;}
-  .ccstack-grade.ccstack-pop{animation-duration:.5s;}
-}
-
-/* ============================================================
-   FEATURED HUB CARD — owner order Oct 29 ~5:32 PM (fold-in).
-   NOT .ccstack-scoped on purpose: this styles Cauldron
-   Stack's card in the GAMES hub (built by gameBtnHTML when
-   the entry carries featured:true). Bigger than every
-   sibling card (min-height 96px vs 68px, larger type),
-   filled MENU-style gold with a glow border in the demo's
-   neon family, plus a dark NEW GAME badge pill. Dual
-   selectors (plain + body.neon) pin the treatment over the
-   neon theme's translucent b-gold override, the same
-   technique as the Pop Path reveal patch. Sibling cards
-   and the two-list hub structure are untouched.
-   ============================================================ */
-.bubble-btn.cc-featured-game,
-body.neon .bubble-btn.cc-featured-game{
-  min-height:96px;
-  padding:20px 26px;
-  font-size:22px;
-  opacity:1;
-  background:linear-gradient(105deg,#fff0ae 0%,#ffd76a 34%,#ffc53d 62%,#ffb347 100%);
-  border:3px solid #fff3bd;
-  color:var(--gold-ink);
-  filter:brightness(1.08) saturate(1.10);
-  box-shadow:0 0 0 3px rgba(255,197,61,.38), 0 0 34px rgba(255,197,61,.65), inset 0 3px 0 rgba(255,255,255,.55), inset 0 -10px 16px rgba(146,96,10,.28), 0 10px 24px rgba(0,0,0,.60);
-  text-shadow:0 1px 0 rgba(255,255,255,.45);
-}
-.bubble-btn.cc-featured-game .sub{
-  color:var(--gold-ink); opacity:1;
-  text-shadow:0 1px 0 rgba(255,255,255,.35);
-}
-body.neon .bubble-btn.cc-featured-game:active{
-  box-shadow:0 0 12px rgba(255,215,106,.60), inset 0 0 16px rgba(146,96,10,.30), 0 3px 10px rgba(0,0,0,.60);
-}
-.cc-newgame-badge{
-  display:inline-block;
-  background:#140e20; color:#ffd76a;
-  border:1.5px solid #ffd76a; border-radius:999px;
-  padding:3px 12px;
-  font-size:12px; font-weight:900; letter-spacing:.14em;
-  box-shadow:0 0 14px rgba(255,215,106,.65), inset 0 0 8px rgba(255,215,106,.25);
-  text-shadow:0 0 6px rgba(255,215,106,.8);
-}
-</style>
-</head>
 <body class="neon">
 <div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first — local demo only. No password, no server, nothing leaves this device. This only remembers a name so the top bubble shows who is signed in.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Local demo only — not a real account.</p></div>
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #15-polish-wave1 · Oct 29, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #18 · Oct 30, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
