@@ -959,6 +959,26 @@ footer{
    it to the top of the page, clipped under the topbar. Keep it home. */
 nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0;box-shadow:none;padding:0;}
 </style>
+<style id="cc-docklift-2026-10-29">
+/* CC-DOCKLIFT 2026-10-29 (Option A — the same two-part fix as shop's
+   CC-SHOPFIX, live at commit ad6e70ea): at phone widths the shared two-row
+   .web-dock has NO safe-area lift (bottom:.7rem only), so its second row
+   renders partly inside the phone's gesture-bar zone. The lift alone is
+   not enough: the fixed Cauldron Sound pill's own rule already carries
+   env(safe-area-inset-bottom), so the pill would NOT rise with the dock —
+   the lifted dock's top edge (~110px + inset) would land ~18px inside the
+   pill's band (bottom edge 92.4px + inset), covering ~45% of row 1's
+   Sets/Bulk links (measured in DOCKLIFT-REPORT.md; that collision is why
+   the lift-only pass stopped). So, exactly as shop: lift the dock clear
+   of the gesture bar, keep the page-end clearance in step, and re-park
+   the pill at 140px + inset, ~30px clear of the lifted dock's top edge.
+   Phone widths only — desktop (>760px) untouched. */
+@media (max-width:760px){
+  .web-dock{bottom:calc(.7rem + env(safe-area-inset-bottom, 0px))}
+  body{padding-bottom:calc(136px + env(safe-area-inset-bottom, 0px))}
+  #soundToggle{bottom:calc(140px + env(safe-area-inset-bottom, 0px))}
+}
+</style>
 </head>
 <body class="subpage">
 
