@@ -983,6 +983,12 @@ details.cardbox-fold>summary::-webkit-details-marker{display:none}
 .fold-hint{font-size:.72em;color:#b388ff;letter-spacing:.08em;font-weight:700;text-shadow:0 0 8px rgba(179,136,255,.4);white-space:nowrap}
 .fold-hint-line{margin:.45rem 0 0}
 </style>
+<style id="cc-topfix-2026-10-29">
+/* CC-TOPFIX 2026-10-29: the footer social row is a <nav>, and the old
+   top-navigation's generic nav{} rule (position:fixed; top:0) was pinning
+   it to the top of the page, clipped under the topbar. Keep it home. */
+nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0;box-shadow:none;padding:0;}
+</style>
 </head>
 <body class="subpage">
 
