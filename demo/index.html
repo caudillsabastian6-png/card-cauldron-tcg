@@ -1234,7 +1234,7 @@ body.neon .bubble-btn.cc-featured-game:active{
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #18 · Oct 30, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #19 · Oct 30, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -2831,9 +2831,23 @@ document.addEventListener("click", function(e){
   var b = e.target.closest("[data-game]");
   if(!b) return;
   popSnd();
-  show(b.getAttribute("data-game"));
-  var fn = GAME_STARTERS[b.getAttribute("data-game")];
-  if(fn) fn();
+  var scr = b.getAttribute("data-game");
+  show(scr);
+  /* CC-FIX-19: a missing or throwing starter now says so on screen
+     (and in the console) instead of stalling on the loading line. */
+  var fn = (window.GAME_STARTERS || {})[scr];
+  if (fn) {
+    try { fn(); }
+    catch (err) {
+      try { console.error("CC games: starter for " + scr + " threw", err); } catch (e2) {}
+      var body = document.getElementById(scr + "-body");
+      if (body) body.innerHTML = '<p class="center" style="margin-top:26px;font-weight:800;">That game hit a snag while opening — sorry about that. Please tell the crew which game: ' + scr + '.</p>';
+    }
+  } else {
+    try { console.error("CC games: no starter registered for " + scr); } catch (e3) {}
+    var body2 = document.getElementById(scr + "-body");
+    if (body2) body2.innerHTML = '<p class="center" style="margin-top:26px;font-weight:800;">That game could not be opened. Please tell the crew which game: ' + scr + '.</p>';
+  }
 });
 renderGamesHub();
 
@@ -5775,7 +5789,7 @@ var CMCore = (function(){
    ===================================================================== */
 (function(){
   'use strict';
-  var C = window.CMCore;
+  var C = CMCore;
   var $ = function(id){ return document.getElementById(id); };
   var stageEl = $('cm-stage'), trayEl = $('cm-tray'), fxEl = $('cm-fx');
   var overlayEl = $('cm-overlay'), panelStart = $('cm-panelStart'), panelEnd = $('cm-panelEnd');
@@ -6565,7 +6579,7 @@ var CC_CANNON_CORE = (function(){
 
 "use strict";
 (function(){
-  var CORE = window.CC_CANNON_CORE;
+  var CORE = CC_CANNON_CORE;
   var LEVELS = CORE.LEVELS, MATS = CORE.MATERIALS;
   var W = 390, H = 660;
   var CANNON = {x:58, y:598};            // pivot point
@@ -7110,6 +7124,44 @@ function startCannon(){
     buildCannonGame(body.querySelector(".cn-wrap"));
   } else { /* game keeps its own state + menu; nothing to restart on re-entry */ }
 }
+/* CC-FIX-19: startTell restored verbatim from build #14
+   (index.frozen-14.html) — it was lost in the #17 fold while its
+   data (OP_TELL_LEVELS), level state (opTellLevel/opTellUnlocked)
+   and opSetTellLevel survived in the file. */
+function startTell(){
+  gameCleanup = null;
+  var body = $("gameTell-body");
+  var level = opTellLevel, qs = OP_TELL_LEVELS[level], idx = 0, correct = 0;
+  function levelButtons(){ return '<div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+level+' \u25BE</span></button><div class="stack mt cc-drop-list">' + [1,2,3].map(function(l){ return '<button type="button" class="bubble-btn '+(l===level?'b-gold':'b-white')+'" '+(l>opTellUnlocked?'disabled':'')+' onclick="opSetTellLevel('+l+')"><span>Level '+l+(l===level?' ✓':'')+(l>opTellUnlocked?' · locked':'')+'</span></button>'; }).join("") + '</div></div>'; }
+  function renderQ(){
+    if(idx >= qs.length){ finish(); return; }
+    var q = qs[idx];
+    var _m = q.q.match(/^(.*?) A\) (.*?) B\) (.*)$/);
+    var _qt = _m ? _m[1] : q.q, _oa = _m ? _m[2] : 'A', _ob = _m ? _m[3] : 'B';
+    var _speak = _qt + '. Option A: ' + _oa + '. Option B: ' + _ob + '.';
+    body.innerHTML = '<p class="small dim">Level '+level+' — Q'+(idx+1)+' of '+qs.length+' · Highest unlocked: Level '+opTellUnlocked+' · Pass at 60%+ to unlock the next.</p><div class="card mt cc-qcard"><p style="font-size:22px;font-weight:900;line-height:1.35;margin:0;">'+_qt+'</p>' + ccHearHTML(_speak) + '</div><div class="stack mt"><button type="button" class="bubble-btn b-gold cc-opt" id="tellA" style="animation-delay:.15s;"><span style="font-size:18px;">A — '+_oa+'</span></button><button type="button" class="bubble-btn b-sky cc-opt" id="tellB" style="animation-delay:.3s;"><span style="font-size:18px;">B — '+_ob+'</span></button></div><p class="small dim" id="tellNote" style="margin-top:10px;"></p><div class="stack mt">'+levelButtons()+'</div>';
+    $("tellA").addEventListener("click", function(){ answer(0); });
+    $("tellB").addEventListener("click", function(){ answer(1); });
+  }
+  function answer(i){
+    var q = qs[idx];
+    ccStopSpeak();
+    if(i === q.a){ correct++; $("tellNote").textContent = "Correct — that is the tell/rule."; ccSpeak("Correct! That is the tell."); } else { $("tellNote").textContent = "Not that one — the other answer is the tell/rule."; ccSpeak("Not that one — the other answer is the tell."); }
+    idx++;
+    if(idx >= qs.length){ finish(); } else { renderQ(); }
+  }
+  function finish(){
+    var pct = qs.length ? correct/qs.length : 0;
+    var msg = 'Level '+level+' finished: '+correct+' of '+qs.length+' correct.';
+    if(pct >= 0.6){ if(level < 3 && level >= opTellUnlocked){ opTellUnlocked = level + 1; try{ localStorage.setItem("op_tell_unlocked", String(opTellUnlocked)); }catch(e){} msg += ' Level '+opTellUnlocked+' unlocked!'; } recordBest("tell", correct); opAddCoins(50); msg += ' +50 coins (device-local only, never money).'; }
+    else { msg += ' 60% or better unlocks the next level — replay to try again.'; }
+    ccStopSpeak(); ccSpeak(msg);
+    body.innerHTML = '<div class="card mt center"><p class="lead">'+msg+'</p><div class="stack mt"><button type="button" class="bubble-btn b-pink" id="tellAgain"><span>Play again</span></button></div><div class="stack mt">'+levelButtons()+'</div></div>';
+    $("tellAgain").addEventListener("click", function(){ startTell(); });
+  }
+  renderQ();
+}
+
 var GAME_META = {
   gameRapid:   { title:"Real or Fake? Rapid Fire ⚡", by:"by Nickel 🪙 · This is a game, never a real check — no verdicts, no free checks, just speed." },
   gameMatch:   { title:"Noor's Match Audit 🃏", by:"by Noor 🦉 · Match all pairs in the fewest flips." },
@@ -7135,13 +7187,35 @@ var GAME_META = {
   });
   host.innerHTML = html;
 })();
-var GAME_STARTERS = {
-  gameRapid: startRapid, gameMatch: startMatch, gameBeat: startBeat,
-  gamePopPath: startPopPath, gameCoin: startCoin, gameMystery: startMystery, gameZiggy: startZiggy,
-  gameBrew: startBrew, gameZoom: startZoom, gameShelf: startShelf,
-  gameTell: startTell, gameStack: startStack,
-  gameWords: startWords, gameCMatch: startCMatch, gameCannon: startCannon
-};
+/* CC-FIX-19: defensive starter registry. In #18 this map was an
+   object literal naming startTell, which no longer existed — the
+   literal threw, the whole map stayed undefined, and every game
+   stalled on its loading line. Starters now register one by one,
+   only when the function actually exists; anything skipped is
+   named in GAME_STARTERS_MISSING instead of breaking the rest. */
+var GAME_STARTERS = {};
+var GAME_STARTERS_REGISTERED = [];
+var GAME_STARTERS_MISSING = [];
+function ccRegisterStarter(scr, fn) {
+  if (typeof fn === "function") { GAME_STARTERS[scr] = fn; GAME_STARTERS_REGISTERED.push(scr); }
+  else { GAME_STARTERS_MISSING.push(scr); }
+}
+ccRegisterStarter("gameRapid",   typeof startRapid   === "function" ? startRapid   : null);
+ccRegisterStarter("gameMatch",   typeof startMatch   === "function" ? startMatch   : null);
+ccRegisterStarter("gameBeat",    typeof startBeat    === "function" ? startBeat    : null);
+ccRegisterStarter("gamePopPath", typeof startPopPath === "function" ? startPopPath : null);
+ccRegisterStarter("gameCoin",    typeof startCoin    === "function" ? startCoin    : null);
+ccRegisterStarter("gameMystery", typeof startMystery === "function" ? startMystery : null);
+ccRegisterStarter("gameZiggy",   typeof startZiggy   === "function" ? startZiggy   : null);
+ccRegisterStarter("gameBrew",    typeof startBrew    === "function" ? startBrew    : null);
+ccRegisterStarter("gameZoom",    typeof startZoom    === "function" ? startZoom    : null);
+ccRegisterStarter("gameShelf",   typeof startShelf   === "function" ? startShelf   : null);
+ccRegisterStarter("gameTell",    typeof startTell    === "function" ? startTell    : null);
+ccRegisterStarter("gameStack",   typeof startStack   === "function" ? startStack   : null);
+ccRegisterStarter("gameWords",   typeof startWords   === "function" ? startWords   : null);
+ccRegisterStarter("gameCMatch",  typeof startCMatch  === "function" ? startCMatch  : null);
+ccRegisterStarter("gameCannon",  typeof startCannon  === "function" ? startCannon  : null);
+if (GAME_STARTERS_MISSING.length) { try { console.warn("CC games: starters missing — " + GAME_STARTERS_MISSING.join(", ")); } catch (e) {} }
 </script>
 
 <script>
@@ -11662,6 +11736,43 @@ if (typeof document !== "undefined") (function () {
   var greetShowTimer = null;
   var greetVisible = false;
 
+  /* ---------- CC-FIX-19: greeting dismissal PERSISTS ----------
+     Owner rule (Oct 30): "once we hit the exit sign I wanted to
+     stay exit." The ✕ now retires that exact message for good:
+     the dismissal is keyed to the greeting's own words (a short
+     hash of the line — contexts that share one line, like the
+     three binder states, share one message) and stored in
+     localStorage, so a dismissed greeting never renders again
+     — not on re-render, not on leaving and returning, not after
+     a reload. The ~5s auto-hide is NOT a dismissal; only the
+     ✕ counts. New, different messages still appear. */
+  var CCPP_GREET_DISMISS_KEY = "cc_mallow_greet_dismissed_v1";
+  var greetKey = null;         /* key of the greeting on screen now */
+  function ccppGreetKey(line) {
+    var s = String(line || ""), h = 5381;
+    for (var i = 0; i < s.length; i++) { h = (((h << 5) + h) + s.charCodeAt(i)) | 0; }
+    return "g" + (h >>> 0).toString(36);
+  }
+  function ccppGreetDismissed(key) {
+    if (!key) return false;
+    try {
+      var raw = window.localStorage.getItem(CCPP_GREET_DISMISS_KEY);
+      if (!raw) return false;
+      var map = JSON.parse(raw);
+      return !!(map && map[key]);
+    } catch (e) { return false; }
+  }
+  function ccppDismissGreeting(key) {
+    if (!key) return;
+    try {
+      var map = {};
+      var raw = window.localStorage.getItem(CCPP_GREET_DISMISS_KEY);
+      if (raw) { try { map = JSON.parse(raw) || {}; } catch (e) { map = {}; } }
+      map[key] = 1;
+      window.localStorage.setItem(CCPP_GREET_DISMISS_KEY, JSON.stringify(map));
+    } catch (e) {}
+  }
+
   function hideGreeting() {
     if (greetShowTimer) { clearTimeout(greetShowTimer); greetShowTimer = null; }
     if (greetTimer) { clearTimeout(greetTimer); greetTimer = null; }
@@ -11673,6 +11784,8 @@ if (typeof document !== "undefined") (function () {
     if (panelOpen()) return;
     var ctxKey = resolveCtx(screenKey);
     var line = CCPP_GREETINGS[ctxKey] || CCPP_GREETINGS.generic;
+    greetKey = ccppGreetKey(line);
+    if (ccppGreetDismissed(greetKey)) { greetKey = null; return; }
     greetText.textContent = line;
     greetEl.style.display = "block";
     greetEl.classList.add("ccpp-show");
@@ -11697,6 +11810,7 @@ if (typeof document !== "undefined") (function () {
   });
   greetX.addEventListener("click", function (e) {
     if (e && e.stopPropagation) e.stopPropagation();
+    ccppDismissGreeting(greetKey);
     hideGreeting();
   });
   greetEl.addEventListener("keydown", function (e) {
