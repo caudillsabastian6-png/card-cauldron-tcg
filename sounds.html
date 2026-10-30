@@ -823,6 +823,15 @@
   .web-dock a:hover{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#221503;}
   body{padding-bottom:76px;}
 
+  /* ---------- CC-DOCKFIX 2026-10-29: two-stack dock, full word labels (<=760px) ----------
+     Owner order Oct 29: keep the icons, show the whole word, two rows.
+     Desktop (>760px) keeps the single-row dock; its labels already fit. */
+  @media (max-width:760px){
+    .web-dock{flex-wrap:wrap;border-radius:26px;row-gap:.3rem}
+    .web-dock a{flex:1 1 22%;font-size:.8rem;padding:.55rem .05rem;overflow:visible;text-overflow:clip}
+    body{padding-bottom:128px}
+  }
+
   /* ---------- website background picker: animated layer, default = current background ---------- */
   #webBgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .7s ease;overflow:hidden;}
   body[data-webbg="flames"] #webBgLayer{opacity:.55;background:radial-gradient(circle at 30% 80%,rgba(255,122,60,.35) 0 12%,transparent 45%),radial-gradient(circle at 70% 20%,rgba(255,197,61,.25) 0 10%,transparent 40%),linear-gradient(160deg,transparent,#2b1d4e 70%,transparent);animation:webEmber 8s linear infinite;}
@@ -989,6 +998,12 @@ section:not(#binderlabels){
 }
 .soundcard{margin-top:1.4rem}
 .anthem-extras{margin-top:1rem}
+</style>
+<style id="cc-topfix-2026-10-29">
+/* CC-TOPFIX 2026-10-29: the footer social row is a <nav>, and the old
+   top-navigation's generic nav{} rule (position:fixed; top:0) was pinning
+   it to the top of the page, clipped under the topbar. Keep it home. */
+nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0;box-shadow:none;padding:0;}
 </style>
 </head>
 <body>
