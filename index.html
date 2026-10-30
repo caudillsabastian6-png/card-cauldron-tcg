@@ -1046,6 +1046,12 @@ section:not(#binderlabels){
   .motion-card figcaption{padding-top:.5rem}
 }
 </style>
+<style id="cc-topfix-2026-10-29">
+/* CC-TOPFIX 2026-10-29: the footer social row is a <nav>, and the old
+   top-navigation's generic nav{} rule (position:fixed; top:0) was pinning
+   it to the top of the page, clipped under the topbar. Keep it home. */
+nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0;box-shadow:none;padding:0;}
+</style>
 </head>
 <body>
 
