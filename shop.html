@@ -1045,6 +1045,28 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
   #soundToggle{bottom:calc(140px + env(safe-area-inset-bottom, 0px))}
 }
 </style>
+<style id="cc-pillshrink-2026-10-29">
+/* CC-PILLSHRINK 2026-10-29 (owner order Oct 29 ~8:27 PM): while the Cauldron
+   Sound is PLAYING, the wide gold pill used to float over page words (the
+   owner's /shop screenshot, Oct 29 8:26 PM — the ON pill sat on the Sample
+   Pack card text mid-scroll). In the pressed state the pill now collapses
+   to a compact 48px round button, speaker only, so it stops covering
+   content. Pure CSS, keyed off the aria-pressed attribute the toggle
+   script already sets — no JS change, no markup change, aria-label
+   untouched (the full name is collapsed visually, never removed). Parking
+   is NOT set here: the pill keeps the bottom offset the docklift/shopfix
+   geometry gave it (140px + safe-area inset at phone widths; the base
+   rule on desktop), where a 48px circle stays clear of the two-row dock
+   and of content buttons at rest (shop's Rip button included). The Off
+   and "ready" states render exactly as before. */
+#soundToggle{transition:width .25s ease,height .25s ease,padding .25s ease,gap .25s ease,border-radius .25s ease}
+#soundToggle[aria-pressed="true"]{
+  width:48px;height:48px;min-width:48px;padding:0;gap:0;border-radius:50%;
+  font-size:0;line-height:0;justify-content:center;overflow:hidden;
+}
+#soundToggle[aria-pressed="true"]::before{content:"\1F50A";font-size:1.3rem;line-height:1}
+#soundToggle[aria-pressed="true"] .snd-state{display:none}
+</style>
 </head>
 <body class="subpage">
 
@@ -1573,6 +1595,7 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
 </footer>
 
 <button id="soundToggle" type="button" aria-pressed="false" aria-label="Toggle the smooth background melody">🔊 Cauldron Sound <span class="snd-state">Off</span></button>
+<audio id="ccLoop" src="assets/site-sound-loop.mp3" loop preload="none"></audio>
 <!-- Cauldron Sound now plays a smooth instrumental melody, no words, generated in the browser. -->
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -1874,45 +1897,12 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
     var sndWasOn = false;
     var rampTimer = null;
     var BASE_VOL = 0.35, DUCK_VOL = 0.08;
-    /* Instrumental melody object, same play/pause/volume shape as the old audio element */
-    var melody = (function(){
-      var ctx = null, master = null, timer = null, vol = BASE_VOL, paused = true;
-      var chords = [[261.63,329.63,392.00],[220.00,261.63,329.63],[174.61,220.00,261.63],[196.00,246.94,293.66]];
-      var step = 0;
-      function note(freq, when, dur){
-        var o = ctx.createOscillator(), g = ctx.createGain();
-        o.type = "sine"; o.frequency.setValueAtTime(freq, when);
-        g.gain.setValueAtTime(0, when);
-        g.gain.linearRampToValueAtTime(0.5, when + 0.4);
-        g.gain.linearRampToValueAtTime(0, when + dur);
-        o.connect(g); g.connect(master); o.start(when); o.stop(when + dur + 0.1);
-      }
-      function playChord(){
-        if (!ctx || paused) return;
-        var now = ctx.currentTime, chord = chords[step % chords.length]; step++;
-        chord.forEach(function(f, i){ note(f, now + i * 0.15, 3.2); });
-      }
-      return {
-        get paused(){ return paused; },
-        get volume(){ return vol; },
-        set volume(v){ vol = v; if (master && ctx) master.gain.setTargetAtTime(v, ctx.currentTime, 0.1); },
-        play: function(){
-          if (!ctx){
-            var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
-            ctx = new AC(); master = ctx.createGain(); master.gain.value = vol; master.connect(ctx.destination);
-          }
-          if (ctx.state === "suspended") ctx.resume();
-          paused = false; step = 0; playChord();
-          if (timer) clearInterval(timer);
-          timer = setInterval(playChord, 2800);
-        },
-        pause: function(){
-          paused = true;
-          if (timer){ clearInterval(timer); timer = null; }
-          if (ctx && ctx.state === "running") ctx.suspend();
-        }
-      };
-    })();
+    /* Cauldron Sound source (CC-PILLSOUND 2026-10-29): our own site
+       loop — the <audio id="ccLoop"> element added beside the button
+       above. A real audio element natively has the play/pause/volume/
+       paused shape the synthesized melody object it replaces was built
+       to mimic, so every handler below is unchanged. */
+    var melody = document.getElementById("ccLoop");
     var soundSrc = melody;
     function setSndLabel(){
       sndState.textContent = sndOn ? "On" : (sndBtn.classList.contains("ready") ? "Tap for sound" : "Off");
