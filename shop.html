@@ -1026,6 +1026,25 @@ details.cardbox-fold>summary::-webkit-details-marker{display:none}
    it to the top of the page, clipped under the topbar. Keep it home. */
 nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0;box-shadow:none;padding:0;}
 </style>
+<style id="cc-shopfix-2026-10-29">
+/* CC-SHOPFIX 2026-10-29 (shop only): owner phone catch Oct 29 ~8:19 PM — at
+   phone widths the two-row dock's second row (App/Demo/Ask/About) slid under
+   the phone's gesture bar, and the fixed Cauldron Sound pill sat on top of
+   the "Rip a pack" button. Causes, verified against sets.html: the shared
+   .web-dock has NO safe-area lift (bottom:.7rem only) while the pill's own
+   rule has env(safe-area-inset-bottom) — so on a gesture-bar phone the dock
+   renders partly inside the bar's zone; and shop is the only page whose
+   first screen holds a primary CTA (#ripBtn) whose resting spot falls in
+   the pill's fixed band (bottom:78px+.9rem+inset, ~48px tall). This block
+   lifts the dock clear of the gesture bar, keeps the page-end clearance in
+   step, and parks the pill above the two-row dock, clear of the button.
+   Phone widths only — desktop (>760px) untouched. */
+@media (max-width:760px){
+  .web-dock{bottom:calc(.7rem + env(safe-area-inset-bottom, 0px))}
+  body{padding-bottom:calc(136px + env(safe-area-inset-bottom, 0px))}
+  #soundToggle{bottom:calc(140px + env(safe-area-inset-bottom, 0px))}
+}
+</style>
 </head>
 <body class="subpage">
 
