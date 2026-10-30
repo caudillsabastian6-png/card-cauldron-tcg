@@ -1014,6 +1014,28 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
   #soundToggle{bottom:calc(140px + env(safe-area-inset-bottom, 0px))}
 }
 </style>
+<style id="cc-pillshrink-2026-10-29">
+/* CC-PILLSHRINK 2026-10-29 (owner order Oct 29 ~8:27 PM): while the Cauldron
+   Sound is PLAYING, the wide gold pill used to float over page words (the
+   owner's /shop screenshot, Oct 29 8:26 PM — the ON pill sat on the Sample
+   Pack card text mid-scroll). In the pressed state the pill now collapses
+   to a compact 48px round button, speaker only, so it stops covering
+   content. Pure CSS, keyed off the aria-pressed attribute the toggle
+   script already sets — no JS change, no markup change, aria-label
+   untouched (the full name is collapsed visually, never removed). Parking
+   is NOT set here: the pill keeps the bottom offset the docklift/shopfix
+   geometry gave it (140px + safe-area inset at phone widths; the base
+   rule on desktop), where a 48px circle stays clear of the two-row dock
+   and of content buttons at rest (shop's Rip button included). The Off
+   and "ready" states render exactly as before. */
+#soundToggle{transition:width .25s ease,height .25s ease,padding .25s ease,gap .25s ease,border-radius .25s ease}
+#soundToggle[aria-pressed="true"]{
+  width:48px;height:48px;min-width:48px;padding:0;gap:0;border-radius:50%;
+  font-size:0;line-height:0;justify-content:center;overflow:hidden;
+}
+#soundToggle[aria-pressed="true"]::before{content:"\1F50A";font-size:1.3rem;line-height:1}
+#soundToggle[aria-pressed="true"] .snd-state{display:none}
+</style>
 </head>
 <body class="subpage">
 
@@ -1123,7 +1145,7 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
 </footer>
 
 <button id="soundToggle" type="button" aria-pressed="false" aria-label="Toggle the Card Cauldron Anthem">🔊 Cauldron Sound <span class="snd-state">Off</span></button>
-<audio id="anthem" src="assets/cauldron-anthem.mp3" loop preload="none"></audio>
+<audio id="anthem" src="assets/site-sound-loop.mp3" loop preload="none"></audio>
 
 <script>
 (function(){
