@@ -978,6 +978,427 @@ body.neon .top-banner{position:relative;}
 .cw-wrap{ background:url("assets/sweep/words/words-bg.webp") center/cover no-repeat; }
 .cm-wrap{ background:url("assets/sweep/tilematch/tilematch-bg.webp") center/cover no-repeat; }
 </style>
+<style id="cw-words-styles">
+/* ============================================================
+   CAULDRON WORDS — module styles (FIX-20, Oct 30)
+   The fold-in port (build #17/#19) carried the game's JS and
+   markup but NONE of its CSS: the only .cw- rule in the file
+   was the .cw-wrap splash background above, so the grid fell
+   back to unstyled block layout (one letter per line down the
+   left edge) and the wheel's real letter bubbles — positioned
+   by left/top on statically-positioned divs — never rendered
+   as bubbles; the only "wheel" visible was the rune bubbles
+   baked into the words-bg splash art.
+   This block ports the working prototype's stylesheet
+   (word-game-prototype-2026-10-29/index.html lines 7-176)
+   verbatim in effect, scoped under .cw-wrap, ids cw-prefixed,
+   keyframes cw-prefixed, position:fixed -> absolute (the wrap
+   is the positioning context), palette vars defined locally
+   on .cw-wrap so nothing leaks to other screens. Wheel width
+   is fluid (min(296px,88vw)) so 360px phones keep the whole
+   wheel on-canvas; layoutWheel() reads clientWidth, so it
+   follows automatically.
+   ============================================================ */
+.cw-wrap{
+  --potion:#b388ff; --pink:#ff7ac8; --ember:#ffb347; --gold:#ffd76a; --green:#57ffb0;
+  --cream:#fff8e7; --ink:#0d0a14;
+  position:relative;
+  color:var(--cream);
+  font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+  border-radius:18px;
+  overflow:hidden;
+}
+.cw-wrap *,.cw-wrap *::before,.cw-wrap *::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+.cw-wrap .lasers{position:absolute; inset:0; pointer-events:none; opacity:.5; z-index:0;}
+.cw-wrap .lasers i{position:absolute; display:block; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(179,136,255,.5), transparent);}
+.cw-wrap .lasers i:nth-child(1){top:12%; left:-10%; width:55%; transform:rotate(-14deg);}
+.cw-wrap .lasers i:nth-child(2){top:38%; right:-15%; width:60%; transform:rotate(-14deg);
+  background:linear-gradient(90deg, transparent, rgba(255,122,200,.45), transparent);}
+.cw-wrap .lasers i:nth-child(3){top:66%; left:-8%; width:48%; transform:rotate(-14deg);
+  background:linear-gradient(90deg, transparent, rgba(87,255,176,.35), transparent);}
+.cw-wrap .lasers i:nth-child(4){top:88%; right:-10%; width:52%; transform:rotate(-14deg);}
+
+.cw-wrap #cw-app{position:relative; z-index:1; width:100%;
+  display:flex; flex-direction:column; padding:8px 10px 12px;}
+
+.cw-wrap header{display:flex; align-items:center; gap:8px; padding:2px 2px 8px;}
+.cw-wrap header .logo{font-size:26px; filter:drop-shadow(0 0 8px rgba(255,179,71,.8));}
+.cw-wrap header h1{font-size:19px; letter-spacing:.4px; font-weight:800; margin:0; line-height:1.15;
+  background:linear-gradient(90deg,var(--gold),var(--pink),var(--potion));
+  -webkit-background-clip:text; background-clip:text; color:transparent;}
+.cw-wrap header .spacer{flex:1;}
+.cw-wrap .pill{background:rgba(29,20,48,.85); border:1px solid rgba(179,136,255,.45);
+  border-radius:999px; padding:5px 11px; font-size:13px; font-weight:700; white-space:nowrap;}
+.cw-wrap .pill b{color:var(--gold);}
+.cw-wrap .iconbtn{width:38px; height:38px; flex:none; border-radius:50%; border:1px solid rgba(179,136,255,.5);
+  background:rgba(29,20,48,.85); color:var(--cream); font-size:17px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;}
+.cw-wrap .iconbtn:active{transform:scale(.93);}
+
+.cw-wrap #cw-lvlLine{display:flex; align-items:center; gap:8px; font-size:12.5px; color:#cdbcf5;
+  padding:0 2px 6px;}
+.cw-wrap #cw-lvlLine .lname{color:var(--cream); font-weight:800; font-size:13.5px;}
+.cw-wrap #cw-lvlLine .prog{flex:1; height:7px; border-radius:99px; background:rgba(255,255,255,.09);
+  overflow:hidden;}
+.cw-wrap #cw-lvlLine .prog i{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg,var(--green),var(--gold)); border-radius:99px;
+  transition:width .4s ease;}
+.cw-wrap #cw-foundCount{font-weight:800; color:var(--green); white-space:nowrap;}
+
+/* ——— the grid: columns by first letter, wrapping ——— */
+.cw-wrap #cw-gridWrap{flex:0 1 auto; max-height:37dvh; overflow-y:auto; overflow-x:hidden; padding:8px 6px 10px;
+  background:linear-gradient(180deg, rgba(179,136,255,.08), rgba(13,10,20,.25));
+  border:1px solid rgba(179,136,255,.28); border-radius:18px;
+  box-shadow:inset 0 0 24px rgba(179,136,255,.07);}
+.cw-wrap #cw-grid{display:flex; flex-wrap:wrap; gap:10px 14px; align-content:flex-start;}
+.cw-wrap .gcol{display:flex; flex-direction:column; gap:4px;}
+.cw-wrap .ghead{align-self:flex-start; font-size:10.5px; font-weight:900; letter-spacing:1px;
+  color:var(--ink); background:linear-gradient(135deg,var(--gold),var(--ember));
+  border-radius:6px; padding:1px 6px; margin-bottom:1px;
+  box-shadow:0 0 8px rgba(255,215,106,.45);}
+.cw-wrap .wrow{display:flex; gap:3px;}
+.cw-wrap .cell{width:23px; height:27px; flex:none; border-radius:6px; display:flex; align-items:center;
+  justify-content:center; font-size:14.5px; font-weight:800;
+  background:rgba(255,248,231,.07); border:1px solid rgba(255,248,231,.16); color:transparent;}
+.cw-wrap .cell.hinted{color:rgba(255,215,106,.85); border-color:rgba(255,215,106,.55);
+  background:rgba(255,215,106,.08); text-shadow:0 0 6px rgba(255,215,106,.6);}
+.cw-wrap .wrow.found .cell{color:var(--ink); background:linear-gradient(160deg,#ffe9a8,var(--gold) 55%,var(--ember));
+  border-color:#ffe9a8; box-shadow:0 0 7px rgba(255,215,106,.4);}
+.cw-wrap .wrow.pop .cell{animation:cwCellpop .45s ease both;}
+.cw-wrap .wrow.pop .cell:nth-child(2){animation-delay:.04s} .cw-wrap .wrow.pop .cell:nth-child(3){animation-delay:.08s}
+.cw-wrap .wrow.pop .cell:nth-child(4){animation-delay:.12s} .cw-wrap .wrow.pop .cell:nth-child(5){animation-delay:.16s}
+.cw-wrap .wrow.pop .cell:nth-child(6){animation-delay:.20s} .cw-wrap .wrow.pop .cell:nth-child(7){animation-delay:.24s}
+@keyframes cwCellpop{0%{transform:scale(.4) rotate(-8deg);} 60%{transform:scale(1.25) rotate(3deg);} 100%{transform:scale(1);}}
+
+/* ——— attempt banner ——— */
+.cw-wrap #cw-banner{min-height:52px; display:flex; align-items:center; justify-content:center; gap:2px;
+  padding:6px 4px 2px;}
+.cw-wrap #cw-bannerWord{font-size:30px; font-weight:900; letter-spacing:5px; min-height:38px;
+  color:var(--cream); text-shadow:0 0 14px rgba(179,136,255,.75); text-transform:uppercase;}
+.cw-wrap #cw-bannerWord:empty::before{content:"drag to spell"; font-size:13px; letter-spacing:2px;
+  color:rgba(255,248,231,.35); font-weight:600; text-shadow:none;}
+.cw-wrap #cw-banner.shake{animation:cwShake .35s ease;}
+.cw-wrap #cw-banner.bad #cw-bannerWord{color:var(--pink); text-shadow:0 0 14px rgba(255,122,200,.8);}
+.cw-wrap #cw-banner.good #cw-bannerWord{color:var(--green); text-shadow:0 0 14px rgba(87,255,176,.8);}
+@keyframes cwShake{0%,100%{transform:translateX(0);} 20%{transform:translateX(-7px);}
+  40%{transform:translateX(6px);} 60%{transform:translateX(-4px);} 80%{transform:translateX(3px);}}
+.cw-wrap #cw-toast{min-height:20px; text-align:center; font-size:13px; font-weight:700; color:var(--gold);
+  text-shadow:0 0 8px rgba(255,215,106,.5); padding-bottom:2px;}
+.cw-wrap #cw-toast:empty::before{content:" ";}
+
+/* ——— the cauldron wheel ——— */
+.cw-wrap #cw-wheelZone{display:flex; align-items:center; justify-content:center; position:relative;
+  min-height:308px; padding:6px 0;}
+.cw-wrap #cw-wheel{position:relative; flex:none; width:min(296px,88vw); aspect-ratio:1/1; touch-action:none;
+  user-select:none; -webkit-user-select:none;}
+.cw-wrap #cw-brewRing{position:absolute; inset:0; border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(87,255,176,.14), rgba(179,136,255,.10) 45%, rgba(13,10,20,.55) 78%),
+    radial-gradient(circle at 50% 50%, #241640, #170f2a 70%);
+  border:2px solid rgba(87,255,176,.4);
+  box-shadow:0 0 34px rgba(87,255,176,.20), inset 0 0 44px rgba(0,0,0,.55), inset 0 -18px 30px rgba(87,255,176,.10);}
+.cw-wrap #cw-brewRing::after{content:""; position:absolute; left:6%; right:6%; bottom:-13px; height:26px;
+  border-radius:50%; background:radial-gradient(50% 100% at 50% 0%, rgba(255,179,71,.5), transparent 70%);
+  filter:blur(2px);}
+.cw-wrap #cw-dragSvg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:3;}
+.cw-wrap #cw-dragLine{fill:none; stroke:var(--gold); stroke-width:7; stroke-linecap:round; stroke-linejoin:round;
+  opacity:.85; filter:drop-shadow(0 0 6px rgba(255,215,106,.75));}
+.cw-wrap .bub{position:absolute; width:64px; height:64px; margin:-32px 0 0 -32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; z-index:4;
+  font-size:27px; font-weight:900; color:var(--cream); cursor:pointer;
+  background:radial-gradient(circle at 34% 30%, rgba(255,255,255,.5), rgba(179,136,255,.35) 42%, rgba(42,29,71,.9) 78%);
+  border:1.5px solid rgba(255,248,231,.55);
+  box-shadow:0 4px 14px rgba(0,0,0,.5), inset 0 -6px 12px rgba(13,10,20,.45), inset 0 6px 10px rgba(255,255,255,.25);
+  text-shadow:0 2px 5px rgba(0,0,0,.6); transition:transform .08s ease, background .08s;}
+.cw-wrap .bub.on{background:radial-gradient(circle at 34% 30%, #fff3c4, var(--gold) 45%, #e8930c 85%);
+  color:var(--ink); text-shadow:none; transform:scale(1.14);
+  border-color:#fff3c4; box-shadow:0 0 20px rgba(255,215,106,.85), 0 4px 12px rgba(0,0,0,.5);}
+.cw-wrap .bub.pop{animation:cwBubpop .18s ease;}
+@keyframes cwBubpop{50%{transform:scale(1.28);}}
+
+/* ——— controls ——— */
+.cw-wrap #cw-controls{display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:12px; padding:8px 0 2px;}
+.cw-wrap .cbtn{display:flex; align-items:center; gap:7px; border-radius:999px; cursor:pointer;
+  border:1px solid rgba(179,136,255,.5); background:rgba(29,20,48,.9); color:var(--cream);
+  font-size:14px; font-weight:800; padding:10px 17px; font-family:inherit;}
+.cw-wrap .cbtn:active{transform:scale(.95);}
+.cw-wrap .cbtn:disabled{opacity:.38; cursor:default;}
+.cw-wrap .cbtn .n{color:var(--gold);}
+.cw-wrap #cw-jar{margin-left:2px; font-size:13.5px; font-weight:800; color:#9be8ff;
+  background:rgba(29,20,48,.9); border:1px solid rgba(87,200,255,.4);
+  padding:9px 13px; border-radius:999px;}
+
+/* ——— overlays (absolute inside the wrap; board stays visible behind) ——— */
+.cw-wrap .overlay{position:absolute; inset:0; z-index:20; display:flex; align-items:center; justify-content:center;
+  background:rgba(13,10,20,.55); padding:18px;}
+.cw-wrap .overlay.hidden{display:none;}
+.cw-wrap .card{width:100%; max-width:380px; text-align:center; border-radius:24px; padding:26px 20px 22px;
+  background:linear-gradient(170deg, rgba(42,29,71,.97), rgba(20,14,32,.98));
+  border:1.5px solid rgba(179,136,255,.55); box-shadow:0 18px 50px rgba(0,0,0,.6), 0 0 34px rgba(179,136,255,.25);}
+.cw-wrap .card .big{font-size:44px;}
+.cw-wrap .card h2{font-size:25px; font-weight:900; letter-spacing:.5px; margin:6px 0 4px; line-height:1.15;
+  background:linear-gradient(90deg,var(--gold),var(--pink),var(--potion));
+  -webkit-background-clip:text; background-clip:text; color:transparent;}
+.cw-wrap .card p{font-size:14px; color:#d9cdf7; line-height:1.45;}
+.cw-wrap .card .howto{font-size:12.5px; color:rgba(255,248,231,.6); margin-top:8px;}
+.cw-wrap #cw-startBtn{margin-top:18px; width:100%; border:none; cursor:pointer; border-radius:999px;
+  padding:16px; font-size:20px; font-weight:900; letter-spacing:1.5px; color:var(--ink); font-family:inherit;
+  background:linear-gradient(135deg,var(--gold),var(--ember) 60%,var(--pink));
+  box-shadow:0 8px 26px rgba(255,179,71,.45);}
+.cw-wrap #cw-startBtn:active{transform:scale(.97);}
+.cw-wrap .chips{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:16px;}
+.cw-wrap .chip{border-radius:999px; padding:8px 13px; font-size:13px; font-weight:800; cursor:pointer;
+  border:1px solid rgba(179,136,255,.55); background:rgba(255,248,231,.06); color:var(--cream); font-family:inherit;}
+.cw-wrap .chip.sel{background:linear-gradient(135deg,var(--potion),var(--pink)); color:var(--ink); border-color:transparent;}
+.cw-wrap .chip:disabled{opacity:.35; cursor:default;}
+.cw-wrap .vbtn{margin-top:12px; width:100%; border-radius:999px; padding:13px; font-size:16px; font-weight:900;
+  cursor:pointer; border:1px solid rgba(179,136,255,.55); background:rgba(255,248,231,.07); color:var(--cream); font-family:inherit;}
+.cw-wrap .vbtn.primary{border:none; color:var(--ink);
+  background:linear-gradient(135deg,var(--gold),var(--ember) 60%,var(--pink));
+  box-shadow:0 8px 22px rgba(255,179,71,.4);}
+.cw-wrap .vbtn:active{transform:scale(.97);}
+.cw-wrap #cw-winWord{color:var(--gold); font-weight:900;}
+.cw-wrap .confetti{position:absolute; font-size:20px; animation:cwFall 1.6s ease-in both; pointer-events:none;}
+@keyframes cwFall{0%{transform:translateY(-12px) rotate(0); opacity:1;} 100%{transform:translateY(150px) rotate(300deg); opacity:0;}}
+@media (max-height:700px){ .cw-wrap #cw-gridWrap{max-height:30dvh;} .cw-wrap #cw-wheel{width:min(262px,88vw);} .cw-wrap .bub{width:58px; height:58px; margin:-29px 0 0 -29px; font-size:24px;} }
+</style>
+<style id="cm-match-styles">
+/* ============================================================
+   CAULDRON MATCH — module styles (FIX-20, Oct 30)
+   Same fold-in defect as Cauldron Words: the port carried the
+   JS + markup but none of the prototype's CSS (only the
+   .cm-wrap splash background at the FOLD-IN block above made
+   it). Unstyled, .tile is a static block — its inline left/top
+   are ignored — so the board stacked into a one-tile-wide
+   vertical strip down the left edge over the splash art, and
+   the HUD chips / level chips ran together as raw text.
+   Second, layoutStage() sizes tiles from
+   #cm-stageWrap.clientHeight — in the prototype that wrap is
+   flex:1 of a 100dvh column; in the demo's page flow it had no
+   height at all, so the unit would have floored at 13px even
+   with .tile fixed. The wrap therefore gets a real height
+   below (min(500px,58dvh)).
+   Ported from tile-match-prototype-2026-10-29/index.html
+   lines 7-147, scoped under .cm-wrap, ids cm-prefixed,
+   keyframes cm-prefixed, overlay/fx positioning adapted:
+   #cm-overlay is absolute inside the wrap (prototype: fixed);
+   #cm-fx + .flytile stay FIXED on purpose — the JS positions
+   fly tiles from getBoundingClientRect() viewport coords.
+   ============================================================ */
+.cm-wrap{
+  --purple:#b388ff; --pink:#ff7ac8; --green:#57ffb0; --gold:#ffd76a; --ember:#ffb347;
+  --cream:#fff8e7; --ink:#241a3d;
+  position:relative;
+  color:var(--cream);
+  font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+  border-radius:18px;
+  user-select:none;-webkit-user-select:none;
+}
+.cm-wrap *,.cm-wrap *::before,.cm-wrap *::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+.cm-wrap #cm-app{position:relative; z-index:1; display:flex; flex-direction:column; padding:8px 10px 12px;}
+
+/* ---------- HUD ---------- */
+.cm-wrap #cm-hud{ display:flex; align-items:center; gap:8px; padding:2px 2px 6px; }
+.cm-wrap #cm-hud .ttl{ font-weight:900; letter-spacing:.4px; font-size:17px; color:var(--cream); text-shadow:0 0 14px rgba(179,136,255,.65); }
+.cm-wrap #cm-hud .ttl em{ font-style:normal; color:var(--gold); }
+.cm-wrap #cm-hud .sp{ flex:1; }
+.cm-wrap .hudchip{ background:rgba(255,255,255,.07); border:1px solid rgba(179,136,255,.35); border-radius:999px;
+  padding:4px 10px; font-size:13px; font-weight:800; color:var(--cream); white-space:nowrap; font-family:inherit; }
+.cm-wrap .hudchip b{ color:var(--gold); }
+.cm-wrap #cm-muteBtn{ cursor:pointer; font-size:15px; line-height:1; padding:6px 10px; }
+.cm-wrap #cm-muteBtn:active{ transform:scale(.94); }
+
+/* ---------- Tray (cauldron rim) ---------- */
+.cm-wrap #cm-trayWrap{ position:relative; margin:2px 0 4px; }
+.cm-wrap #cm-trayLabel{ font-size:10.5px; font-weight:800; letter-spacing:1.6px; color:rgba(255,248,231,.55); text-align:center; margin-bottom:3px; }
+.cm-wrap #cm-tray{
+  display:flex; gap:6px; justify-content:center; padding:8px;
+  background:linear-gradient(180deg, rgba(87,255,176,.10), rgba(20,14,32,.65) 30%, rgba(13,10,20,.9));
+  border:1px solid rgba(87,255,176,.35); border-radius:16px;
+  box-shadow: inset 0 2px 0 rgba(255,248,231,.14), inset 0 -10px 18px rgba(87,255,176,.07), 0 6px 18px rgba(0,0,0,.45);
+}
+.cm-wrap #cm-tray.shake{ animation:cmTrayShake .45s ease; }
+@keyframes cmTrayShake{ 0%,100%{transform:translateX(0)} 15%{transform:translateX(-7px)} 35%{transform:translateX(6px)} 55%{transform:translateX(-5px)} 75%{transform:translateX(4px)} }
+.cm-wrap .slot{ width:42px; height:48px; flex:none; border-radius:11px; border:1.5px dashed rgba(179,136,255,.35);
+  background:rgba(255,255,255,.04); display:flex; align-items:center; justify-content:center; position:relative; }
+.cm-wrap .slot.filled{ border-style:solid; border-color:rgba(0,0,0,.25);
+  background:linear-gradient(165deg,#fdfaff,#e7ddf8 58%,#d5c6f2);
+  box-shadow: inset 0 -4px 0 rgba(90,60,160,.30), inset 0 2px 0 #fff, 0 3px 6px rgba(0,0,0,.4);
+  font-size:25px; }
+.cm-wrap .slot.pop{ animation:cmPop .28s ease forwards; }
+@keyframes cmPop{ 40%{ transform:scale(1.28) rotate(-3deg); filter:brightness(1.5);} 100%{ transform:scale(.2); opacity:0; } }
+.cm-wrap .slot.enter{ animation:cmSlotIn .18s ease; }
+@keyframes cmSlotIn{ from{ transform:scale(.4); opacity:.2;} to{ transform:scale(1); opacity:1;} }
+.cm-wrap .burst{ position:absolute; font-size:15px; pointer-events:none; animation:cmBurst .5s ease-out forwards; z-index:5; }
+@keyframes cmBurst{ from{ transform:translateY(0) scale(.6); opacity:1;} to{ transform:translateY(-26px) scale(1.25); opacity:0;} }
+
+/* ---------- Board ---------- */
+.cm-wrap #cm-stageWrap{ height:min(500px,58dvh); min-height:320px; display:flex; align-items:center; justify-content:center; width:100%; }
+.cm-wrap #cm-stage{ position:relative; flex:none; }
+.cm-wrap .tile{
+  position:absolute; display:flex; align-items:center; justify-content:center;
+  border-radius:19%; cursor:pointer; will-change:transform,left,top;
+  background:linear-gradient(165deg,#fdfaff,#eadff9 55%,#d8c9f3);
+  border:1px solid rgba(70,45,130,.35);
+  transition:filter .15s ease, transform .15s ease;
+}
+.cm-wrap .tile .g{ pointer-events:none; line-height:1; filter:drop-shadow(0 1px 0 rgba(255,255,255,.8)); }
+.cm-wrap .tile.covered{ filter:brightness(.62) saturate(.75); cursor:not-allowed; }
+.cm-wrap .tile.free{ filter:brightness(1); }
+.cm-wrap .tile.free:active{ transform:scale(.95); }
+.cm-wrap .tile.denied{ animation:cmDenied .25s ease; }
+@keyframes cmDenied{ 0%,100%{ margin-left:0 } 30%{ margin-left:-3px } 65%{ margin-left:3px } }
+.cm-wrap .tile.hintglow{ animation:cmHintGlow .55s ease-in-out 3; z-index:999 !important; }
+@keyframes cmHintGlow{ 0%,100%{ box-shadow:0 0 0 2px var(--gold), 0 0 18px 4px rgba(255,215,106,.55);} 50%{ box-shadow:0 0 0 3px var(--gold), 0 0 30px 10px rgba(255,215,106,.9);} }
+.cm-wrap .tile.vanish{ transition:opacity .15s ease, transform .15s ease; opacity:0 !important; transform:scale(.6); }
+.cm-wrap #cm-fx{ position:fixed; inset:0; pointer-events:none; z-index:60; }
+.cm-wrap .flytile{ position:fixed; display:flex; align-items:center; justify-content:center; border-radius:19%;
+  background:linear-gradient(165deg,#fdfaff,#eadff9 55%,#d8c9f3); border:1px solid rgba(70,45,130,.35);
+  box-shadow: inset 0 -4px 0 rgba(90,60,160,.30), inset 0 2px 0 #fff, 0 10px 22px rgba(0,0,0,.5); z-index:60; }
+
+/* ---------- Powers ---------- */
+.cm-wrap #cm-powers{ display:flex; gap:10px; justify-content:center; padding:8px 2px 2px; }
+.cm-wrap .pow{ flex:1; max-width:150px; cursor:pointer; border-radius:16px; padding:9px 4px 7px; text-align:center;
+  background:linear-gradient(180deg, rgba(179,136,255,.20), rgba(20,14,32,.8));
+  border:1px solid rgba(179,136,255,.45); color:var(--cream); font-family:inherit;
+  box-shadow: 0 4px 12px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.15); }
+.cm-wrap .pow:active{ transform:scale(.96); }
+.cm-wrap .pow .ic{ font-size:21px; display:block; line-height:1.15; }
+.cm-wrap .pow .nm{ font-size:11px; font-weight:900; letter-spacing:1.2px; }
+.cm-wrap .pow .ct{ display:inline-block; margin-left:5px; font-size:11px; font-weight:900; color:#140e20;
+  background:var(--gold); border-radius:999px; padding:0 6px; vertical-align:1px; }
+.cm-wrap .pow.off{ opacity:.38; pointer-events:none; }
+
+/* ---------- Overlay (start / win / lose) ---------- */
+.cm-wrap #cm-overlay{ position:absolute; inset:0; z-index:50; display:flex; align-items:center; justify-content:center;
+  background:rgba(9,6,16,.45); padding:18px; }
+.cm-wrap #cm-overlay.hidden{ display:none; }
+.cm-wrap .panel{ width:100%; max-width:400px; text-align:center; padding:22px 18px 18px; border-radius:24px;
+  background:linear-gradient(180deg, rgba(36,22,64,.92), rgba(16,11,28,.96));
+  border:1px solid rgba(179,136,255,.5);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 0 34px rgba(179,136,255,.28), 0 18px 44px rgba(0,0,0,.6); }
+.cm-wrap .panel h1{ margin:0 0 2px; font-size:31px; font-weight:900; letter-spacing:.3px; color:var(--cream); line-height:1.15;
+  text-shadow:0 0 18px rgba(255,122,200,.55); }
+.cm-wrap .panel h1 em{ font-style:normal; color:var(--gold); }
+.cm-wrap .panel .tag{ margin:0 0 14px; font-size:13.5px; color:rgba(255,248,231,.78); font-weight:600; }
+.cm-wrap .chips{ display:flex; gap:8px; justify-content:center; margin-bottom:16px; }
+.cm-wrap .chip{ cursor:pointer; flex:1; border-radius:14px; padding:8px 2px 7px; border:1px solid rgba(179,136,255,.4);
+  background:rgba(255,255,255,.05); color:var(--cream); font-weight:800; font-size:13px; font-family:inherit; }
+.cm-wrap .chip .sub{ display:block; font-size:10.5px; font-weight:700; color:rgba(255,248,231,.55); margin-top:1px; }
+.cm-wrap .chip .bst{ display:block; font-size:10.5px; font-weight:800; color:var(--gold); margin-top:1px; }
+.cm-wrap .chip.sel{ background:linear-gradient(180deg, rgba(255,215,106,.28), rgba(255,179,71,.14)); border-color:var(--gold);
+  box-shadow:0 0 14px rgba(255,215,106,.35); }
+.cm-wrap .chip:active{ transform:scale(.96); }
+.cm-wrap #cm-bigStart{ cursor:pointer; width:100%; border:none; border-radius:999px; padding:16px 10px;
+  font-size:21px; font-weight:900; letter-spacing:1.5px; color:#2a1a05; font-family:inherit;
+  background:linear-gradient(180deg,#ffe9a8,var(--gold) 45%,var(--ember));
+  box-shadow: 0 0 26px rgba(255,215,106,.5), 0 8px 20px rgba(0,0,0,.5), inset 0 2px 0 rgba(255,255,255,.53);
+  animation:cmPulse 1.8s ease-in-out infinite; }
+@keyframes cmPulse{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.03);} }
+.cm-wrap #cm-bigStart:active{ transform:scale(.97); }
+.cm-wrap .panel .how{ margin:13px 0 0; font-size:12px; line-height:1.5; color:rgba(255,248,231,.62); font-weight:600; }
+.cm-wrap .row2{ display:flex; gap:9px; margin-top:12px; }
+.cm-wrap .btn2{ flex:1; cursor:pointer; border-radius:999px; padding:12px 6px; font-size:15px; font-weight:900; letter-spacing:.6px;
+  border:1px solid rgba(179,136,255,.55); background:rgba(179,136,255,.16); color:var(--cream); font-family:inherit; }
+.cm-wrap .btn2:active{ transform:scale(.96); }
+.cm-wrap .btn2.gold{ background:linear-gradient(180deg,#ffe9a8,var(--gold) 45%,var(--ember)); color:#2a1a05; border:none;
+  box-shadow:0 0 18px rgba(255,215,106,.4); }
+.cm-wrap .stats{ display:flex; justify-content:center; gap:16px; margin:6px 0 2px; font-size:14px; font-weight:800; }
+.cm-wrap .stats b{ color:var(--gold); }
+.cm-wrap .newbest{ color:var(--green); font-weight:900; font-size:13px; letter-spacing:1px; margin-top:4px; }
+</style>
+<style id="cn-cannon-styles">
+/* ============================================================
+   CAULDRON CANNON — module styles (FIX-20, Oct 30)
+   Same fold-in defect: JS + markup ported, prototype CSS left
+   behind — the demo file held NO .cn- rules at all. Unstyled,
+   the 390x660 canvas rendered at natural pixel size inside the
+   ~350px phone content column, pushing the tower off the right
+   edge; the HUD and start overlay fell into normal flow below
+   the stage. The fit fix is the prototype's own rule:
+   canvas{display:block;width:100%;height:auto} — the whole
+   390x660 scene scales to the column, and aiming stays true
+   because the port converts pointer coords through
+   getBoundingClientRect() (candidate line ~7149-7150).
+   Ported from cannon-game-prototype-2026-10-29/index.html
+   lines 7-83, scoped under .cn-wrap, ids cn-prefixed,
+   keyframes cn-prefixed, overlays absolute inside #cn-stage
+   (prototype context: #stage), exactly as the prototype had it.
+   ============================================================ */
+.cn-wrap{
+  --purple:#b388ff; --pink:#ff7ac8; --ember:#ffb347; --gold:#ffd76a; --green:#57ffb0; --cream:#fff8e7;
+  position:relative; width:100%;
+  color:var(--cream);
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
+}
+.cn-wrap *,.cn-wrap *::before,.cn-wrap *::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+.cn-wrap #cn-wrap{position:relative; width:100%; padding:4px 0 8px;}
+.cn-wrap #cn-stage{position:relative; width:100%; border-radius:18px; overflow:hidden;
+  box-shadow:0 0 0 2px rgba(179,136,255,.35), 0 0 34px rgba(179,136,255,.18), 0 18px 40px rgba(0,0,0,.55);}
+.cn-wrap #cn-cv{display:block; width:100%; height:auto; touch-action:none; background:#0d0a14;}
+/* ---------- HUD ---------- */
+.cn-wrap #cn-hud{position:absolute; top:0; left:0; right:0; padding:8px 10px; pointer-events:none;
+  display:flex; flex-direction:column; gap:6px; z-index:3;}
+.cn-wrap #cn-objBar{align-self:center; max-width:92%; text-align:center; background:rgba(13,10,20,.72);
+  border:1.5px solid rgba(255,215,106,.75); border-radius:999px; padding:5px 14px 6px;
+  font-weight:900; letter-spacing:.4px; font-size:15px; color:var(--gold);
+  text-shadow:0 0 12px rgba(255,215,106,.35);}
+.cn-wrap #cn-objBar small{display:block; font-size:11px; color:var(--cream); font-weight:700; letter-spacing:.2px; opacity:.92;}
+.cn-wrap #cn-hudRow{display:flex; justify-content:space-between; align-items:flex-start;}
+.cn-wrap .pill{background:rgba(13,10,20,.72); border:1.5px solid rgba(179,136,255,.55); border-radius:999px;
+  padding:4px 11px; font-size:13px; font-weight:800; color:var(--cream);}
+.cn-wrap .pill b{color:var(--gold);}
+.cn-wrap #cn-ballsPill{border-color:rgba(87,255,176,.55);}
+.cn-wrap #cn-ballsPill .orb{display:inline-block; width:10px; height:10px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #eafff3 0%, var(--green) 45%, #14b86a 100%);
+  margin-right:3px; vertical-align:-1px; box-shadow:0 0 6px rgba(87,255,176,.8);}
+.cn-wrap #cn-ballsPill .orb.spent{opacity:.22; box-shadow:none; filter:grayscale(.8);}
+.cn-wrap .iconBtn{pointer-events:auto; cursor:pointer; border:1.5px solid rgba(179,136,255,.6);
+  background:rgba(13,10,20,.78); color:var(--cream); border-radius:999px;
+  width:38px; height:38px; font-size:17px; line-height:1; display:flex; align-items:center; justify-content:center; font-family:inherit;}
+.cn-wrap .iconBtn:active{transform:scale(.93);}
+.cn-wrap #cn-btnRow{position:absolute; bottom:64px; right:10px; display:flex; gap:6px; pointer-events:none; z-index:3;}
+.cn-wrap #cn-hint{position:absolute; left:0; right:0; bottom:8px; text-align:center; pointer-events:none; z-index:3;
+  font-size:12.5px; font-weight:700; color:rgba(255,248,231,.85);
+  text-shadow:0 1px 6px rgba(0,0,0,.8); transition:opacity .4s;}
+/* ---------- Overlays ---------- */
+.cn-wrap .overlay{position:absolute; inset:0; z-index:5; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:12px; padding:20px; text-align:center;
+  background:linear-gradient(180deg, rgba(13,10,20,.38) 0%, rgba(13,10,20,.66) 78%, rgba(13,10,20,.85) 100%);}
+.cn-wrap .overlay.hidden{display:none;}
+.cn-wrap .gameTitle{font-size:39px; font-weight:900; letter-spacing:.5px; color:var(--cream); line-height:1.1;
+  text-shadow:0 0 18px rgba(179,136,255,.65), 0 3px 0 rgba(0,0,0,.35);}
+.cn-wrap .gameTitle .cc{color:var(--green); text-shadow:0 0 18px rgba(87,255,176,.7);}
+.cn-wrap .tagline{font-size:14px; font-weight:700; color:rgba(255,248,231,.92); max-width:300px; line-height:1.45;}
+.cn-wrap .bigStart{cursor:pointer; border:none; border-radius:999px; padding:16px 52px; margin-top:4px;
+  font-family:inherit; font-size:23px; font-weight:900; letter-spacing:1px; color:#241203;
+  background:linear-gradient(180deg,#ffe9a3 0%, var(--gold) 45%, #f5a83d 100%);
+  box-shadow:0 0 0 3px rgba(255,215,106,.35), 0 0 30px rgba(255,183,71,.55), 0 8px 0 #9c5f14, 0 14px 26px rgba(0,0,0,.5);
+  animation:cnPulse 1.6s ease-in-out infinite;}
+.cn-wrap .bigStart:active{transform:translateY(4px); box-shadow:0 0 0 3px rgba(255,215,106,.35),0 0 30px rgba(255,183,71,.55),0 4px 0 #9c5f14;}
+@keyframes cnPulse{0%,100%{scale:1}50%{scale:1.045}}
+.cn-wrap .chips{display:flex; gap:7px; flex-wrap:wrap; justify-content:center; max-width:340px;}
+.cn-wrap .chip{cursor:pointer; pointer-events:auto; font-family:inherit; font-weight:800; font-size:12.5px;
+  color:var(--cream); background:rgba(20,14,32,.85); border:1.5px solid rgba(179,136,255,.55);
+  border-radius:999px; padding:7px 12px;}
+.cn-wrap .chip small{display:block; font-size:10px; font-weight:700; color:var(--gold); letter-spacing:.3px;}
+.cn-wrap .chip.sel{border-color:var(--gold); background:rgba(90,64,10,.85); box-shadow:0 0 14px rgba(255,215,106,.4);}
+.cn-wrap .chip.done{border-color:rgba(87,255,176,.7);}
+.cn-wrap .endCard{background:rgba(16,11,28,.92); border:2px solid rgba(255,215,106,.7); border-radius:20px;
+  padding:22px 26px 18px; max-width:320px; box-shadow:0 0 34px rgba(255,183,71,.25), 0 18px 40px rgba(0,0,0,.6);}
+.cn-wrap .endTitle{font-size:30px; font-weight:900; color:var(--gold); letter-spacing:.5px; text-shadow:0 0 16px rgba(255,215,106,.5); line-height:1.15;}
+.cn-wrap .endTitle.lose{color:var(--pink); text-shadow:0 0 16px rgba(255,122,200,.5);}
+.cn-wrap .endLine{margin-top:6px; font-size:14px; font-weight:700; line-height:1.5; color:var(--cream);}
+.cn-wrap .endScore{margin-top:10px; font-size:15px; font-weight:800; color:var(--purple);}
+.cn-wrap .endScore b{color:var(--gold); font-size:19px;}
+.cn-wrap .btnRow2{display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap;}
+.cn-wrap .miniBtn{cursor:pointer; font-family:inherit; font-weight:900; font-size:14px; border-radius:999px;
+  padding:10px 18px; border:1.5px solid rgba(179,136,255,.65); background:rgba(20,14,32,.9); color:var(--cream);}
+.cn-wrap .miniBtn.gold{color:#241203; background:linear-gradient(180deg,#ffe9a3,var(--gold) 55%,#f5a83d); border-color:#ffe9a3;}
+.cn-wrap .miniBtn:active{transform:scale(.95);}
+.cn-wrap #cn-footNote{margin-top:10px; font-size:11.5px; color:rgba(255,248,231,.55); text-align:center; font-weight:600;}
+</style>
 <style>
 /* ============================================================
    CAULDRON STACK — module styles (game #14)
@@ -1228,13 +1649,24 @@ body.neon .bubble-btn.cc-featured-game:active{
 }
 
 </style>
+<style>
+/* CC-FIX-21: helper out of the play field while a mini-game is open.
+   !important beats the helper modules' inline display styles, so the
+   greeting can never float over game controls mid-game; dismissal
+   persistence (localStorage) is untouched by this rule. */
+body.cc-in-game #ccMallowGreet,
+body.cc-in-game #ccMallowFloatBtn,
+body.cc-in-game #ccMallowFloatSheet,
+body.cc-in-game #ccMallowFloatScrim,
+body.cc-in-game #ccMallowFloatTail{display:none !important;}
+</style>
 </head>
 <body class="neon">
 <div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first — local demo only. No password, no server, nothing leaves this device. This only remembers a name so the top bubble shows who is signed in.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Local demo only — not a real account.</p></div>
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #19 · Oct 30, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #21 · Oct 30, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -2223,6 +2655,12 @@ function show(id){
   var _gp = $("rewardsGamePop"); if(_gp) { _gp.hidden = true; _gp.style.display = "none"; }
   var el = $("scr-"+id);
   if(el) el.classList.add("active");
+  /* CC-FIX-21: while any mini-game screen is open, the helper
+     (Mallow greeting bubble, float button, sheet) stays out of the
+     play field entirely — see the body.cc-in-game CSS. The hub
+     ("games") and every non-game screen keep the helper as-is;
+     leaving a game removes the class and restores normal state. */
+  document.body.classList.toggle("cc-in-game", id.indexOf("game")===0 && id!=="games");
   window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; requestAnimationFrame(function(){ window.scrollTo(0,0); });
   var dockMap = { home:"home", binders:"binders", games:"games", plan:"plan", picker:"check" };
   var dockBtns = document.querySelectorAll(".dock button");
@@ -2837,11 +3275,36 @@ document.addEventListener("click", function(e){
      (and in the console) instead of stalling on the loading line. */
   var fn = (window.GAME_STARTERS || {})[scr];
   if (fn) {
-    try { fn(); }
+    var opened = false;
+    try { fn(); opened = true; }
     catch (err) {
       try { console.error("CC games: starter for " + scr + " threw", err); } catch (e2) {}
       var body = document.getElementById(scr + "-body");
       if (body) body.innerHTML = '<p class="center" style="margin-top:26px;font-weight:800;">That game hit a snag while opening — sorry about that. Please tell the crew which game: ' + scr + '.</p>';
+    }
+    /* CC-FIX-20 launch watchdog: the FIX-19 guard only catches a starter
+       that throws synchronously. A starter that returns but never renders
+       (async hang, a ready condition that never fires) would leave the
+       "Popping the game open…" line up forever with no explanation. So:
+       3.5s after a successful starter call, if the game body STILL shows
+       the loading line, swap in the same snag note. A per-open token on
+       the body element keeps a stale timer from firing after the player
+       has navigated away or opened another game. */
+    if (opened) {
+      var wbody = document.getElementById(scr + "-body");
+      if (wbody) {
+        var tok = String((window._ccOpenSeq = (window._ccOpenSeq || 0) + 1));
+        wbody.setAttribute("data-cc-open", tok);
+        setTimeout(function(){
+          try {
+            if (wbody.getAttribute("data-cc-open") !== tok) return;
+            if (wbody.textContent && wbody.textContent.indexOf("Popping the game open") > -1) {
+              try { console.error("CC games: launch watchdog fired for " + scr + " — starter returned but the loading line never cleared"); } catch (e5) {}
+              wbody.innerHTML = '<p class="center" style="margin-top:26px;font-weight:800;">That game hit a snag while opening — sorry about that. Please tell the crew which game: ' + scr + '.</p>';
+            }
+          } catch (e4) {}
+        }, 3500);
+      }
     }
   } else {
     try { console.error("CC games: no starter registered for " + scr); } catch (e3) {}
@@ -3088,12 +3551,15 @@ function startRapid(){
   ];
   /* Expanded pool, Oct 28 + Oct 29: 43 demo-pool photo cards (24 genuine, 19 fake — every one with a
      documented status: pool-review approved genuine pairs + the owner's Oct 26 confirmed-fake batch;
-     manifest in playground/rapidfire-deck-2026-10-29/MANIFEST.md) + 219 text cards from Sabastian's own
-     card identities (200 genuine from his hand-photo index, 19 documented fakes) = 262 total. Text cards
-     show name/set/number only, with a generic card box — his actual photos are NOT shown in the game.
-     Each play draws 20 at random from the 262, so no repeat inside a play and a different set each time.
+     manifest in playground/rapidfire-deck-2026-10-29/MANIFEST.md).
+     CC-FIX-20 (Oct 30): the rotation is PHOTO CARDS ONLY. The 219 RAPID_TEXT_DECK identities
+     (name/set/number, no photo) used to be concatenated in, so ~5 of every 6 dealt cards were
+     text-only placeholders — a player cannot judge a photo they cannot see (tester Santee's
+     coin-flip complaint; owner phone catch Oct 30). Text identities are excluded from the
+     rotation entirely; RAPID_TEXT_DECK stays defined for the record but is no longer dealt.
+     Each play draws 20 at random from the 43 photo cards, no repeat inside a play.
      Game only, never a real check. */
-  var deck = shuffle(faces.concat(RAPID_TEXT_DECK)).slice(0,20);
+  var deck = shuffle(faces.slice()).slice(0,20);
   var round=0, score=0, streak=0, bestStreak=0, locked=false, elapsed=0, over=false;
   var body = $("gameRapid-body");
   function render(){
@@ -3183,6 +3649,7 @@ function startMatch(){
     open.push(idx); render();
     if(open.length===2){
       attempts++;
+      render(); /* CC-FIX-21: the Flips counter updates the moment the second card flips — not after the ~1.1s flip-back on a mismatch. */
       var a = deck[open[0]], b = deck[open[1]];
       if(a.s === b.s){
         matched[open[0]] = true; matched[open[1]] = true; open = []; goodSnd(); render(); celebrateMatch();
@@ -3610,14 +4077,21 @@ function startZiggy(){
       el.style.cssText = "position:absolute;border:none;cursor:pointer;border-radius:50%;box-shadow:0 6px 14px rgba(51,48,94,.2);left:"+b.x+"%;top:"+b.y+"%;width:"+b.size+"px;height:"+b.size+"px;min-width:68px;min-height:68px;font-size:21px;background:"+(golden ? "radial-gradient(circle at 32% 30%, rgba(255,255,255,.95) 0%, #ffd970 55%, #f0a91e 100%)" : "radial-gradient(circle at 32% 30%, rgba(255,255,255,.9) 0%, #6fd0fc 55%, #1ea8ec 100%)")+";";
       el.textContent = golden ? "⭐" : "";
       (function(bb, ee){
-        ee.addEventListener("click", function(){
-          if(finished) return;
+        /* CC-FIX-21: pop on pointerdown (fires on press, immune to
+           click-synthesis delay while the bubble's short life runs
+           out); the click path stays as a fallback and the popped
+           flag + DOM removal make a double-pop impossible. */
+        function doPop(){
+          if(finished || bb.popped) return;
+          bb.popped = true;
           if(bb.golden) popHighSnd(); else popSnd();
           bubbles = bubbles.filter(function(x){ return x.id !== bb.id; });
           if(ee.parentNode) ee.parentNode.removeChild(ee);
           score += bb.golden ? 30 : 10; pops++; if(bb.golden) goldenPops++;
           updateBar();
-        });
+        }
+        ee.addEventListener("pointerdown", doPop);
+        ee.addEventListener("click", doPop);
       })(b, el);
       b.el = el; field.appendChild(el); bubbles.push(b);
       var em = $("zzEmpty"); if(em) em.style.display = "none";
@@ -3748,8 +4222,12 @@ function startZoom(){
       im.onerror = function(){ c.imgOk = false; step(); };
       im.src = c.img;
     });
-    /* Never stall the game start on a hung network. */
-    bag.set(function(){ if(!finished){ finished = true; deck.forEach(function(c){ if(c.imgOk === null) c.imgOk = false; }); done(); } }, 2500);
+    /* Never stall the game start on a hung network. CC-FIX-21: a crop
+       still unsettled at the failsafe stays imgOk=null (unknown), NOT
+       false — render() includes its <img> anyway and the img's own
+       onerror self-hide covers genuine load failures. A slow crop is
+       no longer branded "unavailable" for the whole session. */
+    bag.set(function(){ if(!finished){ finished = true; done(); } }, 2500);
   }
   function render(){
     var cur = deck[round]; locked = false;
