@@ -1693,7 +1693,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #24 · Oct 30, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #24 + Flash · Oct 31, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -2903,7 +2903,7 @@ function capStopLive(){ if(capStream){ capStream.getTracks().forEach(function(tr
 function capStartLive(openPickerOnFail){
   if(capLive) return;
   if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(st){ capStream=st; var v=$("capVideo"); v.srcObject=st; v.style.display="block"; v.play(); capLive=true; $("capTake").innerHTML="<span>\uD83D\uDCF8 Snap this photo</span>"; var g=$("capGot"); if(g) g.textContent="Live camera is on — line the card up inside the frame, then tap Snap."; }).catch(function(){ var g=$("capGot"); if(g) g.textContent="Camera did not start here — tap Take the photo to open your phone camera picker, or use Upload a file. If nothing opens, open this demo in Chrome."; if(openPickerOnFail) $("capCamFile").click(); });
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(st){ capStream=st; var v=$("capVideo"); v.srcObject=st; __ccFlashAttach(v); v.style.display="block"; v.play(); capLive=true; $("capTake").innerHTML="<span>\uD83D\uDCF8 Snap this photo</span>"; var g=$("capGot"); if(g) g.textContent="Live camera is on — line the card up inside the frame, then tap Snap."; }).catch(function(){ var g=$("capGot"); if(g) g.textContent="Camera did not start here — tap Take the photo to open your phone camera picker, or use Upload a file. If nothing opens, open this demo in Chrome."; if(openPickerOnFail) $("capCamFile").click(); });
   } else { var g2=$("capGot"); if(g2) g2.textContent="Camera is not available in this browser — tap Take the photo to open your phone camera picker, or use Upload a file."; if(openPickerOnFail) $("capCamFile").click(); }
 }
 var poolOptinAsked = false, poolOptinYes = false;
@@ -3198,7 +3198,7 @@ function condOpenCam(side){
     return;
   }
   navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(s){
-    condStream = s; var v = $("condVideo"); v.srcObject = s; v.style.display = "block";
+    condStream = s; var v = $("condVideo"); v.srcObject = s; __ccFlashAttach(v); v.style.display = "block";
     $("condCamWrap").classList.remove("hidden"); v.play();
   }).catch(function(){
     if(msg){ msg.textContent = "Camera blocked here — opening your phone camera picker instead. If nothing opens, use Upload, or open this demo in Chrome."; msg.classList.remove("hidden"); }
@@ -8000,7 +8000,7 @@ if (GAME_STARTERS_MISSING.length) { try { console.warn("CC games: starters missi
       return;
     }
     navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(s){
-      stream = s; video.srcObject = s; video.style.display = "block"; video.play();
+      stream = s; video.srcObject = s; __ccFlashAttach(video); video.style.display = "block"; video.play();
       document.getElementById("tellsSnap").style.display = "inline-block";
       document.getElementById("tellsStopCam").style.display = "inline-block";
     }).catch(function(){
@@ -9195,7 +9195,7 @@ document.addEventListener("click", function(e){
         var sec = $('scr-batchCam');
         if (!sec || !sec.classList.contains('active')) { st.getTracks().forEach(function(tr){ tr.stop(); }); return; }
         bcStream = st;
-        var v = $('bcVideo'); v.srcObject = st; v.style.display = 'block'; v.play(); bcLive = true;
+        var v = $('bcVideo'); v.srcObject = st; v.style.display = 'block'; v.play(); bcLive = true; __ccFlashAttach(v);
         $('bcTake').innerHTML = '<span>\uD83D\uDCF8 Snap this photo</span>';
         var g = $('bcGot'); if (g) g.textContent = 'Live camera is on \u2014 line your 5 cards up in the guide, then tap Snap.';
       }).catch(function(){
@@ -16873,6 +16873,63 @@ if (typeof window !== "undefined" && typeof document !== "undefined") (function 
   } catch (e) { /* prep module must never break the app */ }
 })();
 
+</script>
+
+<script id="ccFlashDefaultScript">
+/* FLASH DEFAULT RULE (owner order, Oct 31 2026): flash/torch ON by default for
+   every in-app card capture. Toggle remembered on-device as cc_flash_default.
+   Where the platform offers no torch, capture proceeds and nothing anywhere
+   claims a flash fired. */
+function __ccFlashOn(){
+  try { return localStorage.getItem("cc_flash_default") !== "off"; }
+  catch(e){ return true; }
+}
+function __ccTorch(videoEl, on){
+  try {
+    var st = videoEl && videoEl.srcObject;
+    if(!st || !st.getVideoTracks) return;
+    var tr = st.getVideoTracks()[0];
+    if(!tr || !tr.getCapabilities) return;
+    var caps = tr.getCapabilities();
+    if(!caps || !("torch" in caps)) return; /* unsupported: stay silent, claim nothing */
+    var p = tr.applyConstraints({ advanced: [{ torch: !!on }] });
+    if(p && p.catch) p.catch(function(){});
+  } catch(e){}
+}
+function __ccFlashUI(videoEl){
+  try {
+    if(!videoEl || !videoEl.parentNode) return;
+    var chip = videoEl.parentNode.querySelector(":scope > .cc-flash-chip");
+    if(!chip){
+      chip = document.createElement("div");
+      chip.className = "cc-flash-chip";
+      chip.style.cssText = "margin:8px auto 2px;max-width:520px;text-align:center;";
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.className = "cc-flash-btn";
+      btn.style.cssText = "border:2px solid #ffd76a;background:#3a2358;color:#fff8e7;border-radius:999px;padding:7px 16px;font-size:15px;font-weight:700;cursor:pointer;";
+      var note = document.createElement("div");
+      note.className = "cc-flash-note";
+      note.style.cssText = "margin-top:5px;font-size:13px;color:#fff8e7;opacity:.92;";
+      chip.appendChild(btn); chip.appendChild(note);
+      videoEl.parentNode.insertBefore(chip, videoEl.nextSibling);
+      btn.addEventListener("click", function(){
+        var now = !__ccFlashOn();
+        try { localStorage.setItem("cc_flash_default", now ? "on" : "off"); } catch(e){}
+        __ccFlashUI(videoEl);
+        __ccTorch(videoEl, now);
+      });
+    }
+    var on = __ccFlashOn();
+    chip.querySelector(".cc-flash-btn").textContent = on ? "\u26A1 Flash: ON" : "\u26A1 Flash: OFF";
+    chip.querySelector(".cc-flash-note").textContent = on
+      ? "Flash is on \u2014 it helps the camera read the card's print. You can turn it off anytime."
+      : "Flash is off \u2014 turning it on helps the camera read the card's print.";
+  } catch(e){}
+}
+function __ccFlashAttach(videoEl){
+  __ccFlashUI(videoEl);
+  __ccTorch(videoEl, __ccFlashOn());
+}
 </script>
 </body>
 </html>
