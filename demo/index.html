@@ -857,7 +857,7 @@ body.neon .top-banner{
    The circle is the row's ::before; its emoji is keyed by :nth-child to the OP_SHOP
    order (tee, hoodie, smartjacket, headphones, glasses, hats, pet-mallow, pet-ember,
    anim-bg, frame-gold, frame-crown, bubble-tint, gold-name, badge-hunter, hint-mystery,
-   zoom-time, poppath-guide, double-coins, streak-freeze, mystery-rounds, emoji-pack,
+   poppath-guide, double-coins, streak-freeze, mystery-rounds, emoji-pack,
    sticker-pack, victory-sounds, home-banner). If OP_SHOP is ever reordered, this
    emoji table must be reordered to match. */
 body.neon #shopList{
@@ -911,19 +911,18 @@ body.neon #shopList > div:nth-child(12)::before{content:"\1F4AC";}
 body.neon #shopList > div:nth-child(13)::before{content:"\2728";}
 body.neon #shopList > div:nth-child(14)::before{content:"\1F396\FE0F";}
 body.neon #shopList > div:nth-child(15)::before{content:"\2B50";}
-body.neon #shopList > div:nth-child(16)::before{content:"\23F1\FE0F";}
-body.neon #shopList > div:nth-child(17)::before{content:"\1F9ED";}
-body.neon #shopList > div:nth-child(18)::before{content:"\1F4B0";}
-body.neon #shopList > div:nth-child(19)::before{content:"\1F9CA";}
-body.neon #shopList > div:nth-child(20)::before{content:"\1F3B2";}
-body.neon #shopList > div:nth-child(21)::before{content:"\1F600";}
-body.neon #shopList > div:nth-child(22)::before{content:"\1F3F7\FE0F";}
-body.neon #shopList > div:nth-child(23)::before{content:"\1F50A";}
-body.neon #shopList > div:nth-child(24)::before{content:"\1F5BC\FE0F";}
-body.neon #shopList > div:nth-child(25)::before{content:"\1F9EA";}
-body.neon #shopList > div:nth-child(26)::before{content:"\1F409";}
-body.neon #shopList > div:nth-child(27)::before{content:"\1F989";}
-body.neon #shopList > div:nth-child(28)::before{content:"\1F0CF";}
+body.neon #shopList > div:nth-child(16)::before{content:"\1F9ED";}
+body.neon #shopList > div:nth-child(17)::before{content:"\1F4B0";}
+body.neon #shopList > div:nth-child(18)::before{content:"\1F9CA";}
+body.neon #shopList > div:nth-child(19)::before{content:"\1F3B2";}
+body.neon #shopList > div:nth-child(20)::before{content:"\1F600";}
+body.neon #shopList > div:nth-child(21)::before{content:"\1F3F7\FE0F";}
+body.neon #shopList > div:nth-child(22)::before{content:"\1F50A";}
+body.neon #shopList > div:nth-child(23)::before{content:"\1F5BC\FE0F";}
+body.neon #shopList > div:nth-child(24)::before{content:"\1F9EA";}
+body.neon #shopList > div:nth-child(25)::before{content:"\1F409";}
+body.neon #shopList > div:nth-child(26)::before{content:"\1F989";}
+body.neon #shopList > div:nth-child(27)::before{content:"\1F0CF";}
 
 /* ============ Batch camera + hero video (Oct 29 — Workstreams A/B) ============ */
 body.neon .top-banner{position:relative;}
@@ -973,8 +972,6 @@ body.neon .top-banner{position:relative;}
 <style>
 /* FOLD-IN (Oct 30): Runway Full Sweep art — game backdrops */
 #gameRapid-body{ background:url("assets/sweep/light/rapid-bg.webp") center/cover no-repeat; border-radius:18px; }
-#gameZoom-body{ background:url("assets/sweep/light/zoom-bg.webp") center/cover no-repeat; border-radius:18px; }
-#gameTell-body{ background:url("assets/sweep/light/tells-bg.webp") center/cover no-repeat; border-radius:18px; }
 .cw-wrap{ background:url("assets/sweep/words/words-bg.webp") center/cover no-repeat; }
 .cm-wrap{ background:url("assets/sweep/tilematch/tilematch-bg.webp") center/cover no-repeat; }
 </style>
@@ -1687,13 +1684,29 @@ body.cc-in-game #ccMallowFloatSheet,
 body.cc-in-game #ccMallowFloatScrim,
 body.cc-in-game #ccMallowFloatTail{display:none !important;}
 </style>
+<style>
+/* ===== TESTER-FIX EXPEDITE 2026-10-31 =====
+   Santee pt 6 (banner stack) + state-line slimming (pt 5 support)
+   + han pt 6 (type density on home/games). CSS only; palette and
+   the old-plus bubble look untouched. Appended last in <head> so
+   these rules win ties by source order. */
+.demo-banner{padding:calc(4px + env(safe-area-inset-top)) 12px 5px;}
+.demo-banner strong{font-size:13.5px;}
+.demo-banner span{font-size:11.5px; font-weight:600;}
+.top-banner{margin-bottom:8px; height:132px;}
+.top-banner img{width:100%; height:100%; object-fit:cover; display:block;}
+.cc-state-line{padding:6px 10px; margin:0 0 8px; font-size:13.5px;}
+#scr-home p, #scr-games p{font-weight:600 !important;}
+#scr-home .lead, #scr-games .lead{font-size:16.5px;}
+#scr-home .band .sub2, #scr-games .band .sub2{font-size:14.5px;}
+</style>
 </head>
 <body class="neon">
 <div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first — local demo only. No password, no server, nothing leaves this device. This only remembers a name so the top bubble shows who is signed in.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Local demo only — not a real account.</p></div>
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #24 + Flash 2 · Oct 31, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #24 + Tester Fixes · Oct 31, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -1726,15 +1739,15 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
     <div class="card center mt">
       <div class="free-bubbles" id="ccFreeCheckBubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <p style="font-size:18px;font-weight:800;margin-top:8px;" id="ccFreeCheckHeading">10 free checks to start</p>
-      <p class="small dim" style="margin-top:4px;" id="homePoolNote">In the full app, everyone starts with 10 free checks and 5 more float in on the 1st of every month. In this demo the checks really count down — when they run out, they restart so you can watch it work.</p>
+      <p class="small dim" style="margin-top:4px;" id="homePoolNote">Full app: 10 free checks to start, 5 more on the 1st of every month. Here they count down — and restart at empty so you can watch it work.</p>
       <p class="small" id="ccFreeCheckNote" aria-live="polite" style="margin-top:6px;font-weight:800;color:#ffd76a;"></p>
-      <button type="button" class="bubble-btn b-gold" data-nav="picker" style="margin-top:12px"><span>🫧 Check your card — Real or Fake</span><span class="sub">Front + back photos, find out if it's real or fake</span></button>
+      <button type="button" class="bubble-btn b-gold" data-nav="picker" style="margin-top:12px"><span>🫧 Check your card — Real or Fake</span><span class="sub">Sample walkthrough — front photo, back photo, plus an optional light test</span></button>
     </div>
 
     <div class="card mt">
       <h3 style="font-size:24px;">✨ Pull of the Day</h3>
       <p style="font-weight:800;color:var(--gold-deep);margin-top:2px;">Juno's Pull of the Day</p>
-      <p class="lead" style="font-size:16px;margin-top:8px;">Today's card from the DEMO-ONLY pool — a separate pool built for this demo, never linked to the real app or the real tracker. No pack was opened and nothing was won; it's a daily look at a card already in the demo pool.</p>
+      <p class="lead" style="font-size:16px;margin-top:8px;">Today's card from the DEMO-ONLY pool — built for this demo, never linked to the real app or tracker. No pack opened, nothing won.</p>
       <p class="small dim" style="margin-top:6px;" id="potdDate">Everyone sees this same card today.</p>
       <div class="gold-frame" style="margin-top:14px;">
         <div style="position:relative;border-radius:1.1rem;overflow:hidden;background:#1b2735;">
@@ -1748,15 +1761,15 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
     <img src="assets/sweep/app/explore-hero.webp" alt="" aria-hidden="true" style="width:100%;border-radius:16px;display:block;margin:10px 0;">
     <div class="band band-teal mt">
       <h3>🩹 Card Condition Grader</h3>
-      <p class="sub2" id="condBandLine">Its own little section, its own window: scan a photo — front and back — and grade the card's condition. Corners, edges, surface, centering, Mint down to Damaged. Condition only — it never calls a card real or fake.</p>
+      <p class="sub2" id="condBandLine">Scan front and back — it grades corners, edges, surface and centering, Mint to Damaged. Condition only — it never calls a card real or fake.</p>
       <p style="font-weight:900;margin-top:10px;">5 free condition grades to start — the grader's own pool</p>
       <button type="button" class="bubble-btn b-gold small mt" data-nav="condition"><span>🩹 Grade a card's condition</span></button>
-      <p class="sub2 center" style="margin-top:10px;">Free grades first — after they run out, grading is the paid Condition Pass, its own separate option inside.</p>
+      <p class="sub2 center" style="margin-top:10px;">Free grades first — then the paid Condition Pass, inside.</p>
     </div>
 
     <div class="band band-grape mt">
       <h3>🫧 Juno's Pop Trail</h3>
-      <p class="sub2">Follow the bubbles — every stop pops open a real part of this demo.</p>
+      <p class="sub2">Follow the bubbles — every stop opens part of this demo.</p>
       <div class="trail" aria-hidden="false">
         <svg viewBox="0 0 340 120" preserveAspectRatio="none" aria-hidden="true"><path d="M 30 78 C 90 30, 140 96, 200 52 C 250 18, 290 44, 322 34" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="6 8"/></svg>
         <div class="trail-stops">
@@ -1770,7 +1783,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 
     <div class="band band-teal mt">
       <h3>What can we check?</h3>
-      <p class="sub2">Six kinds of treasure. Tap any one to open the picker and make your pick — every check starts there.</p>
+      <p class="sub2">Six kinds of treasure — tap one. Every check starts in the picker.</p>
       <div class="cat-grid" id="homeCatGrid"></div>
     </div>
 
@@ -1783,16 +1796,16 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
         <button type="button" class="bubble-btn b-white small" data-nav="condition"><span>🩹 Card Condition Grader</span></button>
         <button type="button" class="bubble-btn b-white small" data-nav="lightLearn"><span>💡 Lens's Light Test</span></button>
         <button type="button" class="bubble-btn b-lemon small" data-nav="plan"><span>Checks &amp; Plan</span></button>
-        <button type="button" class="bubble-btn b-gold" data-nav="games"><span>🎮 Mini Games</span><span class="sub">13 bubbly crew games — tap in and play</span></button>
+        <button type="button" class="bubble-btn b-gold" data-nav="games"><span>🎮 Mini Games</span><span class="sub">9 bubbly crew games — tap in and play</span></button>
       </div>
-      <p class="sub2 center" style="margin-top:12px;">Games are just for fun. Scores in this demo are bragging rights for this visit only — they never touch free checks.</p>
+      <p class="sub2 center" style="margin-top:12px;">Games are just for fun — scores are bragging rights for this visit only, never touching free checks.</p>
     </div>
 
     <div class="card mt">
       <div class="toggle-row">
         <div>
           <h3 style="font-size:18px;">🌿 Calm &amp; Clear Mode</h3>
-          <p class="small dim" style="margin-top:3px;" id="calmText">Turns the drifting and bobbing off across the demo. Everything still works — just quietly.</p>
+          <p class="small dim" style="margin-top:3px;" id="calmText">Turns off the drifting and bobbing. Everything still works, just quietly.</p>
         </div>
       </div>
       <button type="button" class="bubble-btn b-white small mt" id="calmBtn">Turn on Calm &amp; Clear</button>
@@ -1801,7 +1814,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
     <div class="card mt">
       <h3 style="font-size:18px;">🕯️ Plain words</h3>
       <p class="small" style="font-weight:700;color:var(--dim);margin-top:2px;">Wick's idea 🕯️</p>
-      <p class="lead" style="font-size:16px;margin-top:8px;" id="plainCardText1">When this is on, the words around your check get simpler — shorter sentences, everyday words, and hard words explained or left out. Only the explaining words change. Try it: the picker, the plan, and the sample verdict all switch.</p>
+      <p class="lead" style="font-size:16px;margin-top:8px;" id="plainCardText1">Words around your check get simpler — shorter sentences, everyday words, hard words explained or left out. Only explaining words change; picker, plan and sample verdict switch.</p>
       <p class="small dim" style="margin-top:8px;" id="plainCardText2">Your verdict words never change, in either mode: Likely Genuine, Likely Counterfeit, and Inconclusive stay word-for-word. In the full app, your device remembers your choice.</p>
       <button type="button" class="bubble-btn b-white small mt" id="plainBtn">Turn on Plain words</button>
       <p class="small dim center" style="margin-top:10px;">Plain-Words Mode by Wick 🕯️</p>
@@ -1815,12 +1828,13 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
     <div class="decor" aria-hidden="true"><i style="width:70px;height:70px;top:8%;right:-16px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#38bdf8 55%);"></i><i style="width:44px;height:44px;bottom:20%;left:-10px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#ffd93d 55%);animation-delay:1.4s;"></i></div>
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>What are we checking?</h2>
-    <p class="lead" style="margin-top:8px;" id="pickerIntro">Pick the thing in your hand first. Each kind gets its own photo steps, so the checkers always know exactly what they're looking at — there's no scan-anything button, on purpose.</p>
+    <p class="lead" style="margin-top:8px;" id="pickerIntro">Pick the thing in your hand — each kind gets its own photo steps, so the checkers know what they're looking at. No scan-anything button, on purpose.</p>
+    <p class="small center" style="margin-top:8px;">🧭 <strong>Sample walkthrough:</strong> this demo runs the photo steps only — front photo, back photo, and for Pokémon cards an optional light test. Full checks open at launch.</p>
     <button type="button" class="bubble-btn b-white" data-nav="batch" style="min-height:64px;padding:16px 22px;font-size:13.5px;letter-spacing:0;text-transform:none;border-radius:20px;line-height:1.4;white-space:normal;"><span style="display:block;width:100%;text-align:center;">🗂️ Do you want to check more than one card at once?</span><span class="sub" style="display:block;width:100%;text-align:center;font-size:12.5px;line-height:1.4;">Click here for batch check — up to 5 cards in one pass</span></button>
     <p class="small center" style="margin-top:6px;">⭐ Pokémon Card is our #1 pool — it has the most verified cards, so it checks best right now. Other kinds join as their pools grow.</p>
     <div class="stack mt" id="pickerList"></div>
     
-    <p class="small dim center mt" id="pickerFoot">Whatever you pick, a full check works the same way: two checkers, one signed verdict, and a free check pops only when your verdict is ready.</p>
+    <p class="small dim center mt" id="pickerFoot">Every pick works the same way: two checkers, one signed verdict — a free check pops only when your verdict is ready.</p>
   </section>
 
   <!-- ================= CAPTURE ================= -->
@@ -2283,13 +2297,13 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
     <h2>Mini Games 🎮</h2><p class="small dim" id="opGamesAvatarLine"></p>
     <div class="stack" id="gamesList1"></div>
     <div class="card mt" role="note" aria-label="About these games — not a button">
-      <p class="small" style="margin:0;">🫧 Short bubbly games from the crew, just for fun. Best scores show for this visit only; nothing is saved to an account. This bubble is just info — you can't tap it to play.</p>
+      <p class="small" style="margin:0;">🫧 Short bubbly games from the crew, just for fun. Best scores show for this visit only — nothing saved to an account.</p>
     </div>
     <div class="stack mt" id="gamesList2"></div>
-    <p class="small dim" id="gamesShelfLine">15 games on the shelf — no best scores yet this visit. Be the first!</p>
+    <p class="small dim" id="gamesShelfLine">9 games on the shelf — no best scores yet this visit. Be the first!</p>
     <div class="band band-grape mt">
       <h3>📓 Parity tracker — this visit only</h3>
-      <p class="sub2">Play a game and your best score lands here, in this visit only. No account, no backend, nothing saved.</p>
+      <p class="sub2">Best scores land here — this visit only. No account, nothing saved.</p>
     </div>
     <div class="card mt" id="trackerPanel"><p class="small dim">No games finished yet this visit.</p></div>
     <div class="card mt" id="upscaleMoneyPanel"><p>Loading real snapshot totals…</p></div>
@@ -2416,7 +2430,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
     <p class="small dim">Most points out of all games combined, at the top. Each player's total is the sum of their best score in each game — not an average.</p>
     <p class="small dim" id="lbTotalStatus">Loading total scores…</p>
     <div id="lbTotalTop" style="margin-top:10px;"></div>
-    <p class="small dim">Guess the Price and Tell or Tale? do not post scores, so they are not in this total.</p></div>
+    <p class="small dim">Guess the Price does not post scores, so it is not in this total.</p></div>
     <div class="card mt"><h3>Global board — live</h3>
     <p class="small dim" id="opGlobalStatus">Pick a game from the dropdown, then its top scores load live from the backend.</p>
     <div id="opLbPicker" style="margin-top:10px;"></div>
@@ -2524,7 +2538,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
       <button type="button" class="bubble-btn b-gold" id="dailyBtn" onclick="opDailyCheckin()"><span>Check in today (+10 coins)</span></button>
     </div>
     <div class="card mt">
-      <h3 style="margin:0;">🛍️ Reward Shop — all 28, spend your coins here</h3>
+      <h3 style="margin:0;">🛍️ Reward Shop — all 27, spend your coins here</h3>
       <p class="small dim">Bases are FREE, skin tones are FREE. Everything below costs coins, device-local only, never money, never buys a check, grade, verdict, or tier.</p>
       <div id="shopList" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
     </div>
@@ -2532,7 +2546,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
       <summary style="font-weight:900;cursor:pointer;">🪙 How coins work</summary>
       <p class="small dim">Your coins live on this device only, for now. They are never real money. When real sign-in lands, your coins move to your account — until then, nobody else's device can see your coins, and we cannot see theirs either.</p>
       <h3 style="margin:0;">How you earn coins right now</h3>
-      <p class="small">🎮 Bubble Beat finish — +50 coins<br>💬 Tell or Tale? pass (60%+) — +50 coins<br>📅 Daily check-in — +10 coins<br>🃏 Scan a card (front + back) — +10 coins per scan, max 50 a day from scans<br>Other games give leaderboard scores for now, not coins yet.</p>
+      <p class="small">🎮 Bubble Beat finish — +50 coins<br>📅 Daily check-in — +10 coins<br>🃏 Scan a card (front + back) — +10 coins per scan, max 50 a day from scans<br>Other games give leaderboard scores for now, not coins yet.</p>
       <h3 style="margin:0;">👤 Avatar bases &amp; looks</h3>
       <p class="small">Avatar bases are picked free in Profile / Settings, and avatar looks/accessories live in the shop below.</p>
     </details>
@@ -2600,7 +2614,7 @@ function renderTracker(){
   if(bt){
     bt.innerHTML = '<p style="font-weight:900;">Session tracker — this visit only</p>'
       + '<p class="small dim" style="margin-top:6px;">Games played: '+sessionTracker.plays+' · Total score: '+sessionTracker.total
-      + ' · Best scores: '+Object.keys(sessionBests).length+' of 15 games. No cards are filed here in the demo — in the full app, checked cards file themselves by verdict.</p>';
+      + ' · Best scores: '+Object.keys(sessionBests).length+' of 9 games. No cards are filed here in the demo — in the full app, checked cards file themselves by verdict.</p>';
   }
 }
 
@@ -2667,7 +2681,7 @@ $("calmBtn").addEventListener("click", function(){
   this.textContent = calm ? "🌿 Calm & Clear is ON" : "Turn on Calm & Clear";
   $("calmText").textContent = calm
     ? "It's ON — the demo moves quietly. Everything still works; the drifting and bobbing are off."
-    : "Turns the drifting and bobbing off across the demo. Everything still works — just quietly.";
+    : "Turns off the drifting and bobbing. Everything still works, just quietly.";
 });
 
 /* ================= navigation ================= */
@@ -2722,7 +2736,7 @@ function show(id){
    is menu scrolling, not play (the owner-accepted FIX-22/23
    layout). Words and Cannon keep their dedicated fits. No
    gameplay, copy, or art is touched. */
-var CC_FIT24 = ["gameStack","gameCMatch","gameRapid","gameMatch","gameBeat","gamePopPath","gameCoin","gameZiggy","gameBrew","gameZoom","gameShelf","gameTell"];
+var CC_FIT24 = ["gameStack","gameCMatch","gameRapid","gameMatch","gameBeat","gamePopPath"];
 function ccFit24(scr){
   var body = document.getElementById(scr + "-body");
   var sec = document.getElementById("scr-" + scr);
@@ -2926,7 +2940,7 @@ function poolOptinShow(next){
     + '<h3 style="color:#f5c542;">Help the pool?</h3>'
     + '<p>Send this scan to the pending pool, anonymized, deletable.<br>Yes = send to pool.<br>No = just check my card, don\'t save anything.<br><span class="small dim">Asked once — your answer is remembered on this device. Change it any time in Profile / Settings.</span></p>'
     + '<p><a href="/pool-privacy.html" target="_blank" rel="noopener" style="color:#f5c542;">Read the pool privacy agreement</a></p>'
-    + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;"><button type="button" class="bubble-btn b-gold" id="poolYes"><span>Yes, send to pool</span></button><button type="button" class="bubble-btn b-white" id="poolNo"><span>No, just check</span></button></div></div>';
+    + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;"><button type="button" class="bubble-btn b-gold" id="poolYes"><span>Yes, send to pool</span></button><button type="button" class="bubble-btn b-gold" id="poolNo"><span>No, just check</span></button></div></div>';
   document.body.appendChild(pop);
   document.getElementById("poolYes").addEventListener("click", function(){ poolShareSet(true); pop.remove(); next(); });
   document.getElementById("poolNo").addEventListener("click", function(){ poolShareSet(false); pop.remove(); next(); });
@@ -3252,15 +3266,15 @@ var PW_TEXT = {
     plain: "In the full app, you start with 10 free checks. You get 5 more on the 1st of each month. This demo never uses any up."
   },
   condBandLine: {
-    normal: "Its own little section, its own window: scan a photo — front and back — and grade the card's condition. Corners, edges, surface, centering, Mint down to Damaged. Condition only — it never calls a card real or fake.",
+    normal: "Scan front and back — it grades corners, edges, surface and centering, Mint to Damaged. Condition only — it never calls a card real or fake.",
     plain: "Its own section and its own page. Take a photo of the front and back. We grade the card's shape: corners, edges, surface, and centering. Mint down to Damaged. It never says if a card is real or fake."
   },
   pickerIntro: {
-    normal: "Pick the thing in your hand first. Each kind gets its own photo steps, so the checkers always know exactly what they're looking at — there's no scan-anything button, on purpose.",
+    normal: "Pick the thing in your hand — each kind gets its own photo steps, so the checkers know what they're looking at. No scan-anything button, on purpose.",
     plain: "Pick what you have first. Each kind needs its own photos. This helps the checkers know what to look at. You must pick first."
   },
   pickerFoot: {
-    normal: "Whatever you pick, a full check works the same way: two checkers, one signed verdict, and a free check pops only when your verdict is ready.",
+    normal: "Every pick works the same way: two checkers, one signed verdict — a free check pops only when your verdict is ready.",
     plain: "The check works the same for all kinds. Two people check it. You use one free check only when the answer is ready."
   },
   planPoolText: {
@@ -3272,7 +3286,7 @@ var PW_TEXT = {
     plain: "What we found: in this sample, the print, the shine pattern, and the letters all match a real card.<br>What it's based on: both checkers looked at the front and the back, one tell at a time.<br>What it can't tell you: it is an opinion from photos — not a grade, and not a promise."
   },
   plainCardText1: {
-    normal: "When this is on, the words around your check get simpler — shorter sentences, everyday words, and hard words explained or left out. Only the explaining words change. Try it: the picker, the plan, and the sample verdict all switch.",
+    normal: "Words around your check get simpler — shorter sentences, everyday words, hard words explained or left out. Only explaining words change; picker, plan and sample verdict switch.",
     plain: "When this is on, we use short, simple words. Hard words are explained or left out. Only the words around your check change. Try it: the picker, the plan, and the sample verdict all switch."
   },
   plainCardText2: {
@@ -3328,21 +3342,15 @@ $("plainBtn").addEventListener("click", function(){
 "use strict";
 /* ================= games hub ================= */
 var GAMES = [
-  { id:"stack", scr:"gameStack", title:"Cauldron Stack", author:"by Potion 🌙", icon:"🧱", variant:"gold", featured:true, blurb:"A neon block slides over your tower — tap to drop it. Land it FLUSH or the overhang breaks off." },
-  { id:"words",   scr:"gameWords",   title:"Cauldron Words", author:"by Potion 🌙", icon:"🔤", variant:"lime",  blurb:"Drag through the letter bubbles floating in the brew and spell every word hiding in the grid." },
-  { id:"cmatch",  scr:"gameCMatch",  title:"Cauldron Match", author:"by Potion 🌙", icon:"🀄", variant:"pink",  blurb:"Tap free ingredient tiles into the cauldron rim — three of a kind pops. Fill all 7 slots and the brew spills." },
-  { id:"cannon",  scr:"gameCannon",  title:"Cauldron Cannon", author:"by Potion 🌙", icon:"💥", variant:"gold",  blurb:"Drag back to aim the dotted arc, release to fire — topple the bottle towers before your potion orbs run out." },
-  { id:"rapid",   scr:"gameRapid",   title:"Real or Fake? Rapid Fire", author:"by Nickel 🪙", icon:"⚡", variant:"sky",   blurb:"Cards flash by — call Real or Fake before the timer bubble pops." },
-  { id:"match",   scr:"gameMatch",   title:"Noor's Match Audit", author:"by Noor 🦉", icon:"🃏", variant:"pink",  blurb:"Flip bubbly cards two at a time and match every pair." },
-  { id:"beat",    scr:"gameBeat",    title:"Bubble Beat", author:"by Juno 🎵", icon:"🎵", variant:"lime",  blurb:"Tap each rising bubble exactly as it crosses the gold beat ring — with a background beat synced to the ring." },
-  { id:"poppath", scr:"gamePopPath", title:"Pip's Pop Path", author:"by Pip 🦊", icon:"💨", variant:"pink",  blurb:"Trace the winding bubble trail with your finger before it fades." },
-  { id:"coin",    scr:"gameCoin",    title:"Penny's Coin Catch", author:"by Penny 🐱", icon:"✨", variant:"gold",  blurb:"Move the catcher to catch shiny coins and dodge the dull tokens." },
-  { id:"mystery", scr:"gameMystery", title:"Milo's Mystery Bubble", author:"by Milo 🎲", icon:"🔮", variant:"lemon", blurb:"Track the star hiding in a bubble through the shuffle, then pick it." },
-  { id:"ziggy",   scr:"gameZiggy",   title:"Ziggy Zap", author:"by Ziggy ⚡", icon:"⚡", variant:"lime",  blurb:"30 seconds of speed pops — golden bubbles are worth bonus points." },
-  { id:"brew",    scr:"gameBrew",    title:"Cauldron Bubble Brew", author:"by Potion 🧪", icon:"🫧", variant:"lime",  blurb:"Watch the ingredient bubbles light up over the cauldron, then tap the brew back in order." },
-  { id:"zoom",    scr:"gameZoom",    title:"Lens Zoom Pop", author:"by Lens 🔎", icon:"🔎", variant:"pink",  blurb:"A zoomed-in card pattern crop — call it: holofoil, reverse pattern, or plain stock." },
-  { id:"shelf",   scr:"gameShelf",   title:"Index Sorts the Shelf", author:"by Index 📚", icon:"📚", variant:"lemon", blurb:"File real Pokémon sets into the right era binder against the clock." },
-  { id:"tell",    scr:"gameTell",    title:"Tell or Tale?", author:"by V2 · Which statement is a real tell?", icon:"❓", variant:"sky", blurb:"Which statement is a real tell? No card photos, no verdicts — just the knowledge. 3 levels, pass at 60%+ to unlock the next." }
+  { id:"stack", scr:"gameStack", title:"Cauldron Stack", author:"by Potion 🌙", icon:"🧱", variant:"gold", featured:true, blurb:"Tap to drop. Land FLUSH or the overhang breaks off." },
+  { id:"words",   scr:"gameWords",   title:"Cauldron Words", author:"by Potion 🌙", icon:"🔤", variant:"lime",  blurb:"Drag through letter bubbles; spell the hidden words." },
+  { id:"cmatch",  scr:"gameCMatch",  title:"Cauldron Match", author:"by Potion 🌙", icon:"🀄", variant:"pink",  blurb:"Tap free tiles in — three of a kind pops. Fill 7 slots, the brew spills." },
+  { id:"cannon",  scr:"gameCannon",  title:"Cauldron Cannon", author:"by Potion 🌙", icon:"💥", variant:"gold",  blurb:"Aim, release, topple the bottle towers before your orbs run out." },
+  { id:"rapid",   scr:"gameRapid",   title:"Real or Fake? Rapid Fire", author:"by Nickel 🪙", icon:"⚡", variant:"sky",   blurb:"Real or Fake? Beat the timer bubble." },
+  { id:"match",   scr:"gameMatch",   title:"Noor's Match Audit", author:"by Noor 🦉", icon:"🃏", variant:"pink",  blurb:"Flip two at a time; match every pair." },
+  { id:"beat",    scr:"gameBeat",    title:"Bubble Beat", author:"by Juno 🎵", icon:"🎵", variant:"lime",  blurb:"Tap each bubble as it crosses the gold ring." },
+  { id:"poppath", scr:"gamePopPath", title:"Pip's Pop Path", author:"by Pip 🦊", icon:"💨", variant:"pink",  blurb:"Trace the trail before it fades." },
+  { id:"mystery", scr:"gameMystery", title:"Milo's Mystery Bubble", author:"by Milo 🎲", icon:"🔮", variant:"lemon", blurb:"Track the star through the shuffle, then pick it." },
 ];
 function gameBtnHTML(g){
   var feat = g.featured ? ' cc-featured-game' : '';
@@ -3440,7 +3448,7 @@ function opPostScore(game, score, nm, onDone, onFail){
     .catch(function(e){ if(onFail) onFail(e); });
 }
 
-var LB_GAMES=[{id:"rapid",label:"Rapid Fire"},{id:"match",label:"Match Audit"},{id:"beat",label:"Bubble Beat"},{id:"poppath",label:"Pop Path"},{id:"coin",label:"Coin Catch"},{id:"mystery",label:"Mystery Bubble"},{id:"ziggy",label:"Ziggy Zap"},{id:"brew",label:"Bubble Brew"},{id:"zoom",label:"Zoom Pop"},{id:"shelf",label:"Sorts the Shelf"}];
+var LB_GAMES=[{id:"stack",label:"Cauldron Stack"},{id:"words",label:"Cauldron Words"},{id:"cmatch",label:"Cauldron Match"},{id:"cannon",label:"Cauldron Cannon"},{id:"rapid",label:"Rapid Fire"},{id:"match",label:"Match Audit"},{id:"beat",label:"Bubble Beat"},{id:"poppath",label:"Pop Path"},{id:"mystery",label:"Mystery Bubble"}];
 function loadTotalBoard(){
   var st=document.getElementById("lbTotalStatus"), box=document.getElementById("lbTotalTop");
   if(!st || !box) return; st.textContent = "Loading total scores…"; box.innerHTML = "";
@@ -3569,6 +3577,33 @@ function doneHTML(score, line){
     + '<button type="button" class="bubble-btn b-red" id="endAutoOff" style="margin-top:6px;display:none;"><span>⚠️ Auto-post is ON — turn it off</span></button>'
     + '<p class="small dim" id="endNote">Posting shows your name and score to everybody, nothing else. If you do not post, this score stays for this visit only.</p><p class="small dim">Tap “Post my score” even while it still says “Checking the leaderboard…” — posting works while the top list loads.</p></div>'
     + '<p class="small dim">Scores are bragging rights only — they never touch your free checks.</p></div>';
+}
+/* Item 9 (Oct 31): the four module games (stack / words / cmatch / cannon)
+   ended on their own panels and never rendered the shared end board, so
+   their scores never reached opPostScore. endBoardHTML() returns doneHTML's
+   board markup verbatim; ccShowEndBoard(slot) clears any stale board
+   elsewhere (one live #endBoard at a time, as in the array games' flow),
+   fills the game's slot fresh (new nodes — replays never stack listeners),
+   and endBoardInit() wires Post + auto-post from lastGameId/lastGameScore,
+   which recordBest() set at game over. */
+function endBoardHTML(){
+  return '<div class="card mt" id="endBoard" style="padding:12px;"><h3 style="font-size:18px;">🏆 Leaderboard — where you are at</h3>'
+    + '<p id="endRank" style="font-weight:800;">Checking the leaderboard…</p>'
+    + '<ol id="endTop" class="cc-lb" style="margin:10px auto;"></ol>'
+    + '<label style="display:block;font-weight:800;margin-top:6px;">Name or nickname<br><input id="endName" type="text" maxlength="40" placeholder="Type your name or nickname" style="width:100%;padding:8px;border-radius:10px;margin-top:4px;"></label>'
+    + '<button type="button" class="bubble-btn b-gold" id="endSubmit" style="margin-top:6px;"><span>Post my score to the leaderboard</span></button>'
+    + '<label style="display:block;font-weight:700;margin-top:6px;"><input type="checkbox" id="endAutoPost"> Post my future scores automatically too (checking this saves it — you can turn it off anytime)</label>'
+    + '<button type="button" class="bubble-btn b-red" id="endAutoOff" style="margin-top:6px;display:none;"><span>⚠️ Auto-post is ON — turn it off</span></button>'
+    + '<p class="small dim" id="endNote">Posting shows your name and score to everybody, nothing else. If you do not post, this score stays for this visit only.</p><p class="small dim">Tap “Post my score” even while it still says “Checking the leaderboard…” — posting works while the top list loads.</p></div>';
+}
+function ccShowEndBoard(slot){
+  try{
+    if(!slot) return;
+    var stale = document.querySelectorAll("#endBoard");
+    for(var i=0;i<stale.length;i++){ if(!slot.contains(stale[i]) && stale[i].parentNode) stale[i].parentNode.removeChild(stale[i]); }
+    slot.innerHTML = endBoardHTML();
+    setTimeout(endBoardInit, 0);
+  }catch(e){}
 }
 function timersBag(){
   var ids = [], gen = 0;
@@ -3964,77 +3999,6 @@ function startPopPath(){
   }, 700);
 }
 
-/* ================= 6. Coin Catch ================= */
-function startCoin(){
-  var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var FIELD_H = 400, GAME_MS = 40000;
-  var coins = [], catcherX = 50, score = 0, caught = 0, missed = 0, dull = 0, nextId = 1, finished = false;
-  var vnow = 0, lastSpawn = -800; /* virtual clock, advanced by the tick cascade */
-  var body = $("gameCoin-body");
-  body.innerHTML =
-    '<p class="scorebar" role="status" id="coinBar">Score 0 · Caught 0 · Missed 0 · Time left 40s</p>'
-    + '<div class="field" id="coinField" style="height:'+FIELD_H+'px;touch-action:none;" role="img" aria-label="Coins falling toward a catcher you move along the bottom">'
-    + '<div id="coinLayer"></div>'
-    + '<div aria-hidden="true" id="coinCatcher" style="position:absolute;bottom:6px;width:110px;height:72px;margin-left:-55px;border-radius:12px 12px 40px 40px;background:linear-gradient(180deg,#ffd970,#b97e1e);border:3px solid #ffd97a;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 6px 14px rgba(51,48,94,.2);left:50%;">🫕</div>'
-    + '</div>'
-    + '<div style="display:flex;gap:16px;justify-content:center;margin-top:14px;"><button type="button" class="bubble-btn b-sky" id="coinL" aria-label="Move left" style="width:76px;height:76px;border-radius:50%;font-size:32px;padding:0;"><span>◀</span></button><button type="button" class="bubble-btn b-sky" id="coinR" aria-label="Move right" style="width:76px;height:76px;border-radius:50%;font-size:32px;padding:0;"><span>▶</span></button></div>'
-    + '<p class="small dim center" style="margin-top:10px;" id="coinDull"></p>';
-  var field = $("coinField"), layer = $("coinLayer");
-  function moveTo(clientX){
-    var r = field.getBoundingClientRect(); if(!r.width) return;
-    catcherX = clamp(((clientX-r.left)/r.width)*100, 8, 92);
-    $("coinCatcher").style.left = catcherX+"%";
-  }
-  field.addEventListener("pointermove", function(e){ moveTo(e.clientX); });
-  field.addEventListener("pointerdown", function(e){ moveTo(e.clientX); });
-  $("coinL").addEventListener("click", function(){ catcherX = clamp(catcherX-14,8,92); $("coinCatcher").style.left = catcherX+"%"; });
-  $("coinR").addEventListener("click", function(){ catcherX = clamp(catcherX+14,8,92); $("coinCatcher").style.left = catcherX+"%"; });
-  bag.every(function(){
-    if(finished) return;
-    vnow += 100;
-    if(vnow < GAME_MS && vnow-lastSpawn >= (vnow<6000?1300:800) && coins.length < 18){
-      lastSpawn = vnow;
-      var shiny = Math.random() < 0.68;
-      var candX = 8+Math.random()*84, tries = 0;
-      while(tries < 12 && coins.some(function(c){ return Math.abs(c.x - candX) < 18; })){ candX = 8+Math.random()*84; tries++; }
-      var nc = { id: nextId++, x: candX, born: vnow, speed: (vnow<6000?0.65:1)*(118+Math.random()*82), shiny: shiny };
-      var el = document.createElement("span");
-      el.setAttribute("aria-hidden","true");
-      el.style.cssText = "position:absolute;width:48px;height:48px;margin-left:-24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 4px 10px rgba(51,48,94,.18);left:"+nc.x+"%;top:0;background:"+(shiny ? "radial-gradient(circle at 32% 30%, rgba(255,255,255,.95) 0%, #ffd970 55%, #f0a91e 100%)" : "radial-gradient(circle at 32% 30%, rgba(255,255,255,.7) 0%, #cfc8ea 55%, #b3aad6 100%)")+";";
-      el.textContent = shiny ? "✨" : "•";
-      nc.el = el; layer.appendChild(el); coins.push(nc);
-    }
-    var kept = [];
-    coins.forEach(function(c){
-      var y = ((vnow-c.born)/1000)*c.speed;
-      if(y >= FIELD_H-64 && y < FIELD_H-20){
-        if(Math.abs(c.x-catcherX) <= 13){
-          if(c.shiny){ score += 50; caught++; coinSnd(); } else { score = Math.max(0, score-25); dull++; missSnd(); }
-          if(c.el.parentNode) c.el.parentNode.removeChild(c.el);
-          return;
-        }
-        c.el.style.top = y+"px"; kept.push(c);
-      } else if(y >= FIELD_H-20){
-        if(c.shiny){ score = Math.max(0, score-10); missed++; missSnd(); }
-        if(c.el.parentNode) c.el.parentNode.removeChild(c.el);
-      } else { c.el.style.top = y+"px"; kept.push(c); }
-    });
-    coins = kept;
-    var left = Math.max(0, Math.ceil((GAME_MS-vnow)/1000));
-    $("coinBar").textContent = "Score "+score+" · Caught "+caught+" · Missed "+missed+" · Time left "+left+"s"+(vnow<6000?" · Warm-up — coins fall slowly":"");
-    $("coinDull").textContent = dull>0 ? "Dull tokens caught so far: "+dull+" — gentle oops, just dodge the next ones." : "";
-    if(vnow >= GAME_MS){
-      finished = true; bag.clear(); gameCleanup = null;
-      recordBest("coin", score);
-      body.innerHTML = doneHTML(score, "You caught "+caught+" shiny coins and missed "+missed+".");
-      $("againBtn").addEventListener("click", function(){ popSnd(); startCoin(); });
-    }
-  }, 100);
-}
-</script>
-
-<script>
-"use strict";
 /* ================= 7. Mystery Bubble ================= */
 function startMystery(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
@@ -4149,308 +4113,6 @@ function startMystery(){
   build(); update(); beginPeek();
 }
 
-/* ================= 8. Ziggy Zap ================= */
-function startZiggy(){
-  var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var GAME_MS = 30000, FIELD_H = 420, LIFE = 2900;
-  var bubbles = [], score = 0, pops = 0, goldenPops = 0, nextId = 1, finished = false;
-  var vnow = 0, lastSpawn = -900; /* virtual clock, advanced by the tick cascade */
-  var body = $("gameZiggy-body");
-  body.innerHTML =
-    '<p class="scorebar" role="status" id="zzBar">Score 0 · Popped 0 · Time left 30s</p>'
-    + '<div class="timerbar"><i id="zzTimer" style="width:100%;"></i></div>'
-    + '<div class="field" id="zzField" style="height:'+FIELD_H+'px;" role="img" aria-label="Bubbles floating up — tap them to pop">'
-    + '<p id="zzEmpty" class="center" style="position:absolute;left:0;right:0;top:45%;font-weight:800;">Bubbles incoming… get zapping!</p></div>';
-  var field = $("zzField");
-  bag.every(function(){
-    if(finished) return;
-    vnow += 250;
-    if(vnow < GAME_MS && vnow-lastSpawn >= (vnow<6000?1400:900) && bubbles.length < 12){
-      lastSpawn = vnow;
-      var golden = Math.random() < 0.2;
-      var b = { id: nextId++, x: 4+Math.random()*76, y: 12+Math.random()*68, golden: golden, born: vnow, life: (vnow<6000 ? 4200 : LIFE), size: 68+Math.floor(Math.random()*18) };
-      var el = document.createElement("button");
-      el.type = "button";
-      el.setAttribute("aria-label", golden ? "Pop the golden bubble — 30 points" : "Pop the bubble — 10 points");
-      el.style.cssText = "position:absolute;border:none;cursor:pointer;border-radius:50%;box-shadow:0 6px 14px rgba(51,48,94,.2);left:"+b.x+"%;top:"+b.y+"%;width:"+b.size+"px;height:"+b.size+"px;min-width:68px;min-height:68px;font-size:21px;background:"+(golden ? "radial-gradient(circle at 32% 30%, rgba(255,255,255,.95) 0%, #ffd970 55%, #f0a91e 100%)" : "radial-gradient(circle at 32% 30%, rgba(255,255,255,.9) 0%, #6fd0fc 55%, #1ea8ec 100%)")+";";
-      el.textContent = golden ? "⭐" : "";
-      (function(bb, ee){
-        /* CC-FIX-21: pop on pointerdown (fires on press, immune to
-           click-synthesis delay while the bubble's short life runs
-           out); the click path stays as a fallback and the popped
-           flag + DOM removal make a double-pop impossible. */
-        function doPop(){
-          if(finished || bb.popped) return;
-          bb.popped = true;
-          if(bb.golden) popHighSnd(); else popSnd();
-          bubbles = bubbles.filter(function(x){ return x.id !== bb.id; });
-          if(ee.parentNode) ee.parentNode.removeChild(ee);
-          score += bb.golden ? 30 : 10; pops++; if(bb.golden) goldenPops++;
-          updateBar();
-        }
-        ee.addEventListener("pointerdown", doPop);
-        ee.addEventListener("click", doPop);
-      })(b, el);
-      b.el = el; field.appendChild(el); bubbles.push(b);
-      var em = $("zzEmpty"); if(em) em.style.display = "none";
-    }
-    var kept = [];
-    bubbles.forEach(function(b){
-      if(vnow-b.born >= b.life){ if(b.el.parentNode) b.el.parentNode.removeChild(b.el); }
-      else kept.push(b);
-    });
-    bubbles = kept; updateBar();
-    if(vnow >= GAME_MS){
-      finished = true; bag.clear(); gameCleanup = null;
-      recordBest("ziggy", score);
-      body.innerHTML = doneHTML(score, "Final count at the buzzer: "+pops+" bubbles popped, "+goldenPops+" of them golden.");
-      $("againBtn").addEventListener("click", function(){ popSnd(); startZiggy(); });
-    }
-  }, 250);
-  function updateBar(){
-    var left = Math.max(0, Math.ceil((GAME_MS-vnow)/1000));
-    var bar = $("zzBar"); if(bar) bar.textContent = "Score "+score+" · Popped "+pops+" · Time left "+left+"s"+(vnow<6000?" · Warm-up":"");
-    var tm = $("zzTimer"); if(tm) tm.style.width = (left/30*100)+"%";
-  }
-}
-
-/* ================= 9. Bubble Brew ================= */
-var BREW_INGS = [
-  { name:"Strawberry", full:"Strawberry swirl", emoji:"🍓", color:"#ff9ec2", deep:"#f74f8b" },
-  { name:"Lemon", full:"Lemon sparkle", emoji:"🍋", color:"#ffe878", deep:"#f5c81e" },
-  { name:"Blueberry", full:"Blueberry fizz", emoji:"🫐", color:"#6fd0fc", deep:"#1ea8ec" },
-  { name:"Kiwi", full:"Kiwi mist", emoji:"🥝", color:"#aef2a8", deep:"#57d957" },
-  { name:"Orange", full:"Orange zest", emoji:"🍊", color:"#ffc98a", deep:"#ff9d45" },
-  { name:"Grape", full:"Grape glow", emoji:"🍇", color:"#cdb2f5", deep:"#9a6fd0" }
-];
-function startBrew(){
-  var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var phase = "ready", seq = [], lit = -1, tapped = 0, rounds = 0, score = 0, missed = false;
-  var note = "Potion's cauldron is warm and ready when you are.";
-  var body = $("gameBrew-body");
-  function render(){
-    var dots = seq.map(function(_,i){ return '<span style="width:13px;height:13px;border-radius:50%;display:inline-block;background:'+(i<tapped?"#57d957":"#e7ddba")+';"></span>'; }).join("");
-    var balls = BREW_INGS.map(function(ing,i){
-      return '<button type="button" class="brew-ball'+(lit===i?" lit":"")+'" data-ing="'+i+'" '+(phase!=="input"?"disabled":"")+' aria-label="Ingredient bubble: '+ing.full+'" style="background:radial-gradient(circle at 32% 30%, rgba(255,255,255,.95) 0%, '+ing.color+' 55%, '+ing.deep+' 100%);"><span class="em" aria-hidden="true">'+ing.emoji+'</span><span class="nm">'+ing.name+'</span></button>';
-    }).join("");
-    body.innerHTML =
-      '<p class="scorebar" role="status">Score '+score+' · Rounds brewed '+rounds+' · Brew length '+(seq.length||"—")+(rounds===0&&seq.length<=1?' · Warm-up — first brew plays slowly':'')+'</p>'
-      + '<div class="card center mt" style="'+(missed?"background:#3a2a1c;":"")+'"><span style="font-size:52px;" aria-hidden="true">🍲</span>'
-      + '<p style="font-weight:800;margin-top:4px;min-height:26px;" role="status">'+note+'</p>'
-      + '<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px;min-height:14px;" aria-hidden="true">'+dots+'</div></div>'
-      + (phase==="ready"
-          ? '<div class="stack mt"><button type="button" class="bubble-btn b-lime" id="brewStart"><span>Start brewing 🫧</span></button></div>'
-          : '<div class="brew-grid" role="group" aria-label="Ingredient bubbles">'+balls+'</div>')
-      + (phase==="input" ? '<p class="small dim center" style="margin-top:12px;">Tapped '+tapped+' of '+seq.length+' — keep the order bubbling.</p>' : '');
-    var st = $("brewStart");
-    if(st) st.addEventListener("click", function(){ startRound(); });
-    body.querySelectorAll("[data-ing]").forEach(function(b){
-      b.addEventListener("click", function(){ tapIng(parseInt(b.getAttribute("data-ing"),10)); });
-    });
-  }
-  function playSeq(s){
-    phase = "watch"; note = "Watch the bubbles light up over the cauldron…"; tapped = 0; render();
-    var step = calm ? 850 : (s.length===1 ? 1150 : 760);
-    s.forEach(function(ing, i){
-      bag.set(function(){ lit = ing; popSnd(); render(); }, 550 + i*step);
-      bag.set(function(){ lit = -1; render(); }, 550 + i*step + step*0.62);
-    });
-    bag.set(function(){ phase = "input"; note = "Your turn — tap the brew back in the same order!"; render(); }, 550 + s.length*step + 200);
-  }
-  function startRound(){ seq = seq.concat([Math.floor(Math.random()*BREW_INGS.length)]); playSeq(seq); }
-  function finishGame(){
-    phase = "done";
-    recordBest("brew", score);
-    body.innerHTML = doneHTML(score, "You brewed "+rounds+" round"+(rounds===1?"":"s")+" — Potion is writing this recipe down.");
-    $("againBtn").addEventListener("click", function(){ popSnd(); startBrew(); });
-  }
-  function tapIng(i){
-    if(phase!=="input") return;
-    if(i === seq[tapped]){
-      popSnd(); lit = i; render();
-      bag.set(function(){ lit = -1; render(); }, 340);
-      tapped++; score += 10;
-      if(tapped >= seq.length){
-        rounds++; score += 40; popHighSnd();
-        if(seq.length >= 12){ note = "A perfect master brew — every bubble in its place! 🫧"; phase = "watch"; render(); bag.set(finishGame, 1000); }
-        else { note = "Round "+rounds+" brewed! One more bubble joins the recipe…"; phase = "watch"; render(); bag.set(startRound, 1300); }
-      } else render();
-    } else {
-      missed = true; note = "Soft splash — that bubble wasn't next in the brew. The cauldron settles here."; phase = "watch"; render();
-      bag.set(finishGame, 1200);
-    }
-  }
-  render();
-}
-
-/* ================= 11. Lens Zoom Pop ================= */
-function startZoom(){
-  var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var LABELS = { holo:"Holofoil pattern", reverse:"Reverse pattern", plain:"Plain stock" };
-  var zoomCards = [
-    { kind:"reverse", img:"./demo-pool/zoom-1.png", name:"Pawniard" },
-    { kind:"reverse", img:"./demo-pool/zoom-2.png", name:"Team Rocket's Meowth" },
-    { kind:"reverse", img:"./demo-pool/zoom-3.png", name:"Meditite" },
-    { kind:"reverse", img:"./demo-pool/zoom-4.png", name:"Buizel" },
-    { kind:"holo", img:"./demo-pool/zoom-5.png", name:"Noctowl" },
-    { kind:"holo", img:"./demo-pool/zoom-6.png", name:"Team Rocket's Honchkrow" },
-    { kind:"holo", img:"./demo-pool/zoom-7.png", name:"Terapagos" },
-    { kind:"plain", img:"./demo-pool/zoom-8.png", name:"Erika's Tangela" },
-    { kind:"plain", img:"./demo-pool/zoom-9.png", name:"Sandile" },
-    { kind:"plain", img:"./demo-pool/zoom-10.png", name:"Gastly" }
-  ];
-  var deck = shuffle(zoomCards).map(function(c){ return { kind:c.kind, img:c.img, name:c.name, ox: Math.floor(Math.random()*60), oy: Math.floor(Math.random()*60), imgOk: null }; });
-  var round = 0, score = 0, streak = 0, bestStreak = 0, locked = false;
-  var body = $("gameZoom-body");
-  function overlay(kind){
-    if(kind==="holo") return "background:linear-gradient(115deg, rgba(255,110,180,.38), rgba(255,210,80,.38), rgba(110,255,200,.38), rgba(110,180,255,.38));";
-    if(kind==="reverse") return "background-color:rgba(240,169,30,.14);background-image:radial-gradient(rgba(255,255,255,.6) 2.2px, transparent 2.8px);background-size:22px 22px;";
-    return "background:linear-gradient(160deg, rgba(110,110,130,.20), rgba(255,255,255,.05));";
-  }
-  function sparksHTML(kind){
-    return kind==="holo" ? '<span style="position:absolute;left:16%;top:12%;font-size:29px;" aria-hidden="true">✦</span><span style="position:absolute;right:18%;top:42%;font-size:21px;" aria-hidden="true">✦</span><span style="position:absolute;left:38%;bottom:14%;font-size:25px;" aria-hidden="true">✦</span>' : "";
-  }
-  /* Preload every crop once; a failed image is known before its round. */
-  function preload(done){
-    var left = deck.length, finished = false;
-    function step(){ if(--left <= 0 && !finished){ finished = true; done(); } }
-    deck.forEach(function(c){
-      var im = new Image();
-      im.onload = function(){ c.imgOk = true; step(); };
-      im.onerror = function(){ c.imgOk = false; step(); };
-      im.src = c.img;
-    });
-    /* Never stall the game start on a hung network. CC-FIX-21: a crop
-       still unsettled at the failsafe stays imgOk=null (unknown), NOT
-       false — render() includes its <img> anyway and the img's own
-       onerror self-hide covers genuine load failures. A slow crop is
-       no longer branded "unavailable" for the whole session. */
-    bag.set(function(){ if(!finished){ finished = true; done(); } }, 2500);
-  }
-  function render(){
-    var cur = deck[round]; locked = false;
-    var boxInner =
-      /* Fallback layer: always present under the photo. */
-      '<div style="position:absolute;inset:0;'+overlay(cur.kind)+'" aria-hidden="true"></div>'
-      + '<div style="position:absolute;left:0;right:0;bottom:10px;text-align:center;font-size:13px;font-weight:700;color:#dfe6f2;padding:0 12px;">📷 Crop photo unavailable —<br>go by the pattern tint</div>'
-      + sparksHTML(cur.kind);
-    if(cur.imgOk !== false){
-      boxInner += '<img src="'+cur.img+'" alt="Zoomed crop of a demo-pool scan" onerror="this.style.display=\'none\';" style="position:absolute;width:420px;height:auto;left:-'+cur.ox+'px;top:-'+cur.oy+'px;object-fit:cover;">'
-        /* Designed tint over a loaded photo, as originally intended. */
-        + '<div style="position:absolute;inset:0;pointer-events:none;'+overlay(cur.kind)+'" aria-hidden="true"></div>'
-        + sparksHTML(cur.kind);
-    }
-    body.innerHTML =
-      '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Crop '+(round+1)+' of '+deck.length+'</p>'
-      + '<div class="card center mt cc-qcard" id="zoomCard">'
-      + '<div style="position:relative;width:240px;height:240px;margin:0 auto;border-radius:1.4rem;overflow:hidden;box-shadow:0 8px 18px rgba(51,48,94,.18);background:#1b2735;" role="img" aria-label="A zoomed-in crop of a real demo-pool scan — guess the finish">'
-      + boxInner
-      + '</div>'
-      + '<p style="font-size:20px;font-weight:900;margin-top:12px;min-height:24px;" id="zoomMsg">Zoomed way in — what pattern are you looking at?</p>' + ccHearHTML("Zoomed way in — what pattern are you looking at? Options: Holofoil pattern, Reverse pattern, Plain stock.") + '</div>'
-      + '<div class="stack mt">'
-      + '<button type="button" class="bubble-btn b-gold cc-opt" data-z="holo" style="animation-delay:.15s;"><span style="font-size:18px;">Holofoil pattern ✨</span></button>'
-      + '<button type="button" class="bubble-btn b-sky cc-opt" data-z="reverse" style="animation-delay:.3s;"><span style="font-size:18px;">Reverse pattern 🌟</span></button>'
-      + '<button type="button" class="bubble-btn b-white cc-opt" data-z="plain" style="animation-delay:.45s;"><span style="font-size:18px;">Plain stock 🃏</span></button></div>'
-      + '<p class="small dim center" style="margin-top:10px;">A guessing game with demo pattern crops — never a real check.</p>';
-    body.querySelectorAll("[data-z]").forEach(function(b){
-      b.addEventListener("click", function(){ answer(b.getAttribute("data-z")); });
-    });
-  }
-  function answer(kind){
-    if(locked) return; locked = true;
-    var cur = deck[round];
-    var ok = kind === cur.kind, msg;
-    if(ok){
-      streak++; bestStreak = Math.max(bestStreak, streak);
-      var gain = 100 + (streak-1)*10; score += gain; popHighSnd();
-      msg = "Sharp eyes — that was the "+LABELS[cur.kind].toLowerCase()+"! +"+gain;
-    } else {
-      streak = 0; popSnd();
-      msg = "Good look — that crop was the "+LABELS[cur.kind].toLowerCase()+".";
-      var c = $("zoomCard"); if(c) c.style.background = "#3a2a1c";
-    }
-    var m = $("zoomMsg"); if(m) m.textContent = msg; ccStopSpeak(); ccSpeak(msg);
-    var sb = body.querySelector(".scorebar"); if(sb) sb.textContent = "Score "+score+" · Streak "+streak+" · Crop "+(round+1)+" of "+deck.length;
-    bag.set(function(){
-      round++;
-      if(round >= deck.length){
-        recordBest("zoom", score);
-        body.innerHTML = doneHTML(score, "Best pattern streak: "+bestStreak+" in a row — Lens approves of those eyes.");
-        $("againBtn").addEventListener("click", function(){ popSnd(); startZoom(); });
-      } else render();
-    }, 1400);
-  }
-  preload(render);
-}
-
-/* ================= 12. Index Sorts ================= */
-var SHELF_ERAS = [
-  { label:"1999–2002 · Original Era", variant:"sky" },
-  { label:"2003–2010 · EX & Sinnoh Era", variant:"pink" },
-  { label:"2011–2019 · Unova to Alola", variant:"lime" },
-  { label:"2020–Today · Galar & Paldea", variant:"lemon" }
-];
-var SHELF_SETS = [
-  { name:"Base Set", era:0 },{ name:"Jungle", era:0 },{ name:"Fossil", era:0 },{ name:"Team Rocket", era:0 },{ name:"Neo Genesis", era:0 },
-  { name:"EX Ruby & Sapphire", era:1 },{ name:"EX Sandstorm", era:1 },{ name:"Diamond & Pearl", era:1 },{ name:"Platinum", era:1 },{ name:"HeartGold & SoulSilver", era:1 },
-  { name:"Black & White", era:2 },{ name:"XY", era:2 },{ name:"Sun & Moon", era:2 },{ name:"Ultra Prism", era:2 },{ name:"Cosmic Eclipse", era:2 },
-  { name:"Sword & Shield", era:3 },{ name:"Brilliant Stars", era:3 },{ name:"Pokémon GO", era:3 },{ name:"Scarlet & Violet", era:3 },{ name:"Paldea Evolved", era:3 }
-];
-function startShelf(){
-  var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var GAME_MS = 75000;
-  var queue = shuffle(SHELF_SETS), cursor = 0, score = 0, correct = 0, attempts = 0;
-  var vnow = 0, finished = false, note = "Tap the binder this set belongs to!", flash = "";
-  /* Virtual clock: one cascade beat = 250ms of game time, so the
-     countdown derives from beats the cascade itself counts — it
-     cannot be silently eaten by a throttled wall clock. */
-  var body = $("gameShelf-body");
-  function cur(){ return queue[cursor % queue.length]; }
-  function render(){
-    var left = Math.max(0, Math.ceil((GAME_MS-vnow)/1000));
-    var c = cur();
-    var btns = SHELF_ERAS.map(function(e,i){
-      return '<button type="button" class="bubble-btn '+VARCLASS[e.variant]+' cc-opt" data-era="'+i+'" aria-label="File '+c.name+' in the '+e.label+' binder" style="animation-delay:'+(0.15+i*0.15).toFixed(2)+'s;"><span style="font-size:18px;">📚 '+e.label+'</span></button>';
-    }).join("");
-    body.innerHTML =
-      '<p class="scorebar" role="status">Score '+score+' · Filed '+correct+' · '+attempts+(attempts===1?" try":" tries")+' · Time left '+left+'s</p>'
-      + '<div class="timerbar"><i id="shelfTimer" style="width:'+(left/75*100)+'%;"></i></div>'
-      + '<div class="card center mt cc-qcard" style="'+(flash==="peach"?"background:#3a2a1c;":flash==="good"?"background:#1e3a1e;":"")+'"><p class="small" style="font-weight:900;letter-spacing:.06em;color:var(--dim);">FILE THIS SET</p>'
-      + '<p style="font-size:30px;font-weight:900;margin-top:4px;">'+c.name+'</p>'
-      + '<p style="font-weight:800;margin-top:8px;min-height:24px;" role="status">'+note+'</p>' + ccHearHTML("File this set: " + c.name + ". Options: " + SHELF_ERAS.map(function(e){ return e.label; }).join(", ") + ".") + '</div>'
-      + '<div class="stack mt">'+btns+'</div>';
-    body.querySelectorAll("[data-era]").forEach(function(b){
-      b.addEventListener("click", function(){ place(parseInt(b.getAttribute("data-era"),10)); });
-    });
-  }
-  function place(era){
-    if(finished) return;
-    var c = cur(); attempts++;
-    if(era === c.era){ popHighSnd(); score += 100; correct++; flash = "good"; note = "Filed! "+c.name+" lives in "+SHELF_ERAS[c.era].label+". +100"; }
-    else { popSnd(); flash = "peach"; note = "Not quite — "+c.name+" belongs in "+SHELF_ERAS[c.era].label+"."; }
-    ccStopSpeak(); ccSpeak(note);
-    cursor++;
-    if(cursor >= queue.length){ queue = shuffle(SHELF_SETS); cursor = 0; }
-    render();
-    bag.set(function(){ flash = ""; if(!finished) render(); }, 1000);
-  }
-  bag.every(function(){
-    if(finished) return;
-    vnow += 250;
-    var left = Math.max(0, Math.ceil((GAME_MS-vnow)/1000));
-    var bar = body.querySelector(".scorebar");
-    if(bar) bar.textContent = "Score "+score+" · Filed "+correct+" · "+attempts+(attempts===1?" try":" tries")+" · Time left "+left+"s";
-    var tm = $("shelfTimer"); if(tm) tm.style.width = (left/75*100)+"%";
-    if(vnow >= GAME_MS){
-      finished = true; bag.clear(); gameCleanup = null;
-      recordBest("shelf", score);
-      body.innerHTML = doneHTML(score, "You filed "+correct+" sets correctly out of "+attempts+" tries against the clock — Index's shelf has never looked tidier.");
-      $("againBtn").addEventListener("click", function(){ popSnd(); startShelf(); });
-    }
-  }, 250);
-  render();
-}
-
 "use strict";
 /* ============================================================
    CAULDRON STACK — demo integration module (game #14)
@@ -4496,12 +4158,15 @@ function startShelf(){
      hijacked Space in every text input in the app.
    - Game over calls recordBest("stack", finalScore) — the
      demo's session parity tracker — exactly once per run.
-   - NO leaderboard post and NO coins: Stack follows the
-     majority sibling pattern (12 of 14 games pay no coins;
-     only Bubble Beat's clean finish and Tell or Tale?'s
-     pass call opAddCoins(50)). The Penguin backend submit
-     stays the marked no-op hook stackSubmitScore() below —
-     future key "stack", per the prototype README.
+   - NO coins: Stack follows the majority sibling pattern
+     (most games pay no coins; among the keepers only Bubble
+     Beat's clean finish calls opAddCoins(50)).
+   - Leaderboard (Item 9, Oct 31): game over also surfaces
+     the shared end board — ccShowEndBoard() fills
+     #stackBoardSlot in the end card and endBoardInit()
+     posts through opPostScore("stack", ...) exactly like
+     every sibling. The prototype's stackSubmitScore() hook
+     below stays a no-op legacy stub; it is not the post path.
    - Perf polish for mid-range Android: background gradient
      cached on resize (was rebuilt every frame), DPR cap
      1.75 (was 2), off-camera tower rows culled from the
@@ -4874,6 +4539,7 @@ function startStack() {
     +     '</div>'
     +     '<button class="ccstack-bigbtn" id="stackAgain" type="button">▶ Play Again</button>'
     +     '<p class="ccstack-fineprint">Your best score is saved on this device only. This run also lands in the Games visit tracker, like every game on the shelf.</p>'
+    +     '<div id="stackBoardSlot"></div>'
     +   '</div></div>'
     + '</div></div>';
 
@@ -5087,7 +4753,7 @@ function startStack() {
     playing = false;
     syncTouch();
     finalScore = score;                        /* the one final-score variable */
-    stackSubmitScore(finalScore);              /* future hook — no-op today */
+    stackSubmitScore(finalScore);              /* legacy prototype hook — no-op; posting goes through the shared end board (Item 9) */
     var isBest = finalScore > bestScore;
     if (isBest) { bestScore = finalScore; stackSaveBest(bestScore); }
     hudBest.textContent = bestScore;
@@ -5103,6 +4769,7 @@ function startStack() {
       $("stackEndBest").textContent = bestScore;
       $("stackNewBest").style.display = isBest ? "block" : "none";
       endScr.classList.remove("ccstack-hidden");
+      if (typeof ccShowEndBoard === "function") ccShowEndBoard($("stackBoardSlot"));
     };
     endDue = Date.now() + 650;
     endTimer = setTimeout(function () { var f = endPending; endPending = null; if (f) f(); }, 650);
@@ -5881,6 +5548,7 @@ function showWin(){
     (S.levelIdx+1) + " brewed clean.";
   $("cw-nextBtn").style.display = (S.levelIdx + 1 < LEVELS.length) ? "" : "none";
   const ov = $("cw-winOverlay"); ov.classList.remove("hidden");
+  try{ if (window.ccShowEndBoard) ccShowEndBoard($("cwBoardSlot")); }catch(e){}
   const card = $("cw-winCard");
   ["🫧","✨","⭐","🫧","✨"].forEach((s, k) => {
     const sp = document.createElement("span"); sp.className = "confetti"; sp.textContent = s;
@@ -5976,7 +5644,7 @@ paintMute(); buildChips(); loadLevel(selLevel, true);
 function startWords(){
   var body = $("gameWords-body"); if(!body) return;
   if(!body.querySelector(".cw-wrap")){
-    body.innerHTML = "<div class=\"cw-wrap\"><div id=\"cw-fit\"><div id=\"cw-scale\"><div class=\"lasers\"><i></i><i></i><i></i><i></i></div>\n<div id=\"cw-app\">\n  <header>\n    <div class=\"logo\">\ud83c\udf72</div>\n    <h1>Cauldron Words</h1>\n    <div class=\"spacer\"></div>\n    <div class=\"pill\">\u2b50 <b id=\"cw-score\">0</b></div>\n    <button class=\"iconbtn\" id=\"cw-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n    <button class=\"iconbtn\" id=\"cw-menuBtn\" title=\"Levels\">\u2630</button>\n  </header>\n\n  <div id=\"cw-lvlLine\">\n    <span class=\"lname\" id=\"cw-lvlName\">Level 1</span>\n    <div class=\"prog\"><i id=\"cw-progFill\"></i></div>\n    <span id=\"cw-foundCount\">0/0</span>\n  </div>\n\n  <div id=\"cw-gridWrap\"><div id=\"cw-grid\"></div></div>\n\n  <div id=\"cw-foundWrap\"><span class=\"cw-found-label\">WORDS FOUND</span><div id=\"cw-foundList\"></div></div>\n\n  <div id=\"cw-banner\"><div id=\"cw-bannerWord\"></div></div>\n  <div id=\"cw-toast\"></div>\n\n  <div id=\"cw-wheelZone\">\n    <div id=\"cw-wheel\">\n      <div id=\"cw-brewRing\"></div>\n      <svg id=\"cw-dragSvg\"><polyline id=\"cw-dragLine\" points=\"\"></polyline></svg>\n      <!-- letter bubbles injected by JS -->\n    </div>\n  </div>\n\n  <div id=\"cw-controls\">\n    <button class=\"cbtn\" id=\"cw-shuffleBtn\">\ud83d\udd00 Shuffle</button>\n    <button class=\"cbtn\" id=\"cw-hintBtn\">\ud83d\udca1 Hint <span class=\"n\" id=\"cw-hintN\">3</span></button>\n    <div id=\"cw-jar\">\ud83e\uddea Bonus jar \u00b7 <span id=\"cw-jarN\">0</span></div>\n  </div>\n</div>\n\n<!-- START overlay: the board + wheel sit visible behind it -->\n<div class=\"overlay\" id=\"cw-startOverlay\">\n  <div class=\"card\">\n    <div class=\"big\">\ud83c\udf72</div>\n    <h2>Cauldron Words</h2>\n    <p>Drag your finger through the letter bubbles to spell words. Fill the whole grid to brew the level!</p>\n    <p class=\"howto\">Three of a letter? Only if the wheel shows it twice. Extra words you find drop in the bonus jar. \ud83e\uddea</p>\n    <button id=\"cw-startBtn\">\u25b6 START</button>\n    <div class=\"chips\" id=\"cw-lvlChips\"></div>\n  </div>\n</div>\n\n<!-- VICTORY overlay -->\n<div class=\"overlay hidden\" id=\"cw-winOverlay\">\n  <div class=\"card\" id=\"cw-winCard\">\n    <div class=\"big\">\ud83c\udf89</div>\n    <h2>BREWED 'EM ALL!</h2>\n    <p id=\"cw-winLine\">Every word in the grid \u2014 found.</p>\n    <p style=\"margin-top:8px;\">Longest brew: <span id=\"cw-winWord\"></span></p>\n    <p style=\"margin-top:4px;\">Level score: <b id=\"cw-winScore\" style=\"color:var(--gold);\">0</b></p>\n    <button class=\"vbtn primary\" id=\"cw-nextBtn\">Next Level \u25b6</button>\n    <button class=\"vbtn\" id=\"cw-replayBtn\">\u21bb Replay this level</button>\n    <button class=\"vbtn\" id=\"cw-winMenuBtn\">\u2630 All levels</button>\n  </div>\n</div></div></div></div>";
+    body.innerHTML = "<div class=\"cw-wrap\"><div id=\"cw-fit\"><div id=\"cw-scale\"><div class=\"lasers\"><i></i><i></i><i></i><i></i></div>\n<div id=\"cw-app\">\n  <header>\n    <div class=\"logo\">\ud83c\udf72</div>\n    <h1>Cauldron Words</h1>\n    <div class=\"spacer\"></div>\n    <div class=\"pill\">\u2b50 <b id=\"cw-score\">0</b></div>\n    <button class=\"iconbtn\" id=\"cw-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n    <button class=\"iconbtn\" id=\"cw-menuBtn\" title=\"Levels\">\u2630</button>\n  </header>\n\n  <div id=\"cw-lvlLine\">\n    <span class=\"lname\" id=\"cw-lvlName\">Level 1</span>\n    <div class=\"prog\"><i id=\"cw-progFill\"></i></div>\n    <span id=\"cw-foundCount\">0/0</span>\n  </div>\n\n  <div id=\"cw-gridWrap\"><div id=\"cw-grid\"></div></div>\n\n  <div id=\"cw-foundWrap\"><span class=\"cw-found-label\">WORDS FOUND</span><div id=\"cw-foundList\"></div></div>\n\n  <div id=\"cw-banner\"><div id=\"cw-bannerWord\"></div></div>\n  <div id=\"cw-toast\"></div>\n\n  <div id=\"cw-wheelZone\">\n    <div id=\"cw-wheel\">\n      <div id=\"cw-brewRing\"></div>\n      <svg id=\"cw-dragSvg\"><polyline id=\"cw-dragLine\" points=\"\"></polyline></svg>\n      <!-- letter bubbles injected by JS -->\n    </div>\n  </div>\n\n  <div id=\"cw-controls\">\n    <button class=\"cbtn\" id=\"cw-shuffleBtn\">\ud83d\udd00 Shuffle</button>\n    <button class=\"cbtn\" id=\"cw-hintBtn\">\ud83d\udca1 Hint <span class=\"n\" id=\"cw-hintN\">3</span></button>\n    <div id=\"cw-jar\">\ud83e\uddea Bonus jar \u00b7 <span id=\"cw-jarN\">0</span></div>\n  </div>\n</div>\n\n<!-- START overlay: the board + wheel sit visible behind it -->\n<div class=\"overlay\" id=\"cw-startOverlay\">\n  <div class=\"card\">\n    <div class=\"big\">\ud83c\udf72</div>\n    <h2>Cauldron Words</h2>\n    <p>Drag your finger through the letter bubbles to spell words. Fill the whole grid to brew the level!</p>\n    <p class=\"howto\">Three of a letter? Only if the wheel shows it twice. Extra words you find drop in the bonus jar. \ud83e\uddea</p>\n    <button id=\"cw-startBtn\">\u25b6 START</button>\n    <div class=\"chips\" id=\"cw-lvlChips\"></div>\n  </div>\n</div>\n\n<!-- VICTORY overlay -->\n<div class=\"overlay hidden\" id=\"cw-winOverlay\">\n  <div class=\"card\" id=\"cw-winCard\">\n    <div class=\"big\">\ud83c\udf89</div>\n    <h2>BREWED 'EM ALL!</h2>\n    <p id=\"cw-winLine\">Every word in the grid \u2014 found.</p>\n    <p style=\"margin-top:8px;\">Longest brew: <span id=\"cw-winWord\"></span></p>\n    <p style=\"margin-top:4px;\">Level score: <b id=\"cw-winScore\" style=\"color:var(--gold);\">0</b></p>\n    <button class=\"vbtn primary\" id=\"cw-nextBtn\">Next Level \u25b6</button>\n    <button class=\"vbtn\" id=\"cw-replayBtn\">\u21bb Replay this level</button>\n    <button class=\"vbtn\" id=\"cw-winMenuBtn\">\u2630 All levels</button>\n    <div id=\"cwBoardSlot\"></div>\n  </div>\n</div></div></div></div>";
     buildWordsGame(body.querySelector(".cw-wrap"));
   } else { try{ if(window.__cw && window.__cw.start) window.__cw.start(); }catch(e){} }
 }
@@ -6755,6 +6423,7 @@ var CMCore = (function(){
     $('cm-endNextRow').style.display = (won && level < 2) ? '' : 'none';
     panelStart.style.display = 'none'; panelEnd.style.display = '';
     overlayEl.classList.remove('hidden');
+    try{ if (window.ccShowEndBoard) ccShowEndBoard($('cmBoardSlot')); }catch(e){}
   }
   $('cm-bigStart').addEventListener('click', function(){
     Snd.unlock(); Snd.click();
@@ -6789,7 +6458,7 @@ var CMCore = (function(){
 function startCMatch(){
   var body = $("gameCMatch-body"); if(!body) return;
   if(!body.querySelector(".cm-wrap")){
-    body.innerHTML = "<div class=\"cm-wrap\"><div id=\"cm-app\">\n  <div id=\"cm-hud\">\n    <div class=\"ttl\">\ud83e\uddea Cauldron <em>Match</em></div>\n    <div class=\"sp\"></div>\n    <div class=\"hudchip\">\u2728 <b id=\"cm-scoreV\">0</b></div>\n    <div class=\"hudchip\">\ud83e\udee7 <b id=\"cm-leftV\">0</b> left</div>\n    <button class=\"hudchip\" id=\"cm-muteBtn\" aria-label=\"toggle sound\">\ud83d\udd0a</button>\n  </div>\n\n  <div id=\"cm-trayWrap\">\n    <div id=\"cm-trayLabel\">\u2014 CAULDRON RIM \u00b7 MATCH 3 TO BREW \u2014</div>\n    <div id=\"cm-tray\"></div>\n  </div>\n\n  <div id=\"cm-stageWrap\"><div id=\"cm-stage\"></div></div>\n\n  <div id=\"cm-powers\">\n    <button class=\"pow\" id=\"cm-powUndo\"><span class=\"ic\">\u21a9\ufe0f</span><span class=\"nm\">UNDO</span><span class=\"ct\" id=\"cm-ctUndo\">\u00d73</span></button>\n    <button class=\"pow\" id=\"cm-powHint\"><span class=\"ic\">\ud83e\ude84</span><span class=\"nm\">HINT</span><span class=\"ct\" id=\"cm-ctHint\">\u00d73</span></button>\n    <button class=\"pow\" id=\"cm-powShuffle\"><span class=\"ic\">\ud83d\udd00</span><span class=\"nm\">SHUFFLE</span><span class=\"ct\" id=\"cm-ctShuffle\">\u00d73</span></button>\n  </div>\n</div>\n\n<div id=\"cm-fx\"></div>\n\n<div id=\"cm-overlay\">\n  <div class=\"panel\" id=\"cm-panelStart\">\n    <h1>\ud83e\uddea Cauldron <em>Match</em></h1>\n    <p class=\"tag\">Tap a free tile \u2014 it flies to the rim.<br>Match 3 of a kind to brew it away.</p>\n    <div class=\"chips\" id=\"cm-levelChips\"></div>\n    <button id=\"cm-bigStart\">\u25b6 &nbsp;START</button>\n    <p class=\"how\">A tile is free when nothing sits on top of it.<br>Fill all 7 rim slots with no match and the brew spills!</p>\n  </div>\n  <div class=\"panel\" id=\"cm-panelEnd\" style=\"display:none\">\n    <h1 id=\"cm-endTitle\">Brew Complete!</h1>\n    <p class=\"tag\" id=\"cm-endTag\"></p>\n    <div class=\"stats\"><span>Score <b id=\"cm-endScore\">0</b></span><span>Best <b id=\"cm-endBest\">0</b></span></div>\n    <div class=\"newbest\" id=\"cm-endNewBest\" style=\"display:none\">\u2605 NEW BEST \u2605</div>\n    <div class=\"row2\">\n      <button class=\"btn2 gold\" id=\"cm-endPrimary\">\u25b6 Play again</button>\n      <button class=\"btn2\" id=\"cm-endLevels\">Levels</button>\n    </div>\n    <div class=\"row2\" id=\"cm-endNextRow\" style=\"display:none\">\n      <button class=\"btn2\" id=\"cm-endNext\">Next level \u25b6</button>\n    </div>\n  </div>\n</div></div>";
+    body.innerHTML = "<div class=\"cm-wrap\"><div id=\"cm-app\">\n  <div id=\"cm-hud\">\n    <div class=\"ttl\">\ud83e\uddea Cauldron <em>Match</em></div>\n    <div class=\"sp\"></div>\n    <div class=\"hudchip\">\u2728 <b id=\"cm-scoreV\">0</b></div>\n    <div class=\"hudchip\">\ud83e\udee7 <b id=\"cm-leftV\">0</b> left</div>\n    <button class=\"hudchip\" id=\"cm-muteBtn\" aria-label=\"toggle sound\">\ud83d\udd0a</button>\n  </div>\n\n  <div id=\"cm-trayWrap\">\n    <div id=\"cm-trayLabel\">\u2014 CAULDRON RIM \u00b7 MATCH 3 TO BREW \u2014</div>\n    <div id=\"cm-tray\"></div>\n  </div>\n\n  <div id=\"cm-stageWrap\"><div id=\"cm-stage\"></div></div>\n\n  <div id=\"cm-powers\">\n    <button class=\"pow\" id=\"cm-powUndo\"><span class=\"ic\">\u21a9\ufe0f</span><span class=\"nm\">UNDO</span><span class=\"ct\" id=\"cm-ctUndo\">\u00d73</span></button>\n    <button class=\"pow\" id=\"cm-powHint\"><span class=\"ic\">\ud83e\ude84</span><span class=\"nm\">HINT</span><span class=\"ct\" id=\"cm-ctHint\">\u00d73</span></button>\n    <button class=\"pow\" id=\"cm-powShuffle\"><span class=\"ic\">\ud83d\udd00</span><span class=\"nm\">SHUFFLE</span><span class=\"ct\" id=\"cm-ctShuffle\">\u00d73</span></button>\n  </div>\n</div>\n\n<div id=\"cm-fx\"></div>\n\n<div id=\"cm-overlay\">\n  <div class=\"panel\" id=\"cm-panelStart\">\n    <h1>\ud83e\uddea Cauldron <em>Match</em></h1>\n    <p class=\"tag\">Tap a free tile \u2014 it flies to the rim.<br>Match 3 of a kind to brew it away.</p>\n    <div class=\"chips\" id=\"cm-levelChips\"></div>\n    <button id=\"cm-bigStart\">\u25b6 &nbsp;START</button>\n    <p class=\"how\">A tile is free when nothing sits on top of it.<br>Fill all 7 rim slots with no match and the brew spills!</p>\n  </div>\n  <div class=\"panel\" id=\"cm-panelEnd\" style=\"display:none\">\n    <h1 id=\"cm-endTitle\">Brew Complete!</h1>\n    <p class=\"tag\" id=\"cm-endTag\"></p>\n    <div class=\"stats\"><span>Score <b id=\"cm-endScore\">0</b></span><span>Best <b id=\"cm-endBest\">0</b></span></div>\n    <div class=\"newbest\" id=\"cm-endNewBest\" style=\"display:none\">\u2605 NEW BEST \u2605</div>\n    <div class=\"row2\">\n      <button class=\"btn2 gold\" id=\"cm-endPrimary\">\u25b6 Play again</button>\n      <button class=\"btn2\" id=\"cm-endLevels\">Levels</button>\n    </div>\n    <div class=\"row2\" id=\"cm-endNextRow\" style=\"display:none\">\n      <button class=\"btn2\" id=\"cm-endNext\">Next level \u25b6</button>\n    </div>\n    <div id=\"cmBoardSlot\"></div>\n  </div>\n</div></div>";
     buildCMatchGame(body.querySelector(".cm-wrap"));
   } else { try{ if(window.CM && window.CM.start) window.CM.start(); }catch(e){} }
 }
@@ -7410,6 +7079,7 @@ var CC_CANNON_CORE = (function(){
     $("cn-endScore").innerHTML = "Score <b>"+score+"</b>"+(b? " · Best <b>"+b+"</b>":"");
     $("cn-nextBtn").style.display = (wonGame && levelIdx<LEVELS.length-1)? "" : "none";
     $("cn-endOverlay").classList.remove("hidden");
+    try{ if (window.ccShowEndBoard) ccShowEndBoard($("cnBoardSlot")); }catch(e){}
     markChips();
   }
 
@@ -7837,48 +7507,11 @@ var CC_CANNON_CORE = (function(){
 function startCannon(){
   var body = $("gameCannon-body"); if(!body) return;
   if(!body.querySelector(".cn-wrap")){
-    body.innerHTML = "<div class=\"cn-wrap\"><div id=\"cn-fit\"><div id=\"cn-wrap\">\n  <div id=\"cn-stage\">\n    <canvas id=\"cn-cv\" width=\"390\" height=\"660\"></canvas>\n    <div id=\"cn-hud\">\n      <div id=\"cn-hudRow\">\n        <div class=\"pill\" id=\"cn-ballsPill\"></div>\n        <div class=\"pill\">SCORE <b id=\"cn-scoreVal\">0</b></div>\n      </div>\n      <div id=\"cn-objBar\">TOPPLE IT!<small id=\"cn-objSub\"></small></div>\n    </div>\n    <div id=\"cn-btnRow\">\n      <button class=\"iconBtn\" id=\"cn-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n      <button class=\"iconBtn\" id=\"cn-restartBtn\" title=\"Restart level\">\u21ba</button>\n    </div>\n    <div id=\"cn-hint\">Drag back from the cauldron\u2026 let go to fire!</div>\n\n    <div class=\"overlay\" id=\"cn-startOverlay\">\n      <div class=\"gameTitle\">Cauldron <span class=\"cc\">Cannon</span></div>\n      <div class=\"tagline\">Aim the potion cannon, find the weak spot, and bring the whole tower down. Kaboom responsibly.</div>\n      <div class=\"chips\" id=\"cn-levelChips\"></div>\n      <button class=\"bigStart\" id=\"cn-startBtn\">\u25b6 START</button>\n      <div class=\"tagline\" style=\"font-size:12px;opacity:.85\">Drag back to aim \u2014 the dotted line is your shot.<br>Longer drag = bigger boom.</div>\n    </div>\n\n    <div class=\"overlay hidden\" id=\"cn-endOverlay\">\n      <div class=\"endCard\">\n        <div class=\"endTitle\" id=\"cn-endTitle\">TOWER DOWN!</div>\n        <div class=\"endLine\" id=\"cn-endLine\"></div>\n        <div class=\"endScore\" id=\"cn-endScore\"></div>\n        <div class=\"btnRow2\">\n          <button class=\"miniBtn gold\" id=\"cn-nextBtn\">Next \u25b6</button>\n          <button class=\"miniBtn\" id=\"cn-retryBtn\">\u21ba Retry</button>\n          <button class=\"miniBtn\" id=\"cn-menuBtn\">Levels</button>\n        </div>\n      </div>\n    </div>\n  </div>\n  <div id=\"cn-footNote\">Cauldron Cannon \u2014 playground prototype. Best scores live on this device only.</div>\n</div></div></div>";
+    body.innerHTML = "<div class=\"cn-wrap\"><div id=\"cn-fit\"><div id=\"cn-wrap\">\n  <div id=\"cn-stage\">\n    <canvas id=\"cn-cv\" width=\"390\" height=\"660\"></canvas>\n    <div id=\"cn-hud\">\n      <div id=\"cn-hudRow\">\n        <div class=\"pill\" id=\"cn-ballsPill\"></div>\n        <div class=\"pill\">SCORE <b id=\"cn-scoreVal\">0</b></div>\n      </div>\n      <div id=\"cn-objBar\">TOPPLE IT!<small id=\"cn-objSub\"></small></div>\n    </div>\n    <div id=\"cn-btnRow\">\n      <button class=\"iconBtn\" id=\"cn-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n      <button class=\"iconBtn\" id=\"cn-restartBtn\" title=\"Restart level\">\u21ba</button>\n    </div>\n    <div id=\"cn-hint\">Drag back from the cauldron\u2026 let go to fire!</div>\n\n    <div class=\"overlay\" id=\"cn-startOverlay\">\n      <div class=\"gameTitle\">Cauldron <span class=\"cc\">Cannon</span></div>\n      <div class=\"tagline\">Aim the potion cannon, find the weak spot, and bring the whole tower down. Kaboom responsibly.</div>\n      <div class=\"chips\" id=\"cn-levelChips\"></div>\n      <button class=\"bigStart\" id=\"cn-startBtn\">\u25b6 START</button>\n      <div class=\"tagline\" style=\"font-size:12px;opacity:.85\">Drag back to aim \u2014 the dotted line is your shot.<br>Longer drag = bigger boom.</div>\n    </div>\n\n    <div class=\"overlay hidden\" id=\"cn-endOverlay\">\n      <div class=\"endCard\">\n        <div class=\"endTitle\" id=\"cn-endTitle\">TOWER DOWN!</div>\n        <div class=\"endLine\" id=\"cn-endLine\"></div>\n        <div class=\"endScore\" id=\"cn-endScore\"></div>\n        <div class=\"btnRow2\">\n          <button class=\"miniBtn gold\" id=\"cn-nextBtn\">Next \u25b6</button>\n          <button class=\"miniBtn\" id=\"cn-retryBtn\">\u21ba Retry</button>\n          <button class=\"miniBtn\" id=\"cn-menuBtn\">Levels</button>\n        </div>\n        <div id=\"cnBoardSlot\"></div>\n      </div>\n    </div>\n  </div>\n  <div id=\"cn-footNote\">Cauldron Cannon \u2014 playground prototype. Best scores live on this device only.</div>\n</div></div></div>";
     buildCannonGame(body.querySelector(".cn-wrap"));
   } else { /* game keeps its own state + menu; nothing to restart on re-entry */
     if(window.__ccCannon && window.__ccCannon.present) window.__ccCannon.present(); /* CC-FIX-23 */
   }
-}
-/* CC-FIX-19: startTell restored verbatim from build #14
-   (index.frozen-14.html) — it was lost in the #17 fold while its
-   data (OP_TELL_LEVELS), level state (opTellLevel/opTellUnlocked)
-   and opSetTellLevel survived in the file. */
-function startTell(){
-  gameCleanup = null;
-  var body = $("gameTell-body");
-  var level = opTellLevel, qs = OP_TELL_LEVELS[level], idx = 0, correct = 0;
-  function levelButtons(){ return '<div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+level+' \u25BE</span></button><div class="stack mt cc-drop-list">' + [1,2,3].map(function(l){ return '<button type="button" class="bubble-btn '+(l===level?'b-gold':'b-white')+'" '+(l>opTellUnlocked?'disabled':'')+' onclick="opSetTellLevel('+l+')"><span>Level '+l+(l===level?' ✓':'')+(l>opTellUnlocked?' · locked':'')+'</span></button>'; }).join("") + '</div></div>'; }
-  function renderQ(){
-    if(idx >= qs.length){ finish(); return; }
-    var q = qs[idx];
-    var _m = q.q.match(/^(.*?) A\) (.*?) B\) (.*)$/);
-    var _qt = _m ? _m[1] : q.q, _oa = _m ? _m[2] : 'A', _ob = _m ? _m[3] : 'B';
-    var _speak = _qt + '. Option A: ' + _oa + '. Option B: ' + _ob + '.';
-    body.innerHTML = '<p class="small dim">Level '+level+' — Q'+(idx+1)+' of '+qs.length+' · Highest unlocked: Level '+opTellUnlocked+' · Pass at 60%+ to unlock the next.</p><div class="card mt cc-qcard"><p style="font-size:22px;font-weight:900;line-height:1.35;margin:0;">'+_qt+'</p>' + ccHearHTML(_speak) + '</div><div class="stack mt"><button type="button" class="bubble-btn b-gold cc-opt" id="tellA" style="animation-delay:.15s;"><span style="font-size:18px;">A — '+_oa+'</span></button><button type="button" class="bubble-btn b-sky cc-opt" id="tellB" style="animation-delay:.3s;"><span style="font-size:18px;">B — '+_ob+'</span></button></div><p class="small dim" id="tellNote" style="margin-top:10px;"></p><div class="stack mt">'+levelButtons()+'</div>';
-    $("tellA").addEventListener("click", function(){ answer(0); });
-    $("tellB").addEventListener("click", function(){ answer(1); });
-  }
-  function answer(i){
-    var q = qs[idx];
-    ccStopSpeak();
-    if(i === q.a){ correct++; $("tellNote").textContent = "Correct — that is the tell/rule."; ccSpeak("Correct! That is the tell."); } else { $("tellNote").textContent = "Not that one — the other answer is the tell/rule."; ccSpeak("Not that one — the other answer is the tell."); }
-    idx++;
-    if(idx >= qs.length){ finish(); } else { renderQ(); }
-  }
-  function finish(){
-    var pct = qs.length ? correct/qs.length : 0;
-    var msg = 'Level '+level+' finished: '+correct+' of '+qs.length+' correct.';
-    if(pct >= 0.6){ if(level < 3 && level >= opTellUnlocked){ opTellUnlocked = level + 1; try{ localStorage.setItem("op_tell_unlocked", String(opTellUnlocked)); }catch(e){} msg += ' Level '+opTellUnlocked+' unlocked!'; } recordBest("tell", correct); opAddCoins(50); msg += ' +50 coins (device-local only, never money).'; }
-    else { msg += ' 60% or better unlocks the next level — replay to try again.'; }
-    ccStopSpeak(); ccSpeak(msg);
-    body.innerHTML = '<div class="card mt center"><p class="lead">'+msg+'</p><div class="stack mt"><button type="button" class="bubble-btn b-pink" id="tellAgain"><span>Play again</span></button></div><div class="stack mt">'+levelButtons()+'</div></div>';
-    $("tellAgain").addEventListener("click", function(){ startTell(); });
-  }
-  renderQ();
 }
 
 var GAME_META = {
@@ -7886,13 +7519,7 @@ var GAME_META = {
   gameMatch:   { title:"Noor's Match Audit 🃏", by:"by Noor 🦉 · Match all pairs in the fewest flips." },
   gameBeat:    { title:"Bubble Beat 🎵", by:"by Juno 🎵 · Background beat synced to the gold ring — music on/off in-game." },
   gamePopPath: { title:"Pip's Pop Path 💨", by:"by Pip 🦊 · Trace the glowing trail with your finger before it fades. Closer and quicker traces score more." },
-  gameCoin:    { title:"Penny's Coin Catch ✨", by:"by Penny 🐱 · Catch shiny coins (+50). Dull tokens cost 25 if caught — dodge those. A missed shiny costs 10." },
   gameMystery: { title:"Milo's Mystery Bubble 🔮", by:"by Milo 🎲 · Pure tracking skill: follow the star bubble through the shuffle and tap it." },
-  gameZiggy:   { title:"Ziggy Zap ⚡", by:"by Ziggy ⚡ · 30 seconds — pop every bubble you can. Golden bubbles are worth 30, plain ones 10." },
-  gameBrew:    { title:"Cauldron Bubble Brew 🫧", by:"by Potion 🧪 · Watch the ingredient bubbles light up, then tap the brew back in order. Each round adds one more bubble." },
-  gameZoom:    { title:"Lens Zoom Pop 🔎", by:"by Lens 🔎 · A guessing game with zoomed pattern crops — never a real check, no verdicts, no free checks." },
-  gameShelf:   { title:"Index Sorts the Shelf 📚", by:"by Index 📚 · Real Pokémon sets, one at a time — tap the era binder each set belongs to. 75 seconds on the clock." },
-  gameTell:    { title:"Tell or Tale? ❓", by:"by V2 · Which statement is a real tell? No photos, no verdicts, just the knowledge." },
   gameWords:   { title:"Cauldron Words 🔤", by:"by Potion 🌙 · Drag from letter to letter through the brew wheel and spell the words hiding in the grid. Any other real word you find fills the bonus jar." },
   gameCMatch:  { title:"Cauldron Match 🀄", by:"by Potion 🌙 · Tap free tiles into the cauldron rim — three of a kind pops and clears. Seven unmatched tiles spill the brew." },
   gameCannon:  { title:"Cauldron Cannon 💥", by:"by Potion 🌙 · Drag back to aim, release to fire. Topple it, break it down, or clean the board before your orbs run out." },
@@ -7923,13 +7550,7 @@ ccRegisterStarter("gameRapid",   typeof startRapid   === "function" ? startRapid
 ccRegisterStarter("gameMatch",   typeof startMatch   === "function" ? startMatch   : null);
 ccRegisterStarter("gameBeat",    typeof startBeat    === "function" ? startBeat    : null);
 ccRegisterStarter("gamePopPath", typeof startPopPath === "function" ? startPopPath : null);
-ccRegisterStarter("gameCoin",    typeof startCoin    === "function" ? startCoin    : null);
 ccRegisterStarter("gameMystery", typeof startMystery === "function" ? startMystery : null);
-ccRegisterStarter("gameZiggy",   typeof startZiggy   === "function" ? startZiggy   : null);
-ccRegisterStarter("gameBrew",    typeof startBrew    === "function" ? startBrew    : null);
-ccRegisterStarter("gameZoom",    typeof startZoom    === "function" ? startZoom    : null);
-ccRegisterStarter("gameShelf",   typeof startShelf   === "function" ? startShelf   : null);
-ccRegisterStarter("gameTell",    typeof startTell    === "function" ? startTell    : null);
 ccRegisterStarter("gameStack",   typeof startStack   === "function" ? startStack   : null);
 ccRegisterStarter("gameWords",   typeof startWords   === "function" ? startWords   : null);
 ccRegisterStarter("gameCMatch",  typeof startCMatch  === "function" ? startCMatch  : null);
@@ -8377,7 +7998,6 @@ var OP_SHOP = [
   {id:"gold-name",name:"Gold name in chat",price:100,cat:"Look"},
   {id:"badge-hunter",name:"Title badge: Card Hunter",price:250,cat:"Look"},
   {id:"hint-mystery",name:"Mystery hint: reveal star once",price:25,cat:"Games"},
-  {id:"zoom-time",name:"Zoom Pop +5 seconds per crop",price:25,cat:"Games"},
   {id:"poppath-guide",name:"Pop Path guide stay-on, one trail",price:25,cat:"Games"},
   {id:"double-coins",name:"Double coins booster, 24h",price:250,cat:"Games"},
   {id:"streak-freeze",name:"Streak freeze, one missed day",price:100,cat:"Games"},
@@ -8532,29 +8152,7 @@ var OP_MYSTERY_LEVEL = 1, OP_MYSTERY_UNLOCKED = 1;
 try{ OP_MYSTERY_UNLOCKED = Math.max(1, Math.min(10, parseInt(localStorage.getItem('cc_demo_mystery_unlocked')||'1',10) || 1)); }catch(e){}
 function opMysteryPickerHTML(){ return '<p class="small dim">Milo\'s Mystery Bubble — Level '+OP_MYSTERY_LEVEL+' — '+OP_MYSTERY_LEVELS[OP_MYSTERY_LEVEL-1].name+' · Highest unlocked: Level '+OP_MYSTERY_UNLOCKED+' · Finish a level to unlock the next one.</p><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">' + OP_MYSTERY_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_MYSTERY_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_MYSTERY_UNLOCKED?'disabled':'')+' onclick="opSetMysteryLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+(l.n>OP_MYSTERY_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div>'; }
 function opSetMysteryLevel(n){ if(n > OP_MYSTERY_UNLOCKED) return; OP_MYSTERY_LEVEL = n; startMystery(); }
-var OP_TELL_LEVELS={
- 1:[
-  {q:'Which is a real V2 tell? A) The card feels lucky B) Border colour measured against the reference',a:1},
-  {q:'A back photo alone proves which card it is? A) Yes B) No — backs are mostly uniform, so back score is design/print, not identity',a:1},
-  {q:'Cert alone makes a slabbed card genuine? A) Yes B) No — cert + card inside, every time',a:1}],
- 2:[
-  {q:'A verdict with no recorded fact can file as Likely? A) Yes B) No — no recorded fact, no Likely filing',a:1},
-  {q:'If the verification gate fails, what happens? A) It files anyway B) It stays Inconclusive or asks for the missing evidence',a:1},
-  {q:'A canned scan is a real verdict? A) Yes B) No — canned is a pipeline test, never presented as real',a:1},
-  {q:'SAM authenticates a card? A) Yes B) No — SAM crops, it never authenticates',a:1},
-  {q:'A grade guess is an official grade? A) Yes B) No — estimate only, never official',a:1}],
- 3:[
-  {q:'Front Genuine + fake back = ? A) Genuine B) Likely Counterfeit — either side counterfeit makes the whole counterfeit',a:1},
-  {q:'A slab claimed without a cert photo gives? A) A genuine verdict B) needs_input naming the missing cert',a:1},
-  {q:'A flagged do-not-use photo gives? A) A verdict anyway B) needs_input, findings cleared, never a verdict or quote',a:1},
-  {q:'Back scoring in V2 uses? A) The full 174-back pool B) A single pilot reference — pool scoring is not wired yet',a:1},
-  {q:'Free scans are watered-down verdicts? A) Yes B) No — same honesty, only crop method and count differ',a:1},
-  {q:'Pausing a check files a verdict? A) Yes B) No — paused checks file no verdict and no result',a:1},
-  {q:'A level score counts as another level\'s score? A) Yes B) No — scores are always tagged with game + level',a:1}]
-};
-var opTellLevel = 1, opTellUnlocked = 1;
-try{ opTellUnlocked = Math.max(1, Math.min(3, parseInt(localStorage.getItem('op_tell_unlocked')||'1',10) || 1)); }catch(e){}
-function opSetTellLevel(n){ if(n > opTellUnlocked) return; opTellLevel = n; startTell(); }
+
 var OP_PRICE_CARDS=[{"name": "Alolan Meowth", "set": "30th Celebration", "num": "139/128", "price": 11.78, "sold_at": "2026-09-27T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Pikachu & Zekrom GX", "set": "30th Celebration", "num": "33/181", "price": 35.0, "sold_at": "2026-09-27T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Zapdos", "set": "30th Celebration", "num": "133/128", "price": 12.78, "sold_at": "2026-09-28T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mewtwo", "set": "SV Promos", "num": "052", "price": 20.0, "sold_at": "2026-09-29T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Lugia", "set": "Aquapolis", "num": "149/147", "price": 250.0, "sold_at": "2026-10-01T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mega Greninja EX", "set": "Chaos Rising", "num": "116/086", "price": 121.0, "sold_at": "2026-10-03T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mewtwo", "set": "Base Set", "num": "10/130", "price": 20.0, "sold_at": "2026-10-04T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Flareon V", "set": "Sword and Shield Promos", "num": "SWSH179", "price": 56.0, "sold_at": "2026-10-04T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Lugia GX", "set": "Lost Thunder", "num": "207/214", "price": 69.0, "sold_at": "2026-10-05T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Magikarp", "set": "30th Celebration", "num": "203/193", "price": 85.0, "sold_at": "2026-10-05T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mew ex", "set": "Celebrations", "num": "88/92", "price": 14.0, "sold_at": "2026-10-05T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Gengar", "set": "Chilling Reign", "num": "057/198", "price": 2.61, "sold_at": "2026-10-05T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Gengar", "set": "Sword and Shield", "num": "085/202", "price": 8.54, "sold_at": "2026-10-05T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Dedenne", "set": "Unified Minds", "num": "145/228", "price": 1.19, "sold_at": "2026-10-06T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mew", "set": "Celebrations", "num": "011/025", "price": 3.01, "sold_at": "2026-10-06T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Nidoqueen", "set": "Celebrations", "num": "69/160", "price": 3.99, "sold_at": "2026-10-07T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Larvesta", "set": "Chilling Reign", "num": "023/198", "price": 1.0, "sold_at": "2026-10-07T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Shelgon", "set": "Dragon Majesty", "num": "43/70", "price": 1.25, "sold_at": "2026-10-07T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Sylveon ex", "set": "30th Celebration", "num": "156/128", "price": 41.5, "sold_at": "2026-10-07T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Moltres", "set": "30th Celebration", "num": "130/128", "price": 7.99, "sold_at": "2026-10-07T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mew VMAX", "set": "30th Celebration", "num": "114/264", "price": 18.99, "sold_at": "2026-10-08T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Raikou", "set": "30th Celebration", "num": "050/185", "price": 12.5, "sold_at": "2026-10-08T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Sneasel", "set": "30th Celebration", "num": "25/111", "price": 5.0, "sold_at": "2026-10-08T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Lapras", "set": "30th Celebration", "num": "131/128", "price": 6.99, "sold_at": "2026-10-08T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Dark Gyarados", "set": "Celebrations", "num": "8/82", "price": 4.75, "sold_at": "2026-10-08T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Cinderace", "set": "Sword and Shield Promos", "num": "SWSH112", "price": 1.25, "sold_at": "2026-10-09T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mudkip", "set": "MEP Promo", "num": "057", "price": 24.99, "sold_at": "2026-10-11T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Farfetch'd", "set": "Team Up", "num": "127/181", "price": 1.25, "sold_at": "2026-10-11T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Articuno", "set": "Journey Together", "num": "161/159", "price": 15.2, "sold_at": "2026-10-11T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Hop's Zacian ex", "set": "Journey Together", "num": "176/159", "price": 2.38, "sold_at": "2026-10-11T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Reshiram ex", "set": "White Flare", "num": "020/086", "price": 1.89, "sold_at": "2026-10-11T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Wailord ex", "set": "Pitch Black", "num": "097/084", "price": 4.27, "sold_at": "2026-10-12T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Cleffa", "set": "Unbroken Bonds", "num": "131/214", "price": 1.25, "sold_at": "2026-10-12T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Totodile", "set": "Fusion Strike", "num": "055/264", "price": 1.19, "sold_at": "2026-10-12T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Umbreon ex", "set": "30th Celebration", "num": "092/128", "price": 2.84, "sold_at": "2026-10-12T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Alolan Meowth", "set": "McDonald's 2019", "num": "10/12", "price": 9.49, "sold_at": "2026-10-12T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Glaceon GX", "set": "Sun and Moon Promos", "num": "SM147", "price": 5.0, "sold_at": "2026-10-12T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mega Charizard X ex", "set": "Phantasmal Flames", "num": "013/094", "price": 5.46, "sold_at": "2026-10-12T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mega Diancie ex", "set": "Phantasmal Flames", "num": "041/094", "price": 1.89, "sold_at": "2026-10-12T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Cubone", "set": "Prismatic Evolutions", "num": "57/131", "price": 1.25, "sold_at": "2026-10-13T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Lunala GX", "set": "Sun and Moon Promos", "num": "SM103a", "price": 12.0, "sold_at": "2026-10-13T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mudkip", "set": "Primal Clash", "num": "33/160", "price": 1.25, "sold_at": "2026-10-13T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Psyduck", "set": "Hidden Fates", "num": "11/68", "price": 1.25, "sold_at": "2026-10-14T11:04:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Psyduck", "set": "Team Up", "num": "26/181", "price": 1.49, "sold_at": "2026-10-14T11:04:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Pikachu", "set": "Classic Collection", "num": "58/102", "price": 18.99, "sold_at": "2026-10-14T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Decidueye ex", "set": "Perfect Order", "num": "100/088", "price": 2.14, "sold_at": "2026-10-14T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Surfing Pikachu V", "set": "Celebrations", "num": "008/025", "price": 4.99, "sold_at": "2026-10-14T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Aurorus", "set": "Perfect Order", "num": "092/088", "price": 2.84, "sold_at": "2026-10-14T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mimikyu ex", "set": "Journey Together", "num": "069/159", "price": 1.89, "sold_at": "2026-10-14T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Farfetch'd", "set": "Team Up", "num": "127/181", "price": 1.19, "sold_at": "2026-10-14T12:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mega Excadrill ex", "set": "Pitch Black", "num": "065/084", "price": 1.38, "sold_at": "2026-10-15T13:08:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Pikachu", "set": "Japanese 25th Anniversary Collection", "num": "001/028", "price": 53.99, "sold_at": "2026-10-15T14:08:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Pikachu ex", "set": "Japanese Mega Dream ex", "num": "044/193", "price": 40.0, "sold_at": "2026-10-15T14:08:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Mega Darkrai ex", "set": "Pitch Black", "num": "048/084", "price": 1.8, "sold_at": "2026-10-15T19:41:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Pikachu", "set": "Japanese Illustration Contest 2024", "num": "242/SV-P", "price": 63.0, "sold_at": "2026-10-16T01:06:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Inteleon", "set": "Sword & Shield", "num": "059/202", "price": 1.19, "sold_at": "2026-10-16T11:18:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Team Rocket's Moltres ex", "set": "Destined Rivals", "num": "031/182", "price": 1.89, "sold_at": "2026-10-16T21:24:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Salamence ex", "set": "Journey Together", "num": "177/159", "price": 2.38, "sold_at": "2026-10-16T21:24:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Wooper", "set": "Dragon Majesty", "num": "25/70", "price": 1.25, "sold_at": "2026-10-16T21:24:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Nihilego GX", "set": "Hidden Fates", "num": "SV62/SV94", "price": 15.0, "sold_at": "2026-10-17T04:02:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Team Rocket's Zapdos", "set": "Simplified Chinese Pokemon", "num": "068/222", "price": 3.79, "sold_at": "2026-10-17T17:56:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Alolan Meowth", "set": "", "num": "139/128", "price": 7.12, "sold_at": "2026-10-17T22:11:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Alolan Dugtrio", "set": "Unbroken Bonds", "num": "123/214", "price": 1.49, "sold_at": "2026-10-18T02:33:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Poke Kid", "set": "Sword & Shield", "num": "173/202", "price": 1.0, "sold_at": "2026-10-18T04:07:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Pikachu", "set": "30th Celebration", "num": "040/128", "price": 1.49, "sold_at": "2026-10-18T07:38:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Piplup", "set": "Cosmic Eclipse", "num": "54/236", "price": 1.25, "sold_at": "2026-10-18T11:29:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Cinderace VMAX", "set": "Fusion Strike", "num": "045/264", "price": 2.79, "sold_at": "2026-10-18T13:20:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Palkia LV.X", "set": "30th Celebration", "num": "106/106", "price": 11.99, "sold_at": "2026-10-18T21:34:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Alolan Meowth", "set": "", "num": "139/128", "price": 6.0, "sold_at": "2026-10-18T21:50:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Arven's Greedent", "set": "Destined Rivals", "num": "205/182", "price": 43.0, "sold_at": "2026-10-19T00:37:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Crustle", "set": "30th Celebration", "num": "186/182", "price": 1.15, "sold_at": "2026-10-19T01:54:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}, {"name": "Team Rocket's Meowth", "set": "Destined Rivals", "num": "149/182", "price": 1.49, "sold_at": "2026-10-19T16:00:00.000Z", "source": "Card Cauldron TCG eBay sold record - tracker sold section, verified Oct 25 2026"}];
 opBuildAvatarPicker(); opFillSettings(); opRenderAvatar();
 document.addEventListener('click', function(){ opRenderAvatar(); });
@@ -9461,7 +9059,7 @@ document.addEventListener("click", function(e){
   var KEY = "cc_demo_free_checks";
   var MAX = 10;
   var REFILL_TEXT = "That was the last one — in this demo your free checks just restarted at 10 so testing can keep going. In the full app they refill on the 1st of the month, or with a plan.";
-  var NOTE_NORMAL = "In the full app, everyone starts with 10 free checks and 5 more float in on the 1st of every month. In this demo the checks really count down — when they run out, they restart so you can watch it work.";
+  var NOTE_NORMAL = "Full app: 10 free checks to start, 5 more on the 1st of every month. Here they count down — and restart at empty so you can watch it work.";
   var NOTE_PLAIN = "In the full app, you start with 10 free checks. You get 5 more on the 1st of each month. In this demo the checks really count down. When they run out, they start again at 10 so you can watch it work.";
 
   var bubblesEl = document.getElementById("ccFreeCheckBubbles");
@@ -9839,38 +9437,32 @@ document.addEventListener("click", function(e){
 (function(){
   "use strict";
   var LINES = {
-    home:         ["Home", "live demo - games, card checks, and the pool start here. Next tap: pick one to begin."],
+    home:         ["Home", "live demo - games, card checks, and the pool start here."],
     picker:       ["Start a check", "SAMPLE mode - pick the thing in your hand; each kind gets its own photo steps."],
-    capture:      ["Card check", "SAMPLE mode - this step needs one photo. Next tap: take it or upload it."],
+    capture:      ["Card check", "SAMPLE mode - this step needs one photo."],
     gate:         ["Demo gate", "SAMPLE checks pause here on purpose - in the full app, the real check starts at this point."],
     lightLearn:   ["The Light Test, explained", "live guide - read how it works, then try it on a card of your own."],
-    lightTest:    ["The Light Test", "hands-on - hold your card in front of a bright light. Next tap: take the photo."],
-    batch:        ["Batch check", "demo - line up to 5 cards here. Next tap: open the batch camera."],
-    batchCam:     ["Batch camera", "DEMO photos - fill the guides with your cards. Next tap: take the photo."],
+    lightTest:    ["The Light Test", "hands-on - hold your card in front of a bright light."],
+    batch:        ["Batch check", "demo - line up to 5 cards here."],
+    batchCam:     ["Batch camera", "DEMO photos - fill the guides with your cards."],
     condition:    ["Condition Grader", "demo window - add the front photo, then the back photo."],
-    sampleVerdict:["SAMPLE verdict", "an example result, not a finding about your card. Next: see what the checkers looked at."],
+    sampleVerdict:["SAMPLE verdict", "an example result, not a finding about your card."],
     sampleReceipt:["SAMPLE receipt", "example entries show the format - not findings about a real card."],
     binders:      ["My Binders", "saved on this device - every card you check files itself here by verdict."],
-    plan:         ["Upgrade", "plans for the full app - nothing is charged in this demo. Next tap: pick a tier to preview it."],
+    plan:         ["Upgrade", "plans for the full app - nothing is charged in this demo."],
     games:        ["Mini Games", "live and free - tap a game to play. Best scores show for this visit only."],
-    tells:        ["Tells", "learn to check a card yourself, tell by tell. Next tap: pick a tell and read it."],
+    tells:        ["Tells", "learn to check a card yourself, tell by tell."],
     settings:     ["Settings & Profile", "demo only - saves on this device; no real account."],
     leaderboard:  ["Leaderboard", "mini-game scores - pick a game to see its board."],
-    website:      ["Our website", "Card Cauldron on the web. Next tap: open it in your browser."],
-    feedback:     ["Feedback & Ideas", "tell the crew what to fix. Next: write yours, then send it."],
-    chatroom:     ["Chat Room", "talk with the crew and other collectors. Next: tap in and say hello."],
-    rewards:      ["Rewards", "demo shop - spend the coins you earn in games. Next tap: pick an item to look closer."],
+    website:      ["Our website", "Card Cauldron on the web."],
+    feedback:     ["Feedback & Ideas", "tell the crew what to fix."],
+    chatroom:     ["Chat Room", "talk with the crew and other collectors."],
+    rewards:      ["Rewards", "demo shop - spend the coins you earn in games."],
     gameRapid:    ["Rapid Fire", "live game - real or fake? Decide before the bubble pops. First card is a warm-up."],
     gameMatch:    ["Match Audit", "live game - flip two cards at a time and find every matching pair."],
     gameBeat:     ["Bubble Beat", "live game - tap each bubble right on the beat. First bubble is a warm-up."],
     gamePopPath:  ["Pop Path", "live game - trace the glowing trail before it fades. First trail is a warm-up."],
-    gameCoin:     ["Coin Catch", "live game - catch the falling coins, dodge the dull ones. First seconds are a warm-up."],
     gameMystery:  ["Mystery Bubble", "live game - watch the star bubble, follow it through the shuffle. First round is a warm-up."],
-    gameZiggy:    ["Ziggy Zap", "live game - pop the bubbles before they vanish. First seconds are a warm-up."],
-    gameBrew:     ["Bubble Brew", "live game - watch the brew order, then tap it back the same way. First brew is a warm-up."],
-    gameZoom:     ["Zoom Pop", "live game - name the pattern in the zoomed-in crop. No clock - take your time."],
-    gameShelf:    ["Sorts the Shelf", "live game - file each card into its right set before time runs out."],
-    gameTell:     ["Tell or Tale?", "live game - decide if each tell is a real check or a tall tale. No clock."],
     gameStack:     ["Cauldron Stack", "live game - tap to drop the sliding block onto your tower. First block is a warm-up."],
     gameWords:     ["Cauldron Words", "live game - drag letter to letter and spell the grid words. First word is a warm-up."],
     gameCMatch:    ["Cauldron Match", "live game - tap free tiles into the rim, three of a kind pops. First tile is a warm-up."],
@@ -11248,12 +10840,12 @@ CCMF_CONTENT.home = {
 
 CCMF_CONTENT.games = {
   title: "Mini Games",
-  line: "Thirteen bubbly games — every one sneaks in a tell the checkers use, from print dots to price memory. Pick one and warm up; best scores live just for this visit.",
+  line: "Nine bubbly games — every one sneaks in a tell the checkers use, from print dots to price memory. Pick one and warm up; best scores live just for this visit.",
   qa: [
     ["Do games affect my checks?",
      "Not a bit. Games are free, checks are spent only when you Finish a card pair, and the two never touch. Coins from games spend in the Reward Shop — demo sparkle only."],
     ["Which game teaches the tells?",
-     "Tell or Tale? is the pure knowledge one — real tell or tall tale, no photos. Zoom Pop trains your eye on holo patterns up close, and Message Relay is Wick's pinned-memo practice. They're all tells in costume."],
+     "Rapid Fire trains the real-or-fake eye at speed, Match Audit trains pairing and print memory, and Message Relay is Wick's pinned-memo practice. They're all tells in costume."],
     ["What do coins do?",
      "Coins you earn in games spend in the Reward Shop, on demo items and a little sparkle. They never buy checks and never change a verdict — there's no verdict in this demo to change."]
   ]
@@ -15371,7 +14963,7 @@ if (typeof document !== "undefined") (function () {
     }
   }
 
-  return {
+  var api = {
     VERSION: VERSION,
     AS_BAKED: AS_BAKED,
     PROFILE_KEY: PROFILE_KEY,
@@ -15407,6 +14999,7 @@ if (typeof document !== "undefined") (function () {
     },
     _installBrowser: installBrowser
   };
+  return api;
 });
 
 </script>
@@ -17010,19 +16603,25 @@ function __ccTorchOff(videoEl){
 function __ccFlashUI(videoEl){
   try {
     if(!videoEl || !videoEl.parentNode) return;
-    var chip = videoEl.parentNode.querySelector(":scope > .cc-flash-chip");
+    var frame = videoEl.parentNode;
+    var chip = frame.__ccFlashChip || null;
+    if(chip && !chip.parentNode){ chip = null; frame.__ccFlashChip = null; }
     if(!chip){
       chip = document.createElement("div");
       chip.className = "cc-flash-chip";
-      chip.style.cssText = "margin:8px auto 2px;max-width:520px;text-align:center;";
+      chip.style.cssText = "display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:8px auto 4px;max-width:520px;text-align:center;";
       var btn = document.createElement("button");
       btn.type = "button"; btn.className = "cc-flash-btn";
-      btn.style.cssText = "border:2px solid #ffd76a;background:#3a2358;color:#fff8e7;border-radius:999px;padding:7px 16px;font-size:15px;font-weight:700;cursor:pointer;";
+      btn.style.cssText = "border:2px solid #ffd76a;background:#3a2358;color:#fff8e7;border-radius:999px;padding:10px 18px;min-height:44px;font-size:15px;font-weight:700;cursor:pointer;flex:0 0 auto;";
       var note = document.createElement("div");
       note.className = "cc-flash-note";
-      note.style.cssText = "margin-top:5px;font-size:13px;color:#fff8e7;opacity:.92;";
-      chip.appendChild(btn); chip.appendChild(note);
-      videoEl.parentNode.insertBefore(chip, videoEl.nextSibling);
+      note.style.cssText = "font-size:13px;color:#fff8e7;opacity:.92;";
+      chip.appendChild(note); chip.appendChild(btn);
+      /* Tester-fix expedite item 8 (owner field report, Oct 31): the flash
+         control row lives OUTSIDE the camera box — inserted after the frame
+         element, directly under the camera view, never overlaid on video. */
+      frame.parentNode.insertBefore(chip, frame.nextSibling);
+      frame.__ccFlashChip = chip;
       btn.addEventListener("click", function(){
         var st = __ccFlashState(videoEl);
         if(st.status === "unavailable" && __ccFlashOn()){
@@ -17050,13 +16649,13 @@ function __ccFlashUI(videoEl){
     var noteEl = chip.querySelector(".cc-flash-note");
     if(st.status === "on"){
       btnEl.textContent = "\u26A1 Flash: ON";
-      noteEl.textContent = "Flash is on \u2014 it helps the camera read the card's print. You can turn it off anytime.";
+      noteEl.textContent = "Flash on \u2014 helps read the print.";
     } else if(st.status === "off"){
       btnEl.textContent = "\u26A1 Flash: OFF";
-      noteEl.textContent = "Flash is off \u2014 turning it on helps the camera read the card's print.";
+      noteEl.textContent = "Flash off \u2014 turning it on helps read the print.";
     } else if(st.status === "unavailable"){
       btnEl.textContent = "\u26A1 Flash: UNAVAILABLE";
-      noteEl.textContent = "Flash isn't available in this browser \u2014 try Chrome with the rear camera; the phone's own camera app flash still works.";
+      noteEl.textContent = "No flash in this browser \u2014 try Chrome + rear camera, or your camera app's flash.";
     } else {
       btnEl.textContent = "\u26A1 Flash: CHECKING";
       noteEl.textContent = "Checking the flash\u2026";
