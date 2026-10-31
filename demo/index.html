@@ -1693,7 +1693,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #24 + Flash · Oct 31, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #24 + Flash 2 · Oct 31, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -16876,23 +16876,134 @@ if (typeof window !== "undefined" && typeof document !== "undefined") (function 
 </script>
 
 <script id="ccFlashDefaultScript">
-/* FLASH DEFAULT RULE (owner order, Oct 31 2026): flash/torch ON by default for
-   every in-app card capture. Toggle remembered on-device as cc_flash_default.
-   Where the platform offers no torch, capture proceeds and nothing anywhere
-   claims a flash fired. */
+/* FLASH DEFAULT RULE v2 — HARDENED (Oct 31 2026, field failure: chip claimed
+   ON while no torch lit on real hardware). Flash/torch ON by default for every
+   in-app card capture; toggle remembered on-device as cc_flash_default.
+   The chip now reports VERIFIED hardware state, never the bare preference:
+     ON          — applyConstraints resolved AND track.getSettings().torch === true
+     OFF         — the user turned it off (their choice, stored)
+     UNAVAILABLE — no torch capability, the apply failed, or the state could
+                   not be confirmed. The UI NEVER shows ON unconfirmed.
+   Applies are deferred until the track is live and retried (capabilities
+   settle asynchronously on real devices — a one-shot probe at stream start
+   misses torch on much Android hardware), and re-applied on loadeddata /
+   playing / track unmute / tab-visible, so a dropped constraint is re-lit. */
 function __ccFlashOn(){
   try { return localStorage.getItem("cc_flash_default") !== "off"; }
   catch(e){ return true; }
 }
-function __ccTorch(videoEl, on){
+function __ccFlashState(videoEl){
+  if(!videoEl.__ccFlash){
+    videoEl.__ccFlash = { status: "pending", stream: null, tries: 0, timers: [], watch: 0 };
+  }
+  return videoEl.__ccFlash;
+}
+function __ccFlashLater(videoEl, fn, ms){
+  var st = __ccFlashState(videoEl);
+  var id = setTimeout(function(){ fn(); }, ms || 0);
+  st.timers.push(id);
+  return id;
+}
+function __ccFlashClearTimers(videoEl){
+  var st = __ccFlashState(videoEl);
+  for(var i = 0; i < st.timers.length; i++){ try { clearTimeout(st.timers[i]); } catch(e){} }
+  st.timers = [];
+}
+function __ccFlashTrack(videoEl){
   try {
-    var st = videoEl && videoEl.srcObject;
-    if(!st || !st.getVideoTracks) return;
-    var tr = st.getVideoTracks()[0];
+    var s = videoEl && videoEl.srcObject;
+    if(!s || !s.getVideoTracks) return null;
+    return s.getVideoTracks()[0] || null;
+  } catch(e){ return null; }
+}
+function __ccFlashSetStatus(videoEl, status){
+  var st = __ccFlashState(videoEl);
+  if(st.status !== status){ st.status = status; }
+  __ccFlashUI(videoEl);
+}
+function __ccTorchAttempt(videoEl){
+  var st = __ccFlashState(videoEl);
+  if(!__ccFlashOn()){ __ccFlashSetStatus(videoEl, "off"); return; }
+  var stream = videoEl && videoEl.srcObject;
+  if(stream !== st.stream){
+    /* New stream on the same element (new side / camera restart): the whole
+       confirm cycle restarts against the NEW track. */
+    st.stream = stream; st.tries = 0; st.watch = 0;
+  }
+  var tr = __ccFlashTrack(videoEl);
+  if(!tr || tr.readyState === "ended"){
+    __ccFlashRetry(videoEl);
+    return;
+  }
+  var caps = null;
+  try { caps = tr.getCapabilities ? tr.getCapabilities() : null; } catch(e){}
+  var hasTorch = !!(caps && ("torch" in caps) && caps.torch);
+  if(!hasTorch){
+    /* Capability lists settle late on real hardware: keep probing while the
+       track warms up, concede only after the retry budget is spent. */
+    __ccFlashRetry(videoEl);
+    return;
+  }
+  var applied = false;
+  try {
+    var p = tr.applyConstraints({ advanced: [{ torch: true }] });
+    if(p && p.then){
+      p.then(function(){ __ccFlashConfirm(videoEl); },
+             function(){ __ccFlashRetry(videoEl); });
+      applied = true;
+    }
+  } catch(e){}
+  if(!applied){
+    /* Synchronous (non-promise) applyConstraints: confirm by read-back too. */
+    __ccFlashLater(videoEl, function(){ __ccFlashConfirm(videoEl); }, 60);
+  }
+}
+function __ccFlashConfirm(videoEl){
+  var st = __ccFlashState(videoEl);
+  if(!__ccFlashOn()){ __ccFlashSetStatus(videoEl, "off"); return; }
+  var tr = __ccFlashTrack(videoEl);
+  var confirmed = false;
+  try {
+    var s = tr && tr.getSettings ? tr.getSettings() : null;
+    if(s && s.torch === true) confirmed = true;
+  } catch(e){}
+  if(confirmed){
+    st.tries = 0;
+    __ccFlashSetStatus(videoEl, "on");
+  } else {
+    /* Applied (or appeared to) but the hardware state does not confirm the
+       torch is lit — never claim ON; retry, then tell the truth. */
+    __ccFlashRetry(videoEl);
+  }
+}
+function __ccFlashRetry(videoEl){
+  var st = __ccFlashState(videoEl);
+  if(!__ccFlashOn()){ __ccFlashSetStatus(videoEl, "off"); return; }
+  var delays = [250, 700, 1500, 3000];
+  if(st.tries < delays.length){
+    var d = delays[st.tries];
+    st.tries++;
+    __ccFlashLater(videoEl, function(){ __ccTorchAttempt(videoEl); }, d);
+  } else {
+    /* Quick budget spent (~5.5 s): tell the truth now — UNAVAILABLE — but a
+       slow watchdog keeps quietly retrying in case the capability settles
+       very late; a later confirmed apply flips the chip to ON. */
+    if(st.status !== "on") __ccFlashSetStatus(videoEl, "unavailable");
+    if(st.watch < 6){
+      st.watch++;
+      __ccFlashLater(videoEl, function(){
+        if(__ccFlashState(videoEl).status !== "on") __ccTorchAttempt(videoEl);
+      }, 5000);
+    }
+  }
+}
+function __ccTorchOff(videoEl){
+  try {
+    var tr = __ccFlashTrack(videoEl);
     if(!tr || !tr.getCapabilities) return;
     var caps = tr.getCapabilities();
-    if(!caps || !("torch" in caps)) return; /* unsupported: stay silent, claim nothing */
-    var p = tr.applyConstraints({ advanced: [{ torch: !!on }] });
+    if(!caps || !("torch" in caps)) return;
+    var p = tr.applyConstraints({ advanced: [{ torch: false }] });
     if(p && p.catch) p.catch(function(){});
   } catch(e){}
 }
@@ -16913,22 +17024,74 @@ function __ccFlashUI(videoEl){
       chip.appendChild(btn); chip.appendChild(note);
       videoEl.parentNode.insertBefore(chip, videoEl.nextSibling);
       btn.addEventListener("click", function(){
+        var st = __ccFlashState(videoEl);
+        if(st.status === "unavailable" && __ccFlashOn()){
+          /* A tap on UNAVAILABLE = "try again", not a preference flip. */
+          st.tries = 0; st.watch = 0;
+          __ccFlashSetStatus(videoEl, "pending");
+          __ccTorchAttempt(videoEl);
+          return;
+        }
         var now = !__ccFlashOn();
         try { localStorage.setItem("cc_flash_default", now ? "on" : "off"); } catch(e){}
-        __ccFlashUI(videoEl);
-        __ccTorch(videoEl, now);
+        __ccFlashClearTimers(videoEl);
+        if(now){
+          st.tries = 0; st.watch = 0;
+          __ccFlashSetStatus(videoEl, "pending");
+          __ccTorchAttempt(videoEl);
+        } else {
+          __ccTorchOff(videoEl);
+          __ccFlashSetStatus(videoEl, "off");
+        }
       });
     }
-    var on = __ccFlashOn();
-    chip.querySelector(".cc-flash-btn").textContent = on ? "\u26A1 Flash: ON" : "\u26A1 Flash: OFF";
-    chip.querySelector(".cc-flash-note").textContent = on
-      ? "Flash is on \u2014 it helps the camera read the card's print. You can turn it off anytime."
-      : "Flash is off \u2014 turning it on helps the camera read the card's print.";
+    var st = __ccFlashState(videoEl);
+    var btnEl = chip.querySelector(".cc-flash-btn");
+    var noteEl = chip.querySelector(".cc-flash-note");
+    if(st.status === "on"){
+      btnEl.textContent = "\u26A1 Flash: ON";
+      noteEl.textContent = "Flash is on \u2014 it helps the camera read the card's print. You can turn it off anytime.";
+    } else if(st.status === "off"){
+      btnEl.textContent = "\u26A1 Flash: OFF";
+      noteEl.textContent = "Flash is off \u2014 turning it on helps the camera read the card's print.";
+    } else if(st.status === "unavailable"){
+      btnEl.textContent = "\u26A1 Flash: UNAVAILABLE";
+      noteEl.textContent = "Flash isn't available in this browser \u2014 try Chrome with the rear camera; the phone's own camera app flash still works.";
+    } else {
+      btnEl.textContent = "\u26A1 Flash: CHECKING";
+      noteEl.textContent = "Checking the flash\u2026";
+    }
   } catch(e){}
 }
 function __ccFlashAttach(videoEl){
-  __ccFlashUI(videoEl);
-  __ccTorch(videoEl, __ccFlashOn());
+  if(!videoEl) return;
+  var st = __ccFlashState(videoEl);
+  __ccFlashClearTimers(videoEl);
+  st.tries = 0; st.watch = 0; st.stream = null;
+  if(!__ccFlashOn()){
+    __ccFlashSetStatus(videoEl, "off");
+    return;
+  }
+  __ccFlashSetStatus(videoEl, "pending");
+  __ccTorchAttempt(videoEl);
+  /* Re-apply when the track actually starts producing — the field failure
+     was an apply issued before the track was live and silently dropped. */
+  var reapply = function(){
+    var s = __ccFlashState(videoEl);
+    if(__ccFlashOn() && s.status !== "on"){ s.tries = 0; __ccTorchAttempt(videoEl); }
+  };
+  try { videoEl.addEventListener("loadeddata", reapply); } catch(e){}
+  try { videoEl.addEventListener("playing", reapply); } catch(e){}
+  var tr = __ccFlashTrack(videoEl);
+  if(tr){
+    try { tr.addEventListener("unmute", reapply); } catch(e){}
+    try { tr.onunmute = reapply; } catch(e){}
+  }
+  try {
+    document.addEventListener("visibilitychange", function(){
+      if(!document.hidden) reapply();
+    });
+  } catch(e){}
 }
 </script>
 </body>
