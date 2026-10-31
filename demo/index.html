@@ -1706,7 +1706,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #24 + Tester Fixes · Oct 31, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #24 + Camera Fixes · Oct 31, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -1921,9 +1921,10 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
       <p class="lead" style="font-size:16.5px;">Want to see how a finished verdict looks? There's a <strong>clearly labeled sample</strong> waiting — it's an example of the receipt style, <strong>not a real check of your item</strong>, and it was not produced from your photos.</p>
     </div>
     <div class="stack mt-lg">
-      <button type="button" class="bubble-btn b-gold" data-nav="sampleVerdict"><span>See a SAMPLE verdict</span><span class="sub">Labeled sample — not a real check</span></button>
-      <button type="button" class="bubble-btn b-sky" data-nav="games"><span>🎮 Play the mini games instead</span></button>
-      <button type="button" class="bubble-btn b-white small" data-nav="home">Back home</button>
+      <button type="button" class="bubble-btn b-gold" id="gateScanAnother"><span>📸 Scan another card</span><span class="sub">Next card — straight back to the camera</span></button>
+      <button type="button" class="bubble-btn b-white" data-nav="home"><span>Return home</span></button>
+      <button type="button" class="bubble-btn b-sky" data-nav="sampleVerdict"><span>See a SAMPLE verdict</span><span class="sub">Labeled sample — not a real check</span></button>
+      <button type="button" class="bubble-btn b-white small" data-nav="games"><span>🎮 Play the mini games instead</span></button>
     </div>
   </section>
 
@@ -2917,7 +2918,7 @@ function capStopLive(){ if(capStream){ capStream.getTracks().forEach(function(tr
 function capStartLive(openPickerOnFail){
   if(capLive) return;
   if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(st){ capStream=st; var v=$("capVideo"); v.srcObject=st; __ccFlashAttach(v); v.style.display="block"; v.play(); capLive=true; $("capTake").innerHTML="<span>\uD83D\uDCF8 Snap this photo</span>"; var g=$("capGot"); if(g) g.textContent="Live camera is on — line the card up inside the frame, then tap Snap."; }).catch(function(){ var g=$("capGot"); if(g) g.textContent="Camera did not start here — tap Take the photo to open your phone camera picker, or use Upload a file. If nothing opens, open this demo in Chrome."; if(openPickerOnFail) $("capCamFile").click(); });
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(st){ capStream=st; var v=$("capVideo"); v.srcObject=st; v.__ccFlashModeUI=true; __ccFlashAttach(v); v.style.display="block"; v.play(); capLive=true; $("capTake").innerHTML="<span>\uD83D\uDCF8 Snap this photo</span>"; var g=$("capGot"); if(g) g.textContent="Live camera is on — line the card up inside the frame, then tap Snap."; }).catch(function(){ var g=$("capGot"); if(g) g.textContent="Camera did not start here — tap Take the photo to open your phone camera picker, or use Upload a file. If nothing opens, open this demo in Chrome."; if(openPickerOnFail) $("capCamFile").click(); });
   } else { var g2=$("capGot"); if(g2) g2.textContent="Camera is not available in this browser — tap Take the photo to open your phone camera picker, or use Upload a file."; if(openPickerOnFail) $("capCamFile").click(); }
 }
 var poolOptinAsked = false, poolOptinYes = false;
@@ -3000,7 +3001,7 @@ function poolSaveMyScan(sid, frontDataUrl){
   var recs = []; try{ recs = JSON.parse(localStorage.getItem("cc_my_scans") || "[]"); }catch(e){ recs = []; }
   if(recs.some(function(r){ return r.id === sid; })) return;
   var save = function(thumb){
-    recs.unshift({ id: sid, when: new Date().toISOString(), thumb: thumb || "" });
+    recs.unshift({ id: sid, when: new Date().toISOString(), thumb: thumb || "", burst: (typeof ccBurstStats !== "undefined" ? ccBurstStats : null) });
     recs = recs.slice(0, 30);
     try{ localStorage.setItem("cc_my_scans", JSON.stringify(recs)); }catch(e){}
   };
@@ -3026,8 +3027,88 @@ function renderMyScans(){
     return '<div class="entry">' + img + '<div><span class="pill sample">PENDING</span><p class="nm" style="margin-top:6px;">Your scanned card — under review</p><p class="meta">Sent to the pending pool · ' + r.id + '</p><p class="meta">' + d + ' · Name and number are filled in during review — unknown stays unknown, nothing is guessed.</p></div></div>';
   }).join("");
 }
+/* Completion screen: "Scan another card" (owner order, Oct 31) — resets
+   the capture flow and lands straight back on the camera, same category,
+   ready for the next card. Works however the check ended: startCapture
+   resets step, photos and pool state for the new card. */
+$("gateScanAnother").addEventListener("click", function(){
+  popSnd();
+  if(capCat){ startCapture(capCat); }
+  else show("picker");
+});
+/* ================= burst capture (owner order, Oct 31) =================
+   One shutter tap = THREE quick shots, ~0.3s apart, from the live camera
+   stream. Each shot is scored for sharpness (variance of the Laplacian)
+   and glare (blown-pixel share, centre-weighted); the best shot becomes
+   this side's photo. If a shot fails to register, the burst works with
+   what registered (minimum 1) — it never extends past 3. If nothing
+   registers, it falls back to the old single plain grab. No stacking,
+   no sweep, no verdict change: the demo stays SAMPLE, answers stay
+   Inconclusive. Burst stats land on the on-scan label line and in the
+   device-local My Scans record. */
+var capBursting = false;
+var ccBurstStats = {};
+function ccBurstScore(srcCanvas){
+  var W = 320, H = Math.max(2, Math.round(W * srcCanvas.height / Math.max(1, srcCanvas.width)));
+  var ac = document.createElement("canvas"); ac.width = W; ac.height = H;
+  var ax = ac.getContext("2d"); ax.drawImage(srcCanvas, 0, 0, W, H);
+  var data; try{ data = ax.getImageData(0, 0, W, H).data; }catch(e){ return { sharp: 0, glare: 0 }; }
+  var gray = new Float32Array(W * H), i, p;
+  for(i = 0; i < W * H; i++){ p = i * 4; gray[i] = 0.299 * data[p] + 0.587 * data[p + 1] + 0.114 * data[p + 2]; }
+  var blown = 0, tot = 0, cBlown = 0, cTot = 0, x, y, g;
+  var cx0 = W * 0.25, cx1 = W * 0.75, cy0 = H * 0.25, cy1 = H * 0.75;
+  for(y = 0; y < H; y++) for(x = 0; x < W; x++){ g = gray[y * W + x]; tot++; if(g >= 250) blown++; if(x >= cx0 && x < cx1 && y >= cy0 && y < cy1){ cTot++; if(g >= 250) cBlown++; } }
+  var glare = 0.5 * (blown / Math.max(1, tot)) + 0.5 * (cBlown / Math.max(1, cTot));
+  var sum = 0, sum2 = 0, n = 0, lap, j;
+  for(y = 1; y < H - 1; y++) for(x = 1; x < W - 1; x++){ j = y * W + x; lap = 4 * gray[j] - gray[j - 1] - gray[j + 1] - gray[j - W] - gray[j + W]; sum += lap; sum2 += lap * lap; n++; }
+  var mean = sum / Math.max(1, n);
+  return { sharp: (sum2 / Math.max(1, n)) - mean * mean, glare: glare };
+}
+function ccBurstUsePhoto(canvas){
+  var img = $("capImg"); img.src = canvas.toDataURL("image/jpeg", 0.85); img.alt = capCat.steps[capStep].cap + " — your photo (stays on your device)"; img.classList.remove("hidden"); $("capSample").classList.add("hidden"); capStopLive(); $("capTake").innerHTML = "<span>" + capCat.steps[capStep].take + "</span>"; capPhotoReady();
+  try{
+    var st = ccBurstStats[/back/i.test(capCat.steps[capStep].cap) ? "back" : "front"];
+    var lbl = document.getElementById("capLabelLine");
+    if(lbl && st) lbl.textContent += " Burst: kept the sharpest of " + st.frames + " quick shots (shot " + st.kept + ", sharpness " + st.sharp + ", glare " + st.glare + ").";
+  }catch(e){}
+}
+function ccBurstSnap(){
+  if(capBursting) return;
+  var v = $("capVideo");
+  var takeBtn = $("capTake");
+  capBursting = true;
+  if(takeBtn) takeBtn.disabled = true;
+  var got = $("capGot"); if(got) got.textContent = "\uD83D\uDCF8 Snapping 3 quick shots — hold steady…";
+  var frames = [], t0 = Date.now();
+  var finish = function(){
+    capBursting = false;
+    if(takeBtn) takeBtn.disabled = false;
+    if(!frames.length){
+      var c2 = document.createElement("canvas"); c2.width = (v && v.videoWidth) || 640; c2.height = (v && v.videoHeight) || 480;
+      try{ c2.getContext("2d").drawImage(v, 0, 0, c2.width, c2.height); }catch(e){}
+      ccBurstStats[/back/i.test(capCat.steps[capStep].cap) ? "back" : "front"] = { frames: 0, kept: 0, sharp: 0, glare: 0, frame_times_ms: [], fallback: "single-grab", flash_mode: (function(){ try{ return __ccFlashMode(); }catch(e){ return "unknown"; } })(), flash_status: (function(){ try{ return __ccFlashState($("capVideo")).status; }catch(e){ return "unknown"; } })() };
+      ccBurstUsePhoto(c2); return;
+    }
+    var best = frames[0], bi;
+    for(bi = 1; bi < frames.length; bi++){ if(frames[bi].sharp * Math.pow(1 - frames[bi].glare, 2) > best.sharp * Math.pow(1 - best.glare, 2)) best = frames[bi]; }
+    ccBurstStats[/back/i.test(capCat.steps[capStep].cap) ? "back" : "front"] = { frames: frames.length, kept: frames.indexOf(best) + 1, sharp: Math.round(best.sharp), glare: Math.round(best.glare * 1000) / 1000, frame_times_ms: frames.map(function(f){ return f.t; }), flash_mode: (function(){ try{ return __ccFlashMode(); }catch(e){ return "unknown"; } })(), flash_status: (function(){ try{ return __ccFlashState($("capVideo")).status; }catch(e){ return "unknown"; } })() };
+    ccBurstUsePhoto(best.canvas);
+  };
+  var grab = function(idx){
+    try{
+      if(v && v.videoWidth > 0 && v.readyState >= 2){
+        var c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight;
+        c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
+        var sc = ccBurstScore(c);
+        frames.push({ canvas: c, sharp: sc.sharp, glare: sc.glare, t: Date.now() - t0 });
+      }
+    }catch(e){ /* this shot did not register — keep what registered */ }
+    if(idx < 2) setTimeout(function(){ grab(idx + 1); }, 300); else finish();
+  };
+  grab(0);
+}
 $("capTake").addEventListener("click", function(){
-  if(capLive){ var v=$("capVideo"); var c=document.createElement("canvas"); c.width=v.videoWidth||640; c.height=v.videoHeight||480; c.getContext("2d").drawImage(v,0,0,c.width,c.height); var img=$("capImg"); img.src=c.toDataURL("image/jpeg",0.85); img.alt=capCat.steps[capStep].cap+" — your photo (stays on your device)"; img.classList.remove("hidden"); $("capSample").classList.add("hidden"); capStopLive(); $("capTake").innerHTML="<span>"+capCat.steps[capStep].take+"</span>"; capPhotoReady(); return; }
+  if(capLive){ ccBurstSnap(); return; }
   poolOptinShow(function(){ capStartLive(true); });
 });
 $("capContinueBtn").addEventListener("click", function(){
@@ -16485,6 +16566,37 @@ function __ccFlashOn(){
   try { return localStorage.getItem("cc_flash_default") !== "off"; }
   catch(e){ return true; }
 }
+/* FLASH MODE (owner addition #2, Oct 31): the Check screen's flash control
+   cycles OFF -> AUTO -> ON. cc_flash_mode is the single source of truth;
+   the legacy cc_flash_default key is kept in sync (off -> "off", auto/on
+   -> "on") so every other capture surface keeps its binary behaviour.
+   With no stored mode, the legacy preference decides (shipped default:
+   on). AUTO lights the torch only when the scene reads dark; the button
+   prints the mode, and ON is printed only on hardware confirmation —
+   the v2 honesty rule is unchanged. */
+function __ccFlashMode(){
+  try {
+    var m = localStorage.getItem("cc_flash_mode");
+    if(m === "off" || m === "auto" || m === "on") return m;
+  } catch(e){}
+  return __ccFlashOn() ? "on" : "off";
+}
+function __ccFlashSetMode(m){
+  try { localStorage.setItem("cc_flash_mode", m); } catch(e){}
+  try { localStorage.setItem("cc_flash_default", m === "off" ? "off" : "on"); } catch(e){}
+}
+function __ccFlashSampleDark(videoEl){
+  /* true = dark enough to want the torch; false = bright; null = cannot tell yet */
+  try {
+    var v = videoEl;
+    if(!v || v.readyState < 2 || !v.videoWidth) return null;
+    var c = document.createElement("canvas"); c.width = 64; c.height = 48;
+    var x = c.getContext("2d"); x.drawImage(v, 0, 0, 64, 48);
+    var d = x.getImageData(0, 0, 64, 48).data, s = 0, n = 0, i;
+    for(i = 0; i < d.length; i += 16){ s += 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]; n++; }
+    return (s / Math.max(1, n)) < 90;
+  } catch(e){ return null; }
+}
 function __ccFlashState(videoEl){
   if(!videoEl.__ccFlash){
     videoEl.__ccFlash = { status: "pending", stream: null, tries: 0, timers: [], watch: 0 };
@@ -16517,6 +16629,16 @@ function __ccFlashSetStatus(videoEl, status){
 function __ccTorchAttempt(videoEl){
   var st = __ccFlashState(videoEl);
   if(!__ccFlashOn()){ __ccFlashSetStatus(videoEl, "off"); return; }
+  if(videoEl.__ccFlashModeUI && __ccFlashMode() === "auto"){
+    var dark = __ccFlashSampleDark(videoEl);
+    if(dark === false){ __ccFlashSetStatus(videoEl, "autobright"); return; }
+    if(dark === null && st.tries < 4){
+      st.tries++;
+      __ccFlashLater(videoEl, function(){ __ccTorchAttempt(videoEl); }, 300);
+      return;
+    }
+    /* dark — or undecided after warmup: light it; card reading favours light */
+  }
   var stream = videoEl && videoEl.srcObject;
   if(stream !== st.stream){
     /* New stream on the same element (new side / camera restart): the whole
@@ -16620,10 +16742,25 @@ function __ccFlashUI(videoEl){
       /* Tester-fix expedite item 8 (owner field report, Oct 31): the flash
          control row lives OUTSIDE the camera box — inserted after the frame
          element, directly under the camera view, never overlaid on video. */
-      frame.parentNode.insertBefore(chip, frame.nextSibling);
+      if(videoEl.__ccFlashModeUI){ frame.parentNode.insertBefore(chip, frame); } else { frame.parentNode.insertBefore(chip, frame.nextSibling); }
       frame.__ccFlashChip = chip;
       btn.addEventListener("click", function(){
         var st = __ccFlashState(videoEl);
+        if(videoEl.__ccFlashModeUI){
+          var modes = ["off", "auto", "on"];
+          var nextMode = modes[(modes.indexOf(__ccFlashMode()) + 1) % 3];
+          __ccFlashSetMode(nextMode);
+          __ccFlashClearTimers(videoEl);
+          st.tries = 0; st.watch = 0;
+          if(nextMode === "off"){
+            __ccTorchOff(videoEl);
+            __ccFlashSetStatus(videoEl, "off");
+          } else {
+            __ccFlashSetStatus(videoEl, "pending");
+            __ccTorchAttempt(videoEl);
+          }
+          return;
+        }
         if(st.status === "unavailable" && __ccFlashOn()){
           /* A tap on UNAVAILABLE = "try again", not a preference flip. */
           st.tries = 0; st.watch = 0;
@@ -16632,7 +16769,7 @@ function __ccFlashUI(videoEl){
           return;
         }
         var now = !__ccFlashOn();
-        try { localStorage.setItem("cc_flash_default", now ? "on" : "off"); } catch(e){}
+        __ccFlashSetMode(now ? "on" : "off");
         __ccFlashClearTimers(videoEl);
         if(now){
           st.tries = 0; st.watch = 0;
@@ -16659,6 +16796,22 @@ function __ccFlashUI(videoEl){
     } else {
       btnEl.textContent = "\u26A1 Flash: CHECKING";
       noteEl.textContent = "Checking the flash\u2026";
+    }
+    if(videoEl.__ccFlashModeUI){
+      var modeNow = __ccFlashMode();
+      if(modeNow === "off"){
+        btnEl.textContent = "\u26A1 Flash: OFF";
+        noteEl.textContent = "Flash off \u2014 tap to cycle: Auto, On.";
+      } else if(modeNow === "on"){
+        if(st.status === "on"){ btnEl.textContent = "\u26A1 Flash: ON"; noteEl.textContent = "Flash on \u2014 helps read the print."; }
+        else if(st.status === "unavailable"){ btnEl.textContent = "\u26A1 Flash: UNAVAILABLE"; noteEl.textContent = "No flash in this browser \u2014 try Chrome + rear camera, or your camera app's flash."; }
+        else { btnEl.textContent = "\u26A1 Flash: CHECKING"; noteEl.textContent = "Flash set to ON \u2014 confirming the torch lit\u2026"; }
+      } else {
+        if(st.status === "on"){ btnEl.textContent = "\u26A1 Flash: AUTO \u00B7 ON"; noteEl.textContent = "Auto: dark in here \u2014 flash is lit."; }
+        else if(st.status === "autobright"){ btnEl.textContent = "\u26A1 Flash: AUTO \u00B7 OFF"; noteEl.textContent = "Auto: bright enough \u2014 flash stays off."; }
+        else if(st.status === "unavailable"){ btnEl.textContent = "\u26A1 Flash: AUTO \u00B7 UNAVAILABLE"; noteEl.textContent = "Auto: no flash in this browser \u2014 try Chrome + rear camera."; }
+        else { btnEl.textContent = "\u26A1 Flash: AUTO \u00B7 CHECKING"; noteEl.textContent = "Auto: checking the light\u2026"; }
+      }
     }
   } catch(e){}
 }
