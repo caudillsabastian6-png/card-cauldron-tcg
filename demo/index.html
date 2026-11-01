@@ -1706,7 +1706,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #25 · Oct 31, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #26 · Nov 1, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -17278,8 +17278,7 @@ function __ccFlashAttach(videoEl){
         setText("ccGSharp", String(m.sharp));
         setText("ccGGlare", String(m.glare));
         setText("ccGLight", m.meanLum < TOL.LUM_MIN ? "dark" : (m.uniformity >= TOL.UNI_MIN ? "even" : "uneven"));
-        if (ccEscapeArmed) coachSay((reason || "That's it.") + " Tap the round button again to take it anyway — it will be marked unmeasured.");
-        else coachSay(ccReady ? "Got it — tap the round button." : reason);
+        coachSay(ccReady ? "Got it — tap the round button." : reason);
         drawOverlay(m);
       }
     } catch (e) { /* a bad frame never breaks the camera */ }
@@ -17293,16 +17292,14 @@ function __ccFlashAttach(videoEl){
   if (capFrame) capFrame.appendChild(capShutter.row);   /* shutter rides the frame's bottom edge — reachable without scrolling under the widened window (amendments #9+#11 balance, flagged in BUILD-REPORT) */
   if (capShutter.btn && capTake) capShutter.btn.addEventListener("click", function () {
     var has = (typeof capHas !== "undefined" && capHas), live = (typeof capLive !== "undefined" && capLive);
-    if (has || !live) { ccFireCtx = null; capTake.click(); return; }        /* retake / open-camera paths: original logic */
+    if (has) { ccFireCtx = null; capTake.click(); return; }                 /* retake path: original logic */
+    if (!live) { ccColdQueueFire(); ccFireCtx = null; capTake.click(); return; }  /* cold tap: queue the shot (cold-tap block below), then the original open-camera work */
     if (ccReady) { ccFireCtx = { measure: ccLastMeasure, unmeasured: false }; capTake.click(); return; }
-    if (!ccEscapeArmed) {                                                    /* Nickel's fence: never a dead end */
-      ccEscapeArmed = true;
-      coachSay((blockReason(ccLastMeasure) || "Not ready.") + " Tap the round button again to take it anyway — it will be marked unmeasured.");
-      if (ccEscapeTimer) clearTimeout(ccEscapeTimer);
-      ccEscapeTimer = setTimeout(function () { ccEscapeArmed = false; }, 5000);
-      return;
-    }
-    ccEscapeArmed = false;
+    /* Owner ruling, Nov 1: ONE tap takes the picture. The old two-tap
+       arm-then-fire escape cost a second tap on every unmeasured shot
+       (2 taps a side; 3 on the front with the cold-camera start tap).
+       The shutter now fires on the first tap and the shot is marked
+       unmeasured in the record — exactly what the escape fire did. */
     ccFireCtx = { measure: ccLastMeasure, unmeasured: true };
     capTake.click();
   });
@@ -17346,6 +17343,54 @@ function __ccFlashAttach(videoEl){
   if (typeof renderCaptureStep === "function") {
     var _rcs = renderCaptureStep;
     renderCaptureStep = function () { ccEscapeArmed = false; ccLastMeasure = null; ccReady = false; coach.style.display = ""; gauge.style.display = ""; if (capFrame) capFrame.classList.remove("cc-done"); var gd = $("capGuide"); if (gd) gd.style.display = ""; var dt = $("capDots"); if (dt) dt.style.display = ""; if (stamp) { stamp.classList.add("hidden"); stamp.textContent = ""; } prevGray = null; return _rcs.apply(this, arguments); };
+  }
+
+  /* ---------------- checker: cold-tap queued fire ----------------
+     Owner ruling, Nov 1: one tap takes the picture — including the
+     stone-cold first tap. A shutter tap that lands while the camera is
+     still auto-starting queues its intent here (the shutter handler
+     above calls ccColdQueueFire on the not-live branch); the tap itself
+     still does its original open-camera work, and the moment the stream
+     is live AND a frame can actually be grabbed, the burst fires with
+     the same unmeasured context as the warm first-tap fire
+     ({ measure: ccLastMeasure, unmeasured: true }). The queue cancels
+     with no photo if the step is re-rendered (any navigation — the
+     extra renderCaptureStep wrap below, chained AFTER the module's own
+     wrap and using its own captured reference: sharing the module's
+     _rcs variable across two wraps recurses), the capture screen is
+     left, a photo lands by another route, or the camera never comes up
+     within 10 s. While the pool opt-in is up the queue keeps waiting —
+     it never fires behind that popup. Retake taps do NOT queue: their
+     tap restarts the camera to re-aim, exactly as before. */
+  var ccColdTimer = null, ccColdDeadline = 0, ccColdCat = null, ccColdStep = -1;
+  function ccColdCancel() {
+    if (ccColdTimer) { clearInterval(ccColdTimer); ccColdTimer = null; }
+    ccColdCat = null; ccColdStep = -1;
+  }
+  function ccColdQueueFire() {
+    ccColdCat = (typeof capCat !== "undefined") ? capCat : null;
+    ccColdStep = (typeof capStep !== "undefined") ? capStep : -1;
+    ccColdDeadline = Date.now() + 10000;
+    if (ccColdTimer) return;                 /* already queued — one intent */
+    ccColdTimer = setInterval(function () {
+      var cat = (typeof capCat !== "undefined") ? capCat : null;
+      var step = (typeof capStep !== "undefined") ? capStep : -1;
+      var has = (typeof capHas !== "undefined" && capHas);
+      var live = (typeof capLive !== "undefined" && capLive);
+      var scr = $("scr-capture");
+      var onCapture = !!(scr && scr.classList.contains("active"));
+      if (cat !== ccColdCat || step !== ccColdStep || has || !onCapture || Date.now() > ccColdDeadline) { ccColdCancel(); return; }
+      if (!live) return;                                   /* still starting — keep waiting */
+      if (document.getElementById("poolOptinPop")) return; /* pool ask is up — never fire behind it */
+      if (!capVideo || !capVideo.videoWidth || capVideo.readyState < 2) return;  /* live, but no frame to grab yet */
+      ccColdCancel();
+      ccFireCtx = { measure: ccLastMeasure, unmeasured: true };
+      capTake.click();
+    }, 100);
+  }
+  if (typeof renderCaptureStep === "function") {
+    var ccColdOrigRender = renderCaptureStep;
+    renderCaptureStep = function () { ccColdCancel(); return ccColdOrigRender.apply(this, arguments); };
   }
 
   /* ---------------- Light Test: burst + values, torch exception ---------------- */
