@@ -1706,7 +1706,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #26 · Nov 1, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27 · Nov 1, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -2680,6 +2680,7 @@ $("calmBtn").addEventListener("click", function(){
 /* ================= navigation ================= */
 var gameCleanup = null; /* fn set by the active game to stop its timers */
 function show(id){
+  if(window.ccStageNavGuard){ try{ window.ccStageNavGuard(id); }catch(e){} }
   try{ if(window.ccStopSpeak) window.ccStopSpeak(); }catch(e){}
   if(gameCleanup){ try{ gameCleanup(); }catch(e){} gameCleanup=null; }
   var screens = document.querySelectorAll(".screen");
@@ -2731,6 +2732,7 @@ function show(id){
    gameplay, copy, or art is touched. */
 var CC_FIT24 = ["gameStack","gameCMatch","gameRapid","gameMatch","gameBeat","gamePopPath"];
 function ccFit24(scr){
+  if(document.body.classList.contains("cc-stage")) return; /* CC-FIX-27: stage fit owns the body */
   var body = document.getElementById(scr + "-body");
   var sec = document.getElementById("scr-" + scr);
   if(!body || !sec || !sec.classList.contains("active")) return;
@@ -3773,12 +3775,19 @@ function startRapid(){
      Each play draws 20 at random from the 43 photo cards, no repeat inside a play.
      Game only, never a real check. */
   var deck = shuffle(faces.slice()).slice(0,20);
+  /* CC-FIX-27.4: the run is now run in STAGES — five cards per stage,
+     four stages, and the per-card clock steps down a rung each stage
+     (6.0s -> 5.4s -> 4.8s -> 4.2s; the first card keeps its 12s
+     warm-up). Same deck, same buttons, same scoring. */
+  var STAGE_LIMS = [6000, 5400, 4800, 4200];
+  function stageOf(r){ return Math.floor(r/5) + 1; }
+  function stageLim(r){ return r === 0 ? 12000 : STAGE_LIMS[stageOf(r) - 1]; }
   var round=0, score=0, streak=0, bestStreak=0, locked=false, elapsed=0, over=false;
   var body = $("gameRapid-body");
   function render(){
     var card = deck[round];
     body.innerHTML =
-      '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Card '+(round+1)+' of '+deck.length+(round===0?' · Warm-up — take your time to look':'')+'</p>'
+      '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Stage '+stageOf(round)+' of 4 · Card '+(round+1)+' of '+deck.length+(round===0?' · Warm-up — take your time to look':'')+'</p>'
       + '<div class="card center mt" id="rfCard">'
       + (card.img ? '<div style="width:170px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);"><img src="'+card.img+'" alt="'+card.name+'" onerror="this.style.display=\'none\';var n=this.parentNode.querySelector(\'.rf-photonote\');if(n){n.textContent=\'Photo unavailable — treat as a text card\';}" style="display:block;width:100%;aspect-ratio:5/7;object-fit:cover;"><div style="padding:8px 6px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim">'+card.set+'</div><div class="small dim rf-photonote">Game card — demo pool photo · game only, never a real check</div></div></div>'
       : '<div style="width:170px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);padding:18px 12px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim">'+card.set+(card.num ? ' · '+card.num : '')+'</div><div class="small dim">Game card — text card, your card identity · game only, never a real check, photo not shown</div></div>')
@@ -3793,7 +3802,7 @@ function startRapid(){
   bag.every(function(){
     if(locked || over) return;
     elapsed += 100;
-    var lim = (round===0 ? 12000 : 6000);
+    var lim = stageLim(round);
     var bar = $("rfBar"); if(bar) bar.style.width = clamp((lim-elapsed)/lim*100,0,100)+"%";
     if(elapsed >= lim) timeout();
   }, 100);
@@ -3821,14 +3830,14 @@ function startRapid(){
       streak = 0; missSnd();
       feedback(false, "Good try — it was actually "+(card.isReal?"Real":"Fake")+".");
     }
-    var sb = body.querySelector(".scorebar"); if(sb) sb.textContent = "Score "+score+" · Streak "+streak+" · Card "+(round+1)+" of "+deck.length;
+    var sb = body.querySelector(".scorebar"); if(sb) sb.textContent = "Score "+score+" · Streak "+streak+" · Stage "+stageOf(round)+" of 4 · Card "+(round+1)+" of "+deck.length;
   }
   function advance(){
     round++;
     if(round >= deck.length){
       over = true;
       recordBest("rapid", score);
-      body.innerHTML = doneHTML(score, "Best streak: "+bestStreak+". Fast eyes!");
+      body.innerHTML = doneHTML(score, "Best streak: "+bestStreak+" · all 4 stages cleared. Fast eyes!");
       $("againBtn").addEventListener("click", function(){ popSnd(); startRapid(); });
     } else render();
   }
@@ -3838,7 +3847,8 @@ function startRapid(){
 /* ================= 3. Match Audit ================= */
 function startMatch(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var symbols = ["🦊","⭐","🍋","🌸","💎","🦉"];
+  var LV = OP_MATCH_LEVELS[OP_MATCH_LEVEL-1];
+  var symbols = OP_MATCH_SYMBOLS.slice(0, LV.pairs);
   var deck = shuffle(symbols.flatMap(function(s,i){ return [{k:i*2,s:s},{k:i*2+1,s:s}]; }));
   var open = [], matched = {}, attempts = 0, lock = false;
   var body = $("gameMatch-body");
@@ -3851,7 +3861,8 @@ function startMatch(){
     }).join("");
     body.innerHTML =
       '<p class="scorebar" role="status">Flips: '+attempts+' · Pairs found: '+pairs+' of '+symbols.length+'</p>'
-      + '<div class="match-grid">'+cards+'</div>';
+      + '<div class="match-grid">'+cards+'</div>'
+      + opMatchPickerHTML();
     body.querySelectorAll(".match-card").forEach(function(b){
       b.addEventListener("click", function(){ flip(parseInt(b.getAttribute("data-idx"),10)); });
     });
@@ -3867,9 +3878,11 @@ function startMatch(){
       if(a.s === b.s){
         matched[open[0]] = true; matched[open[1]] = true; open = []; goodSnd(); render(); celebrateMatch();
         if(Object.keys(matched).length === deck.length){
-          var sc = Math.max(100, 600 - (attempts - symbols.length)*25);
+          var sc = Math.max(100, symbols.length*100 - (attempts - symbols.length)*25);
           recordBest("match", sc);
-          body.innerHTML = doneHTML(sc, "All pairs matched in "+attempts+" flips.");
+          var unlockMsg = "";
+          if(OP_MATCH_LEVEL < OP_MATCH_LEVELS.length && OP_MATCH_LEVEL >= OP_MATCH_UNLOCKED){ OP_MATCH_UNLOCKED = OP_MATCH_LEVEL + 1; try{ localStorage.setItem("cc_demo_match_unlocked", String(OP_MATCH_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_MATCH_UNLOCKED + " unlocked!"; }
+          body.innerHTML = doneHTML(sc, "All pairs matched in "+attempts+" flips."+unlockMsg);
           $("againBtn").addEventListener("click", function(){ popSnd(); startMatch(); });
         }
       } else {
@@ -3997,19 +4010,38 @@ function startBeat(){
   function checkEnd(){
     if(!finished && spawned >= TOTAL && bubbles.length === 0){
       finished = true; bag.clear(); gameCleanup = null;
-      var unlockMsg = ""; if(beatClean && OP_BEAT_LEVEL < 10 && OP_BEAT_LEVEL >= OP_BEAT_UNLOCKED){ OP_BEAT_UNLOCKED = OP_BEAT_LEVEL + 1; try{ localStorage.setItem("cc_demo_beat_unlocked", String(OP_BEAT_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_BEAT_UNLOCKED + " unlocked!"; opAddCoins(50); } else if(beatClean){ opAddCoins(50); }
+      var unlockMsg = ""; if(beatClean && OP_BEAT_LEVEL < OP_BEAT_LEVELS.length && OP_BEAT_LEVEL >= OP_BEAT_UNLOCKED){ OP_BEAT_UNLOCKED = OP_BEAT_LEVEL + 1; try{ localStorage.setItem("cc_demo_beat_unlocked", String(OP_BEAT_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_BEAT_UNLOCKED + " unlocked!"; opAddCoins(50); } else if(beatClean){ opAddCoins(50); }
       recordBest("beat", score);
       body.innerHTML = doneHTML(score, "You kept the beat floating!" + (beatClean ? " Clean finish! +50 coins (device-local only, never money)." : " Missed a bubble — no clean-finish unlock this run.") + unlockMsg);
       $("againBtn").addEventListener("click", function(){ popSnd(); startBeat(); });
     }
   }
   bag.every(tick, 50);
+  /* CC-FIX-27: shell hooks — pause stills the track (the bubble clock
+     itself is bag-driven and freezes with the shell pause); Space taps
+     the bubble nearest the gold ring. */
+  (window.CC_GAME_HOOKS = window.CC_GAME_HOOKS || {}).gameBeat = {
+    pause: function(){ if(beatAudio){ try{ beatAudio.pause(); }catch(e){} } },
+    resume: function(){ beatTrackSync(); },
+    onSettings: function(){ beatTrackSync(); },
+    tapNearest: function(){
+      if(finished) return;
+      var bestB = null, bestD = 1e18;
+      for(var bi = 0; bi < bubbles.length; bi++){
+        var b = bubbles[bi];
+        var y = 400 - ((vnow - b.born) / b.travel) * 430;
+        var d = Math.abs(y - RING_Y);
+        if(d < bestD){ bestD = d; bestB = b; }
+      }
+      if(bestB && bestB.el) tap(bestB, bestB.el);
+    }
+  };
 }
 
 /* ================= 5. Pop Path ================= */
 function startPopPath(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var LEVELS = 10, TOLS = [52,48,44,40,36,32,28,24,20,18], FADES = [16000,15000,14000,13000,12000,11000,10000,9000,8000,7000];
+  var LEVELS = 14, TOLS = [52,48,44,40,36,32,28,24,20,18,16,15,14,13], FADES = [16000,15000,14000,13000,12000,11000,10000,9000,8000,7000,6500,6000,5500,5000];
   var level = 0, total = 0, drawn = [], drawing = false, vnow = 0, note = null;
   var body = $("gamePopPath-body");
   function pathPoints(){
@@ -4068,7 +4100,7 @@ function startPopPath(){
       note = "Trail "+(level+1)+" traced — "+Math.round(res.cov*100)+"% of the path covered. +"+gain;
       if(level+1 >= LEVELS){
         recordBest("poppath", total);
-        body.innerHTML = '<p role="status" class="center" style="background:#1e3a1e;border-radius:1.4rem;padding:12px 16px;font-weight:800;">'+note+'</p>' + doneHTML(total, "All 10 trails traced — fancy footwork, fox style.");
+        body.innerHTML = '<p role="status" class="center" style="background:#1e3a1e;border-radius:1.4rem;padding:12px 16px;font-weight:800;">'+note+'</p>' + doneHTML(total, "All " + LEVELS + " trails traced — fancy footwork, fox style.");
         $("againBtn").addEventListener("click", function(){ popSnd(); startPopPath(); });
       } else render();
     });
@@ -4076,6 +4108,38 @@ function startPopPath(){
     if(nx) nx.addEventListener("click", function(){ level++; drawn = []; note = null; vnow = 0; render(); });
   }
   render();
+  /* CC-FIX-27: keyboard steering — arrow keys walk a pen cursor that
+     appends points with the same >=4-unit sampling as the pointer. */
+  var ppKbCursor = null;
+  (window.CC_GAME_HOOKS = window.CC_GAME_HOOKS || {}).gamePopPath = {
+    steer: function(dx, dy){
+      if(note) return;
+      var svg = $("ppSvg");
+      if(!svg) return;
+      if(!ppKbCursor){
+        var seedPt = drawn.length ? drawn[drawn.length - 1] : pathPoints()[0];
+        ppKbCursor = { x: seedPt.x, y: seedPt.y };
+        if(!drawn.length) drawn.push({ x: ppKbCursor.x, y: ppKbCursor.y });
+      }
+      ppKbCursor.x = Math.max(0, Math.min(340, ppKbCursor.x + dx));
+      ppKbCursor.y = Math.max(0, Math.min(260, ppKbCursor.y + dy));
+      var last = drawn[drawn.length - 1];
+      if(Math.hypot(ppKbCursor.x - last.x, ppKbCursor.y - last.y) >= 4){
+        drawn.push({ x: ppKbCursor.x, y: ppKbCursor.y });
+        var pl = svg.querySelector("polyline");
+        if(!pl){
+          pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+          pl.setAttribute("fill", "none");
+          pl.setAttribute("stroke", "#f0a91e");
+          pl.setAttribute("stroke-width", "7");
+          pl.setAttribute("stroke-linecap", "round");
+          pl.setAttribute("stroke-linejoin", "round");
+          svg.appendChild(pl);
+        }
+        pl.setAttribute("points", drawn.map(function(q){ return q.x.toFixed(1) + "," + q.y.toFixed(1); }).join(" "));
+      }
+    }
+  };
   /* Virtual clock: one cascade beat = 700ms of trail time. */
   bag.every(function(){
     if(note) return;
@@ -4184,7 +4248,7 @@ function startMystery(){
       if(round+1 >= ROUNDS){
         recordBest("mystery", score);
         var unlockMsg = "";
-        if(OP_MYSTERY_LEVEL < 10 && OP_MYSTERY_LEVEL >= OP_MYSTERY_UNLOCKED){ OP_MYSTERY_UNLOCKED = OP_MYSTERY_LEVEL + 1; try{ localStorage.setItem("cc_demo_mystery_unlocked", String(OP_MYSTERY_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_MYSTERY_UNLOCKED + " unlocked!"; }
+        if(OP_MYSTERY_LEVEL < OP_MYSTERY_LEVELS.length && OP_MYSTERY_LEVEL >= OP_MYSTERY_UNLOCKED){ OP_MYSTERY_UNLOCKED = OP_MYSTERY_LEVEL + 1; try{ localStorage.setItem("cc_demo_mystery_unlocked", String(OP_MYSTERY_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_MYSTERY_UNLOCKED + " unlocked!"; }
         body.innerHTML = doneHTML(score, "Level "+OP_MYSTERY_LEVEL+" — "+LV.name+". Best tracking streak: "+bestStreak+" in a row."+unlockMsg);
         $("againBtn").addEventListener("click", function(){ popSnd(); startMystery(); });
       } else {
@@ -4645,6 +4709,7 @@ function startStack() {
   var ghosts = [], tower = [], mover = null, debris = [];
   var score = 0, finalScore = 0, height = 0;
   var streak = 0, bestStreak = 0, camRows = 0, dropsDone = 0;
+  var tier = 0;   /* CC-FIX-27.4: current height tier (see STACK_TIERS) */
   var bestScore = stackLoadBest();
   var rafId = null, lastT = 0, endTimer = null, W = 0, H = 0, DPR = 1, bgGrad = null;
   var paused = false, endPending = null, endDue = 0, endRemaining = 650;   /* CC-GAMECHROME pause state */
@@ -4727,7 +4792,13 @@ function startStack() {
     ];
     ghosts.forEach(function (g) { g.blocks = makeGhostBlocks(g.w, g.h); });
   }
-  function speedFor(h) { return Math.min(2.3 + h * 0.13, 6.6); }
+  function speedFor(h) { return Math.min(2.3 + h * 0.13, 6.6 + 0.6 * Math.max(0, stackTierFor(h) - 3)); }
+  /* CC-FIX-27.4: height tiers — a named rung every 10 blocks; the
+     speed cap climbs a step with each rung, so the ramp no longer
+     flattens at 33 blocks. Tier crossings announce on the existing
+     grade flash, just after the landing grade. */
+  var STACK_TIERS = ["COPPER RUNG","IRON RUNG","SILVER RUNG","GOLDEN RUNG","EMBER RUNG","CRYSTAL RUNG","MOONLIT RUNG","CAULDRON CROWN"];
+  function stackTierFor(h) { return Math.floor(h / 10); }
   function spawnMover() {
     var top = tower[tower.length - 1];
     /* The mover is block #(height+1) of the run; every 10th is golden. */
@@ -4752,7 +4823,7 @@ function startStack() {
     tower = [{ x: -START_W / 2, w: START_W }];
     debris = [];
     score = 0; finalScore = 0; height = 0;
-    streak = 0; bestStreak = 0; dropsDone = 0;
+    streak = 0; bestStreak = 0; dropsDone = 0; tier = 0;
     camRows = camTargetFor(0);   /* 3D build: start framed on the drop zone, no opening swoop */
     playing = true;
     spawnMover();
@@ -4831,6 +4902,15 @@ function startStack() {
   function afterLand() {
     hudScore.textContent = score;
     updateStandings();
+    /* CC-FIX-27.4: a tier crossing gets its own grade flash, just
+       after the landing grade — never instead of it. */
+    var tNow = stackTierFor(height);
+    if (tNow > tier) {
+      tier = tNow;
+      var tName = tNow <= STACK_TIERS.length ? STACK_TIERS[tNow - 1] : "RUNG " + tNow;
+      var tHeight = height;
+      setTimeout(function(){ if (playing) flashGrade(tName + "!", "ccstack-g-flush", "Height " + tHeight + " · the slide quickens"); }, 950);
+    }
     spawnMover();
   }
 
@@ -5257,6 +5337,24 @@ const LEVELS = [
   ], bonus:[
     "AID","AIR","ARDENT","ART","DEN","DINT","DATER","ERA","IRE","NET","NIT","REND","RIND","TAN",
     "TARN","TEN","TIRADE"
+  ]},
+  { name:"Ember Light", letters:"AEILNST", wheel:"SLIENTA", words:[
+    "ALE","ANT","ATE","EAT","LIE","LIT","NET","SAT","SEA","SET","SIN","SIT","TAN","TEA","TEN",
+    "TIE","TIN","INSET","LEAST","LENT","LIEN","LINE","LIST","NAIL","NEST","SAIL","SAINT","SALE",
+    "SALT","SEAL","SEAT","SILT","SLANT","STAIN","STEAL","TAIL","TALE","TEAL","ALIEN","ENLIST",
+    "LISTEN","SALIENT","SILENT","TINSEL"
+  ], bonus:[
+    "ANTE","ANTES","ANTS","ISLET","LANES","LATES","LEANS","LIENS","LINES","NAILS","STALE","TAILS",
+    "TEALS"
+  ]},
+  { name:"Star Forge", letters:"AEOPRST", wheel:"TROPEAS", words:[
+    "APE","APT","ARE","ATE","EAR","EAT","ERA","OAR","OAT","PAR","PAT","PEA","PET","POT","RAP",
+    "RAT","SAT","SEA","SET","TAP","TAR","TEA","TOP","ATOP","OPERA","PASTE","PEST","POET","PORT",
+    "PROSE","REAP","REST","ROPE","SEAT","SOAP","SOAR","SPOT","STAR","STEP","STOP","STRAP","TAPER",
+    "TRAP","PASTOR","SEAPORT"
+  ], bonus:[
+    "APTER","ASTER","OPERAS","PASTER","PEATS","PORTS","POSTER","PRATE","PRATES","REPOST","TAPERS",
+    "TAPES"
   ]}
 ];
 
@@ -5519,6 +5617,43 @@ function endDrag(){
 wheelEl.addEventListener("pointerup", endDrag);
 wheelEl.addEventListener("pointercancel", endDrag);
 
+  /* CC-FIX-27: keyboard spelling — typing a letter latches the next
+     matching wheel bubble (the same S.path the drag builds), Backspace
+     undoes a step, Enter submits through the game's own endDrag. */
+  (window.CC_GAME_HOOKS = window.CC_GAME_HOOKS || {}).gameWords = {
+    key: function(k){
+      if(!S.started) return;
+      if(k === "BS"){
+        if(S.path.length){ S.path.pop(); sndLatch(S.path.length); refreshPathUI(); drawLine(null); }
+        return;
+      }
+      if(k === "ENTER"){
+        if(S.path.length){ S.dragging = true; endDrag(); }
+        return;
+      }
+      var ch = String(k).toUpperCase(), target = -1, i;
+      for(i = 0; i < bubEls.length; i++){
+        if(S.path.indexOf(i) >= 0) continue;
+        if((bubEls[i].textContent || "").trim().toUpperCase() === ch){ target = i; break; }
+      }
+      if(target < 0){
+        var prev = S.path[S.path.length - 2];
+        if(prev != null && S.path.length >= 2 && (bubEls[prev].textContent || "").trim().toUpperCase() === ch){
+          S.path.pop(); sndLatch(S.path.length); refreshPathUI(); drawLine(null);
+        }
+        return;
+      }
+      if(!S.path.length) ensureAudio();
+      S.path.push(target);
+      sndLatch(S.path.length - 1);
+      bubEls[target].classList.remove("pop");
+      void bubEls[target].offsetWidth;
+      bubEls[target].classList.add("pop");
+      refreshPathUI();
+      drawLine(null);
+    }
+  };
+
 /* CC-FIX-24: fit the WHOLE Words screen into one viewport — no
    scrolling, ever (pattern: CC-FIX-23, Cauldron Cannon). The stage's
    natural height runs ~900px (header + capped grid + found strip +
@@ -5533,6 +5668,7 @@ wheelEl.addEventListener("pointercancel", endDrag);
    or redesigned; the splash behind it stays full-bleed, exactly
    as Cannon's did in #23. */
 function cwFitStage(){
+  if(document.body.classList.contains("cc-stage")) return; /* CC-FIX-27 */
   const fit = document.getElementById("cw-fit"),
         inner = document.getElementById("cw-scale");
   if(!fit || !inner) return;
@@ -5779,12 +5915,43 @@ var CMCore = (function(){
     /* L2 — 48 tiles, 3 layers */
     rect(0,0,6,4,0).concat(rect(1,1,5,3,1)).concat(rect(3,1,3,3,2)),
     /* L3 — 84 tiles, 4 layers */
-    rect(0,0,8,5,0).concat(rect(1,1,7,4,1)).concat(rect(3,2,4,3,2)).concat(rect(5,3,2,2,3))
+    rect(0,0,8,5,0).concat(rect(1,1,7,4,1)).concat(rect(3,2,4,3,2)).concat(rect(5,3,2,2,3)),
+    /* L4 — 96 tiles, 4 layers (Build #27: levels 4-10 extend the same
+       nested-rect pattern at the palette-max 10 faces; every tile
+       count stays a multiple of 3 and every deal is cert-verified
+       solvable by generate() before it can be served) */
+    rect(0,0,9,5,0).concat(rect(1,1,8,4,1)).concat(rect(3,2,5,3,2)).concat(rect(5,3,2,2,3)),
+    /* L5 — 108 tiles, 5 layers */
+    rect(0,0,9,6,0).concat(rect(1,1,7,4,1)).concat(rect(2,2,6,3,2)).concat(rect(4,3,3,2,3)).concat(rect(6,4,2,1,4)),
+    /* L6 — 120 tiles, 5 layers */
+    rect(0,0,10,6,0).concat(rect(1,1,8,4,1)).concat(rect(3,2,6,3,2)).concat(rect(5,3,3,2,3)).concat(rect(6,4,2,2,4)),
+    /* L7 — 132 tiles, 5 layers */
+    rect(0,0,11,6,0).concat(rect(1,1,9,4,1)).concat(rect(3,2,6,3,2)).concat(rect(5,3,4,2,3)).concat(rect(6,4,2,2,4)),
+    /* L8 — 144 tiles, 5 layers */
+    rect(0,0,11,6,0).concat(rect(1,1,10,5,1)).concat(rect(2,2,7,3,2)).concat(rect(5,3,3,2,3)).concat(rect(7,4,1,1,4)),
+    /* L9 — 156 tiles, 6 layers */
+    rect(0,0,12,6,0).concat(rect(1,1,10,5,1)).concat(rect(3,2,7,3,2)).concat(rect(5,3,4,2,3)).concat(rect(6,4,2,2,4)).concat(rect(7,5,1,1,5)),
+    /* L10 — 168 tiles, 5 layers */
+    rect(0,0,12,7,0).concat(rect(1,1,11,5,1)).concat(rect(3,2,7,3,2)).concat(rect(6,3,3,2,3)).concat(rect(7,4,2,1,4)),
+    /* L11 — 174 tiles, 6 layers (CC-FIX-27.4: same nested-rect pattern,
+       palette-max 10 faces, counts stay multiples of 3, cert-verified) */
+    rect(0,0,12,7,0).concat(rect(1,1,11,5,1)).concat(rect(3,2,7,3,2)).concat(rect(5,3,4,2,3)).concat(rect(6,4,2,2,4)).concat(rect(8,5,2,1,5)),
+    /* L12 — 186 tiles, 5 layers */
+    rect(0,0,12,8,0).concat(rect(1,1,10,6,1)).concat(rect(3,2,7,3,2)).concat(rect(5,3,3,2,3)).concat(rect(6,4,3,1,4))
   ];
   var LEVELS = [
     { name:'Level 1', sub:'First Sip',    faces:6,  layout:0 },
     { name:'Level 2', sub:'Steady Brew',  faces:8,  layout:1 },
-    { name:'Level 3', sub:'Full Cauldron',faces:10, layout:2 }
+    { name:'Level 3', sub:'Full Cauldron',faces:10, layout:2 },
+    { name:'Level 4', sub:'Deeper Brew',  faces:10, layout:3 },
+    { name:'Level 5', sub:'Thick Potion', faces:10, layout:4 },
+    { name:'Level 6', sub:"Witch's Ladder",faces:10, layout:5 },
+    { name:'Level 7', sub:'Double Bubble',faces:10, layout:6 },
+    { name:'Level 8', sub:'Midnight Mix', faces:10, layout:7 },
+    { name:'Level 9', sub:'Grand Brew',   faces:10, layout:8 },
+    { name:'Level 10', sub:'Full Moon Cauldron', faces:10, layout:9 },
+    { name:'Level 11', sub:'Ember Depths', faces:10, layout:10 },
+    { name:'Level 12', sub:'The Full Brew', faces:10, layout:11 }
   ];
 
   function mulberry32(seed){
@@ -6249,7 +6416,7 @@ var CMCore = (function(){
 
   /* ---------------- State ---------------- */
   var level = 0;
-  try { level = Math.min(2, Math.max(0, parseInt(localStorage.getItem('cm_match_level') || '0', 10) || 0)); } catch(e){}
+  try { level = Math.min(C.LEVELS.length - 1, Math.max(0, parseInt(localStorage.getItem('cm_match_level') || '0', 10) || 0)); } catch(e){}
   var gen = null;          /* {board, faces, cert, seed} */
   var play = null;         /* core play state */
   var powers = { undo:3, hint:3, shuffle:3 };
@@ -6332,6 +6499,65 @@ var CMCore = (function(){
     $('cm-muteBtn').textContent = Snd.isMuted() ? '🔇' : '🔊';
   }
   function renderAll(){ renderBoard(); renderTray(); renderHUD(); }
+
+  /* CC-FIX-27: keyboard tile cursor — arrows move a visible cursor
+     over the tiles still on the board; Enter/Space taps through the
+     same onTileTap path as a click. */
+  var kbCursorId = null;
+  function kbPaint(){
+    Object.keys(tileEls).forEach(function(id){
+      tileEls[id].classList.toggle("kbfocus", kbCursorId != null && +id === kbCursorId);
+    });
+  }
+  function kbPick(){
+    if(!play){ kbCursorId = null; return null; }
+    var cands = [];
+    play.present.forEach(function(id){ if(tileEls[id]) cands.push(id); });
+    if(!cands.length){ kbCursorId = null; return null; }
+    if(kbCursorId == null || !play.present.has(kbCursorId)){
+      cands.sort(function(a, b){
+        var pa = tileXY(play.board.slots[a]), pb = tileXY(play.board.slots[b]);
+        return (pa.y - pb.y) || (pa.x - pb.x);
+      });
+      /* prefer a FREE tile: Enter on a covered tile is a silent no-op,
+         so the cursor's home position must be a tile that can move. */
+      var home = cands[0];
+      for(var i = 0; i < cands.length; i++){ if(C.isFree(play.board, play.present, cands[i])){ home = cands[i]; break; } }
+      kbCursorId = home;
+    }
+    return kbCursorId;
+  }
+  function kbMove(dx, dy){
+    if(!started || !play || play.status !== "playing") return;
+    var cur = kbPick();
+    if(cur == null) return;
+    var cp = tileXY(play.board.slots[cur]);
+    var best = null, bestScore = 1e18;
+    play.present.forEach(function(id){
+      if(id === cur || !tileEls[id]) return;
+      var p = tileXY(play.board.slots[id]);
+      var vx = p.x - cp.x, vy = p.y - cp.y;
+      if(dx > 0 && vx <= 2) return;
+      if(dx < 0 && vx >= -2) return;
+      if(dy > 0 && vy <= 2) return;
+      if(dy < 0 && vy >= -2) return;
+      var along = dx !== 0 ? Math.abs(vx) : Math.abs(vy);
+      var off = dx !== 0 ? Math.abs(vy) : Math.abs(vx);
+      var score = along + off * 3;
+      if(score < bestScore){ bestScore = score; best = id; }
+    });
+    if(best != null) kbCursorId = best;
+    kbPaint();
+  }
+  function kbTap(){
+    if(!started || busy || !play || play.status !== "playing") return;
+    var cur = kbPick();
+    if(cur == null) return;
+    var el = tileEls[cur];
+    if(el) onTileTap(cur, el);
+    setTimeout(function(){ kbCursorId = null; kbPick(); kbPaint(); }, 280);
+  }
+  (window.CC_GAME_HOOKS = window.CC_GAME_HOOKS || {}).gameCMatch = { move: kbMove, tap: kbTap };
 
   /* ---------------- Deals ---------------- */
   function deal(lv){
@@ -6505,7 +6731,7 @@ var CMCore = (function(){
     $('cm-endBest').textContent = bests()[level] || '—';
     $('cm-endNewBest').style.display = isBest ? '' : 'none';
     $('cm-endPrimary').textContent = won ? '▶ Brew it again' : '▶ Try again';
-    $('cm-endNextRow').style.display = (won && level < 2) ? '' : 'none';
+    $('cm-endNextRow').style.display = (won && level < C.LEVELS.length - 1) ? '' : 'none';
     panelStart.style.display = 'none'; panelEnd.style.display = '';
     overlayEl.classList.remove('hidden');
     try{ if (window.ccShowEndBoard) ccShowEndBoard($('cmBoardSlot')); }catch(e){}
@@ -6518,7 +6744,7 @@ var CMCore = (function(){
   });
   $('cm-endPrimary').addEventListener('click', function(){ Snd.click(); deal(level); started = true; overlayEl.classList.add('hidden'); renderHUD(); });
   $('cm-endLevels').addEventListener('click', function(){ Snd.click(); showStart(); });
-  $('cm-endNext').addEventListener('click', function(){ Snd.click(); deal(Math.min(2, level + 1)); started = true; overlayEl.classList.add('hidden'); renderHUD(); });
+  $('cm-endNext').addEventListener('click', function(){ Snd.click(); deal(Math.min(C.LEVELS.length - 1, level + 1)); started = true; overlayEl.classList.add('hidden'); renderHUD(); });
   $('cm-muteBtn').addEventListener('click', function(){
     Snd.setMuted(!Snd.isMuted());
     if (!Snd.isMuted()) Snd.click();
@@ -6922,7 +7148,38 @@ var CC_CANNON_CORE = (function(){
           box("wood",222,472), box("wood",358,472)
         ];
         return arr;
-      }}
+      }},
+    /* CC-FIX-27.4: Levels 5-6, authored in the same idiom as 1-4 —
+       every stack rests exactly on the layer below (same bottom-face
+       arithmetic the first four levels use), all weight over the
+       pedestal span, objectives from the existing four types. */
+    { name:"Level 5", banner:"BRING IT DOWN!",
+      sub:"Knock 72% of the tower off the shelf",
+      objective:{type:"topple", pct:0.72}, balls:5,
+      build:function(){ return [
+        box("stone",222,472), box("stone",358,472),
+        post("ice",258,472), post("ice",322,472),
+        beam("wood",290,414),
+        box("wood",258,394), box("wood",322,394),
+        beam("stone",290,362),
+        post("wood",290,342),
+        beam("wood",290,284),
+        jarB("jar",290,264),
+        {mat:"ice", x:290, y:472-8, w:40, h:16}
+      ];}},
+    { name:"Level 6", banner:"SMASH THE VAULT!",
+      sub:"Smash at least 12 jars and ice blocks",
+      objective:{type:"break", count:12}, balls:5,
+      build:function(){ return [
+        jarB("jar",230,472), jarB("jar",260,472), jarB("jar",290,472), jarB("jar",320,472), jarB("jar",350,472),
+        {mat:"ice", x:245, y:442-14, w:28, h:28}, {mat:"ice", x:275, y:442-14, w:28, h:28},
+        {mat:"ice", x:305, y:442-14, w:28, h:28}, {mat:"ice", x:335, y:442-14, w:28, h:28},
+        jarB("jar",260,414), jarB("jar",290,414), jarB("jar",320,414),
+        {mat:"ice", x:275, y:384-14, w:28, h:28}, {mat:"ice", x:305, y:384-14, w:28, h:28},
+        jarB("jar",290,356),
+        {mat:"ice", x:216, y:458, w:28, h:28}, {mat:"ice", x:216, y:430, w:28, h:28},
+        {mat:"ice", x:364, y:458, w:28, h:28}, {mat:"ice", x:364, y:430, w:28, h:28}
+      ];}}
   ];
 
   function buildWorld(levelIdx){
@@ -7376,24 +7633,44 @@ var CC_CANNON_CORE = (function(){
     var r=cv.getBoundingClientRect();
     return {x:(e.clientX-r.left)*W/r.width, y:(e.clientY-r.top)*H/r.height};
   }
+  /* CC-FIX-27.1: ABSOLUTE POINTING (owner phone report, Nov 1: Cannon
+     "fires, but I can't aim where I want"). The old scheme was a
+     slingshot: aimAngle = atan2(dragStart - dragCur), so the shot flew
+     opposite the finger's travel, from wherever the touch happened to
+     land — while the aim line is drawn cannon -> fingertip, promising
+     "the shot goes where your finger is". A player who drags ONTO the
+     tower (the natural gesture) produced a displacement pointing AT
+     the tower and so fired AWAY from it, angle-clamped into the shelf
+     or the ground. canvasPos() itself was never wrong: it maps
+     through the canvas's own rendered rect, so stage scale and
+     letterbox offsets divide out exactly, at every aspect.
+     Now: the shot flies from the cauldron toward the fingertip/cursor
+     position in game coords — line, trajectory dots and physics all
+     describe the same shot. Power keeps the original feel: drag
+     length from the touch point, /150, same speed range, same angle
+     clamp, same 0.08 fire threshold. */
+  function aimAtPointer(){
+    var pdx=dragStart.x-dragCur.x, pdy=dragStart.y-dragCur.y;
+    aimPower=Math.min(1, Math.sqrt(pdx*pdx+pdy*pdy)/150);
+    var dx=dragCur.x-CANNON.x, dy=dragCur.y-CANNON.y;
+    if(dx*dx+dy*dy>36){
+      var ang=Math.atan2(dy,dx);
+      if(ang<-1.45) ang=-1.45; else if(ang>0.55) ang=0.55;
+      aimAngle=ang;
+    }
+  }
   cv.addEventListener("pointerdown", function(e){
     ensureAudio();
     if(state!=="aim") return;
     dragging=true; dragStart=canvasPos(e); dragCur=dragStart;
+    aimAtPointer(); /* CC-FIX-27.1: aim snaps to the touch point */
     try{ cv.setPointerCapture(e.pointerId); }catch(err){}
     e.preventDefault();
   });
   cv.addEventListener("pointermove", function(e){
     if(!dragging) return;
     dragCur=canvasPos(e);
-    var vx=dragStart.x-dragCur.x, vy=dragStart.y-dragCur.y;
-    var len=Math.sqrt(vx*vx+vy*vy);
-    aimPower=Math.min(1, len/150);
-    if(len>4){
-      var ang=Math.atan2(vy,vx);
-      if(ang<-1.45) ang=-1.45; else if(ang>0.55) ang=0.55;
-      aimAngle=ang;
-    }
+    aimAtPointer(); /* CC-FIX-27.1 */
   });
   function endDrag(fireIt){
     if(!dragging) return;
@@ -7422,6 +7699,7 @@ var CC_CANNON_CORE = (function(){
      divides the scale back out. Verified by touch drags at both
      phone viewports in FIX-23-REPORT.md. */
   function fitStage(){
+    if(document.body.classList.contains("cc-stage")) return; /* CC-FIX-27 */
     var fit = document.getElementById("cn-fit"),
         inner = document.getElementById("cn-wrap");
     if(!fit || !inner) return;
@@ -7518,6 +7796,26 @@ var CC_CANNON_CORE = (function(){
   });
   paintMute();
 
+  /* CC-FIX-27: shell pause hook + keyboard aim. cnPaused freezes the
+     world step (dt is clamped, so resuming never jumps). */
+  var cnPaused = false;
+  (window.CC_GAME_HOOKS = window.CC_GAME_HOOKS || {}).gameCannon = {
+    pause: function(){ cnPaused = true; },
+    resume: function(){ cnPaused = false; }
+  };
+  document.addEventListener("keydown", function(ev){
+    var sec = document.getElementById("scr-gameCannon");
+    if(!sec || !sec.classList.contains("active") || cnPaused) return;
+    if(state !== "aim") return;
+    var tag = (ev.target && ev.target.tagName) || "";
+    if(tag === "INPUT" || tag === "TEXTAREA" || tag === "BUTTON") return;
+    if(ev.key === "ArrowLeft"){ aimAngle -= 0.045; ev.preventDefault(); }
+    else if(ev.key === "ArrowRight"){ aimAngle += 0.045; ev.preventDefault(); }
+    else if(ev.key === "ArrowUp"){ aimPower = Math.min(1, aimPower + 0.05); ev.preventDefault(); }
+    else if(ev.key === "ArrowDown"){ aimPower = Math.max(0.15, aimPower - 0.05); ev.preventDefault(); }
+    else if(ev.key === " "){ ev.preventDefault(); fire(); }
+  });
+
   /* ---------------- Main loop ---------------- */
   var lastTs=0, hudTick=0;
   function frame(ts){
@@ -7525,6 +7823,7 @@ var CC_CANNON_CORE = (function(){
     var dt=lastTs? Math.min(0.033,(ts-lastTs)/1000) : 0.016;
     lastTs=ts;
     var t=ts/1000;
+    if(cnPaused){ return; } /* CC-FIX-27: shell pause freezes the world */
     world.step(dt);
     drainEvents();
     // knockdown points for anything that leaves the shelf
@@ -7576,6 +7875,11 @@ var CC_CANNON_CORE = (function(){
       aimAngle=deg*Math.PI/180; aimPower=power; recoil=1; fire(); return true;
     },
     present: schedulePresent, /* CC-FIX-23 */
+    aim:function(){ /* CC-FIX-27.1: read-only aim state for examiners */
+      return { angle:aimAngle, power:aimPower, dragging:dragging,
+               cur:dragCur?{x:dragCur.x,y:dragCur.y}:null,
+               cannon:{x:CANNON.x,y:CANNON.y} };
+    },
     state:function(){ return state; },
     world:function(){ return world; },
     score:function(){ return score; }
@@ -7592,7 +7896,7 @@ var CC_CANNON_CORE = (function(){
 function startCannon(){
   var body = $("gameCannon-body"); if(!body) return;
   if(!body.querySelector(".cn-wrap")){
-    body.innerHTML = "<div class=\"cn-wrap\"><div id=\"cn-fit\"><div id=\"cn-wrap\">\n  <div id=\"cn-stage\">\n    <canvas id=\"cn-cv\" width=\"390\" height=\"660\"></canvas>\n    <div id=\"cn-hud\">\n      <div id=\"cn-hudRow\">\n        <div class=\"pill\" id=\"cn-ballsPill\"></div>\n        <div class=\"pill\">SCORE <b id=\"cn-scoreVal\">0</b></div>\n      </div>\n      <div id=\"cn-objBar\">TOPPLE IT!<small id=\"cn-objSub\"></small></div>\n    </div>\n    <div id=\"cn-btnRow\">\n      <button class=\"iconBtn\" id=\"cn-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n      <button class=\"iconBtn\" id=\"cn-restartBtn\" title=\"Restart level\">\u21ba</button>\n    </div>\n    <div id=\"cn-hint\">Drag back from the cauldron\u2026 let go to fire!</div>\n\n    <div class=\"overlay\" id=\"cn-startOverlay\">\n      <div class=\"gameTitle\">Cauldron <span class=\"cc\">Cannon</span></div>\n      <div class=\"tagline\">Aim the potion cannon, find the weak spot, and bring the whole tower down. Kaboom responsibly.</div>\n      <div class=\"chips\" id=\"cn-levelChips\"></div>\n      <button class=\"bigStart\" id=\"cn-startBtn\">\u25b6 START</button>\n      <div class=\"tagline\" style=\"font-size:12px;opacity:.85\">Drag back to aim \u2014 the dotted line is your shot.<br>Longer drag = bigger boom.</div>\n    </div>\n\n    <div class=\"overlay hidden\" id=\"cn-endOverlay\">\n      <div class=\"endCard\">\n        <div class=\"endTitle\" id=\"cn-endTitle\">TOWER DOWN!</div>\n        <div class=\"endLine\" id=\"cn-endLine\"></div>\n        <div class=\"endScore\" id=\"cn-endScore\"></div>\n        <div class=\"btnRow2\">\n          <button class=\"miniBtn gold\" id=\"cn-nextBtn\">Next \u25b6</button>\n          <button class=\"miniBtn\" id=\"cn-retryBtn\">\u21ba Retry</button>\n          <button class=\"miniBtn\" id=\"cn-menuBtn\">Levels</button>\n        </div>\n        <div id=\"cnBoardSlot\"></div>\n      </div>\n    </div>\n  </div>\n  <div id=\"cn-footNote\">Cauldron Cannon \u2014 playground prototype. Best scores live on this device only.</div>\n</div></div></div>";
+    body.innerHTML = "<div class=\"cn-wrap\"><div id=\"cn-fit\"><div id=\"cn-wrap\">\n  <div id=\"cn-stage\">\n    <canvas id=\"cn-cv\" width=\"390\" height=\"660\"></canvas>\n    <div id=\"cn-hud\">\n      <div id=\"cn-hudRow\">\n        <div class=\"pill\" id=\"cn-ballsPill\"></div>\n        <div class=\"pill\">SCORE <b id=\"cn-scoreVal\">0</b></div>\n      </div>\n      <div id=\"cn-objBar\">TOPPLE IT!<small id=\"cn-objSub\"></small></div>\n    </div>\n    <div id=\"cn-btnRow\">\n      <button class=\"iconBtn\" id=\"cn-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n      <button class=\"iconBtn\" id=\"cn-restartBtn\" title=\"Restart level\">\u21ba</button>\n    </div>\n    <div id=\"cn-hint\">Drag to aim at your target \u2014 let go to fire!</div>\n\n    <div class=\"overlay\" id=\"cn-startOverlay\">\n      <div class=\"gameTitle\">Cauldron <span class=\"cc\">Cannon</span></div>\n      <div class=\"tagline\">Aim the potion cannon, find the weak spot, and bring the whole tower down. Kaboom responsibly.</div>\n      <div class=\"chips\" id=\"cn-levelChips\"></div>\n      <button class=\"bigStart\" id=\"cn-startBtn\">\u25b6 START</button>\n      <div class=\"tagline\" style=\"font-size:12px;opacity:.85\">Point at your target \u2014 the dotted line is your shot.<br>Longer drag = bigger boom.</div>\n    </div>\n\n    <div class=\"overlay hidden\" id=\"cn-endOverlay\">\n      <div class=\"endCard\">\n        <div class=\"endTitle\" id=\"cn-endTitle\">TOWER DOWN!</div>\n        <div class=\"endLine\" id=\"cn-endLine\"></div>\n        <div class=\"endScore\" id=\"cn-endScore\"></div>\n        <div class=\"btnRow2\">\n          <button class=\"miniBtn gold\" id=\"cn-nextBtn\">Next \u25b6</button>\n          <button class=\"miniBtn\" id=\"cn-retryBtn\">\u21ba Retry</button>\n          <button class=\"miniBtn\" id=\"cn-menuBtn\">Levels</button>\n        </div>\n        <div id=\"cnBoardSlot\"></div>\n      </div>\n    </div>\n  </div>\n  <div id=\"cn-footNote\">Cauldron Cannon \u2014 playground prototype. Best scores live on this device only.</div>\n</div></div></div>";
     buildCannonGame(body.querySelector(".cn-wrap"));
   } else { /* game keeps its own state + menu; nothing to restart on re-entry */
     if(window.__ccCannon && window.__ccCannon.present) window.__ccCannon.present(); /* CC-FIX-23 */
@@ -7607,7 +7911,7 @@ var GAME_META = {
   gameMystery: { title:"Milo's Mystery Bubble 🔮", by:"by Milo 🎲 · Pure tracking skill: follow the star bubble through the shuffle and tap it." },
   gameWords:   { title:"Cauldron Words 🔤", by:"by Potion 🌙 · Drag from letter to letter through the brew wheel and spell the words hiding in the grid. Any other real word you find fills the bonus jar." },
   gameCMatch:  { title:"Cauldron Match 🀄", by:"by Potion 🌙 · Tap free tiles into the cauldron rim — three of a kind pops and clears. Seven unmatched tiles spill the brew." },
-  gameCannon:  { title:"Cauldron Cannon 💥", by:"by Potion 🌙 · Drag back to aim, release to fire. Topple it, break it down, or clean the board before your orbs run out." },
+  gameCannon:  { title:"Cauldron Cannon 💥", by:"by Potion 🌙 · Drag to aim at your target, release to fire. Topple it, break it down, or clean the board before your orbs run out." },
   gameStack: { title:"Cauldron Stack 🧱", by:"by Potion 🌙 · Tap to drop — land it FLUSH." }
 };
 (function(){
@@ -8217,11 +8521,28 @@ var OP_BEAT_LEVELS = [
   {n:7,name:"Turbo beat",total:48,travel:1450,gap:420,perfect:25,onbeat:55,beatMs:450,notes:[587,784,880,1174]},
   {n:8,name:"Hyper beat",total:52,travel:1300,gap:400,perfect:25,onbeat:55,beatMs:425,notes:[659,880,1046,1318]},
   {n:9,name:"Frenzy",total:56,travel:1150,gap:380,perfect:25,onbeat:55,beatMs:400,notes:[784,1046,1174,1318]},
-  {n:10,name:"Master of beat",total:60,travel:1000,gap:360,perfect:25,onbeat:55,beatMs:375,notes:[880,1046,1318,1568]}];
+  {n:10,name:"Master of beat",total:60,travel:1000,gap:360,perfect:25,onbeat:55,beatMs:375,notes:[880,1046,1318,1568]},
+  {n:11,name:"Turbo encore",total:64,travel:950,gap:340,perfect:22,onbeat:50,beatMs:350,notes:[880,1046,1318,1568]},
+  {n:12,name:"Double frenzy",total:68,travel:900,gap:325,perfect:22,onbeat:50,beatMs:340,notes:[784,880,1174,1568]},
+  {n:13,name:"Sky rush",total:72,travel:850,gap:310,perfect:22,onbeat:50,beatMs:330,notes:[659,880,1318,1568,1760]},
+  {n:14,name:"Star storm",total:76,travel:800,gap:295,perfect:22,onbeat:50,beatMs:320,notes:[784,1046,1318,1760]},
+  {n:15,name:"Beat legend",total:80,travel:750,gap:280,perfect:22,onbeat:50,beatMs:310,notes:[880,1174,1568,1760,2093]}];
 var OP_BEAT_LEVEL = 1, OP_BEAT_UNLOCKED = 1;
-try{ OP_BEAT_UNLOCKED = Math.max(1, Math.min(10, parseInt(localStorage.getItem('cc_demo_beat_unlocked')||'1',10) || 1)); }catch(e){}
+try{ OP_BEAT_UNLOCKED = Math.max(1, Math.min(OP_BEAT_LEVELS.length, parseInt(localStorage.getItem('cc_demo_beat_unlocked')||'1',10) || 1)); }catch(e){}
 function opBeatPickerHTML(){ return '<p class="small dim">Bubble Beat — regular style, gold ring at 90px, 420px field. Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' · Highest unlocked: Level '+OP_BEAT_UNLOCKED+' · Clean finish (no missed bubble) unlocks the next level.</p><div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' \u25BE</span></button><div class="stack mt cc-drop-list">' + OP_BEAT_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_BEAT_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_BEAT_UNLOCKED?'disabled':'')+' onclick="opSetBeatLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+'</span><span class="sub">'+l.total+' bubbles · '+l.travel+'ms travel'+(l.n>OP_BEAT_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div></div>'; }
 function opSetBeatLevel(n){ if(n > OP_BEAT_UNLOCKED) return; OP_BEAT_LEVEL = n; startBeat(); }
+/* CC-FIX-27.4: Match Audit gains levels in the same house pattern as
+   Bubble Beat / Mystery Bubble (picker + unlock chain, persisted).
+   Level 1 is the original 6-pair board, byte-for-byte the same game. */
+var OP_MATCH_LEVELS = [
+  {n:1,name:"First Pairs",pairs:6},
+  {n:2,name:"Fuller Brew",pairs:8},
+  {n:3,name:"Grand Pairs",pairs:10}];
+var OP_MATCH_SYMBOLS = ["🦊","⭐","🍋","🌸","💎","🦉","🍇","🦋","🍄","🐢"];
+var OP_MATCH_LEVEL = 1, OP_MATCH_UNLOCKED = 1;
+try{ OP_MATCH_UNLOCKED = Math.max(1, Math.min(OP_MATCH_LEVELS.length, parseInt(localStorage.getItem('cc_demo_match_unlocked')||'1',10) || 1)); }catch(e){}
+function opMatchPickerHTML(){ return '<p class="small dim">Match Audit — Level '+OP_MATCH_LEVEL+' — '+OP_MATCH_LEVELS[OP_MATCH_LEVEL-1].name+' · Highest unlocked: Level '+OP_MATCH_UNLOCKED+' · Finish a board to unlock the next one.</p><div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+OP_MATCH_LEVEL+' — '+OP_MATCH_LEVELS[OP_MATCH_LEVEL-1].name+' ▾</span></button><div class="stack mt cc-drop-list">' + OP_MATCH_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_MATCH_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_MATCH_UNLOCKED?'disabled':'')+' onclick="opSetMatchLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+'</span><span class="sub">'+(l.pairs*2)+' cards · '+l.pairs+' pairs'+(l.n>OP_MATCH_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div></div>'; }
+function opSetMatchLevel(n){ if(n > OP_MATCH_UNLOCKED) return; OP_MATCH_LEVEL = n; startMatch(); }
 var OP_MYSTERY_LEVELS = [
   {n:1,name:"Slow shuffle",glide:560,gap:680,peek:1700,swaps:4},
   {n:2,name:"Quicker shuffle",glide:520,gap:620,peek:1600,swaps:5},
@@ -8232,9 +8553,14 @@ var OP_MYSTERY_LEVELS = [
   {n:7,name:"Rapid shuffle",glide:350,gap:390,peek:1100,swaps:8},
   {n:8,name:"Blur shuffle",glide:320,gap:360,peek:1000,swaps:8},
   {n:9,name:"Lightning shuffle",glide:300,gap:340,peek:900,swaps:9},
-  {n:10,name:"Master shuffle",glide:280,gap:320,peek:850,swaps:10}];
+  {n:10,name:"Master shuffle",glide:280,gap:320,peek:850,swaps:10},
+  {n:11,name:"Blinding shuffle",glide:265,gap:305,peek:820,swaps:10},
+  {n:12,name:"Whirlwind shuffle",glide:250,gap:290,peek:790,swaps:11},
+  {n:13,name:"Cyclone shuffle",glide:240,gap:275,peek:760,swaps:11},
+  {n:14,name:"Phantom shuffle",glide:225,gap:260,peek:730,swaps:12},
+  {n:15,name:"Cauldron master shuffle",glide:210,gap:245,peek:700,swaps:12}];
 var OP_MYSTERY_LEVEL = 1, OP_MYSTERY_UNLOCKED = 1;
-try{ OP_MYSTERY_UNLOCKED = Math.max(1, Math.min(10, parseInt(localStorage.getItem('cc_demo_mystery_unlocked')||'1',10) || 1)); }catch(e){}
+try{ OP_MYSTERY_UNLOCKED = Math.max(1, Math.min(OP_MYSTERY_LEVELS.length, parseInt(localStorage.getItem('cc_demo_mystery_unlocked')||'1',10) || 1)); }catch(e){}
 function opMysteryPickerHTML(){ return '<p class="small dim">Milo\'s Mystery Bubble — Level '+OP_MYSTERY_LEVEL+' — '+OP_MYSTERY_LEVELS[OP_MYSTERY_LEVEL-1].name+' · Highest unlocked: Level '+OP_MYSTERY_UNLOCKED+' · Finish a level to unlock the next one.</p><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">' + OP_MYSTERY_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_MYSTERY_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_MYSTERY_UNLOCKED?'disabled':'')+' onclick="opSetMysteryLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+(l.n>OP_MYSTERY_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div>'; }
 function opSetMysteryLevel(n){ if(n > OP_MYSTERY_UNLOCKED) return; OP_MYSTERY_LEVEL = n; startMystery(); }
 
@@ -9551,7 +9877,7 @@ document.addEventListener("click", function(e){
     gameStack:     ["Cauldron Stack", "live game - tap to drop the sliding block onto your tower. First block is a warm-up."],
     gameWords:     ["Cauldron Words", "live game - drag letter to letter and spell the grid words. First word is a warm-up."],
     gameCMatch:    ["Cauldron Match", "live game - tap free tiles into the rim, three of a kind pops. First tile is a warm-up."],
-    gameCannon:    ["Cauldron Cannon", "live game - drag back to aim, release to fire. First shot is a warm-up."]
+    gameCannon:    ["Cauldron Cannon", "live game - drag to aim at your target, release to fire. First shot is a warm-up."]
   };
   function findLine(scr){
     for(var i=0;i<scr.children.length;i++){
@@ -17600,6 +17926,1011 @@ function __ccFlashAttach(videoEl){
   loopOn = true; tick();
 })();
 
+</script>
+<style id="cc27-style">
+/* ================= CC-FIX-27 · Build #27 game stage mode =================
+   Owner ruling Nov 1, 2026 (Sierra's Words screenshot): tapping a game
+   opens an instruction card; PLAY puts the game on the ENTIRE screen —
+   no menu bar, no profile bar, no demo banner, no page title/description,
+   no bottom dock, no scrolling. One quiet PAUSE button survives; its menu
+   carries Resume / Settings / Quit to Mini Games. The stage fit runs at
+   EVERY size (phone portrait, phone landscape, desktop): uniform scale,
+   centered, the app's animated plum background paints the letterbox.
+   Desktop landscape layouts are REARRANGED landscape-first (Amendment 6):
+   the stages are portrait designs (~430x844) — the owner's own diagnosis
+   ("all the games are really tall") — so on wide screens panels move
+   side-by-side instead of a tall column floating centre-screen. */
+
+/* ---------- stage mode frame ---------- */
+html.cc-stage-lock, body.cc-stage-lock{ overflow:hidden !important; }
+body.cc-stage #opTopRow,
+body.cc-stage .op-toprow,
+body.cc-stage .demo-banner,
+body.cc-stage .dock,
+body.cc-stage #opMenuPanel{ display:none !important; }
+
+.screen.cc-stage-sec{
+  position:fixed !important; inset:0 !important; z-index:120;
+  width:100% !important; max-width:none !important;
+  margin:0 !important; padding:0 !important;
+  display:flex !important; flex-direction:column;
+  align-items:center; justify-content:center;
+  overflow:hidden; background:transparent;
+  outline:none;
+}
+.screen.cc-stage-sec > div[id$="-body"]{ flex:none; transform-origin:50% 50%; }
+
+/* frozen game while the pause menu is up (CSS layer; JS freezes the clocks) */
+body.cc-paused .screen.cc-stage-sec *{ animation-play-state:paused !important; }
+
+/* ---------- the one surviving control: PAUSE ---------- */
+/* CC-FIX-27.2 (owner phone report, Nov 1): the button rode up into the
+   phone's camera/notch band in stage mode. Its top now clears the
+   safe area: the device-reported inset wins when it is larger; the
+   48px floor clears the standard ~47px notch band even when a
+   fullscreen UA reports a 0 inset. Stage chrome only — no game
+   layout or fit math changes. */
+#ccStagePauseBtn{
+  position:fixed; top:max(48px, env(safe-area-inset-top, 0px)); right:10px; z-index:200;
+  width:52px; height:52px; border-radius:50%;
+  border:1.5px solid rgba(255,215,106,.55);
+  background:rgba(13,10,20,.72); color:#fff8e7; font-size:21px; line-height:1;
+  display:none; align-items:center; justify-content:center;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+body.cc-stage #ccStagePauseBtn{ display:flex; }
+#ccStagePauseBtn:focus-visible{ outline:3px solid #ffd76a; outline-offset:2px; }
+@media (hover:hover){ #ccStagePauseBtn:hover{ background:rgba(40,24,66,.85); } }
+
+/* ---------- CC-FIX-27.3: per-game pause-button seats (phones) ----------
+   Owner phone finding, Nov 1 (his own circled screenshot): the 27.2
+   notch fix dropped the button to top:48px on every game — clear of
+   the camera band, but on Cauldron Stack it now lands on the game's
+   own MUSIC chip + colour dot and crowds the standings line. Owner's
+   rule, BOTH halves, on ALL 9 games: the button clears the notch band
+   AND never overlaps a game's own top furniture. The measured
+   furniture map (390x844 + 360x740, survey273) says no single seat
+   obeys both rules everywhere, so three games take a per-game seat:
+   Stack sinks below its standings line, Cannon sinks below its SCORE
+   pill, Words moves to the top centre (both its corners are occupied
+   by its own header furniture; the centre column is empty at both
+   sizes). The other five already clear everything from the 27.2 seat.
+   Scoped to phone widths; wider layouts keep the 27.2 placement.
+   Mystery Bubble has NO seat that obeys both rules — its stage is
+   wall-to-wall furniture at both sizes in every state (exhaustive
+   empty-rectangle search, survey273b: zero spots even at 44px) — so
+   it keeps the 27.2 seat pending the owner's call; making room there
+   means moving the game's own furniture, a game-layout decision. */
+@media (max-width:699px){
+  body.cc-stage:has(#scr-gameStack.cc-stage-sec) #ccStagePauseBtn{
+    top:max(108px, env(safe-area-inset-top, 0px));
+  }
+  body.cc-stage:has(#scr-gameCannon.cc-stage-sec) #ccStagePauseBtn{
+    top:max(128px, env(safe-area-inset-top, 0px));
+  }
+  body.cc-stage:has(#scr-gameWords.cc-stage-sec) #ccStagePauseBtn{
+    left:50%; right:auto; transform:translateX(-50%);
+  }
+}
+
+/* ---------- CC-FIX-27.4b: Cauldron Cannon title lane (examiner catch) ----------
+   At 360 wide the centred screen title's right edge reaches x=327.5,
+   inside the pause button's lane (button left edge 298, seat top 128
+   chosen under the SCORE pill) — a real overlap of the game's own top
+   furniture under rule 2, font-dependent and marginal (~30 px), which
+   is why one earlier harness run measured it clean. Stage-only: pull
+   the title's box out of the lane (margin-right) and shrink it a step
+   so it still fits one line; the seat does not move. */
+@media (max-width:699px){
+  body.cc-stage #gameCannon-body .gameTitle{ margin-right:84px; font-size:30px; }
+}
+
+/* ---------- CC-FIX-27.4: Mystery Bubble stage rearrangement (phones) ----------
+   Owner-authorised (Nov 1: "Mystery: rearrange its screen to make
+   room"). The 27.3 survey proved no legal pause seat exists on
+   Mystery's stage: its body is 965px tall at design width — the ten
+   level buttons stack one per row (553 of those 965px) — so the
+   scaled body fills the whole viewport and the scorebar, phase line
+   and a live bubble all reach the button's corner. Rearrangement,
+   stage scope only (the embedded games-page layout is untouched):
+   (1) the level picker becomes a compact two-column grid of the SAME
+   buttons with the SAME labels (smaller type, tighter padding) —
+   five rows instead of ten, which drops the body to ~600px and
+   re-opens a letterbox band above it on phone screens; (2) the
+   scorebar, phase line and bubble stage keep a clear 84px lane on
+   their right inside the stage, so the button's corner stays empty
+   even where the letterbox is thin. Two independent mechanisms; the
+   seat itself (top:48, right) is unchanged, as are the balls, the
+   glide and every handler. */
+@media (max-width:699px){
+  .screen.cc-stage-sec #gameMystery-body > div{
+    display:grid !important; grid-template-columns:1fr 1fr; gap:8px;
+  }
+  .screen.cc-stage-sec #gameMystery-body > div .bubble-btn{
+    width:100%; min-height:42px; padding:5px 6px; font-size:13px;
+  }
+  .screen.cc-stage-sec #mysteryBar,
+  .screen.cc-stage-sec #mysteryPhase{
+    max-width:calc(100% - 84px); margin-right:auto;
+  }
+  .screen.cc-stage-sec #mysteryPhase{ margin-top:6px !important; }
+  .screen.cc-stage-sec #mysteryStage{
+    max-width:calc(100% - 84px); margin:10px auto 0 0;
+  }
+}
+
+/* ---------- instruction + pause overlays ---------- */
+#cc27-ui > *{ pointer-events:auto; }
+.cc-overlay{
+  position:fixed; inset:0; z-index:190;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(5,3,12,.68); padding:14px;
+  /* CC-FIX-27.2: the overlay card (and its close button) also stays out
+     of the notch band on notched devices; still exactly 14px wherever
+     the device reports a 0 inset */
+  padding-top:max(14px, env(safe-area-inset-top, 0px));
+}
+.cc-overlay[hidden]{ display:none !important; }
+.cc-pauseovl{ z-index:210; }
+.cc-card{
+  position:relative; width:min(560px,94vw); max-height:94dvh; overflow:auto;
+  background:linear-gradient(180deg,#261740,#170e28);
+  border:1.5px solid rgba(179,136,255,.55); border-radius:22px;
+  padding:clamp(18px,3.4vw,30px); color:#fff8e7;
+  box-shadow:0 24px 60px rgba(0,0,0,.65);
+  font-family:Georgia,"Times New Roman",serif;
+}
+.cc-card h3{
+  margin:0 34px 8px 0; font-size:clamp(21px,3.4vw,28px); color:#ffe9a8;
+  font-family:"Cinzel",Georgia,serif; letter-spacing:.03em;
+}
+.cc-card-by{ margin:0 0 14px; font-size:clamp(14px,2vw,16.5px); line-height:1.45; color:#f3e9ff; }
+.cc-card-x{
+  position:absolute; top:10px; right:10px; width:44px; height:44px;
+  border-radius:50%; border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.08); color:#fff8e7; font-size:17px; cursor:pointer;
+}
+.cc-controls{
+  border:1px solid rgba(179,136,255,.35); border-radius:14px;
+  padding:10px 14px; margin:0 0 16px; background:rgba(0,0,0,.25);
+  font-size:clamp(13px,1.9vw,15px); line-height:1.5;
+}
+.cc-controls h4{ margin:0 0 4px; font-size:12px; letter-spacing:.14em; color:#cdbcf5; font-family:Georgia,serif; }
+.cc-controls p{ margin:2px 0; }
+.cc-play{
+  display:block; width:100%; min-height:58px; border:none; border-radius:16px;
+  background:linear-gradient(180deg,#ffd76a,#f0a91e); color:#2a1503;
+  font-size:clamp(19px,3vw,23px); font-weight:900; letter-spacing:.04em; cursor:pointer;
+  box-shadow:0 6px 0 #9a6206, 0 14px 28px rgba(0,0,0,.45);
+}
+.cc-menu-btn{
+  display:block; width:100%; min-height:52px; margin:0 0 10px;
+  border-radius:14px; border:1.5px solid rgba(179,136,255,.5);
+  background:rgba(255,255,255,.07); color:#fff8e7;
+  font-size:17px; font-weight:700; cursor:pointer; font-family:Georgia,serif;
+}
+.cc-quit{ border-color:rgba(255,150,150,.55); }
+.cc-set{ border:1px solid rgba(179,136,255,.35); border-radius:14px; padding:10px 12px 4px; margin:0 0 12px; background:rgba(0,0,0,.25); }
+.cc-set h4{ margin:0 0 8px; font-size:12px; letter-spacing:.14em; color:#cdbcf5; }
+.cc-toggle{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  width:100%; min-height:46px; margin:0 0 8px; padding:6px 8px 6px 12px;
+  border-radius:12px; border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.05); color:#fff8e7; font-size:15.5px; cursor:pointer;
+  font-family:Georgia,serif; text-align:left;
+}
+.cc-tog-pill{
+  flex:none; min-width:52px; text-align:center; padding:4px 0; border-radius:999px;
+  background:#3a3f4a; color:#cfd4dd; font-size:12.5px; font-weight:900; letter-spacing:.06em;
+}
+.cc-toggle[aria-pressed="true"] .cc-tog-pill{ background:#f0a91e; color:#2a1503; }
+.cc-controls-line{ margin:4px 2px 8px; font-size:12.5px; line-height:1.45; color:#cdbcf5; }
+.cc-card button:focus-visible, .cc-toggle:focus-visible{ outline:3px solid #ffd76a; outline-offset:2px; }
+@media (hover:hover){
+  .cc-play:hover{ filter:brightness(1.07); }
+  .cc-menu-btn:hover, .cc-toggle:hover, .cc-card-x:hover{ background:rgba(255,255,255,.14); }
+}
+
+/* ---------- settings effects ---------- */
+/* Animated background OFF: backdrop layer gone, static plum.
+   CC-FIX-27.4 (owner phone report, Nov 1: "my cauldron background
+   disappeared"): this kill-switch used to be body-global, so ONE tap
+   on the in-game pause menu's Animated-background toggle silently
+   removed the backdrop from the WHOLE app — every shell screen
+   included — on every later load, with nothing on the shell saying
+   why or where it went. The setting is a stage setting (it lives in
+   the game's pause menu), so its reach is now the stage: inside a
+   game it still does exactly what it did (backdrop gone, static
+   plum, Words' lasers and Beat's field video off); the shell's
+   background answers to the shell's own controls (the Background
+   picker + Calm & Clear), as it did before the #27 line. The saved
+   value itself is untouched — a saved OFF still reads OFF in the
+   pause menu and still takes the stage's backdrop away. */
+body.cc-stage.cc-bg-off .op-bg{ display:none !important; }
+body.cc-stage.cc-bg-off{ background:#170b26 !important; }
+body.cc-stage.cc-bg-off .cw-wrap .lasers{ display:none !important; }
+body.cc-stage.cc-bg-off #beatField video{ display:none !important; }
+/* Reduce motion: stage CSS animation settles instantly (end state kept) */
+body.cc-rm .screen.cc-stage-sec *{ animation-duration:.01s !important; animation-iteration-count:1 !important; }
+
+/* ---------- hover + focus affordances inside the stage (desktop) ---------- */
+@media (hover:hover){
+  .screen.cc-stage-sec button:hover{ filter:brightness(1.1); }
+  .screen.cc-stage-sec .tile:hover{ outline:2px solid rgba(255,215,106,.75); outline-offset:1px; }
+}
+.screen.cc-stage-sec .match-card:focus-visible,
+.screen.cc-stage-sec .mystery-ball:focus-visible,
+.screen.cc-stage-sec .tile:focus-visible{ outline:3px solid #ffd76a; outline-offset:2px; }
+.cm-wrap .tile.kbfocus{ outline:3px solid #ffd76a !important; outline-offset:1px; }
+
+/* ---------- Cauldron Stack: native canvas fill (no transform) ---------- */
+.screen.cc-stage-sec #gameStack-body{ display:flex; flex-direction:column; }
+.screen.cc-stage-sec .ccstack{ flex:1; display:flex; flex-direction:column; height:100%; }
+.screen.cc-stage-sec .ccstack-stage{ flex:1; height:auto; min-height:0; }
+
+/* ================= landscape rearrangements (stage only) =================
+   .cc-land = wide landscape (desktop, landscape tablets/phones >=900px)
+   .cc-landshort = short landscape phone (<900px wide, <=500px tall)    */
+
+/* --- Cauldron Words: play area left (grid over brew wheel), WORDS FOUND right --- */
+.screen.cc-stage-sec.cc-land #cw-app{
+  display:grid; width:100%; gap:8px 20px; align-items:start;
+  grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);
+  grid-template-areas:"head head" "lvl lvl" "grid found" "banner found" "wheel found" "ctrl found";
+}
+.screen.cc-stage-sec.cc-land #cw-app > header{ grid-area:head; }
+.screen.cc-stage-sec.cc-land #cw-lvlLine{ grid-area:lvl; }
+.screen.cc-stage-sec.cc-land #cw-gridWrap{ grid-area:grid; max-height:44dvh; }
+.screen.cc-stage-sec.cc-land #cw-foundWrap{ grid-area:found; align-self:stretch; }
+.screen.cc-stage-sec.cc-land #cw-banner{ grid-area:banner; }
+.screen.cc-stage-sec.cc-land #cw-wheelZone{ grid-area:wheel; }
+.screen.cc-stage-sec.cc-land #cw-controls{ grid-area:ctrl; }
+/* short landscape phone: three columns — grid | wheel | found */
+.screen.cc-stage-sec.cc-landshort #cw-app{
+  display:grid; width:100%; gap:4px 12px; align-items:start;
+  grid-template-columns:minmax(0,1.2fr) auto minmax(0,1fr);
+  grid-template-areas:"head head head" "lvl lvl lvl" "grid wheel found" "banner wheel found" "ctrl wheel found";
+}
+.screen.cc-stage-sec.cc-landshort #cw-app > header{ grid-area:head; }
+.screen.cc-stage-sec.cc-landshort #cw-lvlLine{ grid-area:lvl; }
+.screen.cc-stage-sec.cc-landshort #cw-gridWrap{ grid-area:grid; max-height:54dvh; }
+.screen.cc-stage-sec.cc-landshort #cw-foundWrap{ grid-area:found; }
+.screen.cc-stage-sec.cc-landshort #cw-banner{ grid-area:banner; }
+.screen.cc-stage-sec.cc-landshort #cw-wheelZone{ grid-area:wheel; }
+.screen.cc-stage-sec.cc-landshort #cw-controls{ grid-area:ctrl; }
+.screen.cc-stage-sec.cc-landshort #cw-wheel{ width:min(228px,32vw); }
+
+/* --- Cauldron Match: board left, rim tray + powers as a right rail --- */
+.screen.cc-stage-sec.cc-land .cm-wrap #cm-app,
+.screen.cc-stage-sec.cc-landshort .cm-wrap #cm-app{ flex-direction:row; flex-wrap:wrap; align-content:flex-start; }
+.screen.cc-stage-sec.cc-land .cm-wrap #cm-hud,
+.screen.cc-stage-sec.cc-landshort .cm-wrap #cm-hud{ flex:1 1 100%; }
+.screen.cc-stage-sec.cc-land .cm-wrap #cm-stageWrap{ flex:1 1 57%; order:2; height:min(74dvh,680px); }
+.screen.cc-stage-sec.cc-landshort .cm-wrap #cm-stageWrap{ flex:1 1 57%; order:2; height:66dvh; }
+.screen.cc-stage-sec.cc-land .cm-wrap #cm-trayWrap,
+.screen.cc-stage-sec.cc-landshort .cm-wrap #cm-trayWrap{ flex:0 1 37%; order:3; }
+.screen.cc-stage-sec.cc-land .cm-wrap #cm-powers,
+.screen.cc-stage-sec.cc-landshort .cm-wrap #cm-powers{ flex:0 1 37%; order:4; }
+
+/* --- Rapid Fire: card left, verdict buttons on a right rail --- */
+.screen.cc-stage-sec.cc-land #gameRapid-body,
+.screen.cc-stage-sec.cc-landshort #gameRapid-body{
+  display:grid; grid-template-columns:auto 1fr; grid-template-areas:"bar bar" "card side";
+  gap:4px 22px; align-items:start; width:100%;
+}
+.screen.cc-stage-sec.cc-land #gameRapid-body .scorebar,
+.screen.cc-stage-sec.cc-landshort #gameRapid-body .scorebar{ grid-area:bar; }
+.screen.cc-stage-sec.cc-land #gameRapid-body .card,
+.screen.cc-stage-sec.cc-landshort #gameRapid-body .card{ grid-area:card; }
+.screen.cc-stage-sec.cc-land #gameRapid-body .stack,
+.screen.cc-stage-sec.cc-landshort #gameRapid-body .stack{ grid-area:side; align-self:center; }
+.screen.cc-stage-sec.cc-land #gameRapid-body .card > div{ width:min(320px,38dvh) !important; }
+.screen.cc-stage-sec.cc-landshort #gameRapid-body .card > div{ width:min(210px,52dvh) !important; }
+
+/* --- Bubble Beat: field left, score/music/level picker as a right rail --- */
+.screen.cc-stage-sec.cc-land #gameBeat-body,
+.screen.cc-stage-sec.cc-landshort #gameBeat-body{
+  display:grid; width:100%; gap:4px 20px; align-items:start;
+  grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
+  grid-template-areas:"bar bar" "field music" "field picker" "field drop";
+}
+.screen.cc-stage-sec.cc-land #gameBeat-body .scorebar,
+.screen.cc-stage-sec.cc-landshort #gameBeat-body .scorebar{ grid-area:bar; }
+.screen.cc-stage-sec.cc-land #beatField,
+.screen.cc-stage-sec.cc-landshort #beatField{ grid-area:field; }
+.screen.cc-stage-sec.cc-land #gameBeat-body > div:nth-child(3),
+.screen.cc-stage-sec.cc-landshort #gameBeat-body > div:nth-child(3){ grid-area:music; }
+.screen.cc-stage-sec.cc-land #gameBeat-body > p:nth-child(4),
+.screen.cc-stage-sec.cc-landshort #gameBeat-body > p:nth-child(4){ grid-area:picker; }
+.screen.cc-stage-sec.cc-land #gameBeat-body > .cc-drop,
+.screen.cc-stage-sec.cc-landshort #gameBeat-body > .cc-drop{ grid-area:drop; }
+
+/* --- Mystery Bubble: stage left, phase line + level picker right --- */
+.screen.cc-stage-sec.cc-land #gameMystery-body,
+.screen.cc-stage-sec.cc-landshort #gameMystery-body{
+  display:grid; width:100%; gap:4px 20px; align-items:start;
+  grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
+  grid-template-areas:"bar bar" "stage phase" "stage picker" "stage note";
+}
+.screen.cc-stage-sec.cc-land #mysteryBar,
+.screen.cc-stage-sec.cc-landshort #mysteryBar{ grid-area:bar; }
+.screen.cc-stage-sec.cc-land #mysteryPhase,
+.screen.cc-stage-sec.cc-landshort #mysteryPhase{ grid-area:phase; }
+.screen.cc-stage-sec.cc-land #mysteryStage,
+.screen.cc-stage-sec.cc-landshort #mysteryStage{ grid-area:stage; max-width:640px; }
+.screen.cc-stage-sec.cc-land #gameMystery-body > p:nth-child(4),
+.screen.cc-stage-sec.cc-landshort #gameMystery-body > p:nth-child(4){ grid-area:picker; }
+.screen.cc-stage-sec.cc-land #gameMystery-body > div:nth-child(5),
+.screen.cc-stage-sec.cc-landshort #gameMystery-body > div:nth-child(5){ grid-area:picker; align-self:start; }
+.screen.cc-stage-sec.cc-land #gameMystery-body > p.small,
+.screen.cc-stage-sec.cc-landshort #gameMystery-body > p.small{ grid-area:note; }
+
+/* --- Match Audit: six-across card grid on wide screens --- */
+.screen.cc-stage-sec.cc-land .match-grid,
+.screen.cc-stage-sec.cc-landshort .match-grid{ grid-template-columns:repeat(6,1fr); max-width:920px; margin-left:auto; margin-right:auto; }
+
+/* ================= whole-app desktop fit (Amendment 5) =================
+   App pages are fluid (NO transform scaling of text): the phone column
+   widens, shelves/binders/tells lay out multi-column, the animated
+   background already paints full-window (.op-bg is fixed inset:0).    */
+@media (min-width:700px) and (max-width:1023px){
+  .phone{ max-width:660px; }
+  .dock{ max-width:660px; }
+}
+@media (min-width:1024px){
+  .phone{ max-width:1240px; padding:0 30px; }
+  .dock{ max-width:1240px; }
+  #opMenuPanel{ right:max(10px, calc(50% - 610px)); }
+  .screen{ padding:22px 30px 120px; }
+  .screen h2{ font-size:clamp(25px, 2.4vw, 36px); }
+  .top-banner{ max-width:840px; }
+  .cc-lb{ max-width:680px; }
+  #gamesList1, #gamesList2{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr));
+    gap:14px; align-items:start;
+  }
+  #gamesList1 .bubble-btn, #gamesList2 .bubble-btn{ margin-top:0; }
+  #scr-binders{ flex-direction:row; flex-wrap:wrap; column-gap:22px; }
+  #scr-binders > *{ flex:1 1 100%; }
+  #scr-binders > .mt-lg{ flex:1 1 46%; }
+  #tellsList{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(430px,1fr));
+    gap:14px; align-items:start;
+  }
+}
+</style>
+<script>
+/* ================= CC-FIX-27 · Build #27 stage mode =================
+   See stage27.css header for the owner ruling. This module:
+   1. upgrades timersBag with pause()/resume() (remaining-time banking)
+      — the bag-driven games (Rapid Fire, Bubble Beat, Pop Path, Mystery
+      Bubble, Match Audit) freeze with zero timer drain;
+   2. intercepts game taps -> instruction overlay (existing description
+      copy verbatim from GAME_META) with a big PLAY button;
+   3. PLAY runs the ORIGINAL entry path (show + starter + watchdog via a
+      real click on the hub button), then enters stage mode: chrome
+      hidden, scroll locked, stage fit to the whole viewport, browser
+      fullscreen requested (denial never blocks entry);
+   4. provides window.ccGameChrome (Stack's registerStack seat, designed
+      into Stack in #25 but never built) and the pause menu: Resume,
+      Settings (Music / Sound effects / Animated background / Reduce
+      motion — real, persisted), Quit to Mini Games;
+   5. first-class mouse + keyboard: per-game keyboard schemes, Tab
+      trapped inside the stage, P always pauses, Esc pauses when the
+      browser has not reserved it for leaving fullscreen.            */
+
+/* ---------- 1. timersBag v2 (same set/every/clear API + pause) ---------- */
+function timersBag(){
+  var gen = 0, paused = false, nextId = 1;
+  var recs = {};
+  function arm(rec, delay){
+    rec.fireAt = Date.now() + delay;
+    rec.realId = window.setTimeout(function(){ fire(rec); }, delay);
+  }
+  function fire(rec){
+    rec.realId = 0;
+    if(rec.gen !== gen) return;
+    if(rec.kind === "set"){
+      Object.keys(recs).forEach(function(k){ if(recs[k] === rec) delete recs[k]; });
+      try{ rec.fn(); }catch(e){}
+    } else {
+      try{ rec.fn(); }catch(e){}
+      var alive = false;
+      Object.keys(recs).forEach(function(k){ if(recs[k] === rec) alive = true; });
+      if(alive && rec.gen === gen){
+        if(paused){ rec.remaining = rec.ms; }
+        else arm(rec, rec.ms);
+      }
+    }
+  }
+  var api = {
+    set: function(fn, ms){
+      var id = nextId++;
+      var rec = { kind:"set", fn:fn, ms:ms, gen:gen, realId:0, fireAt:0, remaining:null };
+      recs[id] = rec;
+      if(paused) rec.remaining = ms; else arm(rec, ms);
+      return id;
+    },
+    every: function(fn, ms){
+      var id = nextId++;
+      var rec = { kind:"every", fn:fn, ms:ms, gen:gen, realId:0, fireAt:0, remaining:null };
+      recs[id] = rec;
+      if(paused) rec.remaining = ms; else arm(rec, ms);
+      return id;
+    },
+    clear: function(){
+      gen++;
+      Object.keys(recs).forEach(function(k){ var r = recs[k]; if(r.realId) window.clearTimeout(r.realId); });
+      recs = {};
+      paused = false;
+      var ix = (window.CC_BAGS || []).indexOf(api);
+      if(ix >= 0) window.CC_BAGS.splice(ix, 1);
+    },
+    pause: function(){
+      if(paused) return;
+      paused = true;
+      var now = Date.now();
+      Object.keys(recs).forEach(function(k){
+        var r = recs[k];
+        if(r.realId){ window.clearTimeout(r.realId); r.realId = 0; r.remaining = Math.max(0, r.fireAt - now); }
+      });
+    },
+    resume: function(){
+      if(!paused) return;
+      paused = false;
+      Object.keys(recs).forEach(function(k){
+        var r = recs[k];
+        if(r.gen === gen && !r.realId){
+          arm(r, r.remaining != null ? r.remaining : r.ms);
+          r.remaining = null;
+        }
+      });
+    },
+    isPaused: function(){ return paused; }
+  };
+  (window.CC_BAGS = window.CC_BAGS || []).push(api);
+  return api;
+}
+
+/* ---------- 2. per-game controls copy (shown on the instruction card) ---------- */
+var CC_CONTROLS = {
+  gameStack:  { mouse:"Click or tap the field to drop the block. Land it flush to keep the block whole.",
+                keys:"Space — drop the block." },
+  gameWords:  { mouse:"Drag letter to letter through the brew wheel to spell; let go to submit the word.",
+                keys:"Type letters to build the word · Backspace — undo a letter · Enter — submit." },
+  gameCMatch: { mouse:"Click a free tile to send it to the cauldron rim; click a rim tile to send it back.",
+                keys:"Arrow keys — move the tile cursor · Enter or Space — pick the tile." },
+  gameCannon: { mouse:"Drag to aim — the shot flies at your fingertip. Let go to fire. Drag farther = more power.",
+                keys:"Left / Right arrows — adjust aim · Up / Down arrows — power · Space — fire." },
+  gameRapid:  { mouse:"Click Genuine or Replica before the bubble pops.",
+                keys:"R or Left arrow — Genuine · F or Right arrow — Replica." },
+  gameMatch:  { mouse:"Click two cards to flip them and hunt for the matching pair.",
+                keys:"Arrow keys — move between cards · Enter — flip the card." },
+  gameBeat:   { mouse:"Click each bubble right as it crosses the gold ring.",
+                keys:"Space — tap the bubble nearest the ring. (Bubbles rise in random lanes, so there is no lane key — Space is the keyboard tap.)" },
+  gamePopPath:{ mouse:"Press and drag along the glowing trail, then Reveal.",
+                keys:"Arrow keys — steer the pen · Enter — reveal your trail." },
+  gameMystery:{ mouse:"Watch the shuffle, then click the bubble hiding the star.",
+                keys:"Left / Right arrows — choose a bubble · Enter — pick it." }
+};
+function ccControlsLine(scr){
+  var c = CC_CONTROLS[scr];
+  if(!c) return "P / Esc — pause.";
+  return "Mouse: " + c.mouse + " Keys: " + c.keys + " P / Esc — pause.";
+}
+
+/* ---------- 3. settings (persisted, wired to the app's real state) ---------- */
+var CC_SET = { music:false, sfx:true, bg:true, motion:false };
+try{
+  var savedSet = JSON.parse(localStorage.getItem("ccStageSettings27") || "null");
+  /* CC-FIX-27.4: a key MISSING from the saved record takes its declared
+     default — an earlier merge coerced a missing bg/sfx to false,
+     silently defaulting the background OFF for any partial record. */
+  if(savedSet) CC_SET = {
+    music: !!savedSet.music,
+    sfx: savedSet.sfx === undefined ? true : !!savedSet.sfx,
+    bg: savedSet.bg === undefined ? true : !!savedSet.bg,
+    motion: !!savedSet.motion
+  };
+}catch(e){}
+function ccSetPersist(){ try{ localStorage.setItem("ccStageSettings27", JSON.stringify(CC_SET)); }catch(e){} }
+function ccMusicIsOn(){ return !!window.opMusicOn; }
+function ccApplyMusic(on, fromUser){
+  if(ccMusicIsOn() !== !!on && typeof window.opToggleMusic === "function") window.opToggleMusic();
+  if(fromUser && window.ccStackAudio && window.ccStackAudio.setMusic) window.ccStackAudio.setMusic(!!on);
+}
+function ccApplySfx(on){
+  window.soundOn = !!on;
+  window.ccMuted = !on;
+  var sb = document.getElementById("soundBtn");
+  if(sb){ var sp = sb.querySelector("span"); if(sp) sp.textContent = on ? "🔊 Sound: On" : "🔇 Sound: Off"; }
+  var h = (window.CC_GAME_HOOKS || {})[CCSTAGE.scr];
+  if(h && h.onSettings) h.onSettings();
+}
+function ccApplyBg(on){ document.body.classList.toggle("cc-bg-off", !on); }
+function ccApplyMotion(on){
+  document.body.classList.toggle("cc-rm", !!on);
+  var phone = document.querySelector(".phone");
+  var has = !!(phone && phone.classList.contains("calm"));
+  if(has !== !!on){ var cb = document.getElementById("calmBtn"); if(cb) cb.click(); }
+}
+function ccApplySettings(fromUser){
+  ccApplyMusic(CC_SET.music, fromUser);
+  ccApplySfx(CC_SET.sfx);
+  ccApplyBg(CC_SET.bg);
+  ccApplyMotion(CC_SET.motion);
+  document.querySelectorAll(".cc-toggle").forEach(function(b){
+    var k = b.getAttribute("data-set");
+    var on = !!CC_SET[k];
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+    var pill = b.querySelector(".cc-tog-pill");
+    if(pill) pill.textContent = on ? "ON" : "OFF";
+  });
+}
+
+/* ---------- 4. stage state ---------- */
+var CCSTAGE = { active:false, scr:null, paused:false, furn:[], obs:null, obsT:0 };
+window.__ccStageInfo = null;
+
+/* Stack's pause seat (its CC-GAMECHROME block registers here) */
+window.ccGameChrome = {
+  _stack: null,
+  registerStack: function(api){ this._stack = api; },
+  unregisterStack: function(){ this._stack = null; }
+};
+
+function ccStageSection(){ return CCSTAGE.scr ? document.getElementById("scr-" + CCSTAGE.scr) : null; }
+function ccStageBody(){ return CCSTAGE.scr ? document.getElementById(CCSTAGE.scr + "-body") : null; }
+
+var CC_LAND_W = {
+  gameWords:"min(1400px,100%)", gameCMatch:"min(1280px,100%)",
+  gameRapid:"min(1100px,100%)", gameMatch:"min(1150px,100%)",
+  gameBeat:"min(1240px,100%)", gamePopPath:"min(1150px,100%)",
+  gameMystery:"min(1100px,100%)", gameCannon:""
+};
+
+function ccStageFit(){
+  ccSweepFurniture();
+  if(!CCSTAGE.active) return;
+  var body = ccStageBody(), sec = ccStageSection();
+  if(!body || !sec) return;
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var land = vw > vh && vw >= 900;
+  var landShort = vw > vh && vw < 900;
+  sec.classList.toggle("cc-land", land);
+  sec.classList.toggle("cc-landshort", landShort);
+  body.style.transform = "";
+  body.style.width = "";
+  body.style.height = "";
+  if(CCSTAGE.scr === "gameStack"){
+    /* Stack's canvas resizes itself to its stage element — native fill */
+    body.style.width = "100%";
+    body.style.height = "100%";
+    window.__ccStageInfo = { scr:CCSTAGE.scr, scale:1, W0:vw, H0:vh, mode:"native-canvas" };
+    window.dispatchEvent(new Event("resize"));
+    return;
+  }
+  if(CCSTAGE.scr === "gameCannon"){
+    /* Cannon's fit box is %-driven: left alone it balloons to the
+       section size on wide screens (measured 1920x3286 at 1080p).
+       Pin the body to the game's authored design box in every
+       orientation; the canvas + HUD inside are built for 430x780. */
+    body.style.width = "430px";
+    body.style.height = "780px";
+  }
+  else if(land || landShort) body.style.width = CC_LAND_W[CCSTAGE.scr] || "100%";
+  else body.style.width = "430px";
+  var W0 = body.offsetWidth, H0 = body.offsetHeight;
+  if(!W0 || !H0) return;
+  var s = Math.min(vw / W0, vh / H0);
+  if(s > 0 && Math.abs(s - 1) > 0.0015) body.style.transform = "scale(" + s + ")";
+  window.__ccStageInfo = {
+    scr: CCSTAGE.scr, scale: Math.round(s * 1000) / 1000, W0: W0, H0: H0,
+    mode: land ? "landscape" : (landShort ? "landscape-short" : "portrait")
+  };
+}
+function ccStageFitSoon(){
+  [60, 200, 500, 950, 1600].forEach(function(ms){ setTimeout(ccStageFit, ms); });
+  /* games recalibrate internal geometry on window resize (Words wheel
+     centres, Cauldron Match board, Stack canvas) — entering the stage
+     changes their box, so announce it once the first fits land. */
+  setTimeout(function(){
+    if(!CCSTAGE.active) return;
+    /* Words recalibrates its wheel centres on resize, but its handler
+       throws before the wheel is built — only announce once it exists. */
+    if(CCSTAGE.scr === "gameWords" && !document.querySelector("#cw-wheel .bub")) return;
+    window.dispatchEvent(new Event("resize"));
+  }, 700);
+  if(window.requestAnimationFrame) requestAnimationFrame(ccStageFit);
+}
+
+function ccClearStaleFits(scr){
+  if(scr === "gameWords"){
+    var f = document.getElementById("cw-fit"), s = document.getElementById("cw-scale");
+    if(f){ f.classList.remove("cw-fitted"); f.style.width = ""; f.style.height = ""; }
+    if(s){ s.style.transform = ""; }
+  }
+  if(scr === "gameCannon"){
+    var cf = document.getElementById("cn-fit"), cs = document.getElementById("cn-scale");
+    if(cf){ cf.classList.remove("cn-fitted"); cf.style.width = ""; cf.style.height = ""; }
+    if(cs){ cs.style.transform = ""; }
+  }
+}
+
+
+/* hide every section child that is not the game body. Games inject
+   furniture (the .cc-state-line status div) into the section AFTER
+   stage entry, so this sweep runs again on every fit pass. */
+function ccSweepFurniture(){
+  var sec = ccStageSection(), body = ccStageBody();
+  if(!sec || !body) return;
+  Array.prototype.forEach.call(sec.children, function(ch){
+    if(ch === body) return;
+    for(var i = 0; i < CCSTAGE.furn.length; i++) if(CCSTAGE.furn[i][0] === ch) return;
+    CCSTAGE.furn.push([ch, ch.style.display]);
+    ch.style.display = "none";
+  });
+}
+
+function ccEnterStage(scr){
+  var sec = document.getElementById("scr-" + scr);
+  if(!sec) return;
+  CCSTAGE.scr = scr;
+  CCSTAGE.active = true;
+  CCSTAGE.paused = false;
+  sec.classList.add("cc-stage-sec");
+  sec.setAttribute("tabindex", "-1");
+  /* hide the section's own furniture (title, byline, back link) */
+  CCSTAGE.furn = [];
+  ccSweepFurniture();
+  document.body.classList.add("cc-stage");
+  document.documentElement.classList.add("cc-stage-lock");
+  document.body.classList.add("cc-stage-lock");
+  window.scrollTo(0, 0);
+  ccClearStaleFits(scr);
+  /* true fullscreen — requested on the ROOT element, not the section:
+     a fullscreen section strands everything outside its subtree
+     (including the pause button) outside the browser top layer,
+     unrendered and unclickable. Root fullscreen gives the identical
+     visible result — browser chrome gone, stage owning the screen —
+     with the pause control alive inside the top layer. A denial
+     never blocks entry. */
+  try{
+    var p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    if(p && p.catch) p.catch(function(){});
+  }catch(e){}
+  try{ sec.focus({ preventScroll:true }); }catch(e){}
+  ccStageFitSoon();
+  /* games re-render their bodies mid-play (end boards, level deals):
+     keep the fit honest without looping on our own style writes */
+  var body = ccStageBody();
+  if(body && window.MutationObserver){
+    if(CCSTAGE.obs) CCSTAGE.obs.disconnect();
+    CCSTAGE.obs = new MutationObserver(function(){
+      var now = Date.now();
+      if(now - CCSTAGE.obsT < 220) return;
+      CCSTAGE.obsT = now;
+      setTimeout(ccStageFit, 60);
+    });
+    CCSTAGE.obs.observe(body, { childList:true, subtree:true, attributes:true, attributeFilter:["class"] });
+  }
+}
+
+function ccExitStage(){
+  if(CCSTAGE.obs){ CCSTAGE.obs.disconnect(); CCSTAGE.obs = null; }
+  if(CCSTAGE.paused) ccPauseGame(false);
+  var sec = ccStageSection(), body = ccStageBody();
+  CCSTAGE.furn.forEach(function(pair){ pair[0].style.display = pair[1]; });
+  CCSTAGE.furn = [];
+  if(sec) sec.classList.remove("cc-stage-sec", "cc-land", "cc-landshort");
+  if(body){ body.style.transform = ""; body.style.width = ""; body.style.height = ""; }
+  document.body.classList.remove("cc-stage");
+  document.documentElement.classList.remove("cc-stage-lock");
+  document.body.classList.remove("cc-stage-lock");
+  CCSTAGE.active = false;
+  CCSTAGE.scr = null;
+  window.__ccStageInfo = null;
+  if(document.fullscreenElement){
+    try{ var p = document.exitFullscreen(); if(p && p.catch) p.catch(function(){}); }catch(e){}
+  }
+  /* let size-sensitive games (Cauldron Match board, Stack canvas)
+     re-measure for the embedded page they are returning to */
+  window.dispatchEvent(new Event("resize"));
+}
+
+/* shell navigation away from a staged game exits the stage cleanly;
+   installed by a one-line hook at the top of show() */
+window.ccStageNavGuard = function(id){
+  ccCloseInstr();
+  if(CCSTAGE.active && id !== CCSTAGE.scr) ccExitStage();
+};
+
+/* ---------- 5. pause: genuine freeze across every clock ---------- */
+function ccHeldMedia(body, hold){
+  if(!body) return;
+  body.querySelectorAll("video, audio").forEach(function(m){
+    if(hold){
+      if(!m.paused){ m.setAttribute("data-cc-held", "1"); try{ m.pause(); }catch(e){} }
+    } else if(m.getAttribute("data-cc-held")){
+      m.removeAttribute("data-cc-held");
+      try{ m.play(); }catch(e){}
+    }
+  });
+}
+function ccPauseSystems(on){
+  (window.CC_BAGS || []).slice().forEach(function(b){ if(on) b.pause(); else b.resume(); });
+  var h = (window.CC_GAME_HOOKS || {})[CCSTAGE.scr];
+  if(h){ if(on && h.pause) h.pause(); if(!on && h.resume) h.resume(); }
+  if(CCSTAGE.scr === "gameStack" && window.ccGameChrome && window.ccGameChrome._stack){
+    if(on) window.ccGameChrome._stack.pause();
+    else window.ccGameChrome._stack.resume();
+  }
+  ccHeldMedia(ccStageBody(), on);
+}
+function ccPauseGame(on){
+  if(!CCSTAGE.active || CCSTAGE.paused === !!on) return;
+  CCSTAGE.paused = !!on;
+  document.body.classList.toggle("cc-paused", CCSTAGE.paused);
+  ccPauseSystems(CCSTAGE.paused);
+  var ovl = document.getElementById("ccPauseOverlay");
+  if(ovl) ovl.hidden = !CCSTAGE.paused;
+  if(CCSTAGE.paused){
+    var rb = document.getElementById("ccResumeBtn");
+    if(rb) rb.focus();
+  } else {
+    var sec = ccStageSection();
+    if(sec) try{ sec.focus({ preventScroll:true }); }catch(e){}
+  }
+}
+
+/* ---------- 6. overlays (built once, reused) ---------- */
+var ccInstrScr = null, ccInstrBtn = null;
+function ccBuildOverlays(){
+  if(document.getElementById("ccInstrOverlay")) return;
+  var wrap = document.createElement("div");
+  /* the wrap must be its own top-level layer: as a plain in-flow div its
+     subtree stacked BELOW the app's screens (z-index 1), and taps leaked
+     through the transparent screen onto the hub buttons underneath */
+  wrap.id = "cc27-ui";
+  wrap.style.cssText = "position:fixed; inset:0; z-index:300; pointer-events:none;";
+  wrap.innerHTML =
+    '<button id="ccStagePauseBtn" type="button" aria-label="Pause game">⏸</button>' +
+    '<div class="cc-overlay" id="ccInstrOverlay" hidden>' +
+      '<div class="cc-card" role="dialog" aria-modal="true" aria-labelledby="ccInstrTitle">' +
+        '<button class="cc-card-x" id="ccInstrClose" type="button" aria-label="Back to menu">✕</button>' +
+        '<h3 id="ccInstrTitle"></h3>' +
+        '<p class="cc-card-by" id="ccInstrBy"></p>' +
+        '<div class="cc-controls"><h4>CONTROLS</h4>' +
+          '<p id="ccInstrMouse"></p><p id="ccInstrKeys"></p><p>P / Esc — pause.</p>' +
+        '</div>' +
+        '<button class="cc-play" id="ccInstrPlay" type="button">▶ PLAY</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="cc-overlay cc-pauseovl" id="ccPauseOverlay" hidden>' +
+      '<div class="cc-card" role="dialog" aria-modal="true" aria-labelledby="ccPauseTitle">' +
+        '<h3 id="ccPauseTitle">⏸ Paused</h3>' +
+        '<button class="cc-menu-btn" id="ccResumeBtn" type="button">▶ Resume</button>' +
+        '<div class="cc-set"><h4>SETTINGS</h4>' +
+          '<button class="cc-toggle" type="button" data-set="music"><span>🎵 Music</span><span class="cc-tog-pill">OFF</span></button>' +
+          '<button class="cc-toggle" type="button" data-set="sfx"><span>🔊 Sound effects</span><span class="cc-tog-pill">ON</span></button>' +
+          '<button class="cc-toggle" type="button" data-set="bg"><span>✨ Animated background</span><span class="cc-tog-pill">ON</span></button>' +
+          '<button class="cc-toggle" type="button" data-set="motion"><span>🐢 Reduce motion</span><span class="cc-tog-pill">OFF</span></button>' +
+          '<p class="cc-controls-line" id="ccPauseControls"></p>' +
+        '</div>' +
+        '<button class="cc-menu-btn cc-quit" id="ccQuitBtn" type="button">🚪 Quit to Mini Games</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(wrap);
+
+  document.getElementById("ccStagePauseBtn").addEventListener("click", function(){ ccPauseGame(true); });
+  document.getElementById("ccInstrClose").addEventListener("click", function(){ ccCloseInstr(); });
+  document.getElementById("ccInstrPlay").addEventListener("click", function(){
+    var scr = ccInstrScr, btn = ccInstrBtn;
+    ccCloseInstr();
+    if(!scr || !btn) return;
+    window.__ccPlayBypass = true;
+    try{ btn.click(); } finally { window.__ccPlayBypass = false; }
+    ccEnterStage(scr);
+  });
+  document.getElementById("ccResumeBtn").addEventListener("click", function(){ ccPauseGame(false); });
+  document.getElementById("ccQuitBtn").addEventListener("click", function(){
+    ccExitStage();
+    if(typeof window.show === "function") window.show("games");
+  });
+  document.querySelectorAll(".cc-toggle").forEach(function(b){
+    b.addEventListener("click", function(){
+      var k = b.getAttribute("data-set");
+      CC_SET[k] = !CC_SET[k];
+      ccSetPersist();
+      ccApplySettings(true);
+    });
+  });
+}
+function ccOpenInstr(scr, btn){
+  ccBuildOverlays();
+  ccInstrScr = scr;
+  ccInstrBtn = btn;
+  var meta = (window.GAME_META || {})[scr] || {};
+  document.getElementById("ccInstrTitle").textContent = meta.title || scr;
+  document.getElementById("ccInstrBy").textContent = meta.by || ""; /* the game's existing description copy, verbatim */
+  var c = CC_CONTROLS[scr] || { mouse:"", keys:"" };
+  document.getElementById("ccInstrMouse").textContent = "🖱️ Mouse: " + c.mouse;
+  document.getElementById("ccInstrKeys").textContent = "⌨️ Keyboard: " + c.keys;
+  document.getElementById("ccPauseControls").textContent = ccControlsLine(scr);
+  document.getElementById("ccInstrOverlay").hidden = false;
+  var play = document.getElementById("ccInstrPlay");
+  if(play) play.focus();
+}
+function ccCloseInstr(){
+  var o = document.getElementById("ccInstrOverlay");
+  if(o) o.hidden = true;
+  ccInstrScr = null;
+  ccInstrBtn = null;
+}
+function ccInstrOpen(){
+  var o = document.getElementById("ccInstrOverlay");
+  return !!(o && !o.hidden);
+}
+
+/* game taps anywhere in the app route through the instruction card;
+   capture phase so the shell's own entry handler only runs on PLAY */
+document.addEventListener("click", function(e){
+  if(window.__ccPlayBypass) return;
+  var t = e.target;
+  var b = t && t.closest ? t.closest("[data-game]") : null;
+  if(!b) return;
+  e.stopPropagation();
+  e.preventDefault();
+  try{ if(typeof window.popSnd === "function") window.popSnd(); }catch(err){}
+  ccOpenInstr(b.getAttribute("data-game"), b);
+}, true);
+
+/* ---------- 7. keyboard: pause keys, per-game schemes, Tab trap ---------- */
+function ccClickId(id){ var el = document.getElementById(id); if(el) el.click(); }
+function ccFocusMove(sel, key){
+  var body = ccStageBody();
+  if(!body) return;
+  var els = Array.prototype.filter.call(body.querySelectorAll(sel), function(el){
+    return !el.disabled && el.offsetParent !== null;
+  });
+  if(!els.length) return;
+  var cur = document.activeElement;
+  var ix = els.indexOf(cur);
+  if(ix < 0){ els[0].focus(); return; }
+  var r = cur.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  var best = null, bestScore = 1e18;
+  els.forEach(function(el){
+    if(el === cur) return;
+    var q = el.getBoundingClientRect(), x = q.left + q.width / 2, y = q.top + q.height / 2;
+    var dx = x - cx, dy = y - cy;
+    if(key === "ArrowLeft" && dx >= -2) return;
+    if(key === "ArrowRight" && dx <= 2) return;
+    if(key === "ArrowUp" && dy >= -2) return;
+    if(key === "ArrowDown" && dy <= 2) return;
+    var along = (key === "ArrowLeft" || key === "ArrowRight") ? Math.abs(dx) : Math.abs(dy);
+    var off = (key === "ArrowLeft" || key === "ArrowRight") ? Math.abs(dy) : Math.abs(dx);
+    var score = along + off * 3;
+    if(score < bestScore){ bestScore = score; best = el; }
+  });
+  if(best) best.focus();
+}
+function ccTrapTab(e){
+  var pool = [];
+  var pb = document.getElementById("ccStagePauseBtn");
+  if(pb) pool.push(pb);
+  if(CCSTAGE.paused){
+    pool = pool.concat(Array.prototype.slice.call(document.querySelectorAll("#ccPauseOverlay button")));
+  } else {
+    var body = ccStageBody();
+    if(body) pool = pool.concat(Array.prototype.filter.call(
+      body.querySelectorAll("button, input, select, [tabindex]"),
+      function(el){ return !el.disabled && el.offsetParent !== null; }
+    ));
+  }
+  if(!pool.length){ e.preventDefault(); return; }
+  var ix = pool.indexOf(document.activeElement);
+  if(e.shiftKey){ ix = ix <= 0 ? pool.length - 1 : ix - 1; }
+  else { ix = ix >= pool.length - 1 ? 0 : ix + 1; }
+  e.preventDefault();
+  pool[ix].focus();
+}
+document.addEventListener("keydown", function(e){
+  var tag = (e.target && e.target.tagName) || "";
+  if(tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+  if(ccInstrOpen()){
+    if(e.key === "Escape") ccCloseInstr();
+    return;
+  }
+  if(!CCSTAGE.active) return;
+  if(e.key === "Escape"){
+    /* in browser fullscreen, Esc belongs to the browser (it exits
+       fullscreen and the game stays alive in the window); P pauses there */
+    if(document.fullscreenElement) return;
+    ccPauseGame(!CCSTAGE.paused);
+    e.preventDefault();
+    return;
+  }
+  if(e.key === "p" || e.key === "P"){
+    ccPauseGame(!CCSTAGE.paused);
+    e.preventDefault();
+    return;
+  }
+  if(e.key === "Tab"){ ccTrapTab(e); return; }
+  if(CCSTAGE.paused) return;
+  var H = window.CC_GAME_HOOKS || {};
+  var onButton = tag === "BUTTON" || tag === "A";
+  switch(CCSTAGE.scr){
+    case "gameRapid":
+      if(e.key === "r" || e.key === "R" || e.key === "ArrowLeft"){ ccClickId("rfReal"); e.preventDefault(); }
+      else if(e.key === "f" || e.key === "F" || e.key === "ArrowRight"){ ccClickId("rfFake"); e.preventDefault(); }
+      break;
+    case "gameMatch":
+      if(e.key.indexOf("Arrow") === 0){ ccFocusMove(".match-card", e.key); e.preventDefault(); }
+      break;
+    case "gameMystery":
+      if(e.key === "ArrowLeft" || e.key === "ArrowRight"){ ccFocusMove(".mystery-ball:not([disabled])", e.key); e.preventDefault(); }
+      break;
+    case "gameWords":
+      if(/^[a-zA-Z]$/.test(e.key) && !e.metaKey && !e.ctrlKey && !e.altKey){
+        if(H.gameWords) H.gameWords.key(e.key.toUpperCase());
+        e.preventDefault();
+      } else if(e.key === "Backspace"){
+        if(H.gameWords) H.gameWords.key("BS");
+        e.preventDefault();
+      } else if(e.key === "Enter" && !onButton){
+        if(H.gameWords) H.gameWords.key("ENTER");
+        e.preventDefault();
+      }
+      break;
+    case "gameCMatch":
+      if(e.key.indexOf("Arrow") === 0){
+        if(H.gameCMatch) H.gameCMatch.move(e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0, e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0);
+        e.preventDefault();
+      } else if((e.key === "Enter" || e.key === " ") && !onButton){
+        if(H.gameCMatch) H.gameCMatch.tap();
+        e.preventDefault();
+      }
+      break;
+    case "gameBeat":
+      if(e.key === " " && !onButton){
+        if(H.gameBeat) H.gameBeat.tapNearest();
+        e.preventDefault();
+      }
+      break;
+    case "gamePopPath":
+      if(e.key.indexOf("Arrow") === 0){
+        if(H.gamePopPath) H.gamePopPath.steer(e.key === "ArrowRight" ? 10 : e.key === "ArrowLeft" ? -10 : 0, e.key === "ArrowDown" ? 10 : e.key === "ArrowUp" ? -10 : 0);
+        e.preventDefault();
+      } else if(e.key === "Enter" && !onButton){
+        var fin = document.getElementById("ppFinish"), nxt = document.getElementById("ppNext");
+        if(fin && !fin.disabled) fin.click();
+        else if(nxt) nxt.click();
+        e.preventDefault();
+      }
+      break;
+    /* gameStack: Space drops natively (its own handler).
+       gameCannon: arrows + Space handled inside the game module. */
+  }
+});
+
+/* refit on every geometry change; fullscreen loss keeps the stage alive */
+var ccFitDeb = 0;
+window.addEventListener("resize", function(){
+  if(!CCSTAGE.active) return;
+  window.clearTimeout(ccFitDeb);
+  ccFitDeb = window.setTimeout(ccStageFit, 110);
+});
+window.addEventListener("orientationchange", function(){ setTimeout(ccStageFit, 160); });
+document.addEventListener("fullscreenchange", function(){
+  if(!CCSTAGE.active) return;
+  setTimeout(ccStageFit, 120);
+  if(CCSTAGE.scr === "gameStack") window.dispatchEvent(new Event("resize"));
+});
+
+/* boot: overlays + persisted settings (music state set without a
+   gesture is fine — the shell's AudioContext resumes on first tap) */
+ccBuildOverlays();
+ccApplySettings(false);
 </script>
 </body>
 </html>
