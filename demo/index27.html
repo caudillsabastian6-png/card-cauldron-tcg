@@ -4792,7 +4792,7 @@ function startStack() {
     ];
     ghosts.forEach(function (g) { g.blocks = makeGhostBlocks(g.w, g.h); });
   }
-  function speedFor(h) { return Math.min(2.3 + h * 0.13, 6.6 + 0.6 * stackTierFor(h)); }
+  function speedFor(h) { return Math.min(2.3 + h * 0.13, 6.6 + 0.6 * Math.max(0, stackTierFor(h) - 3)); }
   /* CC-FIX-27.4: height tiers — a named rung every 10 blocks; the
      speed cap climbs a step with each rung, so the ramp no longer
      flattens at 33 blocks. Tier crossings announce on the existing
@@ -18011,6 +18011,18 @@ body.cc-stage #ccStagePauseBtn{ display:flex; }
   body.cc-stage:has(#scr-gameWords.cc-stage-sec) #ccStagePauseBtn{
     left:50%; right:auto; transform:translateX(-50%);
   }
+}
+
+/* ---------- CC-FIX-27.4b: Cauldron Cannon title lane (examiner catch) ----------
+   At 360 wide the centred screen title's right edge reaches x=327.5,
+   inside the pause button's lane (button left edge 298, seat top 128
+   chosen under the SCORE pill) — a real overlap of the game's own top
+   furniture under rule 2, font-dependent and marginal (~30 px), which
+   is why one earlier harness run measured it clean. Stage-only: pull
+   the title's box out of the lane (margin-right) and shrink it a step
+   so it still fits one line; the seat does not move. */
+@media (max-width:699px){
+  body.cc-stage #gameCannon-body .gameTitle{ margin-right:84px; font-size:30px; }
 }
 
 /* ---------- CC-FIX-27.4: Mystery Bubble stage rearrangement (phones) ----------
