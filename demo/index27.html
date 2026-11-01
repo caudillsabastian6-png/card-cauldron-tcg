@@ -1706,7 +1706,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27 · Nov 1, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.5 · Nov 1, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -2290,20 +2290,14 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
     <h2>Mini Games 🎮</h2><p class="small dim" id="opGamesAvatarLine"></p>
     <div class="stack" id="gamesList1"></div>
     <div class="card mt" role="note" aria-label="About these games — not a button">
-      <p class="small" style="margin:0;">🫧 Short bubbly games from the crew, just for fun. Best scores show for this visit only — nothing saved to an account.</p>
+      <p class="small" style="margin:0;">🫧 Short bubbly games from the crew, just for fun. Best scores land on the live global leaderboard below — bragging rights for everybody.</p>
     </div>
     <div class="stack mt" id="gamesList2"></div>
-    <p class="small dim" id="gamesShelfLine">9 games on the shelf — no best scores yet this visit. Be the first!</p>
     <div class="band band-grape mt">
-      <h3>📓 Parity tracker — this visit only</h3>
-      <p class="sub2">Best scores land here — this visit only. No account, nothing saved.</p>
+      <h3>🏆 Global Leaderboard</h3>
+      <p class="sub2">Live top 5 for every game — everybody's best scores, not just this visit. Finish a game and your best score posts under your profile name.</p>
     </div>
-    <div class="card mt" id="trackerPanel"><p class="small dim">No games finished yet this visit.</p></div>
-    <div class="card mt" id="upscaleMoneyPanel"><p>Loading real snapshot totals…</p></div>
-    <div class="band band-navy mt">
-      <h3>🏁 That's the whole shelf</h3>
-      <p class="sub2">Nothing here ever touches your free checks.</p>
-    </div>
+    <div class="card mt" id="gamesBoardPanel"><p class="small dim">Loading the global leaderboard…</p></div>
   </section>
 
 
@@ -2580,6 +2574,62 @@ function recordBest(id, score){
   sessionTracker.plays++;
   sessionTracker.total += score;
   renderGamesHub();
+  ccSubmitBest(id, score);
+}
+
+/* ===== Build #27.5: live global leaderboard (Games screen) =====
+   Board data: GET /scores on the pool backend (per-game top lists from
+   the isolated scores store). A finished game posts through
+   POST /scores under the local profile name — only when the score
+   beats the best this device has posted for that game before
+   (localStorage cc_lb_best), so the board carries bests, not spam. */
+var CC_LB_BEST = {};
+try{ CC_LB_BEST = JSON.parse(localStorage.getItem("cc_lb_best") || "{}") || {}; }catch(e){ CC_LB_BEST = {}; }
+function ccProfileName(){
+  var n = "";
+  try{ n = (typeof opProfile !== "undefined" && (opProfile.displayName || opProfile.username)) || ""; }catch(e){}
+  n = String(n || "").replace(/[^A-Za-z0-9 _-]/g, "").trim().slice(0, 16);
+  return n || "Player";
+}
+function ccEsc(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function ccSubmitBest(id, score){
+  try{
+    if(typeof score !== "number" || !isFinite(score)) return;
+    var prev = (id in CC_LB_BEST) ? CC_LB_BEST[id] : -1;
+    if(score <= prev) return;
+    CC_LB_BEST[id] = score;
+    try{ localStorage.setItem("cc_lb_best", JSON.stringify(CC_LB_BEST)); }catch(e){}
+    fetch(API_BASE + "/scores", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ game: id, name: ccProfileName(), score: Math.floor(score) }) }).catch(function(){});
+  }catch(e){}
+}
+var ccBoardTimer = null;
+function loadGamesBoard(){
+  var panel = $("gamesBoardPanel");
+  if(!panel) return;
+  fetch(API_BASE + "/scores?limit=5").then(function(r){ if(!r.ok) throw new Error("board"); return r.json(); }).then(function(d){
+    var games = (d && d.games) || {};
+    var html = "";
+    LB_GAMES.forEach(function(g){
+      var list = games[g.id] || [];
+      html += '<div style="margin-top:16px;"><h4 style="margin:0 0 6px;font-size:17px;">' + ccEsc(g.label) + "</h4>";
+      if(list.length){
+        html += '<ol class="cc-lb" style="margin:0 auto;">' + list.map(function(s, i){ return "<li" + (i === 0 ? ' class="lb-first"' : "") + '><span class="lbrk">#' + (i + 1) + "</span> " + ccEsc(s.name || "Player") + " — " + (Number(s.score) || 0) + "</li>"; }).join("") + "</ol>";
+      } else {
+        html += '<p class="small dim" style="margin:2px 0 0;">No scores yet — be the first!</p>';
+      }
+      html += "</div>";
+    });
+    panel.innerHTML = html;
+    panel.setAttribute("data-loaded", "1");
+  }).catch(function(){
+    if(!panel.getAttribute("data-loaded")) panel.innerHTML = '<p class="small dim">The leaderboard is offline right now — try again in a bit.</p>';
+  });
+}
+function ccBoardWatch(on){
+  if(on){
+    loadGamesBoard();
+    if(!ccBoardTimer) ccBoardTimer = setInterval(function(){ var s = $("scr-games"); if(s && s.classList.contains("active")) loadGamesBoard(); }, 30000);
+  } else if(ccBoardTimer){ clearInterval(ccBoardTimer); ccBoardTimer = null; }
 }
 function bestLine(id){
   return sessionBests[id]!=null ? "Best this visit: "+sessionBests[id] : "No score yet this visit — be the first!";
@@ -2703,7 +2753,7 @@ function show(id){
   for(var j=0;j<dockBtns.length;j++){
     dockBtns[j].classList.toggle("on", dockBtns[j].getAttribute("data-dock") === (dockMap[id]||"__none__"));
   }
-  if(id==="games") renderGamesHub();
+  if(id==="games"){ renderGamesHub(); ccBoardWatch(true); } else { ccBoardWatch(false); }
   if(id==="rewards") opRenderRewards();
   if(id==="chatroom"){ try{ var cn=document.getElementById("chatName"); if(cn && !cn.value) cn.value = (typeof opProfile!=="undefined" && (opProfile.displayName||opProfile.username)) || ""; }catch(e){} opLoadChat(); }
   if(id==="leaderboard"){ loadGlobalBoard(window._lbGame || "rapid"); if(window.loadTotalBoard) loadTotalBoard(); }
@@ -3449,8 +3499,6 @@ function renderGamesHub(){
   GAMES.forEach(function(g,i){ if(i<6) h1+=gameBtnHTML(g); else h2+=gameBtnHTML(g); });
   $("gamesList1").innerHTML = h1;
   $("gamesList2").innerHTML = h2;
-  var played = GAMES.filter(function(g){ return sessionBests[g.id]!=null; }).length;
-  $("gamesShelfLine").textContent = GAMES.filter(function(g){ return !g.dormant; }).length+" games on the shelf — you've posted a best score in "+played+" of them this visit.";
   renderTracker();
 }
 document.addEventListener("click", function(e){
