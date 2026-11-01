@@ -3775,12 +3775,19 @@ function startRapid(){
      Each play draws 20 at random from the 43 photo cards, no repeat inside a play.
      Game only, never a real check. */
   var deck = shuffle(faces.slice()).slice(0,20);
+  /* CC-FIX-27.4: the run is now run in STAGES — five cards per stage,
+     four stages, and the per-card clock steps down a rung each stage
+     (6.0s -> 5.4s -> 4.8s -> 4.2s; the first card keeps its 12s
+     warm-up). Same deck, same buttons, same scoring. */
+  var STAGE_LIMS = [6000, 5400, 4800, 4200];
+  function stageOf(r){ return Math.floor(r/5) + 1; }
+  function stageLim(r){ return r === 0 ? 12000 : STAGE_LIMS[stageOf(r) - 1]; }
   var round=0, score=0, streak=0, bestStreak=0, locked=false, elapsed=0, over=false;
   var body = $("gameRapid-body");
   function render(){
     var card = deck[round];
     body.innerHTML =
-      '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Card '+(round+1)+' of '+deck.length+(round===0?' · Warm-up — take your time to look':'')+'</p>'
+      '<p class="scorebar" role="status">Score '+score+' · Streak '+streak+' · Stage '+stageOf(round)+' of 4 · Card '+(round+1)+' of '+deck.length+(round===0?' · Warm-up — take your time to look':'')+'</p>'
       + '<div class="card center mt" id="rfCard">'
       + (card.img ? '<div style="width:170px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);"><img src="'+card.img+'" alt="'+card.name+'" onerror="this.style.display=\'none\';var n=this.parentNode.querySelector(\'.rf-photonote\');if(n){n.textContent=\'Photo unavailable — treat as a text card\';}" style="display:block;width:100%;aspect-ratio:5/7;object-fit:cover;"><div style="padding:8px 6px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim">'+card.set+'</div><div class="small dim rf-photonote">Game card — demo pool photo · game only, never a real check</div></div></div>'
       : '<div style="width:170px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);padding:18px 12px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim">'+card.set+(card.num ? ' · '+card.num : '')+'</div><div class="small dim">Game card — text card, your card identity · game only, never a real check, photo not shown</div></div>')
@@ -3795,7 +3802,7 @@ function startRapid(){
   bag.every(function(){
     if(locked || over) return;
     elapsed += 100;
-    var lim = (round===0 ? 12000 : 6000);
+    var lim = stageLim(round);
     var bar = $("rfBar"); if(bar) bar.style.width = clamp((lim-elapsed)/lim*100,0,100)+"%";
     if(elapsed >= lim) timeout();
   }, 100);
@@ -3823,14 +3830,14 @@ function startRapid(){
       streak = 0; missSnd();
       feedback(false, "Good try — it was actually "+(card.isReal?"Real":"Fake")+".");
     }
-    var sb = body.querySelector(".scorebar"); if(sb) sb.textContent = "Score "+score+" · Streak "+streak+" · Card "+(round+1)+" of "+deck.length;
+    var sb = body.querySelector(".scorebar"); if(sb) sb.textContent = "Score "+score+" · Streak "+streak+" · Stage "+stageOf(round)+" of 4 · Card "+(round+1)+" of "+deck.length;
   }
   function advance(){
     round++;
     if(round >= deck.length){
       over = true;
       recordBest("rapid", score);
-      body.innerHTML = doneHTML(score, "Best streak: "+bestStreak+". Fast eyes!");
+      body.innerHTML = doneHTML(score, "Best streak: "+bestStreak+" · all 4 stages cleared. Fast eyes!");
       $("againBtn").addEventListener("click", function(){ popSnd(); startRapid(); });
     } else render();
   }
@@ -3840,7 +3847,8 @@ function startRapid(){
 /* ================= 3. Match Audit ================= */
 function startMatch(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var symbols = ["🦊","⭐","🍋","🌸","💎","🦉"];
+  var LV = OP_MATCH_LEVELS[OP_MATCH_LEVEL-1];
+  var symbols = OP_MATCH_SYMBOLS.slice(0, LV.pairs);
   var deck = shuffle(symbols.flatMap(function(s,i){ return [{k:i*2,s:s},{k:i*2+1,s:s}]; }));
   var open = [], matched = {}, attempts = 0, lock = false;
   var body = $("gameMatch-body");
@@ -3853,7 +3861,8 @@ function startMatch(){
     }).join("");
     body.innerHTML =
       '<p class="scorebar" role="status">Flips: '+attempts+' · Pairs found: '+pairs+' of '+symbols.length+'</p>'
-      + '<div class="match-grid">'+cards+'</div>';
+      + '<div class="match-grid">'+cards+'</div>'
+      + opMatchPickerHTML();
     body.querySelectorAll(".match-card").forEach(function(b){
       b.addEventListener("click", function(){ flip(parseInt(b.getAttribute("data-idx"),10)); });
     });
@@ -3869,9 +3878,11 @@ function startMatch(){
       if(a.s === b.s){
         matched[open[0]] = true; matched[open[1]] = true; open = []; goodSnd(); render(); celebrateMatch();
         if(Object.keys(matched).length === deck.length){
-          var sc = Math.max(100, 600 - (attempts - symbols.length)*25);
+          var sc = Math.max(100, symbols.length*100 - (attempts - symbols.length)*25);
           recordBest("match", sc);
-          body.innerHTML = doneHTML(sc, "All pairs matched in "+attempts+" flips.");
+          var unlockMsg = "";
+          if(OP_MATCH_LEVEL < OP_MATCH_LEVELS.length && OP_MATCH_LEVEL >= OP_MATCH_UNLOCKED){ OP_MATCH_UNLOCKED = OP_MATCH_LEVEL + 1; try{ localStorage.setItem("cc_demo_match_unlocked", String(OP_MATCH_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_MATCH_UNLOCKED + " unlocked!"; }
+          body.innerHTML = doneHTML(sc, "All pairs matched in "+attempts+" flips."+unlockMsg);
           $("againBtn").addEventListener("click", function(){ popSnd(); startMatch(); });
         }
       } else {
@@ -3999,7 +4010,7 @@ function startBeat(){
   function checkEnd(){
     if(!finished && spawned >= TOTAL && bubbles.length === 0){
       finished = true; bag.clear(); gameCleanup = null;
-      var unlockMsg = ""; if(beatClean && OP_BEAT_LEVEL < 10 && OP_BEAT_LEVEL >= OP_BEAT_UNLOCKED){ OP_BEAT_UNLOCKED = OP_BEAT_LEVEL + 1; try{ localStorage.setItem("cc_demo_beat_unlocked", String(OP_BEAT_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_BEAT_UNLOCKED + " unlocked!"; opAddCoins(50); } else if(beatClean){ opAddCoins(50); }
+      var unlockMsg = ""; if(beatClean && OP_BEAT_LEVEL < OP_BEAT_LEVELS.length && OP_BEAT_LEVEL >= OP_BEAT_UNLOCKED){ OP_BEAT_UNLOCKED = OP_BEAT_LEVEL + 1; try{ localStorage.setItem("cc_demo_beat_unlocked", String(OP_BEAT_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_BEAT_UNLOCKED + " unlocked!"; opAddCoins(50); } else if(beatClean){ opAddCoins(50); }
       recordBest("beat", score);
       body.innerHTML = doneHTML(score, "You kept the beat floating!" + (beatClean ? " Clean finish! +50 coins (device-local only, never money)." : " Missed a bubble — no clean-finish unlock this run.") + unlockMsg);
       $("againBtn").addEventListener("click", function(){ popSnd(); startBeat(); });
@@ -4030,7 +4041,7 @@ function startBeat(){
 /* ================= 5. Pop Path ================= */
 function startPopPath(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var LEVELS = 10, TOLS = [52,48,44,40,36,32,28,24,20,18], FADES = [16000,15000,14000,13000,12000,11000,10000,9000,8000,7000];
+  var LEVELS = 14, TOLS = [52,48,44,40,36,32,28,24,20,18,16,15,14,13], FADES = [16000,15000,14000,13000,12000,11000,10000,9000,8000,7000,6500,6000,5500,5000];
   var level = 0, total = 0, drawn = [], drawing = false, vnow = 0, note = null;
   var body = $("gamePopPath-body");
   function pathPoints(){
@@ -4089,7 +4100,7 @@ function startPopPath(){
       note = "Trail "+(level+1)+" traced — "+Math.round(res.cov*100)+"% of the path covered. +"+gain;
       if(level+1 >= LEVELS){
         recordBest("poppath", total);
-        body.innerHTML = '<p role="status" class="center" style="background:#1e3a1e;border-radius:1.4rem;padding:12px 16px;font-weight:800;">'+note+'</p>' + doneHTML(total, "All 10 trails traced — fancy footwork, fox style.");
+        body.innerHTML = '<p role="status" class="center" style="background:#1e3a1e;border-radius:1.4rem;padding:12px 16px;font-weight:800;">'+note+'</p>' + doneHTML(total, "All " + LEVELS + " trails traced — fancy footwork, fox style.");
         $("againBtn").addEventListener("click", function(){ popSnd(); startPopPath(); });
       } else render();
     });
@@ -4237,7 +4248,7 @@ function startMystery(){
       if(round+1 >= ROUNDS){
         recordBest("mystery", score);
         var unlockMsg = "";
-        if(OP_MYSTERY_LEVEL < 10 && OP_MYSTERY_LEVEL >= OP_MYSTERY_UNLOCKED){ OP_MYSTERY_UNLOCKED = OP_MYSTERY_LEVEL + 1; try{ localStorage.setItem("cc_demo_mystery_unlocked", String(OP_MYSTERY_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_MYSTERY_UNLOCKED + " unlocked!"; }
+        if(OP_MYSTERY_LEVEL < OP_MYSTERY_LEVELS.length && OP_MYSTERY_LEVEL >= OP_MYSTERY_UNLOCKED){ OP_MYSTERY_UNLOCKED = OP_MYSTERY_LEVEL + 1; try{ localStorage.setItem("cc_demo_mystery_unlocked", String(OP_MYSTERY_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_MYSTERY_UNLOCKED + " unlocked!"; }
         body.innerHTML = doneHTML(score, "Level "+OP_MYSTERY_LEVEL+" — "+LV.name+". Best tracking streak: "+bestStreak+" in a row."+unlockMsg);
         $("againBtn").addEventListener("click", function(){ popSnd(); startMystery(); });
       } else {
@@ -4698,6 +4709,7 @@ function startStack() {
   var ghosts = [], tower = [], mover = null, debris = [];
   var score = 0, finalScore = 0, height = 0;
   var streak = 0, bestStreak = 0, camRows = 0, dropsDone = 0;
+  var tier = 0;   /* CC-FIX-27.4: current height tier (see STACK_TIERS) */
   var bestScore = stackLoadBest();
   var rafId = null, lastT = 0, endTimer = null, W = 0, H = 0, DPR = 1, bgGrad = null;
   var paused = false, endPending = null, endDue = 0, endRemaining = 650;   /* CC-GAMECHROME pause state */
@@ -4780,7 +4792,13 @@ function startStack() {
     ];
     ghosts.forEach(function (g) { g.blocks = makeGhostBlocks(g.w, g.h); });
   }
-  function speedFor(h) { return Math.min(2.3 + h * 0.13, 6.6); }
+  function speedFor(h) { return Math.min(2.3 + h * 0.13, 6.6 + 0.6 * stackTierFor(h)); }
+  /* CC-FIX-27.4: height tiers — a named rung every 10 blocks; the
+     speed cap climbs a step with each rung, so the ramp no longer
+     flattens at 33 blocks. Tier crossings announce on the existing
+     grade flash, just after the landing grade. */
+  var STACK_TIERS = ["COPPER RUNG","IRON RUNG","SILVER RUNG","GOLDEN RUNG","EMBER RUNG","CRYSTAL RUNG","MOONLIT RUNG","CAULDRON CROWN"];
+  function stackTierFor(h) { return Math.floor(h / 10); }
   function spawnMover() {
     var top = tower[tower.length - 1];
     /* The mover is block #(height+1) of the run; every 10th is golden. */
@@ -4805,7 +4823,7 @@ function startStack() {
     tower = [{ x: -START_W / 2, w: START_W }];
     debris = [];
     score = 0; finalScore = 0; height = 0;
-    streak = 0; bestStreak = 0; dropsDone = 0;
+    streak = 0; bestStreak = 0; dropsDone = 0; tier = 0;
     camRows = camTargetFor(0);   /* 3D build: start framed on the drop zone, no opening swoop */
     playing = true;
     spawnMover();
@@ -4884,6 +4902,15 @@ function startStack() {
   function afterLand() {
     hudScore.textContent = score;
     updateStandings();
+    /* CC-FIX-27.4: a tier crossing gets its own grade flash, just
+       after the landing grade — never instead of it. */
+    var tNow = stackTierFor(height);
+    if (tNow > tier) {
+      tier = tNow;
+      var tName = tNow <= STACK_TIERS.length ? STACK_TIERS[tNow - 1] : "RUNG " + tNow;
+      var tHeight = height;
+      setTimeout(function(){ if (playing) flashGrade(tName + "!", "ccstack-g-flush", "Height " + tHeight + " · the slide quickens"); }, 950);
+    }
     spawnMover();
   }
 
@@ -5310,6 +5337,24 @@ const LEVELS = [
   ], bonus:[
     "AID","AIR","ARDENT","ART","DEN","DINT","DATER","ERA","IRE","NET","NIT","REND","RIND","TAN",
     "TARN","TEN","TIRADE"
+  ]},
+  { name:"Ember Light", letters:"AEILNST", wheel:"SLIENTA", words:[
+    "ALE","ANT","ATE","EAT","LIE","LIT","NET","SAT","SEA","SET","SIN","SIT","TAN","TEA","TEN",
+    "TIE","TIN","INSET","LEAST","LENT","LIEN","LINE","LIST","NAIL","NEST","SAIL","SAINT","SALE",
+    "SALT","SEAL","SEAT","SILT","SLANT","STAIN","STEAL","TAIL","TALE","TEAL","ALIEN","ENLIST",
+    "LISTEN","SALIENT","SILENT","TINSEL"
+  ], bonus:[
+    "ANTE","ANTES","ANTS","ISLET","LANES","LATES","LEANS","LIENS","LINES","NAILS","STALE","TAILS",
+    "TEALS"
+  ]},
+  { name:"Star Forge", letters:"AEOPRST", wheel:"TROPEAS", words:[
+    "APE","APT","ARE","ATE","EAR","EAT","ERA","OAR","OAT","PAR","PAT","PEA","PET","POT","RAP",
+    "RAT","SAT","SEA","SET","TAP","TAR","TEA","TOP","ATOP","OPERA","PASTE","PEST","POET","PORT",
+    "PROSE","REAP","REST","ROPE","SEAT","SOAP","SOAR","SPOT","STAR","STEP","STOP","STRAP","TAPER",
+    "TRAP","PASTOR","SEAPORT"
+  ], bonus:[
+    "APTER","ASTER","OPERAS","PASTER","PEATS","PORTS","POSTER","PRATE","PRATES","REPOST","TAPERS",
+    "TAPES"
   ]}
 ];
 
@@ -5887,7 +5932,12 @@ var CMCore = (function(){
     /* L9 — 156 tiles, 6 layers */
     rect(0,0,12,6,0).concat(rect(1,1,10,5,1)).concat(rect(3,2,7,3,2)).concat(rect(5,3,4,2,3)).concat(rect(6,4,2,2,4)).concat(rect(7,5,1,1,5)),
     /* L10 — 168 tiles, 5 layers */
-    rect(0,0,12,7,0).concat(rect(1,1,11,5,1)).concat(rect(3,2,7,3,2)).concat(rect(6,3,3,2,3)).concat(rect(7,4,2,1,4))
+    rect(0,0,12,7,0).concat(rect(1,1,11,5,1)).concat(rect(3,2,7,3,2)).concat(rect(6,3,3,2,3)).concat(rect(7,4,2,1,4)),
+    /* L11 — 174 tiles, 6 layers (CC-FIX-27.4: same nested-rect pattern,
+       palette-max 10 faces, counts stay multiples of 3, cert-verified) */
+    rect(0,0,12,7,0).concat(rect(1,1,11,5,1)).concat(rect(3,2,7,3,2)).concat(rect(5,3,4,2,3)).concat(rect(6,4,2,2,4)).concat(rect(8,5,2,1,5)),
+    /* L12 — 186 tiles, 5 layers */
+    rect(0,0,12,8,0).concat(rect(1,1,10,6,1)).concat(rect(3,2,7,3,2)).concat(rect(5,3,3,2,3)).concat(rect(6,4,3,1,4))
   ];
   var LEVELS = [
     { name:'Level 1', sub:'First Sip',    faces:6,  layout:0 },
@@ -5899,7 +5949,9 @@ var CMCore = (function(){
     { name:'Level 7', sub:'Double Bubble',faces:10, layout:6 },
     { name:'Level 8', sub:'Midnight Mix', faces:10, layout:7 },
     { name:'Level 9', sub:'Grand Brew',   faces:10, layout:8 },
-    { name:'Level 10', sub:'Full Moon Cauldron', faces:10, layout:9 }
+    { name:'Level 10', sub:'Full Moon Cauldron', faces:10, layout:9 },
+    { name:'Level 11', sub:'Ember Depths', faces:10, layout:10 },
+    { name:'Level 12', sub:'The Full Brew', faces:10, layout:11 }
   ];
 
   function mulberry32(seed){
@@ -7096,7 +7148,38 @@ var CC_CANNON_CORE = (function(){
           box("wood",222,472), box("wood",358,472)
         ];
         return arr;
-      }}
+      }},
+    /* CC-FIX-27.4: Levels 5-6, authored in the same idiom as 1-4 —
+       every stack rests exactly on the layer below (same bottom-face
+       arithmetic the first four levels use), all weight over the
+       pedestal span, objectives from the existing four types. */
+    { name:"Level 5", banner:"BRING IT DOWN!",
+      sub:"Knock 72% of the tower off the shelf",
+      objective:{type:"topple", pct:0.72}, balls:5,
+      build:function(){ return [
+        box("stone",222,472), box("stone",358,472),
+        post("ice",258,472), post("ice",322,472),
+        beam("wood",290,414),
+        box("wood",258,394), box("wood",322,394),
+        beam("stone",290,362),
+        post("wood",290,342),
+        beam("wood",290,284),
+        jarB("jar",290,264),
+        {mat:"ice", x:290, y:472-8, w:40, h:16}
+      ];}},
+    { name:"Level 6", banner:"SMASH THE VAULT!",
+      sub:"Smash at least 12 jars and ice blocks",
+      objective:{type:"break", count:12}, balls:5,
+      build:function(){ return [
+        jarB("jar",230,472), jarB("jar",260,472), jarB("jar",290,472), jarB("jar",320,472), jarB("jar",350,472),
+        {mat:"ice", x:245, y:442-14, w:28, h:28}, {mat:"ice", x:275, y:442-14, w:28, h:28},
+        {mat:"ice", x:305, y:442-14, w:28, h:28}, {mat:"ice", x:335, y:442-14, w:28, h:28},
+        jarB("jar",260,414), jarB("jar",290,414), jarB("jar",320,414),
+        {mat:"ice", x:275, y:384-14, w:28, h:28}, {mat:"ice", x:305, y:384-14, w:28, h:28},
+        jarB("jar",290,356),
+        {mat:"ice", x:216, y:458, w:28, h:28}, {mat:"ice", x:216, y:430, w:28, h:28},
+        {mat:"ice", x:364, y:458, w:28, h:28}, {mat:"ice", x:364, y:430, w:28, h:28}
+      ];}}
   ];
 
   function buildWorld(levelIdx){
@@ -8438,11 +8521,28 @@ var OP_BEAT_LEVELS = [
   {n:7,name:"Turbo beat",total:48,travel:1450,gap:420,perfect:25,onbeat:55,beatMs:450,notes:[587,784,880,1174]},
   {n:8,name:"Hyper beat",total:52,travel:1300,gap:400,perfect:25,onbeat:55,beatMs:425,notes:[659,880,1046,1318]},
   {n:9,name:"Frenzy",total:56,travel:1150,gap:380,perfect:25,onbeat:55,beatMs:400,notes:[784,1046,1174,1318]},
-  {n:10,name:"Master of beat",total:60,travel:1000,gap:360,perfect:25,onbeat:55,beatMs:375,notes:[880,1046,1318,1568]}];
+  {n:10,name:"Master of beat",total:60,travel:1000,gap:360,perfect:25,onbeat:55,beatMs:375,notes:[880,1046,1318,1568]},
+  {n:11,name:"Turbo encore",total:64,travel:950,gap:340,perfect:22,onbeat:50,beatMs:350,notes:[880,1046,1318,1568]},
+  {n:12,name:"Double frenzy",total:68,travel:900,gap:325,perfect:22,onbeat:50,beatMs:340,notes:[784,880,1174,1568]},
+  {n:13,name:"Sky rush",total:72,travel:850,gap:310,perfect:22,onbeat:50,beatMs:330,notes:[659,880,1318,1568,1760]},
+  {n:14,name:"Star storm",total:76,travel:800,gap:295,perfect:22,onbeat:50,beatMs:320,notes:[784,1046,1318,1760]},
+  {n:15,name:"Beat legend",total:80,travel:750,gap:280,perfect:22,onbeat:50,beatMs:310,notes:[880,1174,1568,1760,2093]}];
 var OP_BEAT_LEVEL = 1, OP_BEAT_UNLOCKED = 1;
-try{ OP_BEAT_UNLOCKED = Math.max(1, Math.min(10, parseInt(localStorage.getItem('cc_demo_beat_unlocked')||'1',10) || 1)); }catch(e){}
+try{ OP_BEAT_UNLOCKED = Math.max(1, Math.min(OP_BEAT_LEVELS.length, parseInt(localStorage.getItem('cc_demo_beat_unlocked')||'1',10) || 1)); }catch(e){}
 function opBeatPickerHTML(){ return '<p class="small dim">Bubble Beat — regular style, gold ring at 90px, 420px field. Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' · Highest unlocked: Level '+OP_BEAT_UNLOCKED+' · Clean finish (no missed bubble) unlocks the next level.</p><div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' \u25BE</span></button><div class="stack mt cc-drop-list">' + OP_BEAT_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_BEAT_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_BEAT_UNLOCKED?'disabled':'')+' onclick="opSetBeatLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+'</span><span class="sub">'+l.total+' bubbles · '+l.travel+'ms travel'+(l.n>OP_BEAT_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div></div>'; }
 function opSetBeatLevel(n){ if(n > OP_BEAT_UNLOCKED) return; OP_BEAT_LEVEL = n; startBeat(); }
+/* CC-FIX-27.4: Match Audit gains levels in the same house pattern as
+   Bubble Beat / Mystery Bubble (picker + unlock chain, persisted).
+   Level 1 is the original 6-pair board, byte-for-byte the same game. */
+var OP_MATCH_LEVELS = [
+  {n:1,name:"First Pairs",pairs:6},
+  {n:2,name:"Fuller Brew",pairs:8},
+  {n:3,name:"Grand Pairs",pairs:10}];
+var OP_MATCH_SYMBOLS = ["🦊","⭐","🍋","🌸","💎","🦉","🍇","🦋","🍄","🐢"];
+var OP_MATCH_LEVEL = 1, OP_MATCH_UNLOCKED = 1;
+try{ OP_MATCH_UNLOCKED = Math.max(1, Math.min(OP_MATCH_LEVELS.length, parseInt(localStorage.getItem('cc_demo_match_unlocked')||'1',10) || 1)); }catch(e){}
+function opMatchPickerHTML(){ return '<p class="small dim">Match Audit — Level '+OP_MATCH_LEVEL+' — '+OP_MATCH_LEVELS[OP_MATCH_LEVEL-1].name+' · Highest unlocked: Level '+OP_MATCH_UNLOCKED+' · Finish a board to unlock the next one.</p><div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+OP_MATCH_LEVEL+' — '+OP_MATCH_LEVELS[OP_MATCH_LEVEL-1].name+' ▾</span></button><div class="stack mt cc-drop-list">' + OP_MATCH_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_MATCH_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_MATCH_UNLOCKED?'disabled':'')+' onclick="opSetMatchLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+'</span><span class="sub">'+(l.pairs*2)+' cards · '+l.pairs+' pairs'+(l.n>OP_MATCH_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div></div>'; }
+function opSetMatchLevel(n){ if(n > OP_MATCH_UNLOCKED) return; OP_MATCH_LEVEL = n; startMatch(); }
 var OP_MYSTERY_LEVELS = [
   {n:1,name:"Slow shuffle",glide:560,gap:680,peek:1700,swaps:4},
   {n:2,name:"Quicker shuffle",glide:520,gap:620,peek:1600,swaps:5},
@@ -8453,9 +8553,14 @@ var OP_MYSTERY_LEVELS = [
   {n:7,name:"Rapid shuffle",glide:350,gap:390,peek:1100,swaps:8},
   {n:8,name:"Blur shuffle",glide:320,gap:360,peek:1000,swaps:8},
   {n:9,name:"Lightning shuffle",glide:300,gap:340,peek:900,swaps:9},
-  {n:10,name:"Master shuffle",glide:280,gap:320,peek:850,swaps:10}];
+  {n:10,name:"Master shuffle",glide:280,gap:320,peek:850,swaps:10},
+  {n:11,name:"Blinding shuffle",glide:265,gap:305,peek:820,swaps:10},
+  {n:12,name:"Whirlwind shuffle",glide:250,gap:290,peek:790,swaps:11},
+  {n:13,name:"Cyclone shuffle",glide:240,gap:275,peek:760,swaps:11},
+  {n:14,name:"Phantom shuffle",glide:225,gap:260,peek:730,swaps:12},
+  {n:15,name:"Cauldron master shuffle",glide:210,gap:245,peek:700,swaps:12}];
 var OP_MYSTERY_LEVEL = 1, OP_MYSTERY_UNLOCKED = 1;
-try{ OP_MYSTERY_UNLOCKED = Math.max(1, Math.min(10, parseInt(localStorage.getItem('cc_demo_mystery_unlocked')||'1',10) || 1)); }catch(e){}
+try{ OP_MYSTERY_UNLOCKED = Math.max(1, Math.min(OP_MYSTERY_LEVELS.length, parseInt(localStorage.getItem('cc_demo_mystery_unlocked')||'1',10) || 1)); }catch(e){}
 function opMysteryPickerHTML(){ return '<p class="small dim">Milo\'s Mystery Bubble — Level '+OP_MYSTERY_LEVEL+' — '+OP_MYSTERY_LEVELS[OP_MYSTERY_LEVEL-1].name+' · Highest unlocked: Level '+OP_MYSTERY_UNLOCKED+' · Finish a level to unlock the next one.</p><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">' + OP_MYSTERY_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_MYSTERY_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_MYSTERY_UNLOCKED?'disabled':'')+' onclick="opSetMysteryLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+(l.n>OP_MYSTERY_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div>'; }
 function opSetMysteryLevel(n){ if(n > OP_MYSTERY_UNLOCKED) return; OP_MYSTERY_LEVEL = n; startMystery(); }
 
@@ -17908,6 +18013,40 @@ body.cc-stage #ccStagePauseBtn{ display:flex; }
   }
 }
 
+/* ---------- CC-FIX-27.4: Mystery Bubble stage rearrangement (phones) ----------
+   Owner-authorised (Nov 1: "Mystery: rearrange its screen to make
+   room"). The 27.3 survey proved no legal pause seat exists on
+   Mystery's stage: its body is 965px tall at design width — the ten
+   level buttons stack one per row (553 of those 965px) — so the
+   scaled body fills the whole viewport and the scorebar, phase line
+   and a live bubble all reach the button's corner. Rearrangement,
+   stage scope only (the embedded games-page layout is untouched):
+   (1) the level picker becomes a compact two-column grid of the SAME
+   buttons with the SAME labels (smaller type, tighter padding) —
+   five rows instead of ten, which drops the body to ~600px and
+   re-opens a letterbox band above it on phone screens; (2) the
+   scorebar, phase line and bubble stage keep a clear 84px lane on
+   their right inside the stage, so the button's corner stays empty
+   even where the letterbox is thin. Two independent mechanisms; the
+   seat itself (top:48, right) is unchanged, as are the balls, the
+   glide and every handler. */
+@media (max-width:699px){
+  .screen.cc-stage-sec #gameMystery-body > div{
+    display:grid !important; grid-template-columns:1fr 1fr; gap:8px;
+  }
+  .screen.cc-stage-sec #gameMystery-body > div .bubble-btn{
+    width:100%; min-height:42px; padding:5px 6px; font-size:13px;
+  }
+  .screen.cc-stage-sec #mysteryBar,
+  .screen.cc-stage-sec #mysteryPhase{
+    max-width:calc(100% - 84px); margin-right:auto;
+  }
+  .screen.cc-stage-sec #mysteryPhase{ margin-top:6px !important; }
+  .screen.cc-stage-sec #mysteryStage{
+    max-width:calc(100% - 84px); margin:10px auto 0 0;
+  }
+}
+
 /* ---------- instruction + pause overlays ---------- */
 #cc27-ui > *{ pointer-events:auto; }
 .cc-overlay{
@@ -17981,11 +18120,24 @@ body.cc-stage #ccStagePauseBtn{ display:flex; }
 }
 
 /* ---------- settings effects ---------- */
-/* Animated background OFF: backdrop layer gone, static plum everywhere */
-body.cc-bg-off .op-bg{ display:none !important; }
-body.cc-bg-off{ background:#170b26 !important; }
-body.cc-bg-off .cw-wrap .lasers{ display:none !important; }
-body.cc-bg-off #beatField video{ display:none !important; }
+/* Animated background OFF: backdrop layer gone, static plum.
+   CC-FIX-27.4 (owner phone report, Nov 1: "my cauldron background
+   disappeared"): this kill-switch used to be body-global, so ONE tap
+   on the in-game pause menu's Animated-background toggle silently
+   removed the backdrop from the WHOLE app — every shell screen
+   included — on every later load, with nothing on the shell saying
+   why or where it went. The setting is a stage setting (it lives in
+   the game's pause menu), so its reach is now the stage: inside a
+   game it still does exactly what it did (backdrop gone, static
+   plum, Words' lasers and Beat's field video off); the shell's
+   background answers to the shell's own controls (the Background
+   picker + Calm & Clear), as it did before the #27 line. The saved
+   value itself is untouched — a saved OFF still reads OFF in the
+   pause menu and still takes the stage's backdrop away. */
+body.cc-stage.cc-bg-off .op-bg{ display:none !important; }
+body.cc-stage.cc-bg-off{ background:#170b26 !important; }
+body.cc-stage.cc-bg-off .cw-wrap .lasers{ display:none !important; }
+body.cc-stage.cc-bg-off #beatField video{ display:none !important; }
 /* Reduce motion: stage CSS animation settles instantly (end state kept) */
 body.cc-rm .screen.cc-stage-sec *{ animation-duration:.01s !important; animation-iteration-count:1 !important; }
 
@@ -18134,7 +18286,6 @@ body.cc-rm .screen.cc-stage-sec *{ animation-duration:.01s !important; animation
     gap:14px; align-items:start;
   }
 }
-
 </style>
 <script>
 /* ================= CC-FIX-27 · Build #27 stage mode =================
@@ -18260,7 +18411,15 @@ function ccControlsLine(scr){
 var CC_SET = { music:false, sfx:true, bg:true, motion:false };
 try{
   var savedSet = JSON.parse(localStorage.getItem("ccStageSettings27") || "null");
-  if(savedSet) CC_SET = { music:!!savedSet.music, sfx:!!savedSet.sfx, bg:!!savedSet.bg, motion:!!savedSet.motion };
+  /* CC-FIX-27.4: a key MISSING from the saved record takes its declared
+     default — an earlier merge coerced a missing bg/sfx to false,
+     silently defaulting the background OFF for any partial record. */
+  if(savedSet) CC_SET = {
+    music: !!savedSet.music,
+    sfx: savedSet.sfx === undefined ? true : !!savedSet.sfx,
+    bg: savedSet.bg === undefined ? true : !!savedSet.bg,
+    motion: !!savedSet.motion
+  };
 }catch(e){}
 function ccSetPersist(){ try{ localStorage.setItem("ccStageSettings27", JSON.stringify(CC_SET)); }catch(e){} }
 function ccMusicIsOn(){ return !!window.opMusicOn; }
@@ -18760,7 +18919,6 @@ document.addEventListener("fullscreenchange", function(){
    gesture is fine — the shell's AudioContext resumes on first tap) */
 ccBuildOverlays();
 ccApplySettings(false);
-
 </script>
 </body>
 </html>
