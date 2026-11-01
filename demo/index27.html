@@ -17859,8 +17859,14 @@ body.cc-stage #opMenuPanel{ display:none !important; }
 body.cc-paused .screen.cc-stage-sec *{ animation-play-state:paused !important; }
 
 /* ---------- the one surviving control: PAUSE ---------- */
+/* CC-FIX-27.2 (owner phone report, Nov 1): the button rode up into the
+   phone's camera/notch band in stage mode. Its top now clears the
+   safe area: the device-reported inset wins when it is larger; the
+   48px floor clears the standard ~47px notch band even when a
+   fullscreen UA reports a 0 inset. Stage chrome only — no game
+   layout or fit math changes. */
 #ccStagePauseBtn{
-  position:fixed; top:10px; right:10px; z-index:200;
+  position:fixed; top:max(48px, env(safe-area-inset-top, 0px)); right:10px; z-index:200;
   width:52px; height:52px; border-radius:50%;
   border:1.5px solid rgba(255,215,106,.55);
   background:rgba(13,10,20,.72); color:#fff8e7; font-size:21px; line-height:1;
@@ -17877,6 +17883,10 @@ body.cc-stage #ccStagePauseBtn{ display:flex; }
   position:fixed; inset:0; z-index:190;
   display:flex; align-items:center; justify-content:center;
   background:rgba(5,3,12,.68); padding:14px;
+  /* CC-FIX-27.2: the overlay card (and its close button) also stays out
+     of the notch band on notched devices; still exactly 14px wherever
+     the device reports a 0 inset */
+  padding-top:max(14px, env(safe-area-inset-top, 0px));
 }
 .cc-overlay[hidden]{ display:none !important; }
 .cc-pauseovl{ z-index:210; }
