@@ -1708,7 +1708,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.6 · Nov 1, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.7 · Nov 1, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -8957,7 +8957,7 @@ function opSaveProfileData(){ try{ localStorage.setItem('op_profile_v1', JSON.st
 function opAvatarSrc(){ var human = opHumanAvatarSrc(); if(human) return human; return OP_AVATAR_DATA[opProfile.avatarBase+'-'+opProfile.avatarVariant] || OP_AVATAR_DATA['mallow-original']; }
 var opCoins = 0;
 try{ opCoins = parseInt(localStorage.getItem('op_coins')||'0',10) || 0; }catch(e){}
-function opRenderCoins(){ var el = document.getElementById('opTopCoins'); if(el) el.textContent = '🪙 ' + opCoins; var _chip276 = document.getElementById('ccStageCoins'); if(_chip276) _chip276.innerHTML = '🪙 <span class="cc-coin-num">' + opCoins + '</span>'; }
+function opRenderCoins(){ var el = document.getElementById('opTopCoins'); if(el) el.textContent = '🪙 ' + opCoins; var _cm277 = document.getElementById('ccStageMenuCoins'); if(_cm277) _cm277.textContent = opCoins; }
 function opAddCoins(n){ var _b276 = opCoins; opCoins += n; try{ localStorage.setItem('op_coins', String(opCoins)); }catch(e){} opRenderCoins(); try{ if(window.ccCoinFx && opCoins > _b276) window.ccCoinFx(opCoins - _b276); }catch(e){} }
 var OP_SHOP = [
   {id:"tee",name:"Gold CC TCG tee",price:50,cat:"Avatar"},
@@ -18563,54 +18563,53 @@ body.cc-stage #opMenuPanel{ display:none !important; }
 /* frozen game while the pause menu is up (CSS layer; JS freezes the clocks) */
 body.cc-paused .screen.cc-stage-sec *{ animation-play-state:paused !important; }
 
-/* ---------- the one surviving control: PAUSE ---------- */
-/* CC-FIX-27.2 (owner phone report, Nov 1): the button rode up into the
-   phone's camera/notch band in stage mode. Its top now clears the
-   safe area: the device-reported inset wins when it is larger; the
-   48px floor clears the standard ~47px notch band even when a
-   fullscreen UA reports a 0 inset. Stage chrome only — no game
-   layout or fit math changes. */
-#ccStagePauseBtn{
+/* ---------- the one surviving control: the stage MENU (☰) ---------- */
+/* CC-FIX-27.7 (owner screenshot + words, Nov 1): the floating ⏸ button
+   and the 🪙 chip are GONE from the stage — the coins and the pause
+   both live in this menu now ("throw those in the menu too"). The
+   button keeps the 27.2 notch discipline (top clears the safe area;
+   the device-reported inset wins when larger; the 48px floor clears
+   the standard ~47px notch band even when a fullscreen UA reports a
+   0 inset) and the 27.3 per-game seats below — only its face (☰,
+   44px) and its job (open the menu) changed. Stage chrome only — no
+   game layout or fit math changes. */
+#ccStageMenuBtn{
   position:fixed; top:max(48px, env(safe-area-inset-top, 0px)); right:10px; z-index:200;
-  width:52px; height:52px; border-radius:50%;
+  width:44px; height:44px; border-radius:50%;
   border:1.5px solid rgba(255,215,106,.55);
-  background:rgba(13,10,20,.72); color:#fff8e7; font-size:21px; line-height:1;
+  background:rgba(13,10,20,.72); color:#fff8e7; font-size:19px; line-height:1;
   display:none; align-items:center; justify-content:center;
   cursor:pointer; -webkit-tap-highlight-color:transparent;
 }
-body.cc-stage #ccStagePauseBtn{ display:flex; }
-#ccStagePauseBtn:focus-visible{ outline:3px solid #ffd76a; outline-offset:2px; }
-@media (hover:hover){ #ccStagePauseBtn:hover{ background:rgba(40,24,66,.85); } }
+body.cc-stage #ccStageMenuBtn{ display:flex; }
+body.cc-paused #ccStageMenuBtn{ display:none !important; }
+#ccStageMenuBtn:focus-visible{ outline:3px solid #ffd76a; outline-offset:2px; }
+@media (hover:hover){ #ccStageMenuBtn:hover{ background:rgba(40,24,66,.85); } }
 
-/* ---------- CC-FIX-27.3: per-game pause-button seats (phones) ----------
-   Owner phone finding, Nov 1 (his own circled screenshot): the 27.2
-   notch fix dropped the button to top:48px on every game — clear of
-   the camera band, but on Cauldron Stack it now lands on the game's
-   own MUSIC chip + colour dot and crowds the standings line. Owner's
-   rule, BOTH halves, on ALL 9 games: the button clears the notch band
-   AND never overlaps a game's own top furniture. The measured
-   furniture map (390x844 + 360x740, survey273) says no single seat
-   obeys both rules everywhere, so three games take a per-game seat:
-   Stack sinks below its standings line, Cannon sinks below its SCORE
-   pill, Words moves to the top centre (both its corners are occupied
-   by its own header furniture; the centre column is empty at both
-   sizes). The other five already clear everything from the 27.2 seat.
-   Scoped to phone widths; wider layouts keep the 27.2 placement.
-   Mystery Bubble has NO seat that obeys both rules — its stage is
-   wall-to-wall furniture at both sizes in every state (exhaustive
-   empty-rectangle search, survey273b: zero spots even at 44px) — so
-   it keeps the 27.2 seat pending the owner's call; making room there
-   means moving the game's own furniture, a game-layout decision. */
+/* ---------- CC-FIX-27.3 seats, carried to the 27.7 menu button ----------
+   The 27.3 survey (owner's rule, BOTH halves: clear the notch band
+   AND never overlap a game's own top furniture) seated the old pause
+   button per game; the ☰ inherits those seats unchanged — Stack
+   sinks below its standings line, Cannon below its SCORE pill, the
+   rest ride the 27.2 seat. Scoped to phone widths; wider layouts
+   keep the 27.2 placement. CC-FIX-27.7 WORDS EXCEPTION: Words takes
+   NO fixed seat at any width — its own header and its level line
+   occupy the whole notch-safe band at both phone sizes (the owner's
+   Nov 1 circled screenshot: the centred ⏸ sat ON the level line's
+   text), so no fixed button can leave that row fully clear. Words'
+   stage menu opens from the ☰ its own header already carries
+   (stage mode only — see the click intercept in the stage module);
+   outside the stage that button is still Words' Levels button. */
 @media (max-width:699px){
-  body.cc-stage:has(#scr-gameStack.cc-stage-sec) #ccStagePauseBtn{
+  body.cc-stage:has(#scr-gameStack.cc-stage-sec) #ccStageMenuBtn{
     top:max(108px, env(safe-area-inset-top, 0px));
   }
-  body.cc-stage:has(#scr-gameCannon.cc-stage-sec) #ccStagePauseBtn{
+  body.cc-stage:has(#scr-gameCannon.cc-stage-sec) #ccStageMenuBtn{
     top:max(128px, env(safe-area-inset-top, 0px));
   }
-  body.cc-stage:has(#scr-gameWords.cc-stage-sec) #ccStagePauseBtn{
-    left:50%; right:auto; transform:translateX(-50%);
-  }
+}
+body.cc-stage:has(#scr-gameWords.cc-stage-sec) #ccStageMenuBtn{
+  display:none !important;
 }
 
 /* ---------- CC-FIX-27.4b: Cauldron Cannon title lane (examiner catch) ----------
@@ -18906,12 +18905,29 @@ body.cc-rm .screen.cc-stage-sec *{ animation-duration:.01s !important; animation
    Windows desktop touch), desktop refinements (§9, min-width:1024 only —
    phone rules are untouched), gold-frame fit (§9.6). */
 
-/* ---- §6.4 stage coin chip: top-left, display-only, stage mode only ---- */
-#ccStageCoins{ position:fixed; left:10px; top:max(46px, calc(env(safe-area-inset-top, 0px) + 6px)); z-index:320;
-  display:none; align-items:center; gap:4px; padding:8px 13px; border-radius:999px;
-  border:1.5px solid rgba(255,215,106,.55); background:rgba(13,10,20,.74); color:#ffe9a8;
-  font-weight:900; font-size:15px; pointer-events:none; }
-body.cc-stage #ccStageCoins{ display:flex; }
+/* ---- §6.4 stage coin chip -> CC-FIX-27.7: the chip is GONE from the
+   stage (owner: it laid over the game's own rows). Coins now live in
+   the stage menu: a drop-down panel with a wallet row (the live
+   balance) + the Pause entry. The §6.4 floater styles below stay —
+   the floater re-anchors to the menu button. ---- */
+#ccStageMenuShade{ position:fixed; inset:0; z-index:204; background:transparent; }
+#ccStageMenuShade[hidden]{ display:none !important; }
+#ccStageMenu{ position:fixed; top:100px; right:12px; z-index:205; width:232px;
+  padding:12px; border-radius:14px; border:1.5px solid rgba(240,178,62,.65);
+  background:linear-gradient(180deg,#261740,#170e28); color:#fff8e7;
+  box-shadow:0 16px 40px rgba(0,0,0,.6); font-family:Georgia,"Times New Roman",serif; }
+#ccStageMenu[hidden]{ display:none !important; }
+body.cc-stage:has(#scr-gameWords.cc-stage-sec) #ccStageMenu{ top:86px; }
+@media (max-width:699px){
+  body.cc-stage:has(#scr-gameStack.cc-stage-sec) #ccStageMenu{ top:160px; }
+  body.cc-stage:has(#scr-gameCannon.cc-stage-sec) #ccStageMenu{ top:180px; }
+}
+.cc-menu-coins{ display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:8px 10px; margin:0 0 10px; border-radius:12px;
+  border:1px solid rgba(255,215,106,.4); background:rgba(0,0,0,.28); }
+.cc-menu-coins-label{ font-size:15px; font-weight:700; color:#f3e9ff; }
+.cc-menu-coins-num{ font-size:22px; font-weight:900; color:#ffd76a; }
+#ccStageMenu .cc-menu-btn{ margin:0; }
 .cc-coin-floater{ position:fixed; z-index:400; pointer-events:none; font-weight:900; color:#ffd76a;
   font-size:19px; text-shadow:0 2px 8px rgba(0,0,0,.75); animation:ccCoinFloat 1.15s ease-out forwards; }
 @keyframes ccCoinFloat{ 0%{ opacity:0; transform:translateY(6px) scale(.85); }
@@ -19048,7 +19064,8 @@ window.ccCoinBlip = function(){
 };
 /* visible feedback for an award of n coins that ALREADY landed in opCoins:
    "+N 🪙" floater over the visible counter + ~600ms count-up. In stage the
-   anchor is the stage chip; in the shell it is #opTopCoins. Reduce-motion
+   anchor is the stage menu button (Words: its header ☰); in the
+   shell it is #opTopCoins. Reduce-motion
    (body.cc-rm) -> instant text only. opts.visualOnly skips the count-up
    (Stack rung ticks: coins settle at run end, the tick is a marker only). */
 window.ccCoinFx = function(n, opts){
@@ -19057,7 +19074,12 @@ window.ccCoinFx = function(n, opts){
     window.ccCoinBlip();
     var rm = document.body && document.body.classList.contains("cc-rm");
     var inStage = document.body && document.body.classList.contains("cc-stage");
-    var anchor = inStage ? document.getElementById("ccStageCoins") : document.getElementById("opTopCoins");
+    var anchor = document.getElementById("opTopCoins");
+    if(inStage){
+      var _mb = document.getElementById("ccStageMenuBtn");
+      if(_mb && _mb.getBoundingClientRect().width > 0) anchor = _mb;
+      else { var _wm = document.getElementById("cw-menuBtn"); if(_wm && _wm.getBoundingClientRect().width > 0) anchor = _wm; }
+    }
     if(!rm && anchor){
       var r = anchor.getBoundingClientRect();
       if(r.width > 0){
@@ -19075,7 +19097,7 @@ window.ccCoinFx = function(n, opts){
     var start = final - n, t0 = null, DUR = 600;
     function paint(v){
       var top = document.getElementById("opTopCoins"); if(top) top.textContent = "🪙 " + v;
-      var num = document.querySelector("#ccStageCoins .cc-coin-num"); if(num) num.textContent = v;
+      var num = document.getElementById("ccStageMenuCoins"); if(num) num.textContent = v;
     }
     if(rm){ paint(final); return; }
     function stepFn(ts){
@@ -19679,6 +19701,7 @@ function ccEnterStage(scr){
 }
 
 function ccExitStage(){
+  ccCloseStageMenu();
   if(CCSTAGE.obs){ CCSTAGE.obs.disconnect(); CCSTAGE.obs = null; }
   if(CCSTAGE.paused) ccPauseGame(false);
   var sec = ccStageSection(), body = ccStageBody();
@@ -19735,6 +19758,7 @@ function ccPauseSystems(on){
 }
 function ccPauseGame(on){
   if(!CCSTAGE.active || CCSTAGE.paused === !!on) return;
+  ccCloseStageMenu();
   CCSTAGE.paused = !!on;
   document.body.classList.toggle("cc-paused", CCSTAGE.paused);
   ccPauseSystems(CCSTAGE.paused);
@@ -19754,6 +19778,34 @@ function ccPauseGame(on){
   }
 }
 
+/* ---------- 5b. CC-FIX-27.7: the stage menu (wallet + pause) ---------- */
+function ccWalletCoins(){
+  if(typeof opCoins === "number") return opCoins;
+  try{ return parseInt(localStorage.getItem("op_coins") || "0", 10) || 0; }catch(e){ return 0; }
+}
+function ccRefreshMenuCoins(){
+  var el = document.getElementById("ccStageMenuCoins");
+  if(el) el.textContent = ccWalletCoins();
+}
+function ccStageMenuIsOpen(){
+  var p = document.getElementById("ccStageMenu");
+  return !!(p && !p.hidden);
+}
+function ccOpenStageMenu(){
+  ccRefreshMenuCoins();
+  var p = document.getElementById("ccStageMenu"), sh = document.getElementById("ccStageMenuShade");
+  if(p) p.hidden = false;
+  if(sh) sh.hidden = false;
+  var b = document.getElementById("ccStageMenuPause");
+  if(b) b.focus();
+}
+function ccCloseStageMenu(){
+  var p = document.getElementById("ccStageMenu"), sh = document.getElementById("ccStageMenuShade");
+  if(p) p.hidden = true;
+  if(sh) sh.hidden = true;
+}
+function ccToggleStageMenu(){ if(ccStageMenuIsOpen()) ccCloseStageMenu(); else ccOpenStageMenu(); }
+
 /* ---------- 6. overlays (built once, reused) ---------- */
 var ccInstrScr = null, ccInstrBtn = null;
 function ccBuildOverlays(){
@@ -19765,8 +19817,12 @@ function ccBuildOverlays(){
   wrap.id = "cc27-ui";
   wrap.style.cssText = "position:fixed; inset:0; z-index:300; pointer-events:none;";
   wrap.innerHTML =
-    '<div id="ccStageCoins" aria-label="Your coins">🪙 <span class="cc-coin-num">0</span></div>' +
-    '<button id="ccStagePauseBtn" type="button" aria-label="Pause game">⏸</button>' +
+    '<button id="ccStageMenuBtn" type="button" aria-label="Menu — your coins and pause">☰</button>' +
+    '<div id="ccStageMenuShade" hidden></div>' +
+    '<div id="ccStageMenu" hidden role="dialog" aria-label="Stage menu">' +
+      '<div class="cc-menu-coins"><span class="cc-menu-coins-label">🪙 Your coins</span><span class="cc-menu-coins-num" id="ccStageMenuCoins">0</span></div>' +
+      '<button class="cc-menu-btn" id="ccStageMenuPause" type="button">⏸ Pause</button>' +
+    '</div>' +
     '<div class="cc-overlay" id="ccInstrOverlay" hidden>' +
       '<div class="cc-card" role="dialog" aria-modal="true" aria-labelledby="ccInstrTitle">' +
         '<button class="cc-card-x" id="ccInstrClose" type="button" aria-label="Back to menu">✕</button>' +
@@ -19798,7 +19854,9 @@ function ccBuildOverlays(){
     '</div>';
   document.body.appendChild(wrap);
 
-  document.getElementById("ccStagePauseBtn").addEventListener("click", function(){ ccPauseGame(true); });
+  document.getElementById("ccStageMenuBtn").addEventListener("click", function(){ ccToggleStageMenu(); });
+  document.getElementById("ccStageMenuShade").addEventListener("click", function(){ ccCloseStageMenu(); });
+  document.getElementById("ccStageMenuPause").addEventListener("click", function(){ ccCloseStageMenu(); ccPauseGame(true); });
   document.getElementById("ccInstrClose").addEventListener("click", function(){ ccCloseInstr(); });
   document.getElementById("ccInstrPlay").addEventListener("click", function(){
     var scr = ccInstrScr, btn = ccInstrBtn;
@@ -19821,9 +19879,9 @@ function ccBuildOverlays(){
       ccApplySettings(true);
     });
   });
-  /* CC-FIX-27.6: coin chip starts at the real balance; song selects wired */
-  var _chip0 = document.getElementById("ccStageCoins");
-  if(_chip0){ var _cv0 = 0; try{ _cv0 = parseInt(localStorage.getItem("op_coins") || "0", 10) || 0; }catch(e){} _chip0.innerHTML = '🪙 <span class="cc-coin-num">' + _cv0 + '</span>'; }
+  /* CC-FIX-27.7: the menu's coin row starts at the real balance; song selects wired */
+  var _cm0 = document.getElementById("ccStageMenuCoins");
+  if(_cm0){ _cm0.textContent = ccWalletCoins(); }
   ccFillSongSelects();
   ["ccInstrSongSel", "ccPauseSongSel"].forEach(function(id){
     var sel = document.getElementById(id);
@@ -19949,6 +20007,20 @@ document.addEventListener("click", function(e){
   ccOpenInstr(b.getAttribute("data-game"), b);
 }, true);
 
+/* CC-FIX-27.7: Words' own header carries a ☰ (its Levels button). In
+   stage mode that button opens the stage menu instead — the same
+   wallet + pause panel as every other game; outside the stage it is
+   untouched and still opens Words' levels. */
+document.addEventListener("click", function(e){
+  if(!CCSTAGE.active || CCSTAGE.scr !== "gameWords") return;
+  var t = e.target;
+  var b = t && t.closest ? t.closest("#cw-menuBtn") : null;
+  if(!b) return;
+  e.stopPropagation();
+  e.preventDefault();
+  ccToggleStageMenu();
+}, true);
+
 /* ---------- 7. keyboard: pause keys, per-game schemes, Tab trap ---------- */
 function ccClickId(id){ var el = document.getElementById(id); if(el) el.click(); }
 function ccFocusMove(sel, key){
@@ -19980,8 +20052,9 @@ function ccFocusMove(sel, key){
 }
 function ccTrapTab(e){
   var pool = [];
-  var pb = document.getElementById("ccStagePauseBtn");
-  if(pb) pool.push(pb);
+  var pb = document.getElementById("ccStageMenuBtn");
+  if(pb && pb.getBoundingClientRect().width > 0) pool.push(pb);
+  if(ccStageMenuIsOpen()){ var sp = document.getElementById("ccStageMenuPause"); if(sp) pool.push(sp); }
   if(CCSTAGE.paused){
     pool = pool.concat(Array.prototype.slice.call(document.querySelectorAll("#ccPauseOverlay button")));
   } else {
@@ -20007,6 +20080,7 @@ document.addEventListener("keydown", function(e){
   }
   if(!CCSTAGE.active) return;
   if(e.key === "Escape"){
+    if(ccStageMenuIsOpen()){ ccCloseStageMenu(); e.preventDefault(); return; }
     /* in browser fullscreen, Esc belongs to the browser (it exits
        fullscreen and the game stays alive in the window); P pauses there */
     if(document.fullscreenElement) return;
