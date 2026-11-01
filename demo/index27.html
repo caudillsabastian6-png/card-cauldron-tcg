@@ -7550,24 +7550,44 @@ var CC_CANNON_CORE = (function(){
     var r=cv.getBoundingClientRect();
     return {x:(e.clientX-r.left)*W/r.width, y:(e.clientY-r.top)*H/r.height};
   }
+  /* CC-FIX-27.1: ABSOLUTE POINTING (owner phone report, Nov 1: Cannon
+     "fires, but I can't aim where I want"). The old scheme was a
+     slingshot: aimAngle = atan2(dragStart - dragCur), so the shot flew
+     opposite the finger's travel, from wherever the touch happened to
+     land — while the aim line is drawn cannon -> fingertip, promising
+     "the shot goes where your finger is". A player who drags ONTO the
+     tower (the natural gesture) produced a displacement pointing AT
+     the tower and so fired AWAY from it, angle-clamped into the shelf
+     or the ground. canvasPos() itself was never wrong: it maps
+     through the canvas's own rendered rect, so stage scale and
+     letterbox offsets divide out exactly, at every aspect.
+     Now: the shot flies from the cauldron toward the fingertip/cursor
+     position in game coords — line, trajectory dots and physics all
+     describe the same shot. Power keeps the original feel: drag
+     length from the touch point, /150, same speed range, same angle
+     clamp, same 0.08 fire threshold. */
+  function aimAtPointer(){
+    var pdx=dragStart.x-dragCur.x, pdy=dragStart.y-dragCur.y;
+    aimPower=Math.min(1, Math.sqrt(pdx*pdx+pdy*pdy)/150);
+    var dx=dragCur.x-CANNON.x, dy=dragCur.y-CANNON.y;
+    if(dx*dx+dy*dy>36){
+      var ang=Math.atan2(dy,dx);
+      if(ang<-1.45) ang=-1.45; else if(ang>0.55) ang=0.55;
+      aimAngle=ang;
+    }
+  }
   cv.addEventListener("pointerdown", function(e){
     ensureAudio();
     if(state!=="aim") return;
     dragging=true; dragStart=canvasPos(e); dragCur=dragStart;
+    aimAtPointer(); /* CC-FIX-27.1: aim snaps to the touch point */
     try{ cv.setPointerCapture(e.pointerId); }catch(err){}
     e.preventDefault();
   });
   cv.addEventListener("pointermove", function(e){
     if(!dragging) return;
     dragCur=canvasPos(e);
-    var vx=dragStart.x-dragCur.x, vy=dragStart.y-dragCur.y;
-    var len=Math.sqrt(vx*vx+vy*vy);
-    aimPower=Math.min(1, len/150);
-    if(len>4){
-      var ang=Math.atan2(vy,vx);
-      if(ang<-1.45) ang=-1.45; else if(ang>0.55) ang=0.55;
-      aimAngle=ang;
-    }
+    aimAtPointer(); /* CC-FIX-27.1 */
   });
   function endDrag(fireIt){
     if(!dragging) return;
@@ -7772,6 +7792,11 @@ var CC_CANNON_CORE = (function(){
       aimAngle=deg*Math.PI/180; aimPower=power; recoil=1; fire(); return true;
     },
     present: schedulePresent, /* CC-FIX-23 */
+    aim:function(){ /* CC-FIX-27.1: read-only aim state for examiners */
+      return { angle:aimAngle, power:aimPower, dragging:dragging,
+               cur:dragCur?{x:dragCur.x,y:dragCur.y}:null,
+               cannon:{x:CANNON.x,y:CANNON.y} };
+    },
     state:function(){ return state; },
     world:function(){ return world; },
     score:function(){ return score; }
@@ -7788,7 +7813,7 @@ var CC_CANNON_CORE = (function(){
 function startCannon(){
   var body = $("gameCannon-body"); if(!body) return;
   if(!body.querySelector(".cn-wrap")){
-    body.innerHTML = "<div class=\"cn-wrap\"><div id=\"cn-fit\"><div id=\"cn-wrap\">\n  <div id=\"cn-stage\">\n    <canvas id=\"cn-cv\" width=\"390\" height=\"660\"></canvas>\n    <div id=\"cn-hud\">\n      <div id=\"cn-hudRow\">\n        <div class=\"pill\" id=\"cn-ballsPill\"></div>\n        <div class=\"pill\">SCORE <b id=\"cn-scoreVal\">0</b></div>\n      </div>\n      <div id=\"cn-objBar\">TOPPLE IT!<small id=\"cn-objSub\"></small></div>\n    </div>\n    <div id=\"cn-btnRow\">\n      <button class=\"iconBtn\" id=\"cn-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n      <button class=\"iconBtn\" id=\"cn-restartBtn\" title=\"Restart level\">\u21ba</button>\n    </div>\n    <div id=\"cn-hint\">Drag back from the cauldron\u2026 let go to fire!</div>\n\n    <div class=\"overlay\" id=\"cn-startOverlay\">\n      <div class=\"gameTitle\">Cauldron <span class=\"cc\">Cannon</span></div>\n      <div class=\"tagline\">Aim the potion cannon, find the weak spot, and bring the whole tower down. Kaboom responsibly.</div>\n      <div class=\"chips\" id=\"cn-levelChips\"></div>\n      <button class=\"bigStart\" id=\"cn-startBtn\">\u25b6 START</button>\n      <div class=\"tagline\" style=\"font-size:12px;opacity:.85\">Drag back to aim \u2014 the dotted line is your shot.<br>Longer drag = bigger boom.</div>\n    </div>\n\n    <div class=\"overlay hidden\" id=\"cn-endOverlay\">\n      <div class=\"endCard\">\n        <div class=\"endTitle\" id=\"cn-endTitle\">TOWER DOWN!</div>\n        <div class=\"endLine\" id=\"cn-endLine\"></div>\n        <div class=\"endScore\" id=\"cn-endScore\"></div>\n        <div class=\"btnRow2\">\n          <button class=\"miniBtn gold\" id=\"cn-nextBtn\">Next \u25b6</button>\n          <button class=\"miniBtn\" id=\"cn-retryBtn\">\u21ba Retry</button>\n          <button class=\"miniBtn\" id=\"cn-menuBtn\">Levels</button>\n        </div>\n        <div id=\"cnBoardSlot\"></div>\n      </div>\n    </div>\n  </div>\n  <div id=\"cn-footNote\">Cauldron Cannon \u2014 playground prototype. Best scores live on this device only.</div>\n</div></div></div>";
+    body.innerHTML = "<div class=\"cn-wrap\"><div id=\"cn-fit\"><div id=\"cn-wrap\">\n  <div id=\"cn-stage\">\n    <canvas id=\"cn-cv\" width=\"390\" height=\"660\"></canvas>\n    <div id=\"cn-hud\">\n      <div id=\"cn-hudRow\">\n        <div class=\"pill\" id=\"cn-ballsPill\"></div>\n        <div class=\"pill\">SCORE <b id=\"cn-scoreVal\">0</b></div>\n      </div>\n      <div id=\"cn-objBar\">TOPPLE IT!<small id=\"cn-objSub\"></small></div>\n    </div>\n    <div id=\"cn-btnRow\">\n      <button class=\"iconBtn\" id=\"cn-muteBtn\" title=\"Sound on/off\">\ud83d\udd0a</button>\n      <button class=\"iconBtn\" id=\"cn-restartBtn\" title=\"Restart level\">\u21ba</button>\n    </div>\n    <div id=\"cn-hint\">Drag to aim at your target \u2014 let go to fire!</div>\n\n    <div class=\"overlay\" id=\"cn-startOverlay\">\n      <div class=\"gameTitle\">Cauldron <span class=\"cc\">Cannon</span></div>\n      <div class=\"tagline\">Aim the potion cannon, find the weak spot, and bring the whole tower down. Kaboom responsibly.</div>\n      <div class=\"chips\" id=\"cn-levelChips\"></div>\n      <button class=\"bigStart\" id=\"cn-startBtn\">\u25b6 START</button>\n      <div class=\"tagline\" style=\"font-size:12px;opacity:.85\">Point at your target \u2014 the dotted line is your shot.<br>Longer drag = bigger boom.</div>\n    </div>\n\n    <div class=\"overlay hidden\" id=\"cn-endOverlay\">\n      <div class=\"endCard\">\n        <div class=\"endTitle\" id=\"cn-endTitle\">TOWER DOWN!</div>\n        <div class=\"endLine\" id=\"cn-endLine\"></div>\n        <div class=\"endScore\" id=\"cn-endScore\"></div>\n        <div class=\"btnRow2\">\n          <button class=\"miniBtn gold\" id=\"cn-nextBtn\">Next \u25b6</button>\n          <button class=\"miniBtn\" id=\"cn-retryBtn\">\u21ba Retry</button>\n          <button class=\"miniBtn\" id=\"cn-menuBtn\">Levels</button>\n        </div>\n        <div id=\"cnBoardSlot\"></div>\n      </div>\n    </div>\n  </div>\n  <div id=\"cn-footNote\">Cauldron Cannon \u2014 playground prototype. Best scores live on this device only.</div>\n</div></div></div>";
     buildCannonGame(body.querySelector(".cn-wrap"));
   } else { /* game keeps its own state + menu; nothing to restart on re-entry */
     if(window.__ccCannon && window.__ccCannon.present) window.__ccCannon.present(); /* CC-FIX-23 */
@@ -7803,7 +7828,7 @@ var GAME_META = {
   gameMystery: { title:"Milo's Mystery Bubble 🔮", by:"by Milo 🎲 · Pure tracking skill: follow the star bubble through the shuffle and tap it." },
   gameWords:   { title:"Cauldron Words 🔤", by:"by Potion 🌙 · Drag from letter to letter through the brew wheel and spell the words hiding in the grid. Any other real word you find fills the bonus jar." },
   gameCMatch:  { title:"Cauldron Match 🀄", by:"by Potion 🌙 · Tap free tiles into the cauldron rim — three of a kind pops and clears. Seven unmatched tiles spill the brew." },
-  gameCannon:  { title:"Cauldron Cannon 💥", by:"by Potion 🌙 · Drag back to aim, release to fire. Topple it, break it down, or clean the board before your orbs run out." },
+  gameCannon:  { title:"Cauldron Cannon 💥", by:"by Potion 🌙 · Drag to aim at your target, release to fire. Topple it, break it down, or clean the board before your orbs run out." },
   gameStack: { title:"Cauldron Stack 🧱", by:"by Potion 🌙 · Tap to drop — land it FLUSH." }
 };
 (function(){
@@ -9747,7 +9772,7 @@ document.addEventListener("click", function(e){
     gameStack:     ["Cauldron Stack", "live game - tap to drop the sliding block onto your tower. First block is a warm-up."],
     gameWords:     ["Cauldron Words", "live game - drag letter to letter and spell the grid words. First word is a warm-up."],
     gameCMatch:    ["Cauldron Match", "live game - tap free tiles into the rim, three of a kind pops. First tile is a warm-up."],
-    gameCannon:    ["Cauldron Cannon", "live game - drag back to aim, release to fire. First shot is a warm-up."]
+    gameCannon:    ["Cauldron Cannon", "live game - drag to aim at your target, release to fire. First shot is a warm-up."]
   };
   function findLine(scr){
     for(var i=0;i<scr.children.length;i++){
@@ -18171,7 +18196,7 @@ var CC_CONTROLS = {
                 keys:"Type letters to build the word · Backspace — undo a letter · Enter — submit." },
   gameCMatch: { mouse:"Click a free tile to send it to the cauldron rim; click a rim tile to send it back.",
                 keys:"Arrow keys — move the tile cursor · Enter or Space — pick the tile." },
-  gameCannon: { mouse:"Drag back from the cauldron to aim, let go to fire. Drag farther = more power.",
+  gameCannon: { mouse:"Drag to aim — the shot flies at your fingertip. Let go to fire. Drag farther = more power.",
                 keys:"Left / Right arrows — adjust aim · Up / Down arrows — power · Space — fire." },
   gameRapid:  { mouse:"Click Genuine or Replica before the bubble pops.",
                 keys:"R or Left arrow — Genuine · F or Right arrow — Replica." },
