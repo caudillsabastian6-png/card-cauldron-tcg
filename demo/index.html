@@ -2974,6 +2974,27 @@ function poolSubmitAndConfirm(){
     return;
   }
   var _payload = {opt_in:true, front_image:frontWire, back_image:(backWire || null), number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"};
+  /* Burst provenance (owner ruling, Oct 31): every burst frame plus the
+     sharpness/glare receipt rides with the pool submission; the winner
+     stays the primary photo. Additive + fail-open: any problem here
+     leaves the payload exactly as it was. A side's frames attach only
+     when their recorded winner IS the photo being sent, so an uploaded
+     or retaken photo can never inherit a stale burst. */
+  try{
+    var _bf = {}, _rc = {}, _hasBurst = false;
+    var _bs = [["front", frontWire], ["back", backWire]];
+    for(var _bi = 0; _bi < _bs.length; _bi++){
+      var _bSide = _bs[_bi][0], _bRec = (typeof ccBurstFrames !== "undefined") ? ccBurstFrames[_bSide] : null;
+      if(!_bRec || !_bRec.frames || !_bRec.frames.length || _bRec.winner !== _bs[_bi][1]) continue;
+      var _bOk = true;
+      for(var _bj = 0; _bj < _bRec.frames.length; _bj++){ if(String(_bRec.frames[_bj]).length > 2000000){ _bOk = false; break; } }
+      if(!_bOk) continue;
+      _bf[_bSide] = _bRec.frames;
+      _rc[_bSide] = { frames_fired: _bRec.frames.length, kept_index: _bRec.kept - 1, frames: _bRec.scores };
+      _hasBurst = true;
+    }
+    if(_hasBurst){ _payload.burst_frames = _bf; _payload.capture_receipt = _rc; }
+  }catch(e){}
   fetch("https://api.cardcauldrontcg.com/pool/submit-pending", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(_payload)})
     .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
     .then(function(res){
@@ -3048,6 +3069,11 @@ $("gateScanAnother").addEventListener("click", function(){
    device-local My Scans record. */
 var capBursting = false;
 var ccBurstStats = {};
+/* Burst provenance (owner ruling, Oct 31): the frames behind ccBurstStats —
+   every shot's encoded image + scores + which one won, per side. Read by
+   poolSubmitAndConfirm so the pool receives the whole burst, not just the
+   winner. Null/absent = this side's photo did not come from a burst. */
+var ccBurstFrames = {};
 function ccBurstScore(srcCanvas){
   var W = 320, H = Math.max(2, Math.round(W * srcCanvas.height / Math.max(1, srcCanvas.width)));
   var ac = document.createElement("canvas"); ac.width = W; ac.height = H;
@@ -3087,11 +3113,13 @@ function ccBurstSnap(){
       var c2 = document.createElement("canvas"); c2.width = (v && v.videoWidth) || 640; c2.height = (v && v.videoHeight) || 480;
       try{ c2.getContext("2d").drawImage(v, 0, 0, c2.width, c2.height); }catch(e){}
       ccBurstStats[/back/i.test(capCat.steps[capStep].cap) ? "back" : "front"] = { frames: 0, kept: 0, sharp: 0, glare: 0, frame_times_ms: [], fallback: "single-grab", flash_mode: (function(){ try{ return __ccFlashMode(); }catch(e){ return "unknown"; } })(), flash_status: (function(){ try{ return __ccFlashState($("capVideo")).status; }catch(e){ return "unknown"; } })() };
+      try{ ccBurstFrames[/back/i.test(capCat.steps[capStep].cap) ? "back" : "front"] = null; }catch(e){}
       ccBurstUsePhoto(c2); return;
     }
     var best = frames[0], bi;
     for(bi = 1; bi < frames.length; bi++){ if(frames[bi].sharp * Math.pow(1 - frames[bi].glare, 2) > best.sharp * Math.pow(1 - best.glare, 2)) best = frames[bi]; }
     ccBurstStats[/back/i.test(capCat.steps[capStep].cap) ? "back" : "front"] = { frames: frames.length, kept: frames.indexOf(best) + 1, sharp: Math.round(best.sharp), glare: Math.round(best.glare * 1000) / 1000, frame_times_ms: frames.map(function(f){ return f.t; }), flash_mode: (function(){ try{ return __ccFlashMode(); }catch(e){ return "unknown"; } })(), flash_status: (function(){ try{ return __ccFlashState($("capVideo")).status; }catch(e){ return "unknown"; } })() };
+    try{ ccBurstFrames[/back/i.test(capCat.steps[capStep].cap) ? "back" : "front"] = { winner: best.canvas.toDataURL("image/jpeg", 0.85), frames: frames.map(function(f){ return f.canvas.toDataURL("image/jpeg", 0.85); }), scores: frames.map(function(f){ return { sharpness: Math.round(f.sharp), glare: Math.round(f.glare * 1000) / 1000 }; }), kept: frames.indexOf(best) + 1 }; }catch(e){}
     ccBurstUsePhoto(best.canvas);
   };
   var grab = function(idx){
