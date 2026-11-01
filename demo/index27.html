@@ -17877,6 +17877,37 @@ body.cc-stage #ccStagePauseBtn{ display:flex; }
 #ccStagePauseBtn:focus-visible{ outline:3px solid #ffd76a; outline-offset:2px; }
 @media (hover:hover){ #ccStagePauseBtn:hover{ background:rgba(40,24,66,.85); } }
 
+/* ---------- CC-FIX-27.3: per-game pause-button seats (phones) ----------
+   Owner phone finding, Nov 1 (his own circled screenshot): the 27.2
+   notch fix dropped the button to top:48px on every game — clear of
+   the camera band, but on Cauldron Stack it now lands on the game's
+   own MUSIC chip + colour dot and crowds the standings line. Owner's
+   rule, BOTH halves, on ALL 9 games: the button clears the notch band
+   AND never overlaps a game's own top furniture. The measured
+   furniture map (390x844 + 360x740, survey273) says no single seat
+   obeys both rules everywhere, so three games take a per-game seat:
+   Stack sinks below its standings line, Cannon sinks below its SCORE
+   pill, Words moves to the top centre (both its corners are occupied
+   by its own header furniture; the centre column is empty at both
+   sizes). The other five already clear everything from the 27.2 seat.
+   Scoped to phone widths; wider layouts keep the 27.2 placement.
+   Mystery Bubble has NO seat that obeys both rules — its stage is
+   wall-to-wall furniture at both sizes in every state (exhaustive
+   empty-rectangle search, survey273b: zero spots even at 44px) — so
+   it keeps the 27.2 seat pending the owner's call; making room there
+   means moving the game's own furniture, a game-layout decision. */
+@media (max-width:699px){
+  body.cc-stage:has(#scr-gameStack.cc-stage-sec) #ccStagePauseBtn{
+    top:max(108px, env(safe-area-inset-top, 0px));
+  }
+  body.cc-stage:has(#scr-gameCannon.cc-stage-sec) #ccStagePauseBtn{
+    top:max(128px, env(safe-area-inset-top, 0px));
+  }
+  body.cc-stage:has(#scr-gameWords.cc-stage-sec) #ccStagePauseBtn{
+    left:50%; right:auto; transform:translateX(-50%);
+  }
+}
+
 /* ---------- instruction + pause overlays ---------- */
 #cc27-ui > *{ pointer-events:auto; }
 .cc-overlay{
