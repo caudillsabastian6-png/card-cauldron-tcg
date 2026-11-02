@@ -19293,6 +19293,40 @@ html, body, main, .screen, #ccMallowFloatSheet{ touch-action:pan-y; }
   .top-banner{ height:150px; }
 }
 </style>
+<style id="cc-tvfit-2711">
+/* ================= CC-FIX-27.11 · desktop/TV short-height fit ================
+   Owner report Nov 2, 2026 (photo: the live demo on his 43in Roku TV,
+   Allie at 3840x2160 / 300% scaling = ~1280x720 CSS viewport): the Home
+   stack ran too tall - the gold "Check your card" band slid behind the
+   floating dock (band bottom y=667 vs dock top y=628 at 1280x720) and
+   its walkthrough sub-line was hidden; on the TV the "10 free checks
+   left" line itself sat on the clip edge. Owner's calibration: shrink
+   "just a lil bit". So: a MODEST tightening that lives ONLY in
+   short-height desktop windows (min-width:1024px and max-height:820px)
+   - hero a touch shorter, paddings/margins trimmed 2-12px each, the
+   dock pill a touch slimmer and 4px lower. No text shrinks. Standard-
+   height desktops (1080p, 1536x864) and ALL phones are untouched. */
+@media (min-width:1024px) and (max-height:820px){
+  .screen{ padding-top:16px; padding-bottom:104px; }
+  #opTopRow{ padding-top:2px; }
+  .demo-banner{ margin:4px 0 6px; }
+  .cc-state-line{ margin-bottom:6px; }
+  .top-banner{ height:118px; margin-bottom:6px; }
+  #scr-home .toggle-row h2{ padding-top:5px; padding-bottom:5px; }
+  #scr-home .toggle-row .lead{ padding-top:5px; padding-bottom:5px; margin-top:2px; }
+  #scr-home .toggle-row .card{ padding-top:9px; padding-bottom:9px; margin-top:8px; }
+  #scr-home .card.center{ padding-top:11px; padding-bottom:11px; }
+  #ccFreeCheckBubbles{ height:27px; }
+  #ccFreeCheckBubbles i{ width:23px; height:23px; }
+  #ccFreeCheckHeading{ margin-top:6px; }
+  #scr-home .card.center .bubble-btn{ padding-top:8px; padding-bottom:8px; margin-top:10px; }
+  .card, .band{ padding-top:12px; padding-bottom:12px; }
+  .mt{ margin-top:10px; }
+  .mt-lg{ margin-top:13px; }
+  body .dock{ bottom:14px; padding-top:6px; padding-bottom:6px; }
+  .dock button{ padding-top:5px; padding-bottom:5px; }
+}
+</style>
 <script>
 /* ================= CC-FIX-27.6 · coin FX + award helpers (§6) =================
    Every game/scan award in #27.6 lands through window.opAddCoins (the EARNED
