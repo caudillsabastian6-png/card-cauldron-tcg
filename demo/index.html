@@ -15120,7 +15120,7 @@ if (typeof document !== "undefined") (function () {
         + '<p class="small dim" style="margin-top:8px;">Hair comes with your base — change it in Person.</p>';
       var customCard = document.createElement("div"); customCard.className = "card mt";
       customCard.innerHTML = '<h3>✂️ Hair, brows &amp; eyes — all free</h3><div id="ccCustomizationHost"></div>';
-      var names = ["Person", "Wardrobe", "Companion", "Settings"];
+      var names = ["Person", "Companion", "Settings"]; /* HOTFIX 2026-11-02: Wardrobe tab removed by owner order until the try-on render is fixed */
       var bar = document.createElement("div");
       bar.className = "cc-avtabs"; bar.setAttribute("role", "tablist");
       bar.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px;";
@@ -15139,7 +15139,7 @@ if (typeof document !== "undefined") (function () {
       profile.parentNode.insertBefore(bar, profile);
       names.forEach(function(nm){ bar.parentNode.insertBefore(panels[nm], bar.nextSibling); });
       [profile, human, customCard].forEach(function(c){ if(c) panels.Person.appendChild(c); });
-      panels.Wardrobe.appendChild(wardrobeCard);
+      if (panels.Wardrobe) panels.Wardrobe.appendChild(wardrobeCard); /* HOTFIX 2026-11-02: no Wardrobe panel; card stays detached and dormant */
       panels.Companion.appendChild(comp);
       [pool, login, bg].forEach(function(c){ if(c) panels.Settings.appendChild(c); });
       function showTab(nm){
@@ -16491,6 +16491,7 @@ if (typeof module !== "undefined" && module.exports) module.exports = CCWardrobe
    (original first, overlay re-paint after). Edits no existing code. */
 if (typeof document !== "undefined" && typeof window !== "undefined") (function () {
   "use strict";
+  return; /* HOTFIX 2026-11-02: WARDROBE DORMANT by owner order — no panel render, no top-bubble overlay, no opRenderAvatar wrap — until the try-on render is fixed. Remove this line to revive. */
   try {
     if (window.__ccWardrobe && typeof window.__ccWardrobe.destroy === "function") {
       try { window.__ccWardrobe.destroy(); } catch (e) {}
@@ -16972,6 +16973,7 @@ if (typeof module !== "undefined" && module.exports) module.exports = CCAvatarRe
    with the coin block's and wardrobe module's own wraps. */
 if (typeof window !== "undefined" && typeof document !== "undefined") (function () {
   "use strict";
+  return; /* HOTFIX 2026-11-02: AVATAR-ON-REWARDS DORMANT with the wardrobe by owner order — #ccAvatarStage stays hidden, no equip/bubble wraps. Remove this line to revive. */
   try {
     if (window.__ccAvatarRewards) return;
     var document = window.document;
