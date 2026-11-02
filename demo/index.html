@@ -1711,7 +1711,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.10 · Nov 2, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.12 · Nov 2, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -3139,13 +3139,149 @@ function poolSubmitAndConfirm(){
         + '<h3 style="color:#f5c542;">Your scan went to the pending pool ✓</h3>'
         + '<p>' + poolAutoLabelHTML(res.d.label || {number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"}, res.d.submission_id) + '</p>'
         + (window.__ccScanAward276 && window.__ccScanAward276.paid ? '<p style="font-weight:900;color:#ffd76a;">+10 coins 🪙 — scans pay 10 coins each, up to 50 a day.</p>' : (window.__ccScanAward276 && window.__ccScanAward276.maxed ? '<p style="font-weight:900;color:#ffd76a;">Scan saved — daily scan coins maxed (50).</p>' : ''))
+        + '<div id="glimmerReadSlot"></div>'
         + '<p>Is this correct?</p>'
         + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;"><button type="button" class="bubble-btn b-gold" id="poolLabelYes"><span>Yes, that\'s right</span></button><button type="button" class="bubble-btn b-white" id="poolLabelNo"><span>No, that\'s not right</span></button></div></div>';
       document.body.appendChild(pop);
+      try{ glimmerWatchRead(res.d.submission_id, res.d.label || {number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"}); }catch(e){}
       document.getElementById("poolLabelYes").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Thanks — auto-label confirmed. Your pending scan is saved as " + poolSubmittedId + "." + (window.__ccScanAward276 && window.__ccScanAward276.paid ? " +10 coins 🪙" : ""); });
       document.getElementById("poolLabelNo").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Got it — we dropped the label to UNKNOWN. Potion will fix it. Your pending scan is still saved as " + poolSubmittedId + "."; var _l2 = document.getElementById("capLabelLine"); if(_l2) _l2.textContent = "Labelled: UNKNOWN — you said the auto-label was not right, Potion will fix it — pool: YES, pending, " + poolSubmittedId; if(statusEl && window.__ccScanAward276 && window.__ccScanAward276.paid) statusEl.textContent += " +10 coins 🪙"; });
     }).catch(function(){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; });
 }
+/* CC-FIX-27.12 · Glimmer wiring A1 — see patch2712-glimmer.py header.
+   Identity reads only; the read can never block, delay, or fail a
+   check, and a missing/empty read is exactly the old behaviour. */
+var glimmerPoll = null;
+function glimmerNorm(s){ return String(s == null ? "" : s).replace(/\s+/g, "").toLowerCase(); }
+function glimmerShown(s){ return String(s == null ? "" : s).trim(); }
+function glimmerRecordChoice(sid, field, choice, readVal, finalVal){
+  try{
+    var recs = JSON.parse(localStorage.getItem("cc_glimmer_corrections") || "[]");
+    recs.unshift({ sid: sid, field: field, choice: choice, read: readVal, final: finalVal, when: new Date().toISOString() });
+    recs = recs.slice(0, 50);
+    localStorage.setItem("cc_glimmer_corrections", JSON.stringify(recs));
+    window.__ccGlimmerChoices = recs;
+  }catch(e){}
+}
+function glimmerNoCard(sid){
+  var slot = document.getElementById("glimmerReadSlot");
+  if(slot) slot.innerHTML = "";
+  window.__ccGlimmerState = { sid: sid, state: "none-shown" };
+}
+function glimmerWatchRead(sid, declared){
+  var slot = document.getElementById("glimmerReadSlot");
+  if(!slot || !sid) return;
+  declared = declared || {};
+  var declaredByField = { name: declared.name, number: declared.number, set: declared.set_logo };
+  var started = Date.now();
+  var CAP_MS = 240000, EVERY_MS = 2500;
+  window.__ccGlimmerState = { sid: sid, state: "reading" };
+  slot.innerHTML = "";
+  var wait = document.createElement("div");
+  wait.id = "glimmerWait";
+  wait.style.cssText = "margin-top:12px;border:1px solid #8a6d2f;border-radius:12px;padding:10px 12px;background:#241c31;";
+  wait.innerHTML = "<b>Read by Basil</b><br><span>Reading\u2026</span>";
+  slot.appendChild(wait);
+  if(glimmerPoll) clearInterval(glimmerPoll);
+  var tick = function(){
+    if(!document.getElementById("glimmerReadSlot")){ clearInterval(glimmerPoll); glimmerPoll = null; return; }
+    if(Date.now() - started > CAP_MS){ clearInterval(glimmerPoll); glimmerPoll = null; glimmerNoCard(sid); return; }
+    fetch("https://api.cardcauldrontcg.com/pool/read/" + encodeURIComponent(sid))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if(!d || !d.ok) return;
+        if(d.state === "done" && d.read){ clearInterval(glimmerPoll); glimmerPoll = null; glimmerRenderRead(sid, d.read, declaredByField); }
+        else if(d.state === "empty"){ clearInterval(glimmerPoll); glimmerPoll = null; glimmerNoCard(sid); }
+        /* pending / none: keep polling (two door hosts, host-local
+           read stores — a "none" can be the other host answering). */
+      })
+      .catch(function(){ /* a failed poll is not a failed check */ });
+  };
+  glimmerPoll = setInterval(tick, EVERY_MS);
+  tick();
+}
+function glimmerRenderRead(sid, read, declaredByField){
+  var slot = document.getElementById("glimmerReadSlot");
+  if(!slot) return;
+  window.__ccGlimmerState = { sid: sid, state: "done", read: read };
+  slot.innerHTML = "";
+  var card = document.createElement("div");
+  card.id = "glimmerReadCard";
+  card.style.cssText = "margin-top:12px;border:2px solid #f5c542;border-radius:12px;padding:12px;background:#241c31;text-align:left;";
+  var head = document.createElement("div");
+  head.innerHTML = "<b>Read by Basil \u2014 check it</b>";
+  card.appendChild(head);
+  var fields = [ ["name", "Name"], ["number", "Number"], ["set", "Set"] ];
+  var inputs = {};
+  fields.forEach(function(f){
+    var key = f[0], label = f[1];
+    var val = glimmerShown(read[key]);
+    if(!val) return; /* she did not produce this field — no row, no guess */
+    var row = document.createElement("div");
+    row.style.cssText = "margin-top:8px;";
+    var lab = document.createElement("label");
+    lab.textContent = label;
+    lab.style.cssText = "display:block;font-size:12px;opacity:.85;";
+    var inp = document.createElement("input");
+    inp.type = "text"; inp.value = val; inp.dataset.glimmerField = key;
+    inp.style.cssText = "width:100%;box-sizing:border-box;margin-top:2px;padding:7px 9px;border-radius:8px;border:1px solid #8a6d2f;background:#171221;color:#fff8e7;font-size:15px;";
+    row.appendChild(lab); row.appendChild(inp);
+    card.appendChild(row);
+    inputs[key] = inp;
+    var claim = glimmerShown(declaredByField[key]);
+    if(claim && claim.toUpperCase() !== "UNKNOWN" && glimmerNorm(claim) !== glimmerNorm(val)){
+      var warn = document.createElement("div");
+      warn.className = "glimmerMismatch";
+      warn.dataset.field = key;
+      warn.style.cssText = "margin-top:6px;font-size:13px;";
+      var line = document.createElement("div");
+      line.textContent = label + " reads " + val + " \u2014 doesn\u2019t match " + claim + ".";
+      warn.appendChild(line);
+      var btns = document.createElement("div");
+      btns.style.cssText = "display:flex;gap:8px;margin-top:6px;";
+      var bUse = document.createElement("button");
+      bUse.type = "button"; bUse.className = "bubble-btn b-gold glimmerUseRead"; bUse.innerHTML = "<span>Use the read</span>";
+      var bKeep = document.createElement("button");
+      bKeep.type = "button"; bKeep.className = "bubble-btn b-white glimmerKeepMine"; bKeep.innerHTML = "<span>Keep mine</span>";
+      bUse.addEventListener("click", function(){ inp.value = val; warn.remove(); glimmerRecordChoice(sid, key, "use-read", val, inp.value); });
+      bKeep.addEventListener("click", function(){ inp.value = claim; warn.remove(); glimmerRecordChoice(sid, key, "keep-mine", val, inp.value); });
+      btns.appendChild(bUse); btns.appendChild(bKeep);
+      warn.appendChild(btns);
+      card.appendChild(warn);
+    }
+  });
+  if(read.hp){
+    var hp = document.createElement("div");
+    hp.style.cssText = "margin-top:8px;font-size:13px;opacity:.9;";
+    hp.textContent = "HP reads " + glimmerShown(read.hp);
+    card.appendChild(hp);
+  }
+  var ok = document.createElement("button");
+  ok.type = "button"; ok.id = "glimmerLooksRight"; ok.className = "bubble-btn b-gold";
+  ok.style.cssText = "margin-top:12px;";
+  ok.innerHTML = "<span>Looks right</span>";
+  ok.addEventListener("click", function(){
+    var finalVals = {};
+    Object.keys(inputs).forEach(function(k){ finalVals[k] = inputs[k].value; });
+    glimmerRecordChoice(sid, "all", "confirmed", read, finalVals);
+    window.__ccGlimmerConfirmed = finalVals;
+    var parts = [];
+    if(finalVals.name) parts.push(finalVals.name);
+    if(finalVals.number) parts.push(finalVals.number);
+    if(finalVals.set) parts.push(finalVals.set);
+    var line2 = document.getElementById("capLabelLine");
+    if(line2) line2.textContent = "Labelled: " + parts.join(" \u00b7 ") + " \u2014 read by Basil, confirmed by you \u2014 pool: YES, pending, " + sid;
+    card.innerHTML = "";
+    var done = document.createElement("div");
+    done.id = "glimmerConfirmedLine";
+    done.textContent = "Read confirmed: " + parts.join(" \u00b7 ");
+    card.appendChild(done);
+  });
+  card.appendChild(ok);
+  slot.appendChild(card);
+}
+window.__ccGlimmerWatch = glimmerWatchRead;
+
 /* My scans — this device's own pool scans, shown in My Binders > Undecided
    Pocket as PENDING (owner, Oct 29: binders show real scanned cards, not
    sample cards). Front thumbnail is downscaled before storing so local
@@ -7814,6 +7950,34 @@ var CC_CANNON_CORE = (function(){
         jarB("jar",290,278),
         jarB("jar",290,248),
         {mat:"ice", x:290, y:204, w:28, h:28}
+      ];}},
+    /* CC-FIX-27.12: Forts 9-10 (owner order Nov 2: ten levels, each one
+       harder). Same resting-stack idiom as 1-8; both idle-stable and
+       win-verified headless against this core before landing
+       (build2712 test-levels2.cjs + cannon-harness.cjs). */
+    { name:"Level 9", banner:"CRACK THE KEEP!",
+      sub:"The glowing block must hit the ground",
+      objective:{type:"weakspot"}, balls:4,
+      build:function(){ return [
+        post("stone",222,472), post("stone",358,472),
+        post("wood",256,472), post("wood",324,472),
+        beam("stone",290,414),
+        box("stone",252,394), box("stone",328,394),
+        {mat:"marked", x:290, y:365, w:20, h:58, marked:true},
+        beam("stone",290,336),
+        jarB("jar",270,316), jarB("jar",310,316)
+      ];}},
+    { name:"Level 10", banner:"THE LAST TOWER!",
+      sub:"Every single block off the shelf — no leftovers",
+      objective:{type:"clean"}, balls:5,
+      build:function(){ return [
+        box("wood",232,472), box("wood",266,472), box("wood",300,472), box("wood",334,472),
+        box("ice",232,440),  box("ice",266,440),  box("ice",300,440),  box("ice",334,440),
+        box("wood",249,408), box("wood",317,408),
+        post("wood",249,376), post("wood",317,376),
+        beam("stone",283,318),
+        box("ice",266,298),  box("ice",300,298),
+        jarB("jar",283,266)
       ];}}
   ];
 
@@ -7940,7 +8104,7 @@ var CC_CANNON_CORE = (function(){
   var cnMedals = {};
   try{ cnMedals = JSON.parse(localStorage.getItem("ccCannonMedals") || "{}"); }catch(e){ cnMedals = {}; }
   var cnSiege = false, cnSiegeCycle = 0, cnSiegeIx = 0;
-  var SIEGE_ORDER = [5, 2, 6, 0, 4, 1, 3, 7];
+  var SIEGE_ORDER = [5, 2, 6, 0, 4, 1, 3, 7, 9, 8];
   var goldenBlock = null, goldenDown = false, ballsTotal = 0;
   var stars=[], laserLines=[];
   (function makeBackdrop(){
@@ -8425,9 +8589,33 @@ var CC_CANNON_CORE = (function(){
 
   /* ---------------- UI wiring ---------------- */
   function buildChips(){
-    /* CC-FIX-27.6 §5: no fort buttons — the range opens at your frontier
-       fort and a clear opens the next. This line just says where you stand. */
+    /* CC-FIX-27.12: the fort picker is back (owner order Nov 2: ten
+       levels, and the Levels button must list/select them). 27.6 took
+       the chips away and left only a status line, so the range read as
+       ONE level — you could only ever play your frontier fort. Now:
+       one chip per fort; forts up to your frontier are tappable,
+       later forts show locked; a clear still opens the next fort, and
+       best scores + one-ball medals ride on the chips. */
     var box=$("cn-levelChips"); box.innerHTML="";
+    for(var ci=0; ci<LEVELS.length; ci++){
+      (function(i){
+        var lock = i>cnFrontier;
+        var c=document.createElement("button");
+        c.type="button";
+        c.className="chip"+(i===levelIdx?" sel":"")+(i<cnFrontier?" done":"");
+        c.innerHTML="<b>Fort "+(i+1)+"</b><small>"+LEVELS[i].banner+"</small>"+
+          (cnMedals[i] ? "<small>one-ball medal &#127941;</small>"
+            : best[i] ? "<small>best "+best[i]+"</small>"
+            : lock ? "<small>locked</small>" : "");
+        if(lock){ c.disabled=true; }
+        c.addEventListener("click", function(){
+          if(i>cnFrontier) return;
+          cnSiege=false;
+          loadLevel(i,true);
+        });
+        box.appendChild(c);
+      })(ci);
+    }
     var p=document.createElement("p");
     p.className="small"; p.id="cn-fortLine";
     box.appendChild(p);
@@ -8438,7 +8626,7 @@ var CC_CANNON_CORE = (function(){
     if(cnSiege){ p.textContent = "♾ Siege Remix · cycle " + cnSiegeCycle + " · fort " + (cnSiegeIx + 1) + " of " + SIEGE_ORDER.length + " — " + LEVELS[levelIdx].banner; return; }
     p.textContent = "Fort " + (levelIdx + 1) + " of " + LEVELS.length + " — " + LEVELS[levelIdx].banner + (cnMedals[levelIdx] ? " · 🏅 one-ball medal yours" : "") + " · clear it to open the next fort · ⭐ the gold block pays extra";
   }
-  function markChips(){ paintFortLine(); }
+  function markChips(){ buildChips(); }
   $("cn-startBtn").addEventListener("click", function(){
     ensureAudio();
     $("cn-startOverlay").classList.add("hidden");
@@ -19895,7 +20083,7 @@ function ccStageFit(){
        to 1180px — the extra width is the game's own #cn-rail (how-to
        card built from the game's own words), so the stage reads as a
        composed wide layout instead of a phone column in a void. */
-    if(land){ body.style.width = "1180px"; body.style.height = "780px"; }
+    if(land){ body.style.width = "1180px"; body.style.height = "824px"; }
     else { body.style.width = "430px"; body.style.height = "780px"; }
   }
   else if(land || landShort) body.style.width = CC_LAND_W[CCSTAGE.scr] || "100%";
@@ -20985,6 +21173,71 @@ body.cc-stage .ccstack-hud{padding-right:66px;}
    dock at max scroll (examiner oy19/oy38 on phones). Enforce the normal
    closed-fold hiding; the fold still opens on tap as designed. */
 #scr-rewards details:not([open]) > *:not(summary){display:none !important;}
+</style>
+<style id="cc-2712-style">
+/* ================= CC-FIX-27.12 · Cannon TV layout + end-panel scroll +
+   fort picker + Match HUD clearance =================
+   Owner orders, Mon Nov 2, 2026 ~2:49 PM ET, from his own TV photos of
+   live #27.11 (Cannon stage + its end panel):
+   (1) Cannon sat pinned LEFT in a 430px column with the How-to-play
+       card floating at its right and dead space around. In the wide
+       stage it is now one centred column: the instructions box rides
+       ABOVE the game, the game under it, both fitted to the screen by
+       the stage fitter (design box 1180x824 — the strip takes ~6% of
+       the game's height; the game stays the biggest thing on screen).
+   (2) The end-of-run panel (score + leaderboard) was ~910 design-px
+       inside a 660px stage and its overlay could not scroll at all —
+       the top line was clipped off his TV. The cannon overlays now
+       scroll (wheel + touch drag), centred safely when they fit, and
+       the end card + its board are compacted (this card only — the
+       shared board renders untouched in every other game).
+   (3) Cauldron Match (the candy match game): its HUD chips ran under
+       the stage menu button on TV. Stage-scoped right padding keeps
+       the game's own furniture out of the button's lane — the same
+       medicine as Stack's D-3 rule in CC-FIX-27.10. */
+
+/* ---- (1) Cannon wide stage: instructions above, game centred ---- */
+.screen.cc-stage-sec.cc-land .cn-wrap#cn-outer{
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+}
+.screen.cc-stage-sec.cc-land .cn-wrap #cn-rail{
+  display:block; order:-1; flex:none; width:min(1060px,100%); padding-top:0;
+}
+.screen.cc-stage-sec.cc-land .cn-wrap .cn-railcard{
+  display:flex; align-items:flex-start; gap:26px; padding:12px 22px;
+}
+.screen.cc-stage-sec.cc-land .cn-wrap .cn-railcard h4{
+  flex:none; margin:0; padding-top:3px; font-size:18px;
+}
+.screen.cc-stage-sec.cc-land .cn-wrap .cn-railcard p{
+  flex:1 1 0; margin:0; font-size:13.5px; line-height:1.45;
+}
+.screen.cc-stage-sec.cc-land .cn-wrap #cn-fit{ flex:none; width:430px; margin:0 auto; }
+.screen.cc-stage-sec.cc-land .cn-wrap #cn-footNote{ display:none; }
+
+/* ---- (2) Cannon overlays: scrollable + safe-centred + compact end card ---- */
+.cn-wrap .overlay{
+  overflow-y:auto; overflow-x:hidden; scrollbar-width:thin; overscroll-behavior:contain;
+  justify-content:flex-start;
+}
+.cn-wrap .overlay > *:first-child{ margin-top:auto; }
+.cn-wrap .overlay > *:last-child{ margin-bottom:auto; }
+.cn-wrap .chip:disabled{ opacity:.45; cursor:default; }
+.cn-wrap .endCard{ max-width:344px; width:100%; padding:14px 16px 12px; }
+.cn-wrap .endTitle{ font-size:25px; }
+.cn-wrap .endLine{ font-size:13.5px; margin-top:4px; }
+.cn-wrap .endScore{ margin-top:7px; }
+.cn-wrap .btnRow2{ margin-top:10px; }
+.cn-wrap #cnBoardSlot #endBoard{ padding:9px 10px !important; margin-top:10px; }
+.cn-wrap #cnBoardSlot #endBoard h3{ font-size:15.5px !important; }
+.cn-wrap #cnBoardSlot #endRank{ margin:2px 0; }
+.cn-wrap #cnBoardSlot .cc-lb{ padding:9px 10px; }
+.cn-wrap #cnBoardSlot .cc-lb li{ font-size:14.5px; padding:3px 4px; line-height:1.3; }
+.cn-wrap #cnBoardSlot .cc-lb li.lb-first{ font-size:16.5px; }
+.cn-wrap #cnBoardSlot #endBoard .small{ font-size:11px; line-height:1.35; }
+
+/* ---- (3) Cauldron Match: HUD clears the stage menu button ---- */
+.screen.cc-stage-sec .cm-wrap #cm-hud{ padding-right:70px; }
 </style>
 <script>
 /* CC-FIX-27.10 (D-6): menu gold = the screen you are ON, nothing else.
