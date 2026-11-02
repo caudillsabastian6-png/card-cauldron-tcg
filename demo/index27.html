@@ -1702,13 +1702,16 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 #scr-home .lead, #scr-games .lead{font-size:16.5px;}
 #scr-home .band .sub2, #scr-games .band .sub2{font-size:14.5px;}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="neon">
 <div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first — local demo only. No password, no server, nothing leaves this device. This only remembers a name so the top bubble shows who is signed in.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Local demo only — not a real account.</p></div>
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.8 · Nov 1, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.9 · Nov 1, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -1897,13 +1900,16 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
   </div>
   <!-- In-game rewards popup: shown once per session, after a game end screen. -->
   <div id="rewardsGamePop" hidden style="position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
+    <div style="position:relative;background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
+      <button type="button" id="rewardsGameX" aria-label="Close — back to the finish screen" style="position:absolute;top:8px;right:10px;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,248,231,.4);background:rgba(255,248,231,.08);color:#fff8e7;font-size:16px;line-height:1;cursor:pointer;">✕</button>
       <div style="font-size:44px;">&#129689;</div>
       <h2 style="margin:10px 0 6px;">Spin your rewards!</h2>
       <p class="lead" style="margin:0;">Nice finish &#8212; your coins are in the top bubble. Keep playing to stack them up for the rewards store and avatar goodies at launch.</p>
       <p class="small dim" style="margin-top:8px;">Coins and scores here are device-local only, never real money, and they never touch your free checks.</p>
       <div class="stack" style="margin-top:16px;">
+        <button type="button" class="bubble-btn b-brightpink" id="rewardsGameAgain"><span>▶ Play again</span></button>
         <button type="button" class="bubble-btn b-gold" id="rewardsGameClose"><span>Keep playing</span></button>
+        <button type="button" class="bubble-btn b-white" id="rewardsGameHome"><span>🏠 Return to Home</span></button>
       </div>
     </div>
   </div>
@@ -9135,12 +9141,42 @@ function rewardsShowOpenOnce(){
 }
 function rewardsShowGameOnce(){
   try{ if(sessionStorage.getItem("rewardsGameShown")) return; sessionStorage.setItem("rewardsGameShown","1"); }catch(e){}
+  /* CC-FIX-27.9: remember which game this pop-up belongs to, so its
+     Play Again restarts THAT game. The stage's own record wins;
+     the active game screen is the fallback. */
+  try{
+    var s = (typeof CCSTAGE !== "undefined" && CCSTAGE.scr) ? CCSTAGE.scr : null;
+    if(!s){ var a=document.querySelector(".screen.active"); if(a && a.id.indexOf("scr-game")===0) s=a.id.slice(4); }
+    window.__ccRwScr = s;
+  }catch(e){}
   var b=$("rewardsGamePop"); if(b){ b.hidden=false; b.style.display="flex"; }
 }
 document.addEventListener("click", function(e){
   if(e.target.closest("#rewardsOpenClose")){ rewardsHideAll(); }
   if(e.target.closest("#rewardsOpenGames")){ rewardsHideAll(); show("games"); }
   if(e.target.closest("#rewardsGameClose")){ rewardsHideAll(); }
+  /* CC-FIX-27.9 — the pop-up exit standard (owner, Nov 1): every
+     pop-up carries a corner x, Play Again, and Return to Home.
+     The x (like Keep playing) only dismisses — the finish screen
+     underneath stays exactly as it was. Play Again restarts the
+     game the pop-up belongs to, down the game's own front door
+     (hub tile -> instructions -> PLAY). Return to Home leaves
+     the stage for the app home. */
+  if(e.target.closest("#rewardsGameX")){ rewardsHideAll(); }
+  if(e.target.closest("#rewardsGameHome")){ rewardsHideAll(); try{ ccExitStage(); }catch(err){} show("home"); }
+  if(e.target.closest("#rewardsGameAgain")){
+    var scr = null; try{ scr = window.__ccRwScr; }catch(err){}
+    rewardsHideAll();
+    if(scr){
+      try{ ccExitStage(); }catch(err){}
+      show("games");
+      setTimeout(function(){
+        var t=document.querySelector('#scr-games [data-game="'+scr+'"]');
+        if(t){ try{ t.scrollIntoView({block:"center"}); }catch(err){} t.click(); }
+        setTimeout(function(){ var p=document.getElementById("ccInstrPlay"); if(p) p.click(); }, 750);
+      }, 450);
+    }
+  }
 });
 function opDoLogin(name){
   var n = (name||'').trim() || opProfile.displayName || opProfile.username || 'Guest';
@@ -12991,8 +13027,9 @@ if (typeof document !== "undefined") (function () {
       under the mute law, exactly as before.
 
    3. USER SIZE CONTROL. A "My size" row inside her panel —
-   Small · Regular · Large — scaling her stage live (x0.8 / x1.0 /
-   x1.25 over the equipped companion's own stage box), clamped to
+   Small · Regular · Large — scaling her stage live (x0.64 / x0.8 /
+   x1.0 over the equipped companion's own stage box; the scale
+   shifted one notch down in CC-FIX-27.9), clamped to
    the companion's size-class caps (COMPANIONS-SPEC §3) and never
    below a 44 px tap target. The choice persists in ONE key,
    localStorage "cc_mallow_size", applies on tap, and survives
@@ -13053,7 +13090,14 @@ if (typeof document !== "undefined") (function () {
 
   /* ---------- size control state ---------- */
   var CCPP_SIZE_KEY = "cc_mallow_size";
-  var CCPP_SIZE_MULT = { small: 0.8, regular: 1.0, large: 1.25 };
+  /* CC-FIX-27.9: the whole scale shifts one notch down (owner,
+     Nov 1: "make her just a little bit smaller — she's always in
+     the way of something"). Regular, the default, is now x0.8
+     (Mallow's body stage 92x104 -> 74x83, face 56 -> 45); Large
+     is the old Regular; Small scales with them and the 44 px tap
+     floor below still clamps it. Persisted picks keep working —
+     only the scale moved. */
+  var CCPP_SIZE_MULT = { small: 0.64, regular: 0.8, large: 1.0 };
   var CCPP_CLASS_CAPS = { small: [80, 96], classic: [96, 108], large: [112, 128] };
   var CCPP_TAP_MIN = 44;
 
@@ -20662,5 +20706,27 @@ ccApplySettings(false);
 })();
 </script>
 
+<style id="cc279-fonts">
+/* CC-FIX-27.9 — two-face type system (owner, Nov 1: "change the
+   fonts on all of them as long as the readability stays readable,
+   but make them look nice"). Display: Cinzel Decorative —
+   engraved, mystical; titles, headings, game names, pop-up
+   headings, big-button labels, stage-menu rows. Body/UI:
+   Alegreya, a tall-x-height book serif picked to stay readable.
+   Scores, coins and timers keep clean lining tabular numerals
+   in whichever face they sit in. Loaded via Google Fonts with
+   display=swap over the app's local serif fallbacks: first paint
+   never waits on the font, and offline the fallbacks carry it. */
+:root{
+  --cc-font-display:"Cinzel Decorative","Cinzel",Georgia,"Times New Roman",serif;
+  --cc-font-body:"Alegreya",Georgia,"Times New Roman",serif;
+}
+body{font-family:var(--cc-font-body);}
+h1,h2,h3,.cc-card h3{font-family:var(--cc-font-display);}
+.bubble-btn{font-family:var(--cc-font-display);}
+.bubble-btn .sub{font-family:var(--cc-font-body);}
+.cc-menu-btn,.cc-menu-coins-label{font-family:var(--cc-font-display);}
+#opTopCoins,.cc-menu-coins-num,.scorebar,[class*="score"],[class*="timer"],[id*="score"],[id*="timer"]{font-variant-numeric:lining-nums tabular-nums;}
+</style>
 </body>
 </html>
