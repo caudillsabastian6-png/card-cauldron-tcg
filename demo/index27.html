@@ -19050,6 +19050,22 @@ body.cc-stage:has(#scr-gameWords.cc-stage-sec) #ccStageMenu{ top:86px; }
 .cc-menu-coins-label{ font-size:15px; font-weight:700; color:#f3e9ff; }
 .cc-menu-coins-num{ font-size:22px; font-weight:900; color:#ffd76a; }
 #ccStageMenu .cc-menu-btn{ margin:0; }
+
+/* ---------- CC-FIX-27.9L: short-landscape menu + pop fit ----------
+   Owner report Nov 1: phone sideways "still all crunched up a little
+   bit". Examiner 27.9L (LANDSCAPE-ADDENDUM.md): in short landscape
+   the stage menu (340px tall from top:100px) ran to y=440 — off the
+   bottom of both 390px and 360px viewports, last entries
+   unreachable — and the rewards pop-up's card (443px) centred itself
+   half off-screen top and bottom with no scroll. Both fixes live
+   ONLY in the house short-landscape family (the upload #13 query):
+   portrait and standard desktop rendering are byte-for-byte the
+   same experience; the panels simply cap and scroll internally
+   when the screen is too short to hold them. */
+@media (orientation:landscape) and (max-height:540px){
+  #ccStageMenu{ max-height:calc(100dvh - 108px); overflow-y:auto; }
+  #rewardsGamePop > div{ max-height:calc(100dvh - 16px); overflow-y:auto; }
+}
 .cc-coin-floater{ position:fixed; z-index:400; pointer-events:none; font-weight:900; color:#ffd76a;
   font-size:19px; text-shadow:0 2px 8px rgba(0,0,0,.75); animation:ccCoinFloat 1.15s ease-out forwards; }
 @keyframes ccCoinFloat{ 0%{ opacity:0; transform:translateY(6px) scale(.85); }
