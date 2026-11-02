@@ -1036,6 +1036,70 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
 #soundToggle[aria-pressed="true"]::before{content:"\1F50A";font-size:1.3rem;line-height:1}
 #soundToggle[aria-pressed="true"] .snd-state{display:none}
 </style>
+
+<style id="cc-contrastfix-2026-11-02">
+/* ============================================================
+   CC-CONTRASTFIX 2026-11-02 — owner order Nov 2, 2026: "Fix
+   everything the inspection found" (human-eyes desktop pass,
+   Nov 1). Contrast repair ONLY — the locked Neon Line cauldron
+   look, layout, copy, links and media are untouched.
+
+   ROOT CAUSE (measured): the Neon skin forces the dark plum
+   background in BOTH color schemes, but the base stylesheet's
+   text variables still follow the visitor's OS scheme — so a
+   light-mode visitor got the light scheme's dark-purple ink
+   (#241a3f) and muted copy (#5c5178) on the forced near-black
+   background: headings, the wordmark, the dock labels and the
+   menu links all rendered dark-on-dark (~1.3:1). The designed
+   site is the dark one; this block pins the text palette to
+   the designed dark-scheme values in both schemes, so every
+   visitor gets the readable site the dark-scheme majority
+   already sees. Sizes never shrink; contrast only rises.
+   ============================================================ */
+:root{
+  --ink:#f6f1e3;            /* headings + body text: cream on plum, ~14:1 */
+  --muted:#c9bfe0;          /* secondary copy, brightened a step (~8.6:1) */
+  --faint:#a99cc9;          /* faintest labels, brightened (~5.4:1) */
+  --gold:#f0b23e;           /* the designed dark-scheme gold, both schemes */
+  --gold-deep:#e09a26;
+  --panel:rgba(24,17,48,.95);   /* M-3: cards near-opaque so the wireframe */
+  --panel2:rgba(31,24,64,.96);  /* world frames them instead of crossing them */
+  color-scheme:dark;
+}
+/* M-3 — Sets: the set symbols are black glyphs on transparency and were
+   invisible on the dark cards. They now sit on a cream chip, the way a
+   printed set symbol sits on a card — visible beside every set name. */
+.set-card .set-sym{
+  display:inline-flex; align-items:center; justify-content:center;
+  background:#f6f1e3; border-radius:10px; padding:.3rem .6rem;
+  min-height:2.2rem; height:auto; width:max-content; max-width:100%;
+}
+/* M-5 — closed folds must read as finished, closed sections, not empty
+   boxes: grid rows no longer stretch a closed fold to its tall sibling,
+   and a closed fold carries the gold edge of a shut cauldron lid. */
+.guide-grid{align-items:start}
+details.cardbox-fold>summary{cursor:pointer; list-style:none}
+details.cardbox-fold>summary::-webkit-details-marker{display:none}
+details.cardbox-fold:not([open]){
+  border-color:rgba(255,215,106,.55);
+  box-shadow:0 0 10px rgba(255,215,106,.14), inset 0 0 18px rgba(179,136,255,.05), 0 12px 26px rgba(0,0,0,.5);
+}
+details.sec-fold>summary{cursor:pointer; list-style:none}
+details.sec-fold>summary::-webkit-details-marker{display:none}
+/* M-6 — the menu drawer was a 220px phone drawer pasted on desktop.
+   Desktop gets a real drawer width; phones keep the compact panel. */
+.web-menu-panel{max-width:calc(100vw - 1.6rem)}
+@media (min-width:761px){
+  .web-menu-panel{min-width:330px; max-height:84vh}
+}
+/* M-4 — the spotlight video no longer floats lost in a wide section:
+   on desktop the pair composes inside a designed measure and the
+   card takes a fair share of it. Phone layout untouched. */
+@media (min-width:1024px){
+  .motion-layout{max-width:1120px; margin-inline:auto; grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
+  .motion-card{max-width:450px}
+}
+</style>
 </head>
 <body class="subpage">
 
@@ -1599,20 +1663,26 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
   var empty = document.getElementById("setsEmpty");
   var search = document.getElementById("setSearch");
   if (!grid) return;
+  /* Symbol CDN ids differ from the shop's own set codes for the SV/ME eras
+     (verified live 2026-11-02). Codes not listed here have no symbol
+     published upstream yet (me02.5, me03, me04, me05) — their chip removes
+     itself on error instead of standing empty. */
+  var SYM_ID = {"sv02":"sv2","sv03":"sv3","sv03.5":"sv3pt5","sv04":"sv4","sv04.5":"sv4pt5","sv05":"sv5","sv08":"sv8","sv08.5":"sv8pt5","sv09":"sv9","sv10.5b":"zsv10pt5","sv10.5w":"zsv10pt5","swsh12.5":"swsh12pt5","me01":"me1","me02":"me2"};
+  var SYM_NONE = {"me02.5":1,"me03":1,"me04":1,"me05":1};
   function render(items){
     grid.innerHTML = "";
     empty.style.display = items.length ? "none" : "";
     items.forEach(function(it){
       var card = document.createElement("article");
       card.className = "set-card";
-      if (it.s){
+      if (it.s && !SYM_NONE[it.s]){
         var sym = document.createElement("div");
         sym.className = "set-sym";
         var img = document.createElement("img");
-        img.src = "https://images.pokemontcg.io/" + it.s + "/symbol.png";
+        img.src = "https://images.pokemontcg.io/" + (SYM_ID[it.s] || it.s) + "/symbol.png";
         img.alt = "";
         img.loading = "lazy";
-        img.onerror = function(){ img.remove(); };
+        img.onerror = function(){ sym.remove(); };
         sym.appendChild(img);
         card.appendChild(sym);
       }
@@ -1703,7 +1773,7 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
 
   function init() {
     /* ---------- tuning constants ---------- */
-    var SHAPE_COUNT = 20;      // floating wireframe polygons
+    var SHAPE_COUNT = 12;      // floating wireframe polygons
     var GRID_ROWS = 14;        // horizontal floor lines
     var GRID_COLS = 18;        // vertical fan lines (drawn -9..+9)
     var DPR_CAP = 2;           // devicePixelRatio cap for phone GPUs
@@ -1712,7 +1782,7 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
     var SMOOTH = 7.5;          // lerp rate toward the real scroll position (per sec)
     var IDLE_DRIFT = 0.010;    // grid travel per second when not scrolling
     var IDLE_RISE = 4;         // shape rise per second at depth 1
-    var BASE_ALPHA = 0.88;     // plum wash opacity (logo backdrop ghosts through)
+    var BASE_ALPHA = 0.97;     // plum wash opacity (logo backdrop ghosts through)
     var HORIZON = 0.60;        // horizon height, fraction of viewport height
 
     /* ---------- locked palette (Neon Line theme) ---------- */
@@ -1810,12 +1880,12 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
       for (i = 0; i < GRID_ROWS; i++) {
         p = wrap(i / GRID_ROWS + travel, 1);
         y = horizon + (H - horizon) * p * p;
-        strokeLine(0, y, W, y, GRID_A, (0.05 + p * 0.42) * boost, 0.6 + p * 1.1);
+        strokeLine(0, y, W, y, GRID_A, (0.04 + p * 0.15) * boost, 0.6 + p * 1.1);
       }
       for (i = -GRID_COLS / 2; i <= GRID_COLS / 2; i++) {
-        strokeLine(cx, horizon, cx + i * (W * 0.16), H, GRID_B, 0.26 * boost, 1);
+        strokeLine(cx, horizon, cx + i * (W * 0.16), H, GRID_B, 0.13 * boost, 1);
       }
-      strokeLine(0, horizon, W, horizon, HORIZON_C, 0.55 * boost, 1.4);
+      strokeLine(0, horizon, W, horizon, HORIZON_C, 0.24 * boost, 1.4);
     }
 
     function drawShape(s, boost) {
@@ -1824,7 +1894,7 @@ nav.social-row{position:static;inset:auto;z-index:auto;background:none;backdrop-
       var x = s.x * W + Math.sin(t * 0.3 + s.sway) * 14 * s.z;
       var r = s.size * (0.35 + s.z * 0.65);
       var stretch = 1 + Math.min(Math.abs(vel) * 0.00012, 0.5) * s.z;
-      var a = (0.16 + s.z * 0.5) * boost;
+      var a = (0.06 + s.z * 0.16) * boost;
       var rot = s.rot + t * s.spin;
       var pts = [], i, ang;
       for (i = 0; i < s.sides; i++) {

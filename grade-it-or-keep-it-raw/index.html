@@ -155,6 +155,70 @@
   .social-row a:hover{text-decoration:underline}
   @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
 </style>
+
+<style id="cc-contrastfix-2026-11-02">
+/* ============================================================
+   CC-CONTRASTFIX 2026-11-02 — owner order Nov 2, 2026: "Fix
+   everything the inspection found" (human-eyes desktop pass,
+   Nov 1). Contrast repair ONLY — the locked Neon Line cauldron
+   look, layout, copy, links and media are untouched.
+
+   ROOT CAUSE (measured): the Neon skin forces the dark plum
+   background in BOTH color schemes, but the base stylesheet's
+   text variables still follow the visitor's OS scheme — so a
+   light-mode visitor got the light scheme's dark-purple ink
+   (#241a3f) and muted copy (#5c5178) on the forced near-black
+   background: headings, the wordmark, the dock labels and the
+   menu links all rendered dark-on-dark (~1.3:1). The designed
+   site is the dark one; this block pins the text palette to
+   the designed dark-scheme values in both schemes, so every
+   visitor gets the readable site the dark-scheme majority
+   already sees. Sizes never shrink; contrast only rises.
+   ============================================================ */
+:root{
+  --ink:#f6f1e3;            /* headings + body text: cream on plum, ~14:1 */
+  --muted:#c9bfe0;          /* secondary copy, brightened a step (~8.6:1) */
+  --faint:#a99cc9;          /* faintest labels, brightened (~5.4:1) */
+  --gold:#f0b23e;           /* the designed dark-scheme gold, both schemes */
+  --gold-deep:#e09a26;
+  --panel:rgba(24,17,48,.95);   /* M-3: cards near-opaque so the wireframe */
+  --panel2:rgba(31,24,64,.96);  /* world frames them instead of crossing them */
+  color-scheme:dark;
+}
+/* M-3 — Sets: the set symbols are black glyphs on transparency and were
+   invisible on the dark cards. They now sit on a cream chip, the way a
+   printed set symbol sits on a card — visible beside every set name. */
+.set-card .set-sym{
+  display:inline-flex; align-items:center; justify-content:center;
+  background:#f6f1e3; border-radius:10px; padding:.3rem .6rem;
+  min-height:2.2rem; height:auto; width:max-content; max-width:100%;
+}
+/* M-5 — closed folds must read as finished, closed sections, not empty
+   boxes: grid rows no longer stretch a closed fold to its tall sibling,
+   and a closed fold carries the gold edge of a shut cauldron lid. */
+.guide-grid{align-items:start}
+details.cardbox-fold>summary{cursor:pointer; list-style:none}
+details.cardbox-fold>summary::-webkit-details-marker{display:none}
+details.cardbox-fold:not([open]){
+  border-color:rgba(255,215,106,.55);
+  box-shadow:0 0 10px rgba(255,215,106,.14), inset 0 0 18px rgba(179,136,255,.05), 0 12px 26px rgba(0,0,0,.5);
+}
+details.sec-fold>summary{cursor:pointer; list-style:none}
+details.sec-fold>summary::-webkit-details-marker{display:none}
+/* M-6 — the menu drawer was a 220px phone drawer pasted on desktop.
+   Desktop gets a real drawer width; phones keep the compact panel. */
+.web-menu-panel{max-width:calc(100vw - 1.6rem)}
+@media (min-width:761px){
+  .web-menu-panel{min-width:330px; max-height:84vh}
+}
+/* M-4 — the spotlight video no longer floats lost in a wide section:
+   on desktop the pair composes inside a designed measure and the
+   card takes a fair share of it. Phone layout untouched. */
+@media (min-width:1024px){
+  .motion-layout{max-width:1120px; margin-inline:auto; grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
+  .motion-card{max-width:450px}
+}
+</style>
 </head>
 <body class="subpage">
 
