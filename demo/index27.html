@@ -1708,7 +1708,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.7 · Nov 1, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-gold" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-gold" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.8 · Nov 1, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -1888,7 +1888,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
       <div style="font-size:44px;">&#127873;</div>
       <h2 style="margin:10px 0 6px;">Earn rewards while you play!</h2>
       <p class="lead" style="margin:0;">Play games to earn coins &#8212; they show in the coin bubble at the top, device-local only, never real money.</p>
-      <p class="small dim" style="margin-top:8px;">Invite a friend at launch and you both get 10 free checks, once per friend. That referral screen is coming at launch &#8212; this popup is just the heads-up, not a live code yet.</p>
+      <p class="small dim" style="margin-top:8px;">Invite a friend with your own link and you both get 10 free checks, once per friend &#8212; and 100 coins each when they grab their first coin pack. Your link lives in Invite &amp; Earn, under Rewards.</p>
       <div class="stack" style="margin-top:16px;">
         <button type="button" class="bubble-btn b-gold" id="rewardsOpenGames"><span>&#127918; Play games &amp; earn coins</span></button>
         <button type="button" class="bubble-btn b-white small" id="rewardsOpenClose"><span>Got it &#8212; not now</span></button>
@@ -2541,9 +2541,75 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
     </details>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button type="button" class="bubble-btn b-white" data-nav="games"><span>Play games</span></button>
+      <button type="button" class="bubble-btn b-gold" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button>
       <button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button>
     </div>
   </section>
+
+  <!-- ================= INVITE & EARN (CC-FIX-27.8) ================= -->
+  <section class="screen" id="scr-invite">
+    <button type="button" class="backlink" data-nav="home">← Home</button>
+    <h2>🤝 Invite &amp; Earn</h2>
+    <div class="card mt" id="ccRefPendingCard" hidden>
+      <h3 style="margin:0;">🎉 You came in on an invite</h3>
+      <p class="small" style="margin-top:6px;">A friend's invite is saved on this device. Sign in with your own name and the bonus lands — +10 free checks for you, +10 for them.</p>
+    </div>
+    <div class="card mt">
+      <h3 style="margin:0;">Your invite link</h3>
+      <p class="small dim" style="margin-top:6px;">Send this link to a friend. When they join with it, you both get <b>+10 free checks</b>. When they grab their first coin pack, you both get <b>+100 coins</b>.</p>
+      <p style="font-size:30px;font-weight:900;letter-spacing:3px;margin:12px 0 2px;" id="ccRefCode">— — — —</p>
+      <p class="small dim" id="ccRefLink" style="word-break:break-all;">Sign in with your name and your code appears here.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+        <button type="button" class="bubble-btn b-gold" id="ccRefShareBtn"><span>📣 Share my link</span></button>
+        <button type="button" class="bubble-btn b-white" id="ccRefCopyBtn"><span>📋 Copy link</span></button>
+      </div>
+      <p class="small" id="ccRefCopyNote" role="status" style="margin-top:8px;"></p>
+    </div>
+    <div class="card mt">
+      <h3 style="margin:0;">Your invites so far</h3>
+      <p class="small" id="ccRefStatsLine" style="margin-top:6px;">Sign in to see your invite count.</p>
+      <p class="small dim" id="ccRefStatsDetail"></p>
+      <p class="small" id="ccRefSyncNote" style="color:#7fe37f;"></p>
+    </div>
+    <div class="card mt">
+      <h3 style="margin:0;">How it works</h3>
+      <p class="small" style="margin-top:6px;">1. Send your link to a friend.<br>2. They open it and sign in with their name — you both get +10 free checks, once per friend.<br>3. When they buy their first coin pack, you both get +100 bonus coins.<br>Inviting yourself doesn't count, and each friend pays out once. Bonuses land on this device, under the name you signed in with.</p>
+    </div>
+  </section>
+
+  <!-- Invite & Earn share pop-up (CC-FIX-27.8): one sheet, every channel
+       prefilled; nothing auto-posts — the player presses send in the
+       app they pick; a channel that can't open falls back to copy. -->
+  <div id="ccRefSharePop" hidden style="position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
+      <div style="font-size:44px;">📣</div>
+      <h2 style="margin:10px 0 6px;">Share your invite link</h2>
+      <p class="small dim" style="margin:0;">Every button carries the same message and your link. Nothing posts by itself — you always press send in the app you pick. If a button doesn't open anything on this device, Copy link does the same job.</p>
+      <div class="stack" style="margin-top:16px;">
+        <button type="button" class="bubble-btn b-gold" id="ccRefShareNative"><span>📣 Share…</span></button>
+        <button type="button" class="bubble-btn b-white" id="ccRefShareMessenger"><span>💬 Messenger</span></button>
+        <button type="button" class="bubble-btn b-white" id="ccRefShareFacebook"><span>📘 Facebook feed</span></button>
+        <button type="button" class="bubble-btn b-white" id="ccRefShareStory"><span>📸 Story</span></button>
+        <button type="button" class="bubble-btn b-white" id="ccRefShareText"><span>💬 Text message</span></button>
+        <button type="button" class="bubble-btn b-white" id="ccRefShareEmail"><span>✉️ Email</span></button>
+        <button type="button" class="bubble-btn b-white" id="ccRefShareCopy"><span>📋 Copy link</span></button>
+        <button type="button" class="bubble-btn b-white small" id="ccRefShareClose"><span>Not now</span></button>
+      </div>
+      <p class="small" id="ccRefShareNote" role="status" style="margin-top:10px;"></p>
+    </div>
+  </div>
+
+  <!-- Invite & Earn news pop-up (CC-FIX-27.8): claim + purchase news,
+       in plain words, filled by #ccRefScript -->
+  <div id="ccRefPop" hidden style="position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
+      <h2 style="margin:10px 0 6px;" id="ccRefPopTitle">Invite bonus!</h2>
+      <p class="lead" id="ccRefPopText" style="margin:0;"></p>
+      <div class="stack" style="margin-top:16px;">
+        <button type="button" class="bubble-btn b-gold" id="ccRefPopOk"><span>Nice!</span></button>
+      </div>
+    </div>
+  </div>
 
   <!-- game screens get injected here -->
   <div id="gameScreens"></div>
@@ -10089,7 +10155,7 @@ document.addEventListener("click", function(e){
     try { raw = localStorage.getItem(KEY); } catch (e) {}
     if (raw === null || raw === undefined) return MAX;
     var n = parseInt(raw, 10);
-    if (isNaN(n) || n < 1 || n > MAX) return MAX;
+    if (isNaN(n) || n < 1 || n > 999) return MAX;
     return n;
   }
   function save(n){
@@ -10107,6 +10173,17 @@ document.addEventListener("click", function(e){
     var n = load() - 1;
     refilled = false;
     if (n < 1) { n = MAX; refilled = true; }
+    save(n);
+    render(n);
+    return n;
+  }
+  /* CC-FIX-27.8: referral bonuses credit real checks through here */
+  function add(k){
+    k = parseInt(k, 10) || 0;
+    if (k <= 0) return load();
+    var n = load() + k;
+    if (n > 999) n = 999;
+    refilled = false;
     save(n);
     render(n);
     return n;
@@ -10147,6 +10224,7 @@ document.addEventListener("click", function(e){
     key: KEY,
     get: load,
     spend: spend,
+    add: add,
     render: render,
     destroy: function(){
       observers.forEach(function(o){ try { o.disconnect(); } catch (e) {} });
@@ -19822,6 +19900,10 @@ function ccBuildOverlays(){
     '<div id="ccStageMenu" hidden role="dialog" aria-label="Stage menu">' +
       '<div class="cc-menu-coins"><span class="cc-menu-coins-label">🪙 Your coins</span><span class="cc-menu-coins-num" id="ccStageMenuCoins">0</span></div>' +
       '<button class="cc-menu-btn" id="ccStageMenuPause" type="button">⏸ Pause</button>' +
+      '<button class="cc-menu-btn" id="ccStageMenuGames" type="button">🎮 Back to Mini Games</button>' +
+      '<button class="cc-menu-btn" id="ccStageMenuHome" type="button">🏠 Return Home</button>' +
+      '<button class="cc-menu-btn" id="ccStageMenuCheck" type="button">🫧 Check a Card</button>' +
+      '<button class="cc-menu-btn" id="ccStageMenuRefer" type="button">🤝 Refer a Friend</button>' +
     '</div>' +
     '<div class="cc-overlay" id="ccInstrOverlay" hidden>' +
       '<div class="cc-card" role="dialog" aria-modal="true" aria-labelledby="ccInstrTitle">' +
@@ -19857,6 +19939,10 @@ function ccBuildOverlays(){
   document.getElementById("ccStageMenuBtn").addEventListener("click", function(){ ccToggleStageMenu(); });
   document.getElementById("ccStageMenuShade").addEventListener("click", function(){ ccCloseStageMenu(); });
   document.getElementById("ccStageMenuPause").addEventListener("click", function(){ ccCloseStageMenu(); ccPauseGame(true); });
+  document.getElementById("ccStageMenuGames").addEventListener("click", function(){ ccCloseStageMenu(); ccExitStage(); if(typeof window.show === "function") window.show("games"); });
+  document.getElementById("ccStageMenuHome").addEventListener("click", function(){ ccCloseStageMenu(); ccExitStage(); if(typeof window.show === "function") window.show("home"); });
+  document.getElementById("ccStageMenuCheck").addEventListener("click", function(){ ccCloseStageMenu(); ccExitStage(); if(typeof window.show === "function") window.show("picker"); });
+  document.getElementById("ccStageMenuRefer").addEventListener("click", function(){ ccCloseStageMenu(); ccExitStage(); if(typeof window.show === "function") window.show("invite"); });
   document.getElementById("ccInstrClose").addEventListener("click", function(){ ccCloseInstr(); });
   document.getElementById("ccInstrPlay").addEventListener("click", function(){
     var scr = ccInstrScr, btn = ccInstrBtn;
@@ -20170,5 +20256,411 @@ document.addEventListener("fullscreenchange", function(){
 ccBuildOverlays();
 ccApplySettings(false);
 </script>
+<script id="ccRefScript">
+/* =====================================================================
+   CC-FIX-27.8 — INVITE & EARN: the referral frontend + purchase tier.
+   The paying engine has lived in the pool backend since Oct 28
+   (POST /referral/create, /referral/claim, GET /referral/stats);
+   this block is the player-facing half that was never built, plus
+   the owner-decided purchase tier (Nov 1, 2026 ~6:50 PM ET: a
+   referred friend's first purchase pays 100 coins to BOTH sides,
+   once, via POST /referral/purchase).
+
+   How the pieces land in a device-local demo, honestly:
+   - ?ref=CODE in the URL is stashed on arrival; signing in with a
+     name fires the claim once (the backend dedupes per code+name,
+     blocks self-referrals, rejects unknown codes). The referred
+     player's +10 free checks land via __ccFreeChecks.add; the
+     referrer's +10 checks and any +100 purchase coins land when
+     their app next syncs /referral/stats (on sign-in and on opening
+     Invite & Earn), diffed against per-name "already applied"
+     markers so nothing ever pays twice on a device.
+   - A completed purchase is known the same way the free-checks
+     block knows a completed check — by watching state only a real
+     completion can move. Only confirmPurchase() grows the coin
+     ledger's purchases list, so this block polls that ledger; the
+     first growth ever seen for a referred profile fires
+     /referral/purchase. The backend's UNIQUE(code, referred) is
+     the once-ever guarantee; the client applies the buyer's +100
+     exactly once (an "applied" marker, so an already_paid answer
+     after a lost response still makes the buyer whole).
+   - If the purchase call answers "no referral claim for this
+     name", the claim may be sitting on the other door's store
+     (the two backends converge on a ~30-min mirror): the client
+     re-fires the guard-checked claim, then retries the purchase
+     once. No guard is weakened — a bonus is only paid for a pair
+     that passes the claim guards on the paying backend.
+   ===================================================================== */
+(function(){
+  "use strict";
+  var API = "https://api.cardcauldrontcg.com";
+  var MSG = "Join Card Cauldron with my link — we both get 10 free checks, and 100 coins each when you grab your first pack! ";
+  var LEDGER_KEY = "cc_coin_purchase_ledger_v1";
+
+  function ls(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function setLs(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+  function delLs(k){ try{ localStorage.removeItem(k); }catch(e){} }
+  function el(id){ return document.getElementById(id); }
+
+  function myName(){
+    try{
+      var raw = ls("op_profile_v1");
+      if(!raw) return "";
+      var p = JSON.parse(raw);
+      if(!p || !p.loggedIn) return "";
+      var n = (p.displayName || p.username || "").trim();
+      if(!n || n === "Guest") return "";
+      return n;
+    }catch(e){ return ""; }
+  }
+
+  function apiPost(path, body){
+    return fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      .then(function(r){ return r.json().then(function(j){ return { status: r.status, body: j }; }); });
+  }
+  function apiGet(path){
+    return fetch(API + path)
+      .then(function(r){ return r.json().then(function(j){ return { status: r.status, body: j }; }); });
+  }
+
+  /* ---------- ?ref= capture ---------- */
+  try{
+    var m = /[?&]ref=([A-Za-z0-9]{4,16})/.exec(location.search || "");
+    if(m) setLs("cc_ref_pending", m[1].toUpperCase());
+  }catch(e){}
+
+  /* ---------- one reusable pop (claim + purchase news) ---------- */
+  function showRefPop(title, text){
+    var pop = el("ccRefPop"); if(!pop) return;
+    var t = el("ccRefPopTitle"), x = el("ccRefPopText");
+    if(t) t.textContent = title;
+    if(x) x.textContent = text;
+    pop.hidden = false; pop.style.display = "flex";
+  }
+  function hideRefPop(){
+    var pop = el("ccRefPop"); if(!pop) return;
+    pop.hidden = true; pop.style.display = "none";
+  }
+
+  /* ---------- the claim: a carried code + a fresh sign-in ---------- */
+  var claimInFlight = false;
+  function maybeClaim(){
+    var code = ls("cc_ref_pending");
+    if(!code) return;
+    var name = myName();
+    if(!name) return;
+    if(ls("cc_ref_claimed_" + name)){
+      if(ls("cc_ref_claimed_" + name) === code) delLs("cc_ref_pending");
+      return;
+    }
+    if(claimInFlight) return;
+    claimInFlight = true;
+    apiPost("/referral/claim", { code: code, name: name }).then(function(res){
+      claimInFlight = false;
+      var b = res.body || {};
+      if(res.status === 200 && b.ok){
+        setLs("cc_ref_claimed_" + name, code);
+        setLs("cc_ref_by_" + name, code);
+        delLs("cc_ref_pending");
+        delLs("cc_ref_claim_tries");
+        if(window.__ccFreeChecks && window.__ccFreeChecks.add) window.__ccFreeChecks.add(10);
+        showRefPop("🎉 You're in, " + name + "!",
+          "You joined with " + (b.referrer || "a friend") + "'s invite link, so +10 free checks just landed in your balance — and " + (b.referrer || "they") + " got +10 too. When you grab your first coin pack, you will both get +100 bonus coins.");
+        renderInvite();
+      } else if(res.status === 400 && /yourself/i.test(b.error || "")){
+        delLs("cc_ref_pending"); /* his own link: nothing to claim, no nagging */
+        delLs("cc_ref_claim_tries");
+      } else if(res.status === 400 && /already claimed/i.test(b.error || "")){
+        setLs("cc_ref_claimed_" + name, code);
+        setLs("cc_ref_by_" + name, code);
+        delLs("cc_ref_pending");
+        delLs("cc_ref_claim_tries");
+      } else if(res.status === 404){
+        /* A 404 can mean "this door's store hasn't seen the code
+           yet" (two backends, ~30-min mirror) just as easily as a
+           bogus code — retry across door samples before giving up. */
+        var tries = parseInt(ls("cc_ref_claim_tries") || "0", 10) || 0;
+        if(tries < 4){
+          setLs("cc_ref_claim_tries", String(tries + 1));
+          setTimeout(maybeClaim, 12000);
+        } else {
+          delLs("cc_ref_pending"); /* unknown code: drop it quietly */
+          delLs("cc_ref_claim_tries");
+        }
+      }
+      /* 429 / network: keep the pending code; retried on next sign-in or Invite open */
+    }).catch(function(){ claimInFlight = false; });
+  }
+
+  /* ---------- my code + stats sync (the referrer side lands here) ---------- */
+  var lastStats = null;
+  function ensureCode(name){
+    var cached = ls("cc_ref_code_" + name);
+    if(cached) return Promise.resolve(cached);
+    return apiPost("/referral/create", { name: name }).then(function(res){
+      if(res.status === 200 && res.body && res.body.code){
+        setLs("cc_ref_code_" + name, res.body.code);
+        return res.body.code;
+      }
+      return null;
+    }).catch(function(){ return null; });
+  }
+  function applyDue(name, s){
+    var notes = [];
+    var total = s.total_referrer_free_checks || 0;
+    var applied = parseInt(ls("cc_ref_synced_checks_" + name) || "0", 10) || 0;
+    if(total > applied){
+      var due = total - applied;
+      if(window.__ccFreeChecks && window.__ccFreeChecks.add) window.__ccFreeChecks.add(due);
+      setLs("cc_ref_synced_checks_" + name, String(total));
+      notes.push("+" + due + " free checks from friends who joined with your link just landed in your balance.");
+    }
+    var pTotal = s.total_referrer_purchase_coins || 0;
+    var pApplied = parseInt(ls("cc_ref_synced_pcoins_" + name) || "0", 10) || 0;
+    if(pTotal > pApplied){
+      var pDue = pTotal - pApplied;
+      if(typeof opAddCoins === "function") opAddCoins(pDue);
+      setLs("cc_ref_synced_pcoins_" + name, String(pTotal));
+      notes.push("+" + pDue + " coins from a friend's first coin pack just landed in your wallet.");
+    }
+    if(notes.length) setLs("cc_ref_sync_note_" + name, notes.join(" "));
+  }
+  var syncInFlight = false;
+  function syncMine(){
+    var name = myName();
+    if(!name){ renderInvite(); return; }
+    maybeClaim();
+    ensureCode(name).then(function(code){
+      if(!code){ renderInvite(); return; }
+      if(syncInFlight) return;
+      syncInFlight = true;
+      apiGet("/referral/stats?code=" + encodeURIComponent(code)).then(function(res){
+        syncInFlight = false;
+        if(res.status === 200 && res.body){ lastStats = res.body; applyDue(name, res.body); }
+        renderInvite();
+      }).catch(function(){ syncInFlight = false; renderInvite(); });
+    });
+  }
+
+  /* ---------- Invite & Earn screen ---------- */
+  function refLinkFor(name){
+    var code = name && ls("cc_ref_code_" + name);
+    return code ? "https://cardcauldrontcg.com/demo/?ref=" + code : "";
+  }
+  function renderInvite(){
+    var name = myName();
+    var codeEl = el("ccRefCode"), linkEl = el("ccRefLink"),
+        statsEl = el("ccRefStatsLine"), detailEl = el("ccRefStatsDetail"),
+        noteEl = el("ccRefSyncNote"), pend = el("ccRefPendingCard");
+    if(!codeEl) return;
+    var code = name ? ls("cc_ref_code_" + name) : null;
+    if(!name){
+      codeEl.textContent = "— — — —";
+      linkEl.textContent = "Sign in with your name (not Guest) and your code appears here.";
+      statsEl.textContent = "Sign in to see your invite count.";
+      detailEl.textContent = "";
+    } else if(code){
+      codeEl.textContent = code;
+      linkEl.textContent = refLinkFor(name);
+      if(lastStats){
+        statsEl.textContent = "Friends joined: " + (lastStats.referrals || 0) +
+          " · Free checks earned: " + (lastStats.total_referrer_free_checks || 0) +
+          " · First-pack bonuses: " + (lastStats.purchase_bonuses || 0) +
+          " (+" + (lastStats.total_referrer_purchase_coins || 0) + " coins)";
+        var names = (lastStats.referred || []).map(function(r){ return r.referred; });
+        detailEl.textContent = names.length ? "Joined so far: " + names.join(", ") + "." : "Nobody has joined with your link yet — send it to a friend!";
+      } else {
+        statsEl.textContent = "Getting your invite count…";
+        detailEl.textContent = "";
+      }
+    } else {
+      codeEl.textContent = "…";
+      linkEl.textContent = "Getting your code from the invite server… if it stays blank, wait a few seconds and reopen this screen.";
+      statsEl.textContent = "";
+      detailEl.textContent = "";
+    }
+    if(noteEl && name){
+      var note = ls("cc_ref_sync_note_" + name);
+      noteEl.textContent = note || "";
+      if(note) delLs("cc_ref_sync_note_" + name);
+    }
+    if(pend){
+      var pending = ls("cc_ref_pending");
+      var claimed = name && ls("cc_ref_claimed_" + name);
+      pend.hidden = !(pending && !claimed);
+    }
+  }
+
+  /* ---------- sharing ---------- */
+  function note(elm, text){ var n = el(elm); if(n) n.textContent = text; }
+  function copyText(text, done){
+    function fallback(){
+      try{
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }catch(e){}
+      done();
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else fallback();
+  }
+  function copyLink(elm, msg){
+    var link = refLinkFor(myName());
+    if(!link){ note(elm, "Your code isn't ready yet — wait a moment and try again."); return; }
+    copyText(link, function(){ note(elm, msg || "Link copied — paste it anywhere."); });
+  }
+  function nativeShare(elm){
+    var link = refLinkFor(myName());
+    if(!link){ note(elm, "Your code isn't ready yet — wait a moment and try again."); return; }
+    if(navigator.share){
+      navigator.share({ title: "Card Cauldron", text: MSG, url: link }).catch(function(){});
+      note(elm, "Share sheet opened — pick the app and press send there.");
+    } else {
+      copyText(link, function(){ note(elm, "This device has no share sheet — your link is copied instead, ready to paste."); });
+    }
+  }
+  function wireShare(){
+    var openBtn = el("ccRefShareBtn"), pop = el("ccRefSharePop");
+    if(openBtn && pop) openBtn.addEventListener("click", function(){
+      if(!refLinkFor(myName())){ note("ccRefCopyNote", "Sign in with your name first — your link is tied to it."); syncMine(); return; }
+      pop.hidden = false; pop.style.display = "flex";
+    });
+    var copyBtn = el("ccRefCopyBtn");
+    if(copyBtn) copyBtn.addEventListener("click", function(){ copyLink("ccRefCopyNote", "Link copied — paste it anywhere."); });
+    function close(){ if(pop){ pop.hidden = true; pop.style.display = "none"; } }
+    var closeBtn = el("ccRefShareClose");
+    if(closeBtn) closeBtn.addEventListener("click", close);
+    if(pop) pop.addEventListener("click", function(e){ if(e.target === pop) close(); });
+    function on(id, fn){ var b = el(id); if(b) b.addEventListener("click", fn); }
+    on("ccRefShareNative", function(){ nativeShare("ccRefShareNote"); });
+    on("ccRefShareMessenger", function(){ nativeShare("ccRefShareNote"); });
+    on("ccRefShareStory", function(){ nativeShare("ccRefShareNote"); });
+    on("ccRefShareFacebook", function(){
+      var link = refLinkFor(myName());
+      if(!link){ note("ccRefShareNote", "Your code isn't ready yet — wait a moment and try again."); return; }
+      var w = window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(link) + "&quote=" + encodeURIComponent(MSG), "_blank");
+      if(w) note("ccRefShareNote", "Facebook opened in a new tab — press Post there when you're ready.");
+      else copyText(link, function(){ note("ccRefShareNote", "The Facebook tab was blocked — your link is copied instead, ready to paste into a post."); });
+    });
+    on("ccRefShareText", function(){
+      var link = refLinkFor(myName());
+      if(!link){ note("ccRefShareNote", "Your code isn't ready yet — wait a moment and try again."); return; }
+      note("ccRefShareNote", "Opening your texts — if nothing opens, use Copy link and paste it in.");
+      location.href = "sms:?&body=" + encodeURIComponent(MSG + link);
+    });
+    on("ccRefShareEmail", function(){
+      var link = refLinkFor(myName());
+      if(!link){ note("ccRefShareNote", "Your code isn't ready yet — wait a moment and try again."); return; }
+      note("ccRefShareNote", "Opening your email — if nothing opens, use Copy link and paste it in.");
+      location.href = "mailto:?subject=" + encodeURIComponent("Join Card Cauldron with me") + "&body=" + encodeURIComponent(MSG + link);
+    });
+    on("ccRefShareCopy", function(){ copyLink("ccRefShareNote", "Link copied — paste it anywhere."); });
+    var okBtn = el("ccRefPopOk");
+    if(okBtn) okBtn.addEventListener("click", hideRefPop);
+    var popEl = el("ccRefPop");
+    if(popEl) popEl.addEventListener("click", function(e){ if(e.target === popEl) hideRefPop(); });
+  }
+
+  /* ---------- the purchase tier: first pack pays both sides ---------- */
+  function attemptPurchase(code, name, tries){
+    apiPost("/referral/purchase", { code: code, name: name }).then(function(res){
+      var b = res.body || {};
+      if(res.status === 200 && b.ok && !b.already_paid){
+        setLs("cc_ref_purch_paid_" + name, "1");
+        if(!ls("cc_ref_purch_applied_" + name)){
+          setLs("cc_ref_purch_applied_" + name, "1");
+          if(typeof opAddCoins === "function") opAddCoins(100);
+          showRefPop("🤝 Invite bonus!",
+            "That was your first coin pack as an invited friend: +100 bonus coins just landed in your wallet — and +100 for " + (b.referrer || "your friend") + " too. Thanks for joining!");
+        }
+      } else if(res.status === 200 && b.already_paid){
+        setLs("cc_ref_purch_paid_" + name, "1");
+        if(!ls("cc_ref_purch_applied_" + name)){
+          /* the backend paid earlier but this device never saw the
+             answer (lost response): apply the buyer's +100 now */
+          setLs("cc_ref_purch_applied_" + name, "1");
+          if(typeof opAddCoins === "function") opAddCoins(100);
+        }
+      } else if((res.status === 400 && /no referral claim/i.test(b.error || "")) || res.status === 404){
+        /* the claim (or the code itself) may live on the other
+           door's store: re-fire the guard-checked claim, then retry
+           the purchase — a bonus is only paid for a pair that
+           passes the claim guards on the paying backend */
+        apiPost("/referral/claim", { code: code, name: name }).then(function(){
+          if(tries < 2) setTimeout(function(){ attemptPurchase(code, name, tries + 1); }, 12000);
+        }).catch(function(){});
+      } else if(res.status === 429 && tries < 3){
+        setTimeout(function(){ attemptPurchase(code, name, tries + 1); }, 12000);
+      }
+      /* 404 (unknown code) / 400 self: nothing is owed — stop quietly */
+    }).catch(function(){
+      if(tries < 3) setTimeout(function(){ attemptPurchase(code, name, tries + 1); }, 12000);
+    });
+  }
+  function ledgerCount(){
+    try{
+      var raw = ls(LEDGER_KEY);
+      if(!raw) return 0;
+      var o = JSON.parse(raw);
+      return (o && Array.isArray(o.purchases)) ? o.purchases.length : 0;
+    }catch(e){ return 0; }
+  }
+  function firstBuyCheck(name){
+    if(ls("cc_ref_firstbuy_done_" + name)) return;
+    setLs("cc_ref_firstbuy_done_" + name, "1");
+    var code = ls("cc_ref_by_" + name);
+    if(!code) return;
+    if(ls("cc_ref_purch_paid_" + name)) return;
+    attemptPurchase(code, name, 0);
+  }
+  function watchPurchases(){
+    var name = myName();
+    if(!name) return;
+    var key = "cc_ref_purch_seen_" + name;
+    var count = ledgerCount();
+    var seen = ls(key);
+    if(seen === null){
+      setLs(key, String(count));
+      if(count > 0) firstBuyCheck(name);
+      return;
+    }
+    var prev = parseInt(seen, 10) || 0;
+    if(count !== prev){
+      setLs(key, String(count));
+      if(count > prev) firstBuyCheck(name);
+    }
+  }
+
+  /* ---------- hooks: sign-in, navigation, boot ---------- */
+  if(typeof window.opDoLogin === "function" && !window.opDoLogin.__ccRefWrapped){
+    var rawLogin = window.opDoLogin;
+    var wrappedLogin = function(n){
+      var r = rawLogin.apply(this, arguments);
+      setTimeout(function(){ maybeClaim(); syncMine(); }, 60);
+      return r;
+    };
+    wrappedLogin.__ccRefWrapped = true;
+    window.opDoLogin = wrappedLogin;
+  }
+  if(typeof window.show === "function" && !window.show.__ccRefWrapped){
+    var rawShow = window.show;
+    var wrappedShow = function(id){
+      var r = rawShow.apply(this, arguments);
+      if(id === "invite") setTimeout(syncMine, 30);
+      return r;
+    };
+    wrappedShow.__ccRefWrapped = true;
+    window.show = wrappedShow;
+  }
+  wireShare();
+  setInterval(watchPurchases, 1500);
+  setTimeout(function(){ maybeClaim(); if(myName()) syncMine(); }, 900);
+})();
+</script>
+
 </body>
 </html>
