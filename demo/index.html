@@ -7,10 +7,13 @@
 <link rel="icon" href="data:," />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/cinzeldecorative/v19/daaCSScvJGqLYhG8nNt8KPPswUAPni7TTMw.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/cinzeldecorative/v19/daaHSScvJGqLYhG8nNt8KPPswUAPniZoadlESTE.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/cinzeldecorative/v19/daaHSScvJGqLYhG8nNt8KPPswUAPniZQa9lESTE.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/alegreya/v41/4UaBrEBBsBhlBjvfkSLhx6g.woff2" />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet" />
 <title>Real or Replica — Public Demo (Upscale Build, staged)</title>
 <link rel="manifest" href="manifest.json" />
-<link rel="stylesheet" href="upscale.css" />
 <meta name="theme-color" content="#0b0908" />
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -1705,13 +1708,49 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
+<script id="cc2713FontInsurance">
+/* CC-27.13 font insurance: pull every declared face at head time so
+   first paint is final on any network, and no declared weight can
+   fall back silently (the latent Decorative 400 defect). */
+(function(){ if(!document.fonts || !document.fonts.load) return;
+  var F = ['400 32px "Cinzel Decorative"','700 32px "Cinzel Decorative"','900 32px "Cinzel Decorative"',
+           '500 32px "Cinzel"','700 32px "Cinzel"','900 32px "Cinzel"',
+           '400 32px "Alegreya"','500 32px "Alegreya"','700 32px "Alegreya"','800 32px "Alegreya"','italic 400 32px "Alegreya"'];
+  for (var i=0;i<F.length;i++){ try { document.fonts.load(F[i]); } catch(e){} }
+})();
+</script>
+
 </head>
 <body class="neon">
 <div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first — local demo only. No password, no server, nothing leaves this device. This only remembers a name so the top bubble shows who is signed in.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Local demo only — not a real account.</p></div>
+<script id="cc2713GateEarly">
+/* CC-27.13 gate early-tap guard: queue gate taps that land before the
+   login system (defined near the end of this document) has parsed. */
+window.opGateLoginGuest = function(){
+  var tries = 0;
+  (function wait(){
+    if (typeof window.opDoLogin === "function") { window.opDoLogin("Guest"); return; }
+    if (++tries > 600) return;
+    setTimeout(wait, 100);
+  })();
+};
+window.opGateLogin = function(){
+  var tries = 0;
+  (function wait(){
+    if (typeof window.opDoLogin === "function") {
+      var inp = document.getElementById("opGateLoginName");
+      window.opDoLogin(inp ? inp.value : "");
+      return;
+    }
+    if (++tries > 600) return;
+    setTimeout(wait, 100);
+  })();
+};
+</script>
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.12 · Nov 2, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.13 · Nov 2, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -2126,8 +2165,8 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
       <p class="sub2">The Condition Grader's own paid option — separate from Unlimited, separate from checks.</p>
     </div>
     <div class="card mt">
-      <p class="lead" style="font-size:16px;">Grading is <strong>$3.99/month</strong>: 20 Grade runs/month, estimate-only. It covers condition grading only — Real checks keep their own tiers.</p>
-      <button type="button" class="bubble-btn b-white mt" disabled aria-label="Get Grading for $3.99 a month — coming at launch"><span>Get Grading — $3.99/month</span><span class="sub">Coming at launch</span></button>
+      <p class="lead" style="font-size:16px;">Grading is <strong>$4.99/month</strong>: 20 Grade runs/month, estimate-only. It covers condition grading only — Real checks keep their own tiers.</p>
+      <button type="button" class="bubble-btn b-white mt" disabled aria-label="Get Grading for $4.99 a month — coming at launch"><span>Get Grading — $4.99/month</span><span class="sub">Coming at launch</span></button>
       <p class="small center" style="font-weight:800;margin-top:12px;">Purchases aren't open in this demo, and no payment is taken anywhere on this page.</p>
     </div>
     <div class="stack mt-lg"></div>
@@ -2279,9 +2318,9 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
     </div>
 
     <div class="card mt">
-      <h3>Grading — $3.99/month</h3>
+      <h3>Grading — $4.99/month</h3>
       <p class="lead" style="font-size:16px;margin-top:8px;">20 Grade runs/month, estimate-only, SAM front+back. Grading only, no Real checks. Unused grades never roll over.</p>
-      <button type="button" class="bubble-btn b-white mt" disabled aria-label="Get the Grading plan for $3.99 a month — coming at launch"><span>Get Grading — $3.99/month</span><span class="sub">Coming at launch</span></button>
+      <button type="button" class="bubble-btn b-white mt" disabled aria-label="Get the Grading plan for $4.99 a month — coming at launch"><span>Get Grading — $4.99/month</span><span class="sub">Coming at launch</span></button>
     </div>
 
     <div class="card mt" style="background:linear-gradient(180deg,#3a2f14 0%,#241d0d 100%);">
@@ -9009,8 +9048,6 @@ if (GAME_STARTERS_MISSING.length) { try { console.warn("CC games: starters missi
 })();
 </script>
 
-<script src="ssd-adapter.js"></script>
-<script src="upscale.js"></script>
 <script id="ccPoolOutboxScript">
 /* =====================================================================
    POOL OUTBOX — STAGED PATCH · NOT LIVE · fold-in material only
@@ -21263,5 +21300,48 @@ body.cc-stage .ccstack-hud{padding-right:66px;}
   else paint("home");
 })();
 </script>
+
+<style id="cc2713-desktop">
+/* ================= CC-27.13 DESKTOP-FOR-JUDGES PASS (Nov 2, 2026) ====
+   One scoped block: desktop type scale, Check a Card tiles as cards,
+   taller home hero, fine-print lift, and the Mallow captions un-clipped
+   (the BUBBLEFIX pass had made the labels screen-reader-only 1px boxes;
+   at judges' sizes they now read as visible captions under the discs).
+   Guarded by min-height:821px so the owner's 27.11 TV calibration
+   (windows 820px tall and under, e.g. his 1280x720 TV viewport) keeps
+   its own rules untouched. Phone rendering is byte-for-byte the 27.12
+   cascade: nothing below can match a phone viewport. */
+@media (min-width:1200px) and (min-height:821px){
+  /* P1-4 type scale: screen titles 36px cap -> 52px; the 24px section
+     head (Pull of the Day, inline-styled) -> 32px */
+  .screen h2{ font-size:52px; }
+  #scr-home .card>h3{ font-size:32px !important; }
+  /* P1-5 checker tiles: 3-column card grid, larger titles/icons; the
+     flagship (Pokemon Card) keeps its standing first-and-biggest rule
+     with a taller first row */
+  #pickerList{ display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; align-items:start; grid-auto-flow:dense; }
+  #pickerList .bubble-btn{ min-height:158px; border-radius:26px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:20px 16px; }
+  #pickerList .bubble-btn.cc-flagship-kind{ min-height:198px !important; }
+  #pickerList .bubble-btn>span:first-child{ font-size:21px; }
+  #pickerList .bubble-btn .sub{ font-size:14px; }
+  #pickerList .cc-batchline{ grid-column:1 / -1; }
+  /* P1-7 fine print: 13px -> 13.5px and a contrast lift, desktop only */
+  .screen .small{ font-size:13.5px; }
+  .screen .dim{ color:#e6defa; }
+  /* P0-3 Mallow captions: un-clip the labels at desktop; the pair is
+     nudged apart so the two captions never touch */
+  #ccMallowPlay{ left:calc(54.5% + 17px); }
+  .cc-mallow-mute{ right:calc(45.5% + 17px); }
+  .cc-mallow-play-label{ position:static; width:auto; height:auto; max-width:96px; margin:3px 0 0; padding:0 2px; overflow:visible; clip:auto; clip-path:none; white-space:normal; text-align:center; font-size:11.5px; line-height:1.25; }
+}
+/* P1-6 hero growth sits in its own taller tier: at 864px-tall laptop
+   windows (1536x864) the grown hero + 52px titles pushed the free-check
+   card behind the dock (examiner TVFIT), so the hero only grows when
+   the window is at least 865px tall; 1440x900 and 1920x1080 get the
+   full min(38vh) banner. */
+@media (min-width:1200px) and (min-height:865px){
+  .top-banner{ height:min(38vh, 420px); }
+}
+</style>
 </body>
 </html>
