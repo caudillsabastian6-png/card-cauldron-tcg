@@ -1750,7 +1750,7 @@ window.opGateLogin = function(){
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.13 · Nov 2, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.14 · Nov 3, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -1799,7 +1799,7 @@ window.opGateLogin = function(){
         </div>
       </div>
       <p class="center" style="margin-top:10px;font-weight:900;" id="potdName">Ludicolo · Celestial Storm 38 · Rare Holo</p>
-      <p class="small dim center" style="margin-top:4px;">Demo pool card 3784 of 6,000 · Official image (pokemontcg.io) · Not a scan of Sabastian's card, not a check, not a verdict.</p>
+      <p class="small dim center" style="margin-top:4px;" id="potdCap">Demo pool card 3784 of 6,000 · Official image (pokemontcg.io) · Not a scan of Sabastian's card, not a check, not a verdict.</p>
     </div>
 
     <div class="band band-grape mt">
@@ -1928,7 +1928,8 @@ window.opGateLogin = function(){
   <!-- ================= REWARDS POPUPS (upload #14) ================= -->
   <!-- App-open rewards/referral popup: shown once per session, only after the login gate closes. Never on Home by itself, never before sign-in. -->
   <div id="rewardsOpenPop" hidden style="position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
+    <div style="position:relative;background:#181130;border:3px solid #f0b23e;border-radius:22px;max-width:420px;width:100%;padding:24px 20px;text-align:center;">
+      <button type="button" id="rewardsOpenX" aria-label="Close rewards pop-up" style="position:absolute;top:8px;right:10px;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,248,231,.4);background:rgba(255,248,231,.08);color:#fff8e7;font-size:16px;line-height:1;cursor:pointer;">&#10005;</button>
       <div style="font-size:44px;">&#127873;</div>
       <h2 style="margin:10px 0 6px;">Earn rewards while you play!</h2>
       <p class="lead" style="margin:0;">Play games to earn coins &#8212; they show in the coin bubble at the top, device-local only, never real money.</p>
@@ -3108,12 +3109,20 @@ function poolOptinShow(next){
   document.getElementById("poolYes").addEventListener("click", function(){ poolShareSet(true); pop.remove(); next(); });
   document.getElementById("poolNo").addEventListener("click", function(){ poolShareSet(false); pop.remove(); next(); });
 }
-var poolFrontImg = null, poolBackImg = null, poolSubmittedId = null;
+var poolFrontImg = null, poolBackImg = null, poolSubmittedId = null, poolSubmitBusy = false;
 function poolAutoLabelHTML(label, sid){
   return '<b>Labelled automatically:</b><br>Number: ' + label.number + ' (most important — bottom of card)<br>Set logo: ' + label.set_logo + '<br>Name: ' + label.name + '<br>Pool: YES, pending<br>Submission: ' + sid;
 }
-function poolSubmitAndConfirm(){
-  if(!poolOptinYes || poolSubmittedId || !poolFrontImg) return;
+function poolSubmitAndConfirm(next){
+  /* FIX-WAVE F6: optional continuation — capNext hands in the
+     check's finish (Light Test offer / launch gate) so it runs
+     only after the confirmation sheet is dismissed (or the send
+     fails). Callers without a continuation keep the exact old
+     behaviour. */
+  var _fwNext = (typeof next === "function") ? next : null, _fwDone = false;
+  var _fwFinish = function(){ if(_fwDone) return; _fwDone = true; poolSubmitBusy = false; if(_fwNext){ try{ _fwNext(); }catch(e){} } };
+  if(!poolOptinYes || poolSubmittedId || !poolFrontImg){ _fwFinish(); return; }
+  poolSubmitBusy = true;
   var statusEl = $("capGot"); if(statusEl) statusEl.textContent = "Sending your scan to the pending pool…";
   /* Backend input budget is 2,000,000 characters; mobile JPEG dataURLs can exceed it.
      If the captured card data exceeds it, do not fake a successful upload. */
@@ -3122,7 +3131,7 @@ function poolSubmitAndConfirm(){
   if(frontWire.length > 1900000) {
     if(statusEl) statusEl.textContent = "Your captured card was too large to send. The scan was not sent to the pool.";
     if(capNext) capNext.dataset.poolAttempted = "1";
-    return;
+    _fwFinish(); return;
   }
   /* Back-photo fix (Oct 29, BACKFIX pass): an oversized back used to be
      silently dropped on this line — the front sent alone and the pair
@@ -3133,7 +3142,7 @@ function poolSubmitAndConfirm(){
   if(backWire.length > 700000) {
     if(statusEl) statusEl.textContent = "Your back photo was too large to send. The scan was not sent to the pool — retake the back photo and try again.";
     if(capNext) capNext.dataset.poolAttempted = "1";
-    return;
+    _fwFinish(); return;
   }
   var _payload = {opt_in:true, front_image:frontWire, back_image:(backWire || null), number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"};
   /* Burst provenance (owner ruling, Oct 31): every burst frame plus the
@@ -3162,7 +3171,7 @@ function poolSubmitAndConfirm(){
   fetch("https://api.cardcauldrontcg.com/pool/submit-pending", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(_payload)})
     .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
     .then(function(res){
-      if(!res.ok || !res.d || !res.d.submission_id){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; return; }
+      if(!res.ok || !res.d || !res.d.submission_id){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; _fwFinish(); return; }
       poolSubmittedId = res.d.submission_id;
       try{ poolSaveMyScan(res.d.submission_id, poolFrontImg); }catch(e){}
       /* CC-FIX-27.6 §6.2: the Rewards copy always promised +10 coins per scan
@@ -3183,9 +3192,9 @@ function poolSubmitAndConfirm(){
         + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;"><button type="button" class="bubble-btn b-gold" id="poolLabelYes"><span>Yes, that\'s right</span></button><button type="button" class="bubble-btn b-white" id="poolLabelNo"><span>No, that\'s not right</span></button></div></div>';
       document.body.appendChild(pop);
       try{ glimmerWatchRead(res.d.submission_id, res.d.label || {number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"}); }catch(e){}
-      document.getElementById("poolLabelYes").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Thanks — auto-label confirmed. Your pending scan is saved as " + poolSubmittedId + "." + (window.__ccScanAward276 && window.__ccScanAward276.paid ? " +10 coins 🪙" : ""); });
-      document.getElementById("poolLabelNo").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Got it — we dropped the label to UNKNOWN. Potion will fix it. Your pending scan is still saved as " + poolSubmittedId + "."; var _l2 = document.getElementById("capLabelLine"); if(_l2) _l2.textContent = "Labelled: UNKNOWN — you said the auto-label was not right, Potion will fix it — pool: YES, pending, " + poolSubmittedId; if(statusEl && window.__ccScanAward276 && window.__ccScanAward276.paid) statusEl.textContent += " +10 coins 🪙"; });
-    }).catch(function(){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; });
+      document.getElementById("poolLabelYes").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Thanks — auto-label confirmed. Your pending scan is saved as " + poolSubmittedId + "." + (window.__ccScanAward276 && window.__ccScanAward276.paid ? " +10 coins 🪙" : ""); _fwFinish(); });
+      document.getElementById("poolLabelNo").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Got it — we dropped the label to UNKNOWN. Potion will fix it. Your pending scan is still saved as " + poolSubmittedId + "."; var _l2 = document.getElementById("capLabelLine"); if(_l2) _l2.textContent = "Labelled: UNKNOWN — you said the auto-label was not right, Potion will fix it — pool: YES, pending, " + poolSubmittedId; if(statusEl && window.__ccScanAward276 && window.__ccScanAward276.paid) statusEl.textContent += " +10 coins 🪙"; _fwFinish(); });
+    }).catch(function(){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; _fwFinish(); });
 }
 /* CC-FIX-27.12 · Glimmer wiring A1 — see patch2712-glimmer.py header.
    Identity reads only; the read can never block, delay, or fail a
@@ -3483,12 +3492,22 @@ $("capNext").addEventListener("click", function(){
   if(!capHas) return;
   popSnd();
   if(capStep >= capCat.steps.length-1){
-    if(poolOptinYes) poolSubmitAndConfirm();
-    /* Pokémon Cards get the optional Light Test offer after the back
-       photo, exactly like the full app — every other category goes
-       straight to the finish. */
-    if(capCat.label === "Pokémon Card"){ resetLightTest(); show("lightTest"); setTimeout(function(){ ltStartLive(false); }, 120); }
-    else show("gate");
+    /* FIX-WAVE F6: when this check's photos are being saved to
+       the pool, the confirmation sheet (with the live identity
+       read) comes FIRST and the finish below waits for the
+       sheet's dismissal — the designed order. */
+    var _fwFinish = function(){
+      /* Pokémon Cards get the optional Light Test offer after the back
+         photo, exactly like the full app — every other category goes
+         straight to the finish. */
+      if(capCat.label === "Pokémon Card"){ resetLightTest(); show("lightTest"); setTimeout(function(){ ltStartLive(false); }, 120); }
+      else show("gate");
+    };
+    if(poolOptinYes && poolFrontImg && !poolSubmittedId){
+      if(poolSubmitBusy) return; /* a send is already in flight — its sheet is coming */
+      poolSubmitAndConfirm(_fwFinish);
+    }
+    else _fwFinish();
   }
   else { capStep++; renderCaptureStep(); }
 });
@@ -3733,6 +3752,7 @@ $("plainBtn").addEventListener("click", function(){
       var e = pool.entries[poolIndex-1]; if(!e) return;
       var img = document.getElementById("potdImg"); if(img){ img.src = e.sourceUrl; img.alt = "Today's demo pool card: "+e.name+", "+e.set+" "+e.number; }
       var nm = document.getElementById("potdName"); if(nm) nm.textContent = e.name+" · "+e.set+" "+e.number+" · "+e.rarity;
+      var cap = document.getElementById("potdCap"); if(cap) cap.textContent = "Demo pool card "+poolIndex+" of 6,000 · Official image (pokemontcg.io) · Not a scan of Sabastian's card, not a check, not a verdict.";
     }).catch(function(){});
   }
 })();
@@ -9487,6 +9507,9 @@ function rewardsShowGameOnce(){
   var b=$("rewardsGamePop"); if(b){ b.hidden=false; b.style.display="flex"; }
 }
 document.addEventListener("click", function(e){
+  /* FIX-WAVE F1: the app-open pop carries the same corner x as
+     every other pop-up (house rule) — same dismissal path. */
+  if(e.target.closest("#rewardsOpenX")){ rewardsHideAll(); }
   if(e.target.closest("#rewardsOpenClose")){ rewardsHideAll(); }
   if(e.target.closest("#rewardsOpenGames")){ rewardsHideAll(); show("games"); }
   if(e.target.closest("#rewardsGameClose")){ rewardsHideAll(); }
@@ -21341,6 +21364,101 @@ body.cc-stage .ccstack-hud{padding-right:66px;}
    full min(38vh) banner. */
 @media (min-width:1200px) and (min-height:865px){
   .top-banner{ height:min(38vh, 420px); }
+}
+</style>
+
+<style id="cc-fixwave">
+/* ================= FIX WAVE (on #27.13) =================
+   F2 Cauldron Words doorway: in stage mode Words' own header menu
+   button IS the stage doorway (the shell button takes no seat on
+   Words — CC-FIX-27.7), but its START / victory overlay covers the
+   whole wrap at z-20, header included, so the doorway could not be
+   tapped until the game was already running (Kernel full run,
+   Job 2; reproduced locally: elementFromPoint at the button =
+   #cw-startOverlay at phone, desktop and TV sizes). While such an
+   overlay is up in stage mode: the overlay lets taps pass outside
+   its card, and the game app beneath goes inert EXCEPT its header —
+   so the doorway (and mute) stay live and no game control behind
+   the card can be touched. Embedded play is untouched. */
+.screen.cc-stage-sec:has(#gameWords-body .cw-wrap .overlay:not(.hidden)) .cw-wrap .overlay{ pointer-events:none; }
+.screen.cc-stage-sec:has(#gameWords-body .cw-wrap .overlay:not(.hidden)) .cw-wrap .overlay .card{ pointer-events:auto; }
+.screen.cc-stage-sec:has(#gameWords-body .cw-wrap .overlay:not(.hidden)) #cw-app{ pointer-events:none; }
+.screen.cc-stage-sec:has(#gameWords-body .cw-wrap .overlay:not(.hidden)) #cw-app header{ pointer-events:auto; }
+
+/* F3 Mystery Bubble stage composition (portrait): Mystery's body
+   is a squat 351px design box whose play cluster (score, prompt,
+   bubbles) fills its upper portion with only small print beneath,
+   so on tall phone stages the game read as riding high over a long
+   bare stretch (owner screenshot, Nov 3). Stage-scope only: the
+   body becomes a space-between column over a taller design box —
+   same elements, same handlers, spread across the stage. The fit
+   stays width-capped on phones, so the scale does not change. */
+@media (orientation:portrait){
+  .screen.cc-stage-sec #gameMystery-body{
+    display:flex; flex-direction:column; justify-content:space-between;
+    min-height:600px;
+  }
+}
+
+/* F4 stage dressing: a cauldron-glow pool centred behind the game
+   and a field of bubbles + sparkles in the stage voids, drawn from
+   the demo's own decor language (radial-gradient circles like the
+   screens' .decor bubbles, the same drift motion family). Pure
+   CSS — no assets, no DOM. The game body is lifted above the
+   dressing layer; the dressing never takes a tap. House toggles
+   respected: background-off hides it (as it hides .op-bg), and
+   reduce-motion stills it. */
+.screen.cc-stage-sec > div[id$="-body"]{ position:relative; z-index:1; }
+.screen.cc-stage-sec::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 74% 48% at 50% 54%, rgba(150,84,255,.17), rgba(150,84,255,0) 62%),
+    radial-gradient(ellipse 48% 32% at 50% 57%, rgba(245,197,66,.11), rgba(245,197,66,0) 70%);
+}
+.screen.cc-stage-sec::after{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.55;
+  background-repeat:no-repeat;
+  background-image:
+    radial-gradient(circle at 32% 30%, rgba(255,255,255,.85), rgba(255,197,61,.55) 55%, rgba(255,197,61,0) 74%),
+    radial-gradient(circle at 32% 30%, rgba(255,255,255,.8), rgba(56,189,248,.5) 55%, rgba(56,189,248,0) 74%),
+    radial-gradient(circle at 32% 30%, rgba(255,255,255,.8), rgba(255,93,162,.45) 55%, rgba(255,93,162,0) 74%),
+    radial-gradient(circle at 32% 30%, rgba(255,255,255,.75), rgba(64,224,208,.45) 55%, rgba(64,224,208,0) 74%),
+    radial-gradient(circle at 40% 35%, rgba(255,255,255,.95), rgba(255,215,106,.85) 55%, rgba(255,215,106,0) 78%),
+    radial-gradient(circle at 40% 35%, rgba(255,255,255,.9), rgba(179,136,255,.8) 55%, rgba(179,136,255,0) 78%),
+    radial-gradient(circle at 40% 35%, rgba(255,255,255,.95), rgba(255,215,106,.85) 55%, rgba(255,215,106,0) 78%),
+    radial-gradient(circle at 40% 35%, rgba(255,255,255,.9), rgba(56,189,248,.8) 55%, rgba(56,189,248,0) 78%);
+  background-size:96px 96px, 58px 58px, 70px 70px, 46px 46px, 12px 12px, 9px 9px, 8px 8px, 11px 11px;
+  background-position:5% 14%, 93% 10%, 90% 84%, 8% 86%, 16% 62%, 84% 38%, 62% 8%, 30% 92%;
+  animation:ccfwDrift 7s ease-in-out infinite;
+}
+@keyframes ccfwDrift{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(6px,-14px); } }
+body.cc-bg-off .screen.cc-stage-sec::before,
+body.cc-bg-off .screen.cc-stage-sec::after{ display:none; }
+body.cc-rm .screen.cc-stage-sec::after{ animation:none; }
+/* F7 — hero board back to a header band (owner eye verdict on live #27.13: "way too
+   big" — measured 387px tall at 1919x992, 41% of the window; #27.13's 38vh growth
+   had overridden the build's own slim-chrome 180px heritage). Same media tier as the
+   growth it corrects: phone and TV (height < 865px) keep their current hero. */
+@media (min-width:1200px) and (min-height:865px){
+  .top-banner{ height:min(21vh, 205px); }
+  #ccHeroVideo, .top-banner img{ object-position:50% 30%; }
+  /* F8 — Pull of the Day: fit the SECTION PANEL to the card it holds. The gold frame
+     already hugs the card (~5px gap, live-measured); the panel ran ~1,120px wide with
+     ~350px of empty panel each side of the centred card. Panel follows the card with
+     a modest margin; the frame itself is untouched. */
+  #scr-home .card:has(#potdDate){ width:min(600px,100%); margin-left:auto; margin-right:auto; }
+  /* F9 — desktop fit pass (owner: "more of the page fitted in on desktop mode").
+     Measured on the base at 1919x992: home docH 4,527 (4.56 screens), rewards 6,299.
+     The demo's spacing is already slim (card padding 14px, band padding 14px) — the
+     remaining fat is individual billboard blocks, tightened here; content cards and
+     lists on the other screens carry no oversize spacing and are left alone.
+     The decorative full-width art images (explore-hero on Home, rewards-hero on
+     Rewards — both aria-hidden) ran 625px tall; cap them to bands. Rewards shop
+     tiles: trim padding + grid gap. */
+  #scr-home img[src*="explore-hero"]{ height:340px; object-fit:cover; }
+  #scr-rewards img[src*="rewards-hero"]{ height:340px; object-fit:cover; }
+  body.neon #shopList{ gap:8px !important; }
+  body.neon #shopList > div{ padding:11px 10px 10px !important; }
 }
 </style>
 </body>
