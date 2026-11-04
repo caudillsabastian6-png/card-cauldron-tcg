@@ -1750,7 +1750,7 @@ window.opGateLogin = function(){
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.14 · Nov 3, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.15 · Nov 4, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -2197,6 +2197,31 @@ window.opGateLogin = function(){
     </div>
     <div class="stack mt-lg">
       <button type="button" class="bubble-btn b-gold" data-nav="sampleReceipt"><span>See what the checkers saw</span><span class="sub">The receipt — every tell, in plain words</span></button>
+      <button type="button" class="bubble-btn b-sky small" data-nav="picker">Check another card</button>
+      <button type="button" class="backlink center" data-nav="home" style="align-self:center;">Back home</button>
+    </div>
+  </section>
+
+  <!-- ================= PAIR-SHEET LANE VERDICT (activation candidate — flag-dark) ================= -->
+  <section class="screen" id="scr-laneVerdict">
+    <div class="decor" aria-hidden="true"><i style="width:64px;height:64px;top:8%;right:-14px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#6fd0fc 55%);"></i></div>
+    <p class="center"><span class="pill sky">🖨️ PRINTED PAIR-SHEET LANE — MEASURED VERDICT</span></p>
+    <p class="center small dim" style="margin-top:8px;">Measured from a scanner pair by the Printed Pair-Sheet Lane — the printed-card checker</p>
+    <p class="center" style="margin-top:14px;"><span class="verdict-pill" id="psLaneVerdictWord">…</span></p>
+    <div class="hero-badge" aria-hidden="true">🖨️</div>
+    <h2 class="center" style="margin-top:16px;font-size:30px;">A measured verdict — not an example</h2>
+    <p class="center small dim" style="margin-top:10px;">Every verdict lands on one of three words — <strong>Likely Genuine</strong>, <strong>Likely Counterfeit</strong>, or <strong>Inconclusive</strong> — and those words never change. This one was measured from the scan pair filed with this check.</p>
+    <div class="card mt center">
+      <p style="font-weight:700;text-align:left;">Front print read: <span id="psLaneFront">…</span></p>
+      <p style="font-weight:700;text-align:left;margin-top:6px;">Back print read: <span id="psLaneBack">…</span></p>
+      <p class="lead" style="font-size:18px;margin-top:14px;text-align:left;" id="psLaneExplain"></p>
+    </div>
+    <div class="card mt">
+      <p style="font-weight:800;">What this lane is:</p>
+      <p class="lead" style="font-size:16.5px;margin-top:4px;">A checker for printed pair-sheet cards, proven in a blind test on scanner pairs — 399 of 400 printed fakes caught, 3 false alarms in 120. It speaks only for that family and that capture path. A verdict is an evidence-based opinion from measurements — not a grade, not a certificate, never a guarantee.</p>
+      <p class="small dim" style="margin-top:10px;" id="psLaneMeta"></p>
+    </div>
+    <div class="stack mt-lg">
       <button type="button" class="bubble-btn b-sky small" data-nav="picker">Check another card</button>
       <button type="button" class="backlink center" data-nav="home" style="align-self:center;">Back home</button>
     </div>
@@ -3192,6 +3217,7 @@ function poolSubmitAndConfirm(next){
         + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;"><button type="button" class="bubble-btn b-gold" id="poolLabelYes"><span>Yes, that\'s right</span></button><button type="button" class="bubble-btn b-white" id="poolLabelNo"><span>No, that\'s not right</span></button></div></div>';
       document.body.appendChild(pop);
       try{ glimmerWatchRead(res.d.submission_id, res.d.label || {number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"}); }catch(e){}
+      try{ if(window.ccPsLaneWatch) window.ccPsLaneWatch(res.d.submission_id); }catch(e){}
       document.getElementById("poolLabelYes").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Thanks — auto-label confirmed. Your pending scan is saved as " + poolSubmittedId + "." + (window.__ccScanAward276 && window.__ccScanAward276.paid ? " +10 coins 🪙" : ""); _fwFinish(); });
       document.getElementById("poolLabelNo").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Got it — we dropped the label to UNKNOWN. Potion will fix it. Your pending scan is still saved as " + poolSubmittedId + "."; var _l2 = document.getElementById("capLabelLine"); if(_l2) _l2.textContent = "Labelled: UNKNOWN — you said the auto-label was not right, Potion will fix it — pool: YES, pending, " + poolSubmittedId; if(statusEl && window.__ccScanAward276 && window.__ccScanAward276.paid) statusEl.textContent += " +10 coins 🪙"; _fwFinish(); });
     }).catch(function(){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; _fwFinish(); });
@@ -3213,7 +3239,7 @@ function glimmerRecordChoice(sid, field, choice, readVal, finalVal){
 }
 function glimmerNoCard(sid){
   var slot = document.getElementById("glimmerReadSlot");
-  if(slot) slot.innerHTML = "";
+  if(slot) slot.innerHTML = "<div style=\"margin-top:12px;border:1px solid #8a6d2f;border-radius:12px;padding:10px 12px;background:#241c31;\">That photo couldn\u2019t be read \u2014 try a clearer shot.</div>";
   window.__ccGlimmerState = { sid: sid, state: "none-shown" };
 }
 function glimmerWatchRead(sid, declared){
@@ -3222,18 +3248,35 @@ function glimmerWatchRead(sid, declared){
   declared = declared || {};
   var declaredByField = { name: declared.name, number: declared.number, set: declared.set_logo };
   var started = Date.now();
-  var CAP_MS = 240000, EVERY_MS = 2500;
+  var CAP_MS = 600000, EVERY_MS = 2500, SLOW_MS = 10000;
   window.__ccGlimmerState = { sid: sid, state: "reading" };
   slot.innerHTML = "";
+  if(!document.getElementById("glimmerWaitStyle")){
+    var st = document.createElement("style");
+    st.id = "glimmerWaitStyle";
+    st.textContent = "@keyframes ccGlimmerPulse{0%,80%,100%{opacity:.25}40%{opacity:1}}"
+      + "#glimmerWait .ccGlimmerDots span{display:inline-block;animation:ccGlimmerPulse 1.2s ease-in-out infinite;}"
+      + "#glimmerWait .ccGlimmerDots span:nth-child(2){animation-delay:.15s}"
+      + "#glimmerWait .ccGlimmerDots span:nth-child(3){animation-delay:.3s}";
+    (document.head || document.documentElement).appendChild(st);
+  }
+  var DOTS = "<span class=\"ccGlimmerDots\" aria-hidden=\"true\"><span>.</span><span>.</span><span>.</span></span>";
   var wait = document.createElement("div");
   wait.id = "glimmerWait";
   wait.style.cssText = "margin-top:12px;border:1px solid #8a6d2f;border-radius:12px;padding:10px 12px;background:#241c31;";
-  wait.innerHTML = "<b>Read by Basil</b><br><span>Reading\u2026</span>";
+  wait.innerHTML = "<b>Checking your card now</b>" + DOTS + "<br><span style=\"font-size:13px;opacity:.85;\">Read by Basil \u2014 this can take a few minutes.</span>";
   slot.appendChild(wait);
   if(glimmerPoll) clearInterval(glimmerPoll);
+  var slowed = false;
   var tick = function(){
     if(!document.getElementById("glimmerReadSlot")){ clearInterval(glimmerPoll); glimmerPoll = null; return; }
-    if(Date.now() - started > CAP_MS){ clearInterval(glimmerPoll); glimmerPoll = null; glimmerNoCard(sid); return; }
+    if(!slowed && Date.now() - started > CAP_MS){
+      slowed = true;
+      var w = document.getElementById("glimmerWait");
+      if(w) w.innerHTML = "<b>Still checking \u2014 she can be slow to wake.</b>" + DOTS + "<br><span>Your read will appear right here.</span>";
+      clearInterval(glimmerPoll);
+      glimmerPoll = setInterval(tick, SLOW_MS);
+    }
     fetch("https://api.cardcauldrontcg.com/pool/read/" + encodeURIComponent(sid))
       .then(function(r){ return r.json(); })
       .then(function(d){
@@ -9065,6 +9108,116 @@ if (GAME_STARTERS_MISSING.length) { try { console.warn("CC games: starters missi
     });
     tellsObs.observe(tellsScreen, { attributes: true, attributeFilter: ["class"] });
   }
+})();
+</script>
+
+<script id="ccPsLaneScript">
+/* =====================================================================
+   PRINTED PAIR-SHEET LANE — ACTIVATION CANDIDATE · SHIPPED DARK
+   Folder: ~/workspace/rosette/pairsheet-lane-activation-2026-11-03/
+
+   The demo half of the one lane that passed its blind proof test
+   (399/400 caught, 3/120 false flags — ONESHOT-PAIRSHEET-2026-11-03).
+   This block polls the same per-submission read endpoint the Glimmer
+   identity watch uses, looking for a lane_verdict field the door
+   attaches ONLY to provenance-marked scanner-pair pool records
+   measured by the frozen lane recipe. When a validated verdict for
+   the CURRENT submission exists, the gate screen's Continue button
+   is rerouted from the example verdict screen to the measured
+   verdict screen (#scr-laneVerdict) and the screen is filled from
+   the response — word, voice reads, timestamp. Nothing here invents,
+   caches, or defaults a verdict: no lane field, no verdict screen.
+
+   THE DEMO GATE: window.CC_PS_LANE_UI ships FALSE. While false this
+   block is inert — the watch never starts, no poll fires, no
+   navigation changes. It is flipped to true only in the post-Latch
+   publish build (ACTIVATION-DESIGN.md gate G1), and the door's own
+   server flag must also be ON before any lane_verdict can exist.
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  window.CC_PS_LANE_UI = false; /* DEMO GATE — see header */
+
+  var VOCAB = { "Likely Genuine": 1, "Likely Counterfeit": 1, "Inconclusive": 1 };
+  var READWORDS = {
+    above_band: "points to a printed fake",
+    below_band: "points to a genuine print",
+    in_band: "undecided"
+  };
+  var EXPLAIN = {
+    "Likely Counterfeit": "The measured print tells match the printed pair-sheet fakes this lane was proven on.",
+    "Likely Genuine": "The measured print tells line up with genuine prints, not with the pair-sheet fakes this lane was proven on.",
+    "Inconclusive": "The lane's two reads did not settle — an honest no-call from this lane, not a pass."
+  };
+
+  window.__ccPsLaneVerdict = null;
+
+  function validLane(lv, sid) {
+    if (!lv || lv.lane_id !== "aux-pair-sheet") return false;
+    if (!VOCAB[lv.verdict]) return false;
+    if (!READWORDS[lv.front_read] || !READWORDS[lv.back_read] || !READWORDS[lv.fused_read]) return false;
+    if (lv.verdict === "Likely Counterfeit" && lv.fused_read !== "above_band") return false;
+    if (lv.verdict === "Likely Genuine" && lv.fused_read !== "below_band") return false;
+    if (lv.verdict === "Inconclusive" && lv.fused_read !== "in_band") return false;
+    return true;
+  }
+
+  function fill(lv) {
+    var w = document.getElementById("psLaneVerdictWord");
+    if (w) w.textContent = lv.verdict;
+    var f = document.getElementById("psLaneFront");
+    if (f) f.textContent = READWORDS[lv.front_read] + ".";
+    var b = document.getElementById("psLaneBack");
+    if (b) b.textContent = READWORDS[lv.back_read] + ".";
+    var e = document.getElementById("psLaneExplain");
+    if (e) e.textContent = EXPLAIN[lv.verdict] || "";
+    var m = document.getElementById("psLaneMeta");
+    if (m) m.textContent = "Lane: Printed Pair-Sheet Lane · measured " + (lv.measured_at || "") + " · recipe " + (lv.config || "frozen") + ".";
+    var btn = document.querySelector('#scr-gate [data-nav="sampleVerdict"]');
+    if (btn) btn.setAttribute("data-nav", "laneVerdict");
+  }
+
+  window.ccPsLaneWatch = function (sid) {
+    if (!window.CC_PS_LANE_UI || !sid) return;
+    window.__ccPsLaneVerdict = null;
+    var started = Date.now(), CAP_MS = 240000, EVERY_MS = 2500, timer = null;
+    var tick = function () {
+      if (Date.now() - started > CAP_MS) { if (timer) clearInterval(timer); timer = null; return; }
+      fetch("https://api.cardcauldrontcg.com/pool/read/" + encodeURIComponent(sid))
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d || !d.ok) return;
+          var lv = d.lane_verdict;
+          if (validLane(lv, sid)) {
+            if (timer) clearInterval(timer); timer = null;
+            lv.sid = sid;
+            window.__ccPsLaneVerdict = lv;
+            fill(lv);
+          }
+        })
+        .catch(function () { /* a failed poll is not a failed check */ });
+    };
+    timer = setInterval(tick, EVERY_MS);
+    tick();
+  };
+
+  /* Gate-Continue reroute (backup to the attribute swap in fill()):
+     only when the flag is ON and a validated verdict for the CURRENT
+     submission is stored. Otherwise this listener does nothing and
+     the example flow runs exactly as shipped. */
+  document.addEventListener("click", function (ev) {
+    if (!window.CC_PS_LANE_UI) return;
+    var lv = window.__ccPsLaneVerdict;
+    if (!lv || lv.sid !== window.poolSubmittedId) return;
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-nav="sampleVerdict"]') : null;
+    if (!t) return;
+    var gate = document.getElementById("scr-gate");
+    if (!gate || !gate.contains(t)) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    show("laneVerdict");
+  }, true);
 })();
 </script>
 
