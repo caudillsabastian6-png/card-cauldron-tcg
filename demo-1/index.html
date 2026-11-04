@@ -1750,7 +1750,7 @@ window.opGateLogin = function(){
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #27.15 · Nov 4, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #28 · Nov 4, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -4089,7 +4089,16 @@ function timersBag(){
   };
 }
 
-/* ================= 1. Rapid Fire ================= */
+/* ================= 1. Rapid Fire =================
+   CC-FIX-28 (MIL-1 games feel pass, demo-1 #28): family testers called
+   the timed games too fast to inspect. This build softens every clock
+   that exists — Rapid Fire stage clocks x1.25 + longer feedback dwell,
+   Match Audit flip-back 1100->1400ms and peek 600->1200ms, Bubble Beat
+   travel x1.15 / gap x1.10 / scoring windows +20%, Pop Path fades
+   x1.25, Mystery glide/gap/peek x1.25 (glide now drives the CSS
+   transition), Cauldron Stack mover ramp softened. Words, Cauldron
+   Match and Cannon were measured: they have no clock, unchanged.
+   Full before/after table: crew-answers/slate-execution-2026-11-04. */
 var RAPID_TEXT_DECK = [{"name": "Abomasnow", "set": "Set unknown", "num": "010/198", "isReal": true}, {"name": "Abomasnow", "set": "DRI", "num": "060/182", "isReal": true}, {"name": "Accelgor", "set": "E", "num": "014/264", "isReal": true}, {"name": "Alolan Exeggutor", "set": "30C", "num": "129/128", "isReal": true}, {"name": "Alolan Golem", "set": "JTG", "num": "046/159", "isReal": true}, {"name": "Alolan Grimer", "set": "Set unknown", "num": "130/236", "isReal": true}, {"name": "Alolan Meowth", "set": "Set unknown", "num": "10/12", "isReal": true}, {"name": "Ambipom", "set": "Set unknown", "num": "91/114", "isReal": true}, {"name": "Aron", "set": "E", "num": "109/198", "isReal": true}, {"name": "Articuno", "set": "JTG", "num": "032/159", "isReal": true}, {"name": "Arven's Skwovet", "set": "DRI", "num": "158/182", "isReal": true}, {"name": "Arven's Toedscool", "set": "DRI", "num": "109/182", "isReal": true}, {"name": "Baltoy", "set": "Set unknown", "num": "144/264", "isReal": true}, {"name": "Baltoy", "set": "Set unknown", "num": "32/98", "isReal": true}, {"name": "Bayleef", "set": "ASC", "num": "009/217", "isReal": true}, {"name": "Beedrill", "set": "Set unknown", "num": "003/185", "isReal": true}, {"name": "Beldum", "set": "JTG", "num": "061/159", "isReal": true}, {"name": "Bewear", "set": "E", "num": "151/264", "isReal": true}, {"name": "Bidoof", "set": "Set unknown", "num": "120/172", "isReal": true}, {"name": "Blaine's Last Stand", "set": "Set unknown", "num": "52/68", "isReal": true}, {"name": "Blaziken", "set": "Set unknown", "num": "6/70", "isReal": true}, {"name": "Boss's Orders", "set": "ASC", "num": "256/217", "isReal": true}, {"name": "Bounsweet", "set": "Set unknown", "num": "014/189", "isReal": true}, {"name": "Bruno", "set": "Set unknown", "num": "121/163", "isReal": true}, {"name": "Budew", "set": "ASC", "num": "016/217", "isReal": true}, {"name": "Bug Catcher", "set": "Set unknown", "num": "189/236", "isReal": true}, {"name": "Buizel", "set": "DRI", "num": "057/182", "isReal": true}, {"name": "Buneary", "set": "Set unknown", "num": "212/264", "isReal": true}, {"name": "Bunnelby", "set": "D", "num": "150/189", "isReal": true}, {"name": "Caitlin", "set": "Set unknown", "num": "132/198", "isReal": true}, {"name": "Carnivine", "set": "Set unknown", "num": "009/163", "isReal": true}, {"name": "Centiskorch", "set": "Set unknown", "num": "049/264", "isReal": true}, {"name": "Cetoddle", "set": "DRI", "num": "064/182", "isReal": true}, {"name": "Chandelure", "set": "30C", "num": "137/128", "isReal": true}, {"name": "Charmeleon", "set": "Set unknown", "num": "8/68", "isReal": true}, {"name": "Chatot", "set": "Set unknown", "num": "139/185", "isReal": true}, {"name": "Chatot", "set": "D", "num": "139/185", "isReal": true}, {"name": "Chespin", "set": "CRI", "num": "087/086", "isReal": true}, {"name": "Chewtle", "set": "Set unknown", "num": "060/202", "isReal": true}, {"name": "Chikorita", "set": "ASC", "num": "008/217", "isReal": true}, {"name": "Chili & Cilan & Cress", "set": "Set unknown", "num": "227/264", "isReal": true}, {"name": "Chimecho", "set": "Set unknown", "num": "059/163", "isReal": true}, {"name": "Chimecho", "set": "Set unknown", "num": "072/185", "isReal": true}, {"name": "Cinderace", "set": "Set unknown", "num": "034/202", "isReal": true}, {"name": "Cinderace VMAX", "set": "E", "num": "045/264", "isReal": true}, {"name": "Claydol", "set": "Set unknown", "num": "103/202", "isReal": true}, {"name": "Clefable", "set": "Set unknown", "num": "064/185", "isReal": true}, {"name": "Cleffa", "set": "Set unknown", "num": "131/214", "isReal": true}, {"name": "Coalossal V", "set": "Set unknown", "num": "098/185", "isReal": true}, {"name": "Coalossal V", "set": "D", "num": "098/185", "isReal": true}, {"name": "Cobalion", "set": "Set unknown", "num": "114/198", "isReal": true}, {"name": "Cobalion ex", "set": "CRI", "num": "103/086", "isReal": true}, {"name": "Combusken", "set": "JTG", "num": "023/159", "isReal": true}, {"name": "Cornerstone Mask Ogerpon", "set": "DRI", "num": "111/182", "isReal": true}, {"name": "Corviknight", "set": "Set unknown", "num": "135/202", "isReal": true}, {"name": "Cosmoem", "set": "Set unknown", "num": "014/025", "isReal": true}, {"name": "Cosmoem", "set": "Celebrations", "num": "014/025", "isReal": true}, {"name": "Cosmoem", "set": "E", "num": "014/025", "isReal": true}, {"name": "Cosmog", "set": "Set unknown", "num": "013/025", "isReal": true}, {"name": "Cosmog", "set": "Celebrations", "num": "013/025", "isReal": true}, {"name": "Cosmog", "set": "E", "num": "013/025", "isReal": true}, {"name": "Cottonee", "set": "Set unknown", "num": "139/214", "isReal": true}, {"name": "Croconaw", "set": "E", "num": "056/264", "isReal": true}, {"name": "Cubone", "set": "Set unknown", "num": "37/68", "isReal": true}, {"name": "Cubone", "set": "Set unknown", "num": "57/131", "isReal": true}, {"name": "Cubone", "set": "JTG", "num": "076/159", "isReal": true}, {"name": "Cufant", "set": "E", "num": "191/264", "isReal": true}, {"name": "Cufant", "set": "JTG", "num": "109/159", "isReal": true}, {"name": "Cynthia", "set": "Set unknown", "num": "119/156", "isReal": true}, {"name": "Cynthia's Gabite", "set": "ASC", "num": "110/217", "isReal": true}, {"name": "Cynthia's Gabite", "set": "DRI", "num": "103/182", "isReal": true}, {"name": "Cynthia's Gible", "set": "ASC", "num": "109/217", "isReal": true}, {"name": "Cynthia's Power Weight", "set": "DRI", "num": "162/182", "isReal": true}, {"name": "Dark Gyarados", "set": "Set unknown", "num": "8/82", "isReal": true}, {"name": "Darkrai", "set": "Set unknown", "num": "87/147", "isReal": true}, {"name": "Darmanitan", "set": "Set unknown", "num": "24/214", "isReal": true}, {"name": "Dedenne", "set": "Set unknown", "num": "145/236", "isReal": true}, {"name": "Dedenne", "set": "E", "num": "067/172", "isReal": true}, {"name": "Delcatty", "set": "Set unknown", "num": "212/264", "isReal": true}, {"name": "Delcatty", "set": "ASC", "num": "166/217", "isReal": true}, {"name": "Deoxys", "set": "Set unknown", "num": "120/264", "isReal": true}, {"name": "Dhelmise", "set": "Set unknown", "num": "59/145", "isReal": true}, {"name": "Dialga", "set": "Set unknown", "num": "020/025", "isReal": true}, {"name": "Dialga", "set": "Celebrations", "num": "020/025", "isReal": true}, {"name": "Dialga", "set": "E", "num": "020/025", "isReal": true}, {"name": "Diglett", "set": "Set unknown", "num": "076/198", "isReal": true}, {"name": "Dipplin", "set": "DRI", "num": "017/182", "isReal": true}, {"name": "Ditto V", "set": "Set unknown", "num": "050/072", "isReal": true}, {"name": "Dragapult", "set": "E", "num": "130/264", "isReal": true}, {"name": "Dragonair", "set": "Set unknown", "num": "150/236", "isReal": true}, {"name": "Drakloak", "set": "ASC", "num": "159/217", "isReal": true}, {"name": "Dratini", "set": "Set unknown", "num": "148/236", "isReal": true}, {"name": "Dratini", "set": "Set unknown", "num": "94/149", "isReal": true}, {"name": "Dreepy", "set": "ASC", "num": "158/217", "isReal": true}, {"name": "Drifblim", "set": "Set unknown", "num": "47/114", "isReal": true}, {"name": "Drilbur", "set": "D", "num": "097/185", "isReal": true}, {"name": "Drizzile", "set": "Set unknown", "num": "042/198", "isReal": true}, {"name": "Drizzile", "set": "Set unknown", "num": "057/202", "isReal": true}, {"name": "Drizzile", "set": "E", "num": "042/198", "isReal": true}, {"name": "Dugtrio", "set": "E", "num": "077/198", "isReal": true}, {"name": "Dunsparce", "set": "JTG", "num": "120/159", "isReal": true}, {"name": "Duskull", "set": "Set unknown", "num": "83/236", "isReal": true}, {"name": "Eevee", "set": "Set unknown", "num": "11/12", "isReal": true}, {"name": "Eiscue V", "set": "D", "num": "055/192", "isReal": true}, {"name": "Electrike", "set": "DRI", "num": "075/182", "isReal": true}, {"name": "Emma", "set": "CRI", "num": "107/086", "isReal": true}, {"name": "Emolga", "set": "E", "num": "057/203", "isReal": true}, {"name": "Energy Recycler", "set": "DRI", "num": "164/182", "isReal": true}, {"name": "Energy Retrieval", "set": "Set unknown", "num": "116/149", "isReal": true}, {"name": "Energy Retrieval", "set": "D", "num": "160/202", "isReal": true}, {"name": "Escavalier", "set": "JTG", "num": "102/159", "isReal": true}, {"name": "Espeon ex", "set": "Set unknown", "num": "070/128", "isReal": true}, {"name": "Ethan's Adventure", "set": "DRI", "num": "165/182", "isReal": true}, {"name": "Ethan's Ho-Oh ex", "set": "DRI", "num": "039/182", "isReal": true}, {"name": "Ethan's Quilava", "set": "DRI", "num": "033/182", "isReal": true}, {"name": "Ethan's Slugma", "set": "DRI", "num": "035/182", "isReal": true}, {"name": "Ethan's Sudowoodo", "set": "DRI", "num": "093/182", "isReal": true}, {"name": "Evosoda", "set": "Set unknown", "num": "62/83", "isReal": true}, {"name": "Falinks", "set": "Set unknown", "num": "154/264", "isReal": true}, {"name": "Farfetch'd", "set": "Set unknown", "num": "127/181", "isReal": true}, {"name": "Feebas", "set": "Set unknown", "num": "038/189", "isReal": true}, {"name": "Ferrothorn", "set": "D", "num": "131/202", "isReal": true}, {"name": "Flareon V", "set": "Set unknown", "num": "023/203", "isReal": true}, {"name": "Fletchinder", "set": "Set unknown", "num": "138/203", "isReal": true}, {"name": "Fletchinder", "set": "Set unknown", "num": "139/203", "isReal": true}, {"name": "Fletchling", "set": "Set unknown", "num": "135/203", "isReal": true}, {"name": "Fletchling", "set": "Set unknown", "num": "179/236", "isReal": true}, {"name": "Florges EX", "set": "Set unknown", "num": "67/119", "isReal": true}, {"name": "Flygon V", "set": "Set unknown", "num": "164/172", "isReal": true}, {"name": "Flying Pikachu V", "set": "Set unknown", "num": "006/025", "isReal": true}, {"name": "Flying Pikachu V", "set": "E", "num": "006/025", "isReal": true}, {"name": "Fog Crystal", "set": "Set unknown", "num": "140/198", "isReal": true}, {"name": "Fomantis", "set": "Set unknown", "num": "14/149", "isReal": true}, {"name": "Foongus", "set": "JTG", "num": "010/159", "isReal": true}, {"name": "Fraxure", "set": "F", "num": "111/172", "isReal": true}, {"name": "Froakie", "set": "Set unknown", "num": "51/214", "isReal": true}, {"name": "Froslass", "set": "Set unknown", "num": "036/198", "isReal": true}, {"name": "Galarian Darmanitan", "set": "Set unknown", "num": "028/189", "isReal": true}, {"name": "Galarian Darmanitan", "set": "E", "num": "072/264", "isReal": true}, {"name": "Galarian Sirfetch'd V", "set": "s4", "num": "065/100", "isReal": true}, {"name": "Galarian Sirfetch'd V (JP)", "set": "Set unknown", "num": "065/100", "isReal": true}, {"name": "Galarian Stunfisk", "set": "D", "num": "125/185", "isReal": true}, {"name": "Gastrodon", "set": "Set unknown", "num": "54/111", "isReal": true}, {"name": "Gengar", "set": "Set unknown", "num": "057/198", "isReal": true}, {"name": "Gengar", "set": "Set unknown", "num": "085/202", "isReal": true}, {"name": "Gengar", "set": "E", "num": "057/198", "isReal": true}, {"name": "Giovanni's Exile", "set": "Set unknown", "num": "57/68", "isReal": true}, {"name": "Girafarig ex", "set": "Set unknown", "num": "225/204", "isReal": true}, {"name": "Gladion's Resolve (JP)", "set": "JP", "num": "116/081", "isReal": true}, {"name": "Gligar", "set": "E", "num": "140/264", "isReal": true}, {"name": "Glimwood Tangle", "set": "Set unknown", "num": "162/189", "isReal": true}, {"name": "Gliscor", "set": "Set unknown", "num": "072/163", "isReal": true}, {"name": "Golduck", "set": "Set unknown", "num": "029/149", "isReal": true}, {"name": "Golduck", "set": "Set unknown", "num": "41/236", "isReal": true}, {"name": "Golem", "set": "Set unknown", "num": "137/264", "isReal": true}, {"name": "Golisopod GX", "set": "Set unknown", "num": "129/147", "isReal": true}, {"name": "Golurk", "set": "Set unknown", "num": "066/198", "isReal": true}, {"name": "Granite Cave", "set": "DRI", "num": "166/182", "isReal": true}, {"name": "Great Ball", "set": "Set unknown", "num": "164/202", "isReal": true}, {"name": "Grimer", "set": "Set unknown", "num": "57/82", "isReal": true}, {"name": "Grimmsnarl", "set": "Set unknown", "num": "094/172", "isReal": true}, {"name": "Grimmsnarl", "set": "JTG", "num": "073/159", "isReal": true}, {"name": "Groudon", "set": "Set unknown", "num": "017/025", "isReal": true}, {"name": "Groudon", "set": "E", "num": "017/025", "isReal": true}, {"name": "Grubbin", "set": "ASC", "num": "017/217", "isReal": true}, {"name": "Gyarados EX", "set": "Set unknown", "num": "114/122", "isReal": true}, {"name": "Gym Trainer", "set": "Set unknown", "num": "059/072", "isReal": true}, {"name": "Hakamo-o", "set": "Set unknown", "num": "111/128", "isReal": true}, {"name": "Haunter", "set": "Set unknown", "num": "056/198", "isReal": true}, {"name": "Hearthflame Mask Ogerpon", "set": "DRI", "num": "044/182", "isReal": true}, {"name": "Helioptile", "set": "Set unknown", "num": "098/264", "isReal": true}, {"name": "Herdier", "set": "WHT", "num": "155/086", "isReal": true}, {"name": "Here Comes Team Rocket!", "set": "Set unknown", "num": "113/108", "isReal": true}, {"name": "Hippowdon", "set": "DRI", "num": "106/182", "isReal": true}, {"name": "Ho-Oh", "set": "Set unknown", "num": "001/025", "isReal": true}, {"name": "Ho-Oh", "set": "30C", "num": "012/128", "isReal": true}, {"name": "Hoopa", "set": "ASC", "num": "141/217", "isReal": true}, {"name": "Hop", "set": "Set unknown", "num": "165/202", "isReal": true}, {"name": "Hop", "set": "D", "num": "165/202", "isReal": true}, {"name": "Hop's Bag", "set": "JTG", "num": "147/159", "isReal": true}, {"name": "Hop's Corviknight", "set": "JTG", "num": "108/159", "isReal": true}, {"name": "Hop's Sandaconda", "set": "JTG", "num": "087/159", "isReal": true}, {"name": "Hop's Silicobra", "set": "JTG", "num": "086/159", "isReal": true}, {"name": "Hoppip", "set": "E", "num": "002/203", "isReal": true}, {"name": "Houndoom", "set": "E", "num": "096/163", "isReal": true}, {"name": "Impidimp", "set": "JTG", "num": "071/159", "isReal": true}, {"name": "Indeedee", "set": "E", "num": "120/163", "isReal": true}, {"name": "Indeedee", "set": "E", "num": "127/264", "isReal": true}, {"name": "Inkay", "set": "Set unknown", "num": "50/131", "isReal": true}, {"name": "Inteleon", "set": "Set unknown", "num": "059/202", "isReal": true}, {"name": "Iono's Kilowattrel", "set": "ASC", "num": "072/217", "isReal": true}, {"name": "Iris's Fighting Spirit", "set": "JTG", "num": "149/159", "isReal": true}, {"name": "Jirachi ex", "set": "30C", "num": "102/128", "isReal": true}, {"name": "Joltik", "set": "Set unknown", "num": "055/185", "isReal": true}, {"name": "Judge", "set": "E", "num": "235/264", "isReal": true}, {"name": "Jynx ex", "set": "SV2a", "num": "124/165", "isReal": true}, {"name": "Kakuna", "set": "Set unknown", "num": "002/198", "isReal": true}, {"name": "Kakuna", "set": "E", "num": "002/198", "isReal": true}, {"name": "Karen's Conviction", "set": "E", "num": "144/198", "isReal": true}, {"name": "Karrablast", "set": "Set unknown", "num": "008/189", "isReal": true}, {"name": "Milcery", "set": "Documented fake", "num": "324", "isReal": false}, {"name": "Darmanitan", "set": "Documented fake", "num": "328", "isReal": false}, {"name": "Gastly", "set": "Documented fake", "num": "329", "isReal": false}, {"name": "Sableye", "set": "Documented fake", "num": "330", "isReal": false}, {"name": "Absol", "set": "Documented fake", "num": "325", "isReal": false}, {"name": "Honchkrow", "set": "Documented fake", "num": "326", "isReal": false}, {"name": "Suicune", "set": "Documented fake", "num": "327", "isReal": false}, {"name": "Caterpie EX", "set": "Documented fake \u2014 wrong art/info", "num": "12/108", "isReal": false}, {"name": "Machamp", "set": "Disco test print \u2014 documented fake", "num": "", "isReal": false}, {"name": "Dark Weezing", "set": "Sticker fake \u2014 documented fake", "num": "", "isReal": false}, {"name": "Wartortle", "set": "Typo fake \u2014 documented fake", "num": "", "isReal": false}, {"name": "Slurpuff", "set": "Novelty fake \u2014 documented fake", "num": "", "isReal": false}, {"name": "Charizard GX", "set": "Documented fake anchor", "num": "SM60", "isReal": false}, {"name": "Salazzle GX", "set": "Documented fake anchor", "num": "132", "isReal": false}, {"name": "Latias & Latios GX", "set": "Documented fake anchor", "num": "113", "isReal": false}, {"name": "Florges ex", "set": "Documented fake anchor", "num": "67", "isReal": false}, {"name": "Mewtwo ex", "set": "Documented fake anchor", "num": "XY106", "isReal": false}, {"name": "Leafeon GX", "set": "Documented fake anchor", "num": "13", "isReal": false}, {"name": "Toxapex GX", "set": "Documented fake anchor", "num": "57", "isReal": false}];
 function startRapid(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
@@ -4154,9 +4163,9 @@ function startRapid(){
      four stages, and the per-card clock steps down a rung each stage
      (6.0s -> 5.4s -> 4.8s -> 4.2s; the first card keeps its 12s
      warm-up). Same deck, same buttons, same scoring. */
-  var STAGE_LIMS = [6000, 5400, 4800, 4200, 3800, 3400];
+  var STAGE_LIMS = [7500, 6750, 6000, 5250, 4750, 4250];
   function stageOf(r){ return Math.floor(r/5) + 1; }
-  function stageLim(r){ if(r === 0) return 12000; if(r >= 30) return Math.max(2400, 3400 - (r - 30) * 100); return STAGE_LIMS[Math.min(5, stageOf(r) - 1)]; }
+  function stageLim(r){ if(r === 0) return 12000; if(r >= 30) return Math.max(3000, 4250 - (r - 30) * 100); return STAGE_LIMS[Math.min(5, stageOf(r) - 1)]; }
   /* CC-FIX-27.6 §3.7: Streak Saver + Sudden Death state */
   var saver = false, suddenDeath = false, pendingEnd = null, rapidAwarded = false;
   function barText(){ return "Score " + score + " · Streak " + streak + (saver ? " · 🛟 Saver ready" : "") + " · " + (suddenDeath ? "☠️ SUDDEN DEATH · Card " + (round + 1) : "Stage " + stageOf(round) + " of 6 · Card " + (round + 1) + " of 30"); }
@@ -4180,8 +4189,8 @@ function startRapid(){
     body.innerHTML =
       '<p class="scorebar" role="status">' + barText() + (round===0?' · Warm-up — take your time to look':'') + (suddenDeath && round===30 ? ' · All 6 stages cleared — one wrong call ends the run!' : '') + '</p>'
       + '<div class="card center mt" id="rfCard">'
-      + (card.img ? '<div style="width:170px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);"><img src="'+card.img+'" alt="'+card.name+'" onerror="this.style.display=\'none\';var n=this.parentNode.querySelector(\'.rf-photonote\');if(n){n.textContent=\'Photo unavailable — treat as a text card\';}" style="display:block;width:100%;aspect-ratio:5/7;object-fit:cover;"><div style="padding:8px 6px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim rf-setline">'+(card.num ? 'No. '+card.num : 'Demo pool photo')+'</div><div class="small dim rf-photonote">Game card — demo pool photo · game only, never a real check</div></div></div>'
-      : '<div style="width:170px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);padding:18px 12px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim rf-setline">'+(card.num ? 'No. '+card.num : 'Demo pool card')+'</div><div class="small dim">Game card — text card, your card identity · game only, never a real check, photo not shown</div></div>')
+      + (card.img ? '<div style="width:230px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);"><img src="'+card.img+'" alt="'+card.name+'" onerror="this.style.display=\'none\';var n=this.parentNode.querySelector(\'.rf-photonote\');if(n){n.textContent=\'Photo unavailable — treat as a text card\';}" style="display:block;width:100%;aspect-ratio:5/7;object-fit:cover;"><div style="padding:8px 6px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim rf-setline">'+(card.num ? 'No. '+card.num : 'Demo pool photo')+'</div><div class="small dim rf-photonote">Game card — demo pool photo · game only, never a real check</div></div></div>'
+      : '<div style="width:230px;margin:0 auto;border-radius:1.2rem;overflow:hidden;background:#1b2735;box-shadow:0 8px 18px rgba(0,0,0,.5);padding:18px 12px;"><div style="font-size:18px;font-weight:900;">'+card.name+'</div><div class="small dim rf-setline">'+(card.num ? 'No. '+card.num : 'Demo pool card')+'</div><div class="small dim">Game card — text card, your card identity · game only, never a real check, photo not shown</div></div>')
       + '<div class="timerbar blue" role="img" aria-label="Time left"><i id="rfBar" style="width:100%;"></i></div>'
       + '<p class="center" style="margin-top:10px;font-weight:800;min-height:24px;" id="rfMsg">Real or fake? Decide before the bubble pops!</p></div>'
       + '<div class="stack mt"><button type="button" class="bubble-btn b-lime" id="rfReal"><span>Real</span></button><button type="button" class="bubble-btn b-pink" id="rfFake"><span>Fake</span></button></div>';
@@ -4214,7 +4223,7 @@ function startRapid(){
     }
     var c = $("rfCard"); if(c) c.style.background = ok ? "#20301c" : "#3a2a1c";
     var m = $("rfMsg"); if(m) m.textContent = text;
-    bag.set(function(){ if(pendingEnd){ var r = pendingEnd; pendingEnd = null; endRun(r); } else advance(); }, ok ? 1050 : 1250);
+    bag.set(function(){ if(pendingEnd){ var r = pendingEnd; pendingEnd = null; endRun(r); } else advance(); }, ok ? 1400 : 2000);
   }
   function timeout(){
     if(locked) return;
@@ -4224,7 +4233,7 @@ function startRapid(){
       var c0 = $("rfCard"); if(c0) c0.style.background = "#3a341c";
       var m0 = $("rfMsg"); if(m0) m0.textContent = "🛟 Streak Saver! The timeout is forgiven — your streak lives.";
       var sb0 = body.querySelector(".scorebar"); if(sb0) sb0.textContent = barText();
-      bag.set(advance, 1250);
+      bag.set(advance, 1600);
       return;
     }
     streak = 0;
@@ -4289,7 +4298,7 @@ function startMatch(){
     if(pk) pk.addEventListener("click", function(){
       if(peekUsed || peeking || lock) return;
       peekUsed = true; peeking = true; render();
-      bag.set(function(){ peeking = false; render(); }, 600);
+      bag.set(function(){ peeking = false; render(); }, 1200);
     });
   }
   function flip(idx){
@@ -4322,7 +4331,7 @@ function startMatch(){
         }
       } else {
         lock = true;
-        bag.set(function(){ open = []; lock = false; render(); }, 1100);
+        bag.set(function(){ open = []; lock = false; render(); }, 1400);
       }
     }
   }
@@ -4628,12 +4637,12 @@ function startBeat(){
 /* ================= 5. Pop Path ================= */
 function startPopPath(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
-  var LEVELS = 18, TOLS = [52,48,44,40,36,32,28,24,20,18,16,15,14,13,12,11,11,11], FADES = [16000,15000,14000,13000,12000,11000,10000,9000,8000,7000,6500,6000,5500,5000,4750,4500,4500,4500];
+  var LEVELS = 18, TOLS = [52,48,44,40,36,32,28,24,20,18,16,15,14,13,12,11,11,11], FADES = [20000,18750,17500,16250,15000,13750,12500,11250,10000,8750,8125,7500,6875,6250,5938,5625,5625,5625];
   /* CC-FIX-27.6 §3.6 Open Sky: past trail 18 the run continues at the floor */
   var endless276 = !!OP_POPPATH_ENDLESS; OP_POPPATH_ENDLESS = false;
   var skyPaid276 = false;
   function tol(){ return level < TOLS.length ? TOLS[level] : 11; }
-  function fadeMs(){ return level === 0 ? 24000 : (level < FADES.length ? FADES[level] : 4500); }
+  function fadeMs(){ return level === 0 ? 30000 : (level < FADES.length ? FADES[level] : 5625); }
   function awardFullRun276(){
     var runs = 0; try{ runs = parseInt(localStorage.getItem("cc_poppath_runs") || "0", 10) || 0; }catch(e){}
     var a = window.ccAwardGame ? window.ccAwardGame("poppath", runs === 0 ? 25 : 10) : { paid: 0, capped: false };
@@ -4839,7 +4848,7 @@ function startMystery(){
       var showsStar = (phase==="peek"||phase==="reveal") && id===starId;
       var el = balls[id];
       el.style.left = "calc("+slot+" * (100% - 120px) / 2)";
-      el.style.transition = (snap||calm) ? "none" : (round===0 ? "left 1000ms cubic-bezier(.45,0,.25,1)" : "");
+      el.style.transition = (snap||calm) ? "none" : ("left " + (round===0 ? Math.round(GLIDE*1.8) : GLIDE) + "ms cubic-bezier(.45,0,.25,1)");
       el.disabled = (phase!=="pick");
       el.className = "mystery-ball"
         + (showsStar ? " star" : "")
@@ -5374,7 +5383,7 @@ function startStack() {
   var musicBtn = $("stackMusicBtn");
 
   /* ---------------- state (prototype values, unchanged) ---------------- */
-  var FIELD_HALF = 3.7, START_W = 3.0, BLOCK_H = 0.52, FLUSH_TOL = 0.14;
+  var FIELD_HALF = 3.7, START_W = 3.0, BLOCK_H = 0.52, FLUSH_TOL = 0.16;
   var playing = false, active = true;
   var playerKey = "jade", playerHex = STACK_PALETTE.jade.hex;
   var ghosts = [], tower = [], mover = null, debris = [];
@@ -5469,7 +5478,7 @@ function startStack() {
     ];
     ghosts.forEach(function (g) { g.blocks = makeGhostBlocks(g.w, g.h); });
   }
-  function speedFor(h) { return Math.min(2.3 + h * 0.13, Math.min(6.6 + 0.6 * Math.max(0, stackTierFor(h) - 3), 10.2)); }
+  function speedFor(h) { return Math.min(2.0 + h * 0.11, Math.min(6.0 + 0.55 * Math.max(0, stackTierFor(h) - 3), 9.0)); }
   /* CC-FIX-27.4: height tiers — a named rung every 10 blocks; the
      speed cap climbs a step with each rung, so the ramp no longer
      flattens at 33 blocks. Tier crossings announce on the existing
@@ -9713,26 +9722,26 @@ document.addEventListener('visibilitychange', function(){ if(document.hidden) op
 window.addEventListener('pagehide', opMusicStopForBackground);
 window.addEventListener('blur', opMusicStopForBackground);
 var OP_BEAT_LEVELS = [
-  {n:1,name:"Keep the beat",total:24,travel:3700,gap:900,perfect:30,onbeat:65,beatMs:600,notes:[523,659]},
-  {n:2,name:"Faster bubbles",total:28,travel:3200,gap:800,perfect:30,onbeat:65,beatMs:575,notes:[523,587,659]},
-  {n:3,name:"Double time",total:32,travel:2700,gap:700,perfect:30,onbeat:65,beatMs:550,notes:[523,587,659,784]},
-  {n:4,name:"Crowded sky",total:36,travel:2300,gap:600,perfect:30,onbeat:65,beatMs:525,notes:[587,659,784,880]},
-  {n:5,name:"Gold rush",total:40,travel:1900,gap:500,perfect:30,onbeat:65,beatMs:500,notes:[659,784,880,1046]},
-  {n:6,name:"Beat master",total:44,travel:1600,gap:450,perfect:25,onbeat:55,beatMs:475,notes:[523,659,784,1046,1318]},
-  {n:7,name:"Turbo beat",total:48,travel:1450,gap:420,perfect:25,onbeat:55,beatMs:450,notes:[587,784,880,1174]},
-  {n:8,name:"Hyper beat",total:52,travel:1300,gap:400,perfect:25,onbeat:55,beatMs:425,notes:[659,880,1046,1318]},
-  {n:9,name:"Frenzy",total:56,travel:1150,gap:380,perfect:25,onbeat:55,beatMs:400,notes:[784,1046,1174,1318]},
-  {n:10,name:"Master of beat",total:60,travel:1000,gap:360,perfect:25,onbeat:55,beatMs:375,notes:[880,1046,1318,1568]},
-  {n:11,name:"Turbo encore",total:64,travel:950,gap:340,perfect:22,onbeat:50,beatMs:350,notes:[880,1046,1318,1568]},
-  {n:12,name:"Double frenzy",total:68,travel:900,gap:325,perfect:22,onbeat:50,beatMs:340,notes:[784,880,1174,1568]},
-  {n:13,name:"Sky rush",total:72,travel:850,gap:310,perfect:22,onbeat:50,beatMs:330,notes:[659,880,1318,1568,1760]},
-  {n:14,name:"Star storm",total:76,travel:800,gap:295,perfect:22,onbeat:50,beatMs:320,notes:[784,1046,1318,1760]},
-  {n:15,name:"Beat legend",total:80,travel:750,gap:280,perfect:22,onbeat:50,beatMs:310,notes:[880,1174,1568,1760,2093]},
-  {n:16,name:"Double legend",total:84,travel:735,gap:272,perfect:22,onbeat:50,beatMs:305,notes:[784,1046,1318,1760]},
-  {n:17,name:"Meteor beat",total:88,travel:720,gap:265,perfect:22,onbeat:50,beatMs:300,notes:[880,1174,1568,2093]},
-  {n:18,name:"Comet trail",total:92,travel:705,gap:258,perfect:22,onbeat:50,beatMs:295,notes:[784,880,1318,1760]},
-  {n:19,name:"Supernova",total:96,travel:690,gap:250,perfect:22,onbeat:50,beatMs:290,notes:[880,1046,1568,2093]},
-  {n:20,name:"The whole shelf beat",total:100,travel:675,gap:242,perfect:22,onbeat:50,beatMs:285,notes:[1046,1318,1568,2093,2349]}];
+  {n:1,name:"Keep the beat",total:24,travel:4255,gap:990,perfect:36,onbeat:78,beatMs:600,notes:[523,659]},
+  {n:2,name:"Faster bubbles",total:28,travel:3680,gap:880,perfect:36,onbeat:78,beatMs:575,notes:[523,587,659]},
+  {n:3,name:"Double time",total:32,travel:3105,gap:770,perfect:36,onbeat:78,beatMs:550,notes:[523,587,659,784]},
+  {n:4,name:"Crowded sky",total:36,travel:2645,gap:660,perfect:36,onbeat:78,beatMs:525,notes:[587,659,784,880]},
+  {n:5,name:"Gold rush",total:40,travel:2185,gap:550,perfect:36,onbeat:78,beatMs:500,notes:[659,784,880,1046]},
+  {n:6,name:"Beat master",total:44,travel:1840,gap:495,perfect:30,onbeat:66,beatMs:475,notes:[523,659,784,1046,1318]},
+  {n:7,name:"Turbo beat",total:48,travel:1665,gap:460,perfect:30,onbeat:66,beatMs:450,notes:[587,784,880,1174]},
+  {n:8,name:"Hyper beat",total:52,travel:1495,gap:440,perfect:30,onbeat:66,beatMs:425,notes:[659,880,1046,1318]},
+  {n:9,name:"Frenzy",total:56,travel:1320,gap:420,perfect:30,onbeat:66,beatMs:400,notes:[784,1046,1174,1318]},
+  {n:10,name:"Master of beat",total:60,travel:1150,gap:395,perfect:30,onbeat:66,beatMs:375,notes:[880,1046,1318,1568]},
+  {n:11,name:"Turbo encore",total:64,travel:1090,gap:375,perfect:26,onbeat:60,beatMs:350,notes:[880,1046,1318,1568]},
+  {n:12,name:"Double frenzy",total:68,travel:1035,gap:360,perfect:26,onbeat:60,beatMs:340,notes:[784,880,1174,1568]},
+  {n:13,name:"Sky rush",total:72,travel:975,gap:340,perfect:26,onbeat:60,beatMs:330,notes:[659,880,1318,1568,1760]},
+  {n:14,name:"Star storm",total:76,travel:920,gap:325,perfect:26,onbeat:60,beatMs:320,notes:[784,1046,1318,1760]},
+  {n:15,name:"Beat legend",total:80,travel:860,gap:310,perfect:26,onbeat:60,beatMs:310,notes:[880,1174,1568,1760,2093]},
+  {n:16,name:"Double legend",total:84,travel:845,gap:300,perfect:26,onbeat:60,beatMs:305,notes:[784,1046,1318,1760]},
+  {n:17,name:"Meteor beat",total:88,travel:830,gap:290,perfect:26,onbeat:60,beatMs:300,notes:[880,1174,1568,2093]},
+  {n:18,name:"Comet trail",total:92,travel:810,gap:285,perfect:26,onbeat:60,beatMs:295,notes:[784,880,1318,1760]},
+  {n:19,name:"Supernova",total:96,travel:795,gap:275,perfect:26,onbeat:60,beatMs:290,notes:[880,1046,1568,2093]},
+  {n:20,name:"The whole shelf beat",total:100,travel:775,gap:265,perfect:26,onbeat:60,beatMs:285,notes:[1046,1318,1568,2093,2349]}];
 var OP_BEAT_LEVEL = 1, OP_BEAT_UNLOCKED = 1;
 try{ OP_BEAT_UNLOCKED = Math.max(1, Math.min(OP_BEAT_LEVELS.length, parseInt(localStorage.getItem('cc_demo_beat_unlocked')||'1',10) || 1)); }catch(e){}
 function opBeatPickerHTML(){ return '<p class="small dim">Bubble Beat — regular style, gold ring at 90px, 420px field. Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' · Highest unlocked: Level '+OP_BEAT_UNLOCKED+' · Clean finish (no missed bubble) unlocks the next level.</p><div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+OP_BEAT_LEVEL+' — '+OP_BEAT_LEVELS[OP_BEAT_LEVEL-1].name+' \u25BE</span></button><div class="stack mt cc-drop-list">' + OP_BEAT_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_BEAT_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_BEAT_UNLOCKED?'disabled':'')+' onclick="opSetBeatLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+'</span><span class="sub">'+l.total+' bubbles · '+l.travel+'ms travel'+(l.n>OP_BEAT_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div></div>'; }
@@ -9752,26 +9761,26 @@ try{ OP_MATCH_UNLOCKED = Math.max(1, Math.min(OP_MATCH_LEVELS.length, parseInt(l
 function opMatchPickerHTML(){ return '<p class="small dim">Match Audit — Level '+OP_MATCH_LEVEL+' — '+OP_MATCH_LEVELS[OP_MATCH_LEVEL-1].name+' · Highest unlocked: Level '+OP_MATCH_UNLOCKED+' · Finish a board to unlock the next one.</p><div class="cc-drop"><button type="button" class="bubble-btn b-gold" onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display===\'block\' ? \'none\' : \'block\')"><span>Level '+OP_MATCH_LEVEL+' — '+OP_MATCH_LEVELS[OP_MATCH_LEVEL-1].name+' ▾</span></button><div class="stack mt cc-drop-list">' + OP_MATCH_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_MATCH_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_MATCH_UNLOCKED?'disabled':'')+' onclick="opSetMatchLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+'</span><span class="sub">'+(l.pairs*2)+' cards · '+l.pairs+' pairs'+(l.n>OP_MATCH_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div></div>'; }
 function opSetMatchLevel(n){ if(n > OP_MATCH_UNLOCKED) return; OP_MATCH_LEVEL = n; startMatch(); }
 var OP_MYSTERY_LEVELS = [
-  {n:1,name:"Slow shuffle",glide:560,gap:680,peek:1700,swaps:4},
-  {n:2,name:"Quicker shuffle",glide:520,gap:620,peek:1600,swaps:5},
-  {n:3,name:"Faster shuffle",glide:480,gap:560,peek:1500,swaps:6},
-  {n:4,name:"Brisk shuffle",glide:440,gap:500,peek:1400,swaps:6},
-  {n:5,name:"Swift shuffle",glide:420,gap:460,peek:1300,swaps:7},
-  {n:6,name:"Speedy shuffle",glide:380,gap:420,peek:1200,swaps:7},
-  {n:7,name:"Rapid shuffle",glide:350,gap:390,peek:1100,swaps:8},
-  {n:8,name:"Blur shuffle",glide:320,gap:360,peek:1000,swaps:8},
-  {n:9,name:"Lightning shuffle",glide:300,gap:340,peek:900,swaps:9},
-  {n:10,name:"Master shuffle",glide:280,gap:320,peek:850,swaps:10},
-  {n:11,name:"Blinding shuffle",glide:265,gap:305,peek:820,swaps:10},
-  {n:12,name:"Whirlwind shuffle",glide:250,gap:290,peek:790,swaps:11},
-  {n:13,name:"Cyclone shuffle",glide:240,gap:275,peek:760,swaps:11},
-  {n:14,name:"Phantom shuffle",glide:225,gap:260,peek:730,swaps:12},
-  {n:15,name:"Cauldron master shuffle",glide:210,gap:245,peek:700,swaps:12},
-  {n:16,name:"Tempest shuffle",glide:205,gap:240,peek:688,swaps:12},
-  {n:17,name:"Spotlight tempest",glide:200,gap:236,peek:676,swaps:13,spotlight:true},
-  {n:18,name:"Hurricane shuffle",glide:195,gap:232,peek:664,swaps:13},
-  {n:19,name:"Cyclone master",glide:192,gap:228,peek:652,swaps:14},
-  {n:20,name:"The final shuffle",glide:190,gap:225,peek:640,swaps:14,spotlight:true}];
+  {n:1,name:"Slow shuffle",glide:700,gap:850,peek:2125,swaps:4},
+  {n:2,name:"Quicker shuffle",glide:650,gap:775,peek:2000,swaps:5},
+  {n:3,name:"Faster shuffle",glide:600,gap:700,peek:1875,swaps:6},
+  {n:4,name:"Brisk shuffle",glide:550,gap:625,peek:1750,swaps:6},
+  {n:5,name:"Swift shuffle",glide:525,gap:575,peek:1625,swaps:7},
+  {n:6,name:"Speedy shuffle",glide:475,gap:525,peek:1500,swaps:7},
+  {n:7,name:"Rapid shuffle",glide:440,gap:490,peek:1375,swaps:8},
+  {n:8,name:"Blur shuffle",glide:400,gap:450,peek:1250,swaps:8},
+  {n:9,name:"Lightning shuffle",glide:375,gap:425,peek:1125,swaps:9},
+  {n:10,name:"Master shuffle",glide:350,gap:400,peek:1063,swaps:10},
+  {n:11,name:"Blinding shuffle",glide:330,gap:380,peek:1025,swaps:10},
+  {n:12,name:"Whirlwind shuffle",glide:315,gap:365,peek:988,swaps:11},
+  {n:13,name:"Cyclone shuffle",glide:300,gap:345,peek:950,swaps:11},
+  {n:14,name:"Phantom shuffle",glide:280,gap:325,peek:913,swaps:12},
+  {n:15,name:"Cauldron master shuffle",glide:265,gap:305,peek:875,swaps:12},
+  {n:16,name:"Tempest shuffle",glide:255,gap:300,peek:860,swaps:12},
+  {n:17,name:"Spotlight tempest",glide:250,gap:295,peek:845,swaps:13,spotlight:true},
+  {n:18,name:"Hurricane shuffle",glide:245,gap:290,peek:830,swaps:13},
+  {n:19,name:"Cyclone master",glide:240,gap:285,peek:815,swaps:14},
+  {n:20,name:"The final shuffle",glide:240,gap:280,peek:800,swaps:14,spotlight:true}];
 var OP_MYSTERY_LEVEL = 1, OP_MYSTERY_UNLOCKED = 1;
 try{ OP_MYSTERY_UNLOCKED = Math.max(1, Math.min(OP_MYSTERY_LEVELS.length, parseInt(localStorage.getItem('cc_demo_mystery_unlocked')||'1',10) || 1)); }catch(e){}
 function opMysteryPickerHTML(){ return '<p class="small dim">Milo\'s Mystery Bubble — Level '+OP_MYSTERY_LEVEL+' — '+OP_MYSTERY_LEVELS[OP_MYSTERY_LEVEL-1].name+' · Highest unlocked: Level '+OP_MYSTERY_UNLOCKED+' · Finish a level to unlock the next one.</p><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">' + OP_MYSTERY_LEVELS.map(function(l){ return '<button type="button" class="bubble-btn '+(l.n===OP_MYSTERY_LEVEL?'b-gold':'b-white')+'" '+(l.n>OP_MYSTERY_UNLOCKED?'disabled':'')+' onclick="opSetMysteryLevel('+l.n+')"><span>Level '+l.n+' — '+l.name+(l.n>OP_MYSTERY_UNLOCKED?' · locked':'')+'</span></button>'; }).join('') + '</div>'; }
@@ -18472,7 +18481,7 @@ function __ccFlashAttach(videoEl){
 .cc-shutter-row.cc-on-frame{position:absolute;left:0;right:0;bottom:8px;z-index:6;margin-top:0;}
 .cc-shutter-row.cc-on-frame .cc-shutter-cap{background:rgba(10,8,20,.72);padding:2px 10px;border-radius:999px;color:#fff8e7;}
 /* --- Lens/Gauge overlay --- */
-.cc-coach{text-align:center;font-weight:900;font-size:16px;margin-top:10px;color:var(--gold);}
+.cc-coach{text-align:center;font-weight:900;font-size:16px;line-height:1.3;min-height:2.6em;margin-top:10px;color:var(--gold);}
 .cc-gauge{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px;}
 .cc-chip{background:#292524;border:1px solid var(--stone-edge);border-radius:999px;padding:4px 11px;font-size:12.5px;font-weight:700;color:var(--text);}
 .cc-chip b{color:var(--gold);font-weight:900;}
@@ -18911,6 +18920,34 @@ function __ccFlashAttach(videoEl){
   if (typeof renderCaptureStep === "function") {
     var _rcs = renderCaptureStep;
     renderCaptureStep = function () { ccEscapeArmed = false; ccLastMeasure = null; ccReady = false; coach.style.display = ""; gauge.style.display = ""; if (capFrame) capFrame.classList.remove("cc-done"); var gd = $("capGuide"); if (gd) gd.style.display = ""; var dt = $("capDots"); if (dt) dt.style.display = ""; if (stamp) { stamp.classList.add("hidden"); stamp.textContent = ""; } prevGray = null; return _rcs.apply(this, arguments); };
+  }
+
+  /* CC-FIX-28 (JUN-1, owner-reported camera bounce): pin the capture
+     guidance area to a fixed height. The coach line reserves two lines
+     in CSS (above); here the step title + guidance are pinned to the
+     tallest step of the CURRENT category, measured off the live
+     elements with the steps' own texts, so stepping front -> back (or
+     into the label close-up) never moves the camera frame. Re-pins on
+     every step render; a failed pin never breaks the camera. */
+  function ccPinGuideHeights() {
+    try {
+      var t = $("capTitle"), g = $("capGuide");
+      if (!t || !g || typeof capCat === "undefined" || !capCat || !capCat.steps) return;
+      var keepT = t.textContent, keepG = g.textContent, mhT = 0, mhG = 0;
+      for (var i = 0; i < capCat.steps.length; i++) {
+        t.textContent = capCat.steps[i].title || "";
+        g.textContent = capCat.steps[i].guidance || "";
+        if (t.offsetHeight > mhT) mhT = t.offsetHeight;
+        if (g.offsetHeight > mhG) mhG = g.offsetHeight;
+      }
+      t.textContent = keepT; g.textContent = keepG;
+      if (mhT > 0) t.style.minHeight = mhT + "px";
+      if (mhG > 0) g.style.minHeight = mhG + "px";
+    } catch (e) { /* pinning is garnish; the camera is the meal */ }
+  }
+  if (typeof renderCaptureStep === "function") {
+    var _rcsPin = renderCaptureStep;
+    renderCaptureStep = function () { var r = _rcsPin.apply(this, arguments); ccPinGuideHeights(); if (window.requestAnimationFrame) requestAnimationFrame(ccPinGuideHeights); return r; };
   }
 
   /* ---------------- checker: cold-tap queued fire ----------------
