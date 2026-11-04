@@ -3212,92 +3212,96 @@ function poolSubmitAndConfirm(next){
         + '<h3 style="color:#f5c542;">Your scan went to the pending pool ✓</h3>'
         + '<p>' + poolAutoLabelHTML(res.d.label || {number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"}, res.d.submission_id) + '</p>'
         + (window.__ccScanAward276 && window.__ccScanAward276.paid ? '<p style="font-weight:900;color:#ffd76a;">+10 coins 🪙 — scans pay 10 coins each, up to 50 a day.</p>' : (window.__ccScanAward276 && window.__ccScanAward276.maxed ? '<p style="font-weight:900;color:#ffd76a;">Scan saved — daily scan coins maxed (50).</p>' : ''))
-        + '<div id="glimmerReadSlot"></div>'
+        + '<div id="houseReadSlot"></div>'
         + '<p>Is this correct?</p>'
         + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;"><button type="button" class="bubble-btn b-gold" id="poolLabelYes"><span>Yes, that\'s right</span></button><button type="button" class="bubble-btn b-white" id="poolLabelNo"><span>No, that\'s not right</span></button></div></div>';
       document.body.appendChild(pop);
-      try{ glimmerWatchRead(res.d.submission_id, res.d.label || {number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"}); }catch(e){}
+      try{ houseWatchRead(res.d.submission_id, res.d.label || {number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"}); }catch(e){}
       try{ if(window.ccPsLaneWatch) window.ccPsLaneWatch(res.d.submission_id); }catch(e){}
       document.getElementById("poolLabelYes").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Thanks — auto-label confirmed. Your pending scan is saved as " + poolSubmittedId + "." + (window.__ccScanAward276 && window.__ccScanAward276.paid ? " +10 coins 🪙" : ""); _fwFinish(); });
       document.getElementById("poolLabelNo").addEventListener("click", function(){ pop.remove(); if(statusEl) statusEl.textContent = "Got it — we dropped the label to UNKNOWN. Potion will fix it. Your pending scan is still saved as " + poolSubmittedId + "."; var _l2 = document.getElementById("capLabelLine"); if(_l2) _l2.textContent = "Labelled: UNKNOWN — you said the auto-label was not right, Potion will fix it — pool: YES, pending, " + poolSubmittedId; if(statusEl && window.__ccScanAward276 && window.__ccScanAward276.paid) statusEl.textContent += " +10 coins 🪙"; _fwFinish(); });
     }).catch(function(){ if(statusEl) statusEl.textContent = "Pool send did not go through — your scan was not saved to the pool."; _fwFinish(); });
 }
-/* CC-FIX-27.12 · Glimmer wiring A1 — see patch2712-glimmer.py header.
-   Identity reads only; the read can never block, delay, or fail a
-   check, and a missing/empty read is exactly the old behaviour. */
-var glimmerPoll = null;
-function glimmerNorm(s){ return String(s == null ? "" : s).replace(/\s+/g, "").toLowerCase(); }
-function glimmerShown(s){ return String(s == null ? "" : s).trim(); }
-function glimmerRecordChoice(sid, field, choice, readVal, finalVal){
+/* CC-FIX-27.12 · House reader wiring (was the outside-model wiring A1 in the as-filed build;
+   renamed by the HOUSE SWITCH, Nov 4, 2026 — owner order: no
+   outside model on call, not even on the old demo. Reads are
+   produced by the house reader only (Basil, running locally on
+   the house's own Llama build) through the pool door. Identity
+   reads only; the read can never block, delay, or fail a check,
+   and a missing/empty read is exactly the old behaviour. */
+var housePoll = null;
+function houseNorm(s){ return String(s == null ? "" : s).replace(/\s+/g, "").toLowerCase(); }
+function houseShown(s){ return String(s == null ? "" : s).trim(); }
+function houseRecordChoice(sid, field, choice, readVal, finalVal){
   try{
-    var recs = JSON.parse(localStorage.getItem("cc_glimmer_corrections") || "[]");
+    var recs = JSON.parse(localStorage.getItem("cc_house_corrections") || "[]");
     recs.unshift({ sid: sid, field: field, choice: choice, read: readVal, final: finalVal, when: new Date().toISOString() });
     recs = recs.slice(0, 50);
-    localStorage.setItem("cc_glimmer_corrections", JSON.stringify(recs));
-    window.__ccGlimmerChoices = recs;
+    localStorage.setItem("cc_house_corrections", JSON.stringify(recs));
+    window.__ccHouseChoices = recs;
   }catch(e){}
 }
-function glimmerNoCard(sid){
-  var slot = document.getElementById("glimmerReadSlot");
+function houseNoCard(sid){
+  var slot = document.getElementById("houseReadSlot");
   if(slot) slot.innerHTML = "<div style=\"margin-top:12px;border:1px solid #8a6d2f;border-radius:12px;padding:10px 12px;background:#241c31;\">That photo couldn\u2019t be read \u2014 try a clearer shot.</div>";
-  window.__ccGlimmerState = { sid: sid, state: "none-shown" };
+  window.__ccHouseState = { sid: sid, state: "none-shown" };
 }
-function glimmerWatchRead(sid, declared){
-  var slot = document.getElementById("glimmerReadSlot");
+function houseWatchRead(sid, declared){
+  var slot = document.getElementById("houseReadSlot");
   if(!slot || !sid) return;
   declared = declared || {};
   var declaredByField = { name: declared.name, number: declared.number, set: declared.set_logo };
   var started = Date.now();
   var CAP_MS = 600000, EVERY_MS = 2500, SLOW_MS = 10000;
-  window.__ccGlimmerState = { sid: sid, state: "reading" };
+  window.__ccHouseState = { sid: sid, state: "reading" };
   slot.innerHTML = "";
-  if(!document.getElementById("glimmerWaitStyle")){
+  if(!document.getElementById("houseWaitStyle")){
     var st = document.createElement("style");
-    st.id = "glimmerWaitStyle";
-    st.textContent = "@keyframes ccGlimmerPulse{0%,80%,100%{opacity:.25}40%{opacity:1}}"
-      + "#glimmerWait .ccGlimmerDots span{display:inline-block;animation:ccGlimmerPulse 1.2s ease-in-out infinite;}"
-      + "#glimmerWait .ccGlimmerDots span:nth-child(2){animation-delay:.15s}"
-      + "#glimmerWait .ccGlimmerDots span:nth-child(3){animation-delay:.3s}";
+    st.id = "houseWaitStyle";
+    st.textContent = "@keyframes ccHousePulse{0%,80%,100%{opacity:.25}40%{opacity:1}}"
+      + "#houseWait .ccHouseDots span{display:inline-block;animation:ccHousePulse 1.2s ease-in-out infinite;}"
+      + "#houseWait .ccHouseDots span:nth-child(2){animation-delay:.15s}"
+      + "#houseWait .ccHouseDots span:nth-child(3){animation-delay:.3s}";
     (document.head || document.documentElement).appendChild(st);
   }
-  var DOTS = "<span class=\"ccGlimmerDots\" aria-hidden=\"true\"><span>.</span><span>.</span><span>.</span></span>";
+  var DOTS = "<span class=\"ccHouseDots\" aria-hidden=\"true\"><span>.</span><span>.</span><span>.</span></span>";
   var wait = document.createElement("div");
-  wait.id = "glimmerWait";
+  wait.id = "houseWait";
   wait.style.cssText = "margin-top:12px;border:1px solid #8a6d2f;border-radius:12px;padding:10px 12px;background:#241c31;";
   wait.innerHTML = "<b>Checking your card now</b>" + DOTS + "<br><span style=\"font-size:13px;opacity:.85;\">Read by Basil \u2014 this can take a few minutes.</span>";
   slot.appendChild(wait);
-  if(glimmerPoll) clearInterval(glimmerPoll);
+  if(housePoll) clearInterval(housePoll);
   var slowed = false;
   var tick = function(){
-    if(!document.getElementById("glimmerReadSlot")){ clearInterval(glimmerPoll); glimmerPoll = null; return; }
+    if(!document.getElementById("houseReadSlot")){ clearInterval(housePoll); housePoll = null; return; }
     if(!slowed && Date.now() - started > CAP_MS){
       slowed = true;
-      var w = document.getElementById("glimmerWait");
+      var w = document.getElementById("houseWait");
       if(w) w.innerHTML = "<b>Still checking \u2014 she can be slow to wake.</b>" + DOTS + "<br><span>Your read will appear right here.</span>";
-      clearInterval(glimmerPoll);
-      glimmerPoll = setInterval(tick, SLOW_MS);
+      clearInterval(housePoll);
+      housePoll = setInterval(tick, SLOW_MS);
     }
     fetch("https://api.cardcauldrontcg.com/pool/read/" + encodeURIComponent(sid))
       .then(function(r){ return r.json(); })
       .then(function(d){
         if(!d || !d.ok) return;
-        if(d.state === "done" && d.read){ clearInterval(glimmerPoll); glimmerPoll = null; glimmerRenderRead(sid, d.read, declaredByField); }
-        else if(d.state === "empty"){ clearInterval(glimmerPoll); glimmerPoll = null; glimmerNoCard(sid); }
+        if(d.state === "done" && d.read){ clearInterval(housePoll); housePoll = null; houseRenderRead(sid, d.read, declaredByField); }
+        else if(d.state === "empty"){ clearInterval(housePoll); housePoll = null; houseNoCard(sid); }
         /* pending / none: keep polling (two door hosts, host-local
            read stores — a "none" can be the other host answering). */
       })
       .catch(function(){ /* a failed poll is not a failed check */ });
   };
-  glimmerPoll = setInterval(tick, EVERY_MS);
+  housePoll = setInterval(tick, EVERY_MS);
   tick();
 }
-function glimmerRenderRead(sid, read, declaredByField){
-  var slot = document.getElementById("glimmerReadSlot");
+function houseRenderRead(sid, read, declaredByField){
+  var slot = document.getElementById("houseReadSlot");
   if(!slot) return;
-  window.__ccGlimmerState = { sid: sid, state: "done", read: read };
+  window.__ccHouseState = { sid: sid, state: "done", read: read };
   slot.innerHTML = "";
   var card = document.createElement("div");
-  card.id = "glimmerReadCard";
+  card.id = "houseReadCard";
   card.style.cssText = "margin-top:12px;border:2px solid #f5c542;border-radius:12px;padding:12px;background:#241c31;text-align:left;";
   var head = document.createElement("div");
   head.innerHTML = "<b>Read by Basil \u2014 check it</b>";
@@ -3306,7 +3310,7 @@ function glimmerRenderRead(sid, read, declaredByField){
   var inputs = {};
   fields.forEach(function(f){
     var key = f[0], label = f[1];
-    var val = glimmerShown(read[key]);
+    var val = houseShown(read[key]);
     if(!val) return; /* she did not produce this field — no row, no guess */
     var row = document.createElement("div");
     row.style.cssText = "margin-top:8px;";
@@ -3314,15 +3318,15 @@ function glimmerRenderRead(sid, read, declaredByField){
     lab.textContent = label;
     lab.style.cssText = "display:block;font-size:12px;opacity:.85;";
     var inp = document.createElement("input");
-    inp.type = "text"; inp.value = val; inp.dataset.glimmerField = key;
+    inp.type = "text"; inp.value = val; inp.dataset.houseField = key;
     inp.style.cssText = "width:100%;box-sizing:border-box;margin-top:2px;padding:7px 9px;border-radius:8px;border:1px solid #8a6d2f;background:#171221;color:#fff8e7;font-size:15px;";
     row.appendChild(lab); row.appendChild(inp);
     card.appendChild(row);
     inputs[key] = inp;
-    var claim = glimmerShown(declaredByField[key]);
-    if(claim && claim.toUpperCase() !== "UNKNOWN" && glimmerNorm(claim) !== glimmerNorm(val)){
+    var claim = houseShown(declaredByField[key]);
+    if(claim && claim.toUpperCase() !== "UNKNOWN" && houseNorm(claim) !== houseNorm(val)){
       var warn = document.createElement("div");
-      warn.className = "glimmerMismatch";
+      warn.className = "houseMismatch";
       warn.dataset.field = key;
       warn.style.cssText = "margin-top:6px;font-size:13px;";
       var line = document.createElement("div");
@@ -3331,11 +3335,11 @@ function glimmerRenderRead(sid, read, declaredByField){
       var btns = document.createElement("div");
       btns.style.cssText = "display:flex;gap:8px;margin-top:6px;";
       var bUse = document.createElement("button");
-      bUse.type = "button"; bUse.className = "bubble-btn b-gold glimmerUseRead"; bUse.innerHTML = "<span>Use the read</span>";
+      bUse.type = "button"; bUse.className = "bubble-btn b-gold houseUseRead"; bUse.innerHTML = "<span>Use the read</span>";
       var bKeep = document.createElement("button");
-      bKeep.type = "button"; bKeep.className = "bubble-btn b-white glimmerKeepMine"; bKeep.innerHTML = "<span>Keep mine</span>";
-      bUse.addEventListener("click", function(){ inp.value = val; warn.remove(); glimmerRecordChoice(sid, key, "use-read", val, inp.value); });
-      bKeep.addEventListener("click", function(){ inp.value = claim; warn.remove(); glimmerRecordChoice(sid, key, "keep-mine", val, inp.value); });
+      bKeep.type = "button"; bKeep.className = "bubble-btn b-white houseKeepMine"; bKeep.innerHTML = "<span>Keep mine</span>";
+      bUse.addEventListener("click", function(){ inp.value = val; warn.remove(); houseRecordChoice(sid, key, "use-read", val, inp.value); });
+      bKeep.addEventListener("click", function(){ inp.value = claim; warn.remove(); houseRecordChoice(sid, key, "keep-mine", val, inp.value); });
       btns.appendChild(bUse); btns.appendChild(bKeep);
       warn.appendChild(btns);
       card.appendChild(warn);
@@ -3344,18 +3348,18 @@ function glimmerRenderRead(sid, read, declaredByField){
   if(read.hp){
     var hp = document.createElement("div");
     hp.style.cssText = "margin-top:8px;font-size:13px;opacity:.9;";
-    hp.textContent = "HP reads " + glimmerShown(read.hp);
+    hp.textContent = "HP reads " + houseShown(read.hp);
     card.appendChild(hp);
   }
   var ok = document.createElement("button");
-  ok.type = "button"; ok.id = "glimmerLooksRight"; ok.className = "bubble-btn b-gold";
+  ok.type = "button"; ok.id = "houseLooksRight"; ok.className = "bubble-btn b-gold";
   ok.style.cssText = "margin-top:12px;";
   ok.innerHTML = "<span>Looks right</span>";
   ok.addEventListener("click", function(){
     var finalVals = {};
     Object.keys(inputs).forEach(function(k){ finalVals[k] = inputs[k].value; });
-    glimmerRecordChoice(sid, "all", "confirmed", read, finalVals);
-    window.__ccGlimmerConfirmed = finalVals;
+    houseRecordChoice(sid, "all", "confirmed", read, finalVals);
+    window.__ccHouseConfirmed = finalVals;
     var parts = [];
     if(finalVals.name) parts.push(finalVals.name);
     if(finalVals.number) parts.push(finalVals.number);
@@ -3364,14 +3368,14 @@ function glimmerRenderRead(sid, read, declaredByField){
     if(line2) line2.textContent = "Labelled: " + parts.join(" \u00b7 ") + " \u2014 read by Basil, confirmed by you \u2014 pool: YES, pending, " + sid;
     card.innerHTML = "";
     var done = document.createElement("div");
-    done.id = "glimmerConfirmedLine";
+    done.id = "houseConfirmedLine";
     done.textContent = "Read confirmed: " + parts.join(" \u00b7 ");
     card.appendChild(done);
   });
   card.appendChild(ok);
   slot.appendChild(card);
 }
-window.__ccGlimmerWatch = glimmerWatchRead;
+window.__ccHouseWatch = houseWatchRead;
 
 /* My scans — this device's own pool scans, shown in My Binders > Undecided
    Pocket as PENDING (owner, Oct 29: binders show real scanned cards, not
@@ -9118,7 +9122,7 @@ if (GAME_STARTERS_MISSING.length) { try { console.warn("CC games: starters missi
 
    The demo half of the one lane that passed its blind proof test
    (399/400 caught, 3/120 false flags — ONESHOT-PAIRSHEET-2026-11-03).
-   This block polls the same per-submission read endpoint the Glimmer
+   This block polls the same per-submission read endpoint the House
    identity watch uses, looking for a lane_verdict field the door
    attaches ONLY to provenance-marked scanner-pair pool records
    measured by the frozen lane recipe. When a validated verdict for
