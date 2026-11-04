@@ -1,0 +1,22 @@
+{
+  "name": "Real or Replica Demo (Upscale Build)",
+  "short_name": "Real or Replica Demo",
+  "description": "Upscale build of the public demo of Real or Replica \u2014 STAGED BUILD ONLY, not live, not live-SSD: games and look-around only, bundled demo pool by default. Does NOT do real card checks, does NOT serve VoiceCalls or PorchCaptures.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0908",
+  "theme_color": "#0b0908",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

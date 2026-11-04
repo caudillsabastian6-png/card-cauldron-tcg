@@ -1,0 +1,227 @@
+{
+  "build": "demo-upscale-v1",
+  "rule": "Counted only if a manifest row/file exists AND is readable in this package. Pool entry image files (sr-*.png, remote sourceUrl) are NOT bundled and are NOT counted as verified in this package.",
+  "base_files_preserved": 28,
+  "base_files_missing": [],
+  "files_added": [
+    "PRIVACY-BOUNDARY.md",
+    "_headers-CLOUDFLARE-PAGES-SNIPPET.txt",
+    "asset-manifest.json",
+    "price-snapshots.json",
+    "scan-gates.md",
+    "ssd-adapter.js",
+    "upscale.css",
+    "upscale.js"
+  ],
+  "all_files": [
+    {
+      "path": "PRIVACY-BOUNDARY.md",
+      "bytes": 1118,
+      "readable": true
+    },
+    {
+      "path": "_headers-CLOUDFLARE-PAGES-SNIPPET.txt",
+      "bytes": 1428,
+      "readable": true
+    },
+    {
+      "path": "asset-manifest.json",
+      "bytes": 4337,
+      "readable": true
+    },
+    {
+      "path": "demo-pool.json",
+      "bytes": 1664259,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/game-images.json",
+      "bytes": 2410,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/pull-today.png",
+      "bytes": 644312,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-fake-1.jpg",
+      "bytes": 60012,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-fake-2.jpg",
+      "bytes": 101340,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-fake-3.jpg",
+      "bytes": 74048,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-fake-4.jpg",
+      "bytes": 76833,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-real-1.jpg",
+      "bytes": 97335,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-real-2.jpg",
+      "bytes": 107964,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-real-3.jpg",
+      "bytes": 90060,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-real-4.jpg",
+      "bytes": 87418,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-real-5.jpg",
+      "bytes": 88069,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/rapid-real-6.jpg",
+      "bytes": 89510,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-1.png",
+      "bytes": 659135,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-10.png",
+      "bytes": 662709,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-2.png",
+      "bytes": 699738,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-3.png",
+      "bytes": 714731,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-4.png",
+      "bytes": 743893,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-5.png",
+      "bytes": 593430,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-6.png",
+      "bytes": 760710,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-7.png",
+      "bytes": 571734,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-8.png",
+      "bytes": 737503,
+      "readable": true
+    },
+    {
+      "path": "demo-pool/zoom-9.png",
+      "bytes": 675362,
+      "readable": true
+    },
+    {
+      "path": "icon-192.png",
+      "bytes": 67289,
+      "readable": true
+    },
+    {
+      "path": "icon-512.png",
+      "bytes": 365048,
+      "readable": true
+    },
+    {
+      "path": "index.html",
+      "bytes": 240078,
+      "readable": true
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 678,
+      "readable": true
+    },
+    {
+      "path": "price-snapshots.json",
+      "bytes": 28995,
+      "readable": true
+    },
+    {
+      "path": "scan-gates.md",
+      "bytes": 1430,
+      "readable": true
+    },
+    {
+      "path": "ssd-adapter.js",
+      "bytes": 2353,
+      "readable": true
+    },
+    {
+      "path": "sw.js",
+      "bytes": 2462,
+      "readable": true
+    },
+    {
+      "path": "upscale.css",
+      "bytes": 2586,
+      "readable": true
+    },
+    {
+      "path": "upscale.js",
+      "bytes": 7287,
+      "readable": true
+    }
+  ],
+  "demo_pool_rows": 6000,
+  "demo_pool_declared_count": 6000,
+  "bundled_game_images_verified": [
+    "rapid-real-1.jpg",
+    "rapid-real-2.jpg",
+    "rapid-real-3.jpg",
+    "rapid-real-4.jpg",
+    "rapid-real-5.jpg",
+    "rapid-real-6.jpg",
+    "rapid-fake-1.jpg",
+    "rapid-fake-2.jpg",
+    "rapid-fake-3.jpg",
+    "rapid-fake-4.jpg",
+    "zoom-1.png",
+    "zoom-2.png",
+    "zoom-3.png",
+    "zoom-4.png",
+    "zoom-5.png",
+    "zoom-6.png",
+    "zoom-7.png",
+    "zoom-8.png",
+    "zoom-9.png",
+    "zoom-10.png"
+  ],
+  "bundled_game_images_unverified": [],
+  "bundled_pull_today_present": true,
+  "bundled_pull_today_bytes": 644312,
+  "total_package_bytes": 10727604,
+  "notes": "No file was renamed or deleted from the base. Zoom PNGs are full-detail and were NOT recompressed. Rapid JPGs are the already-compressed game art."
+}

@@ -1,0 +1,134 @@
+{
+ "rapidReal": [
+  {
+   "img": "rapid-real-1.jpg",
+   "name": "Alakazam",
+   "set": "Base",
+   "number": "1"
+  },
+  {
+   "img": "rapid-real-2.jpg",
+   "name": "Blastoise",
+   "set": "Base",
+   "number": "2"
+  },
+  {
+   "img": "rapid-real-3.jpg",
+   "name": "Venusaur",
+   "set": "Base",
+   "number": "15"
+  },
+  {
+   "img": "rapid-real-4.jpg",
+   "name": "Zapdos",
+   "set": "Base",
+   "number": "16"
+  },
+  {
+   "img": "rapid-real-5.jpg",
+   "name": "Pikachu",
+   "set": "Base",
+   "number": "58"
+  },
+  {
+   "img": "rapid-real-6.jpg",
+   "name": "Poliwag",
+   "set": "Base",
+   "number": "59"
+  }
+ ],
+ "rapidFake": [
+  {
+   "img": "rapid-fake-1.jpg",
+   "name": "Machamp",
+   "note": "Disco test print \u2014 documented fake"
+  },
+  {
+   "img": "rapid-fake-2.jpg",
+   "name": "Dark Weezing",
+   "note": "Sticker fake \u2014 documented fake"
+  },
+  {
+   "img": "rapid-fake-3.jpg",
+   "name": "Wartortle",
+   "note": "Typo fake \u2014 documented fake"
+  },
+  {
+   "img": "rapid-fake-4.jpg",
+   "name": "Slurpuff",
+   "note": "Novelty fake \u2014 documented fake"
+  }
+ ],
+ "zoom": [
+  {
+   "img": "zoom-1.png",
+   "name": "Pawniard",
+   "set": "Ascended Heroes",
+   "number": "146/217",
+   "kind": "reverse"
+  },
+  {
+   "img": "zoom-2.png",
+   "name": "Team Rocket's Meowth",
+   "set": "Ascended Heroes",
+   "number": "161/217",
+   "kind": "reverse"
+  },
+  {
+   "img": "zoom-3.png",
+   "name": "Meditite",
+   "set": "Ascended Heroes",
+   "number": "103/217",
+   "kind": "reverse"
+  },
+  {
+   "img": "zoom-4.png",
+   "name": "Buizel",
+   "set": "Destined Rivals",
+   "number": "057/182",
+   "kind": "reverse"
+  },
+  {
+   "img": "zoom-5.png",
+   "name": "Noctowl",
+   "set": "Prismatic Evolutions",
+   "number": "078/131",
+   "kind": "holo"
+  },
+  {
+   "img": "zoom-6.png",
+   "name": "Team Rocket's Honchkrow",
+   "set": "Ascended Heroes",
+   "number": "127/217",
+   "kind": "holo"
+  },
+  {
+   "img": "zoom-7.png",
+   "name": "Terapagos",
+   "set": "Ascended Heroes",
+   "number": "178/217",
+   "kind": "holo"
+  },
+  {
+   "img": "zoom-8.png",
+   "name": "Erika's Tangela",
+   "set": "Ascended Heroes",
+   "number": "007/217",
+   "kind": "plain"
+  },
+  {
+   "img": "zoom-9.png",
+   "name": "Sandile",
+   "set": "Phantasmal Flames",
+   "number": "064/094",
+   "kind": "plain"
+  },
+  {
+   "img": "zoom-10.png",
+   "name": "Gastly",
+   "set": "Phantasmal Flames",
+   "number": "054/094",
+   "kind": "plain"
+  }
+ ]
+}
