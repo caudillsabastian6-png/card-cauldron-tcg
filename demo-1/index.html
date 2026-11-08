@@ -12,7 +12,9 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/cinzeldecorative/v19/daaHSScvJGqLYhG8nNt8KPPswUAPniZQa9lESTE.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/alegreya/v41/4UaBrEBBsBhlBjvfkSLhx6g.woff2" />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet" />
-<title>Real or Replica — Public Demo (Upscale Build, staged)</title>
+<title>Real or Replica — Pokémon Card Checker</title>
+<meta name="description" content="Real or Replica checks whether a Pokémon card is genuine and shows the evidence: Likely Genuine, Likely Counterfeit, or an honest Inconclusive." />
+<link rel="canonical" href="https://cardcauldrontcg.com/demo-1/" />
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#0b0908" />
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
@@ -1722,6 +1724,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 
 </head>
 <body class="neon">
+<h1 style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">Real or Replica — Pokémon Card Checker</h1>
 <div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first — local demo only. No password, no server, nothing leaves this device. This only remembers a name so the top bubble shows who is signed in.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Local demo only — not a real account.</p></div>
 <script id="cc2713GateEarly">
 /* CC-27.13 gate early-tap guard: queue gate taps that land before the
