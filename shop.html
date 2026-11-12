@@ -1151,6 +1151,105 @@ details.sec-fold>summary::-webkit-details-marker{display:none}
   body.subpage main > section:first-child{padding-top:clamp(5.5rem,10vw,6.5rem)}
 }
 </style>
+<style id="cc-cleanup-2026-11-12">
+/* ============================================================
+   FRONT-END CLEANUP PASS — 2026-11-12 (website: index + shop)
+   Saniya Shaikh's five fresh-eyes findings, applied to the site
+   after demo-1 (owner order Nov 12): readable type, glow/neon
+   stripped from the chrome, one standout primary action, spacing
+   on the 4/8/16/24/32/48/64 scale, targets >= 44px. Presentation
+   ONLY — no copy, catalog content, prices, links or scripts
+   change. This block sits last in the head so it wins the
+   cascade over the base stylesheet and the Oct 29 Neon Line
+   skin at equal specificity; the skin itself is not deleted.
+   All values come from the --cc-* tokens below.
+   ============================================================ */
+:root{
+  --cc-font-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cc-ink:#f6f1e3; --cc-dim:#c9bfe0; --cc-faint:#a99cc9;
+  --cc-ground:#0d0a14; --cc-dock:#120c26;
+  --cc-gold:#f0b23e; --cc-gold-ink:#221503;
+  --cc-line:rgba(195,186,221,.22);
+  --cc-shadow:0 8px 24px rgba(0,0,0,.45);
+  --shadow:0 8px 24px rgba(0,0,0,.45);
+}
+::selection{background:var(--gold); color:var(--cc-gold-ink)}
+
+/* ---------- 1. type: display face on headings/logo only ---------- */
+body{font-family:var(--cc-font-body)}
+.web-topbar .brand{font-family:"Cinzel",serif; font-weight:900; letter-spacing:.04em; text-shadow:none}
+.mini-fold>summary,.slab .grade,.log-date,.cal-date,.promise p strong{font-family:var(--cc-font-body)}
+.hero .kicker,.scroll-cue,.cat .go,.web-menu-label{text-transform:none; letter-spacing:.04em}
+.fold-hint,.lyrics-fold .fold-hint,.sec-fold .fold-hint{color:var(--gold2); text-shadow:none; letter-spacing:.04em}
+
+/* ---------- 2. glow / neon stripped from the chrome ---------- */
+.glowfield{display:none}
+.brand,.sec-head h2{text-shadow:none}
+.hero h1{text-shadow:0 3px 18px rgba(0,0,0,.6)}
+.hero-bolt{filter:none}
+.cat::after{display:none}
+.hits-wrap{background:linear-gradient(180deg, transparent, var(--bg2) 18%, var(--bg2) 82%, transparent)}
+#watch{background:none}
+.web-topbar{background:var(--cc-ground); border-bottom:1px solid var(--cc-line); box-shadow:none}
+.web-menu-panel{background:var(--panel); border:1px solid var(--cc-line); box-shadow:var(--cc-shadow)}
+.web-dock{background:var(--cc-dock); border:1px solid var(--cc-line); box-shadow:var(--cc-shadow)}
+footer{border-top:1px solid var(--cc-line); box-shadow:none}
+.ref-banner{background:var(--gold); box-shadow:none}
+#soundToggle{border:1px solid var(--cc-line); box-shadow:var(--cc-shadow)}
+#soundToggle[aria-pressed="true"]{background:var(--gold)}
+.hero-stats span{backdrop-filter:none; -webkit-backdrop-filter:none}
+.soundcard,.qcard,.linkcard,.crew-card,.rate-card,.cardbox,.review,.tile,.cat,
+.cal-item,.log-item,.cauldron-panel,.hon-card,.motion-card,.packbox,.slab,.fakefig,.grader,
+.qrbox,.cfg-item,.drop-alert,.odds-wrap,.wick-entry,.human-rail{
+  border-color:var(--cc-line); box-shadow:var(--cc-shadow);
+}
+.cat,.promise,.shelf,.soundcard,.wantstrip,.drop-card,.cfg-summary{background:var(--panel)}
+.cfg-item[aria-pressed="true"]{background:var(--panel2)}
+.slab .grade,.log-date,.cal-date{background:var(--bg2)}
+input,textarea,select{background:var(--bg2); border:1px solid var(--cc-line); color:var(--cc-ink); box-shadow:none}
+input:focus,textarea:focus,select:focus{border-color:var(--gold); box-shadow:none; outline:2px solid var(--gold); outline-offset:1px}
+:focus-visible{outline:3px solid var(--gold2); outline-offset:2px}
+
+/* ---------- 3. primary action: solid gold, secondaries flat ---------- */
+.btn{background:var(--panel); border:1px solid var(--cc-line); color:var(--cc-ink); box-shadow:none; text-shadow:none}
+.btn-gold{background:var(--gold); border-color:var(--gold); color:var(--cc-gold-ink); box-shadow:var(--cc-shadow)}
+.btn-ghost{background:rgba(13,10,20,.55); border:1px solid rgba(246,241,227,.5); color:#fdf8ec; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none}
+.store-btn,.web-topbar .store-btn{background:var(--gold); color:var(--cc-gold-ink); box-shadow:none}
+.web-menu-btn{background:var(--gold); color:var(--cc-gold-ink); border-color:var(--gold); box-shadow:none}
+.buy{background:var(--gold)}
+.web-dock a{background:var(--panel2); border:1px solid var(--cc-line)}
+.web-dock a:hover{background:var(--gold); color:var(--cc-gold-ink); border-color:var(--gold)}
+.web-bg-btn[aria-pressed="true"]{background:rgba(240,178,62,.28); color:var(--gold2); box-shadow:none}
+
+/* ---------- 4. spacing on scale + targets >= 44px ---------- */
+.web-topbar{padding:8px 16px; gap:8px}
+.web-menu-panel{padding:8px}
+.web-dock{padding:8px; gap:8px}
+@media (max-width:760px){ .web-dock{row-gap:8px} }
+.hero-ctas{gap:16px}
+.hero-stats{gap:8px}
+.chips{gap:8px; margin:32px 0 16px}
+.grid{gap:16px}
+.slab-list{gap:8px}
+.slab{padding:16px}
+.tile .body{padding:16px}
+.sec-head h2{margin:8px 0}
+footer{padding:32px 16px 48px}
+.btn{min-height:48px; padding:12px 24px}
+.store-btn,.web-topbar .store-btn{min-height:44px; display:inline-flex; align-items:center; padding:8px 16px; font-size:.84rem}
+.web-menu-btn{min-height:44px; min-width:44px}
+.web-dock a{min-height:44px; display:flex; align-items:center; justify-content:center; padding:8px 4px}
+.web-menu-panel a{min-height:44px; display:flex; align-items:center; padding:8px 16px}
+.web-bg-btn{min-height:44px; display:flex; align-items:center; padding:8px 16px}
+.chip{min-height:44px; display:inline-flex; align-items:center}
+.buy{min-height:44px}
+.reviews-more a{min-height:44px; display:inline-flex; align-items:center}
+.shelf .cards a{min-height:44px}
+.quiz-opts button{min-height:44px}
+.copybtn{min-height:44px; display:inline-flex; align-items:center}
+.cauldron-row input{min-height:48px}
+.social-row a{min-height:44px; display:inline-flex; align-items:center; padding:8px 4px}
+</style>
 </head>
 <body class="subpage">
 
