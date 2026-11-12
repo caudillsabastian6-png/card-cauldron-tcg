@@ -1796,7 +1796,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 
 </head>
 <body class="neon">
-<div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first — local demo only. No password, no server, nothing leaves this device. This only remembers a name so the top bubble shows who is signed in.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Local demo only — not a real account.</p></div>
+<div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first. A name or Guest stays on this device only — it just remembers a name so the top bubble shows who is signed in. A real account is optional, further down: it can save your checks, only with your agreement.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Name and Guest are local only — not real accounts.</p><div id="ccGateAcct" style="width:100%;max-width:320px;border-top:1px solid #3a2c12;padding-top:12px;margin-top:4px;"><p style="font-weight:800;">Have a Card Cauldron account?</p><p class="small dim">Sign in with your account to save your checks (with your agreement, asked next). New here? Create a free account.</p><label class="op-field" style="width:100%;">Username <input type="text" id="ccGateUser" placeholder="Account username" autocomplete="username"></label><label class="op-field" style="width:100%;">Password <input type="password" id="ccGatePass" placeholder="Account password" autocomplete="current-password"></label><button type="button" class="bubble-btn b-gold" style="width:100%;text-align:center;justify-content:center" onclick="ccGateAcctLogin()"><span style="display:block;width:100%;text-align:center">Sign in with account</span></button><button type="button" class="bubble-btn b-white" style="width:100%;text-align:center;justify-content:center;margin-top:8px;" onclick="ccGateAcctRegister()"><span style="display:block;width:100%;text-align:center">Create account</span></button><p class="small" id="ccGateAcctMsg" role="status"></p></div></div>
 <script id="cc2713GateEarly">
 /* CC-27.13 gate early-tap guard: queue gate taps that land before the
    login system (defined near the end of this document) has parsed. */
@@ -1953,11 +1953,12 @@ window.opGateLogin = function(){
     <div class="cc-purpose" role="note" aria-label="What this check does">
       <h3>What this check does</h3>
       <p>You take a front photo and a back photo of your card. This demo walks you through those steps and shows you the signs we look at — the print, the texture, and the small details — compared against real cards we have scanned and labelled ourselves.</p>
-      <p><strong>Honest status:</strong> confident verdicts are not live yet. Our checker is still going through its final blind test, so this demo shows the steps and the signs — it does not give a final real-or-fake answer on your card. When a card cannot be called yet, the honest answer is <strong>Inconclusive</strong>, and that is the answer this demo stands on until the test is passed.</p>
+      <p><strong>Honest status:</strong> our checker opens lane by lane, and most lanes are still in their final blind test. A saved check gets a result that shows its work — and today, most results are the honest answer, <strong>Inconclusive</strong>. One result can speak now: if your photo exactly matches a photo our owner has already designated as a fake, the check says <strong>Likely Counterfeit</strong> and shows you why. Nothing here is ever a guarantee — a result is an evidence-based opinion, not a grade or a certificate.</p>
+      <p><strong>Your checks, saved:</strong> with a free account and your agreement, your checks save to your account so you can see them again under Profile / Settings → Your checks. No account, no agreement — nothing is saved to an account.</p>
     </div>
     <div class="stack mt" id="pickerList"></div>
 
-    <p class="small dim center mt" id="pickerFoot">Every pick works the same way: front photo, back photo, then the signs — step by step. Confident verdicts aren't live yet, so an answer that isn't ready comes back Inconclusive.</p>
+    <p class="small dim center mt" id="pickerFoot">Every pick works the same way: front photo, back photo, then the signs — step by step. Saved checks get a result that shows its work; a card that cannot be called yet comes back Inconclusive.</p>
   </section>
 
   <!-- ================= CAPTURE ================= -->
@@ -1978,6 +1979,7 @@ window.opGateLogin = function(){
       <div class="sample-art hidden" id="capSample"><span class="big" id="capSampleEmoji">🃏</span><span class="cap" id="capSampleCap">Sample photo</span><span class="pill sample">SAMPLE — demo illustration</span></div>
     </div>
     <p class="center" style="margin-top:10px;font-weight:800;" id="capGot"></p>
+    <div id="ccDemoVerdictSlot" aria-live="polite"></div>
     <div class="dots" id="capDots" aria-hidden="true" style="margin-top:10px;"></div>
     <input type="file" id="capFile" accept="image/*" class="hidden" />
     <input type="file" id="capCamFile" accept="image/*" capture="environment" class="hidden" />
@@ -1986,7 +1988,7 @@ window.opGateLogin = function(){
       <button type="button" class="bubble-btn b-gold hidden" id="capNext">Next →</button>
       <button type="button" class="bubble-btn b-sky" id="capTake">Take the photo</button>
       <button type="button" class="bubble-btn b-white small" id="capUploadFile">Upload a file instead</button>
-      <p class="small dim center">Photos you pick stay on your device — this demo doesn't upload or store anything.</p>
+      <p class="small dim center">Photos you pick stay on your device unless you choose to share them — pool sharing and account saving are always your choice, and you are asked first.</p>
     </div>
   </section>
 
@@ -2511,7 +2513,7 @@ window.opGateLogin = function(){
 <section class="screen" id="scr-settings">
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>Settings &amp; Profile</h2>
-    <p class="small dim">Demo only: your profile settings save on this device only (local storage). No real account. The one exception is Pool sharing below — only when it is ON do your scans leave this device.</p>
+    <p class="small dim">Most profile settings save on this device only (local storage). Two things can leave this device, and only when you choose them: Pool sharing below, and a Card Cauldron account — if you create one and agree to saving, your checks save to your account so you can see them again here.</p>
     <div class="card mt"><h3>Profile</h3>
     <label class="op-field">Display name <input type="text" id="opDisplayName" placeholder="Name shown in the app" autocomplete="off"></label>
     <label class="op-field">Bio / tagline <input type="text" id="opBio" placeholder="A short line about you" autocomplete="off"></label>
@@ -2522,6 +2524,26 @@ window.opGateLogin = function(){
     <p style="font-weight:800;margin:8px 0;" id="opPoolShareState">Pool sharing: not set yet — you will be asked once, at your first scan.</p>
     <button type="button" class="bubble-btn b-gold" onclick="poolShareSet(true)"><span>Pool sharing ON</span></button>
     <button type="button" class="bubble-btn b-white" onclick="poolShareSet(false)"><span>Pool sharing OFF</span></button></div>
+    <div class="card mt" id="ccAcctCard"><h3>Card Cauldron account — save your checks</h3>
+    <div id="ccAcctOut">
+    <p class="small dim">A free, real account. With your agreement, checks you run while signed in are saved to your account, and each one gets a result that shows its work — most results are Inconclusive while our checker lanes finish their blind tests; an exact photo match to a known fake is called Likely Counterfeit. Saving is off until you agree — you are asked first, and you can withdraw any time.</p>
+    <label class="op-field">Username <input type="text" id="ccAcctUser" placeholder="Pick a username (3–24 characters)" autocomplete="username"></label>
+    <label class="op-field">Password <input type="password" id="ccAcctPass" placeholder="At least 6 characters" autocomplete="current-password"></label>
+    <button type="button" class="bubble-btn b-gold" onclick="ccAcctLogin()"><span>Sign in</span></button>
+    <button type="button" class="bubble-btn b-white" onclick="ccAcctRegister()"><span>Create account</span></button>
+    <p class="small" id="ccAcctMsg" role="status"></p>
+    </div>
+    <div id="ccAcctIn" hidden>
+    <p style="font-weight:800;margin:8px 0;" id="ccAcctState">Signed in.</p>
+    <p class="small dim" id="ccConsentState"></p>
+    <button type="button" class="bubble-btn b-gold" id="ccConsentBtn" onclick="ccAcctConsentToggle()"><span>Review the saving agreement</span></button>
+    <button type="button" class="bubble-btn b-white" onclick="ccAcctLogout()"><span>Sign out of account</span></button>
+    <h3 style="font-size:18px;margin-top:16px;">Your checks</h3>
+    <p class="small dim">Your saved checks, newest first — read from your account, not from this device. A result appears here after the house checker reads your check; that can take a little while.</p>
+    <div id="ccMyChecks"><p class="small dim">Loading…</p></div>
+    <button type="button" class="bubble-btn b-white small" onclick="ccLoadMyChecks()"><span>Refresh your checks</span></button>
+    </div>
+    </div>
     <div class="card mt"><h3>Login — local demo only</h3>
     <p class="small dim">This is NOT a real account login. It only remembers a name so the top bubble shows who is signed in. No password, no server, nothing leaves this device, nothing is saved to an account.</p>
     <label class="op-field">Login name <input type="text" id="opLoginName" placeholder="Username for this demo" autocomplete="off"></label>
@@ -3860,8 +3882,8 @@ var PW_TEXT = {
     plain: "Pick what you have first. Each kind needs its own photos. This helps the checkers know what to look at. You must pick first."
   },
   pickerFoot: {
-    normal: "Every pick works the same way: front photo, back photo, then the signs — step by step. Confident verdicts aren't live yet, so an answer that isn't ready comes back Inconclusive.",
-    plain: "The check works the same for all kinds. Front photo, then back photo, then the signs. Final answers are not live yet. If we cannot call it yet, the answer is Inconclusive."
+    normal: "Every pick works the same way: front photo, back photo, then the signs — step by step. Saved checks get a result that shows its work; a card that cannot be called yet comes back Inconclusive.",
+    plain: "The check works the same for all kinds. Front photo, then back photo, then the signs. Saved checks get a result that shows its work. If we cannot call a card yet, the answer is Inconclusive."
   },
   planPoolText: {
     normal: "10 Real checks to start, then 5 fresh checks every month. No SAM, no Grade. Unused checks never roll over.",
@@ -25261,5 +25283,390 @@ body.neon textarea:focus-visible{
   html{scroll-behavior:auto;}
 }
 </style>
+<style id="ccDemoAcctStyle">
+/* DEMO ACCOUNT + VERDICTS (Nov 12, 2026): verdict cards + Your checks.
+   Scoped .ccd- classes, house tokens, spacing scale only. Verdict
+   colours stay soft — peach for counterfeit (never alarm red). */
+.ccd-card{background:var(--cc-surface);color:var(--cc-text);border:1px solid var(--cc-dim);border-radius:var(--cc-space-16);padding:var(--cc-space-16);margin-top:var(--cc-space-16);text-align:left;}
+.ccd-card.ccd-fake{border-color:#e8a58c;}
+.ccd-card.ccd-real{border-color:#7fc98f;}
+.ccd-card.ccd-inc{border-color:var(--cc-gold);}
+.ccd-word{font-family:var(--cc-font-display);font-size:22px;margin:0;}
+.ccd-sub{margin:var(--cc-space-8) 0 0;}
+.ccd-lane{font-weight:800;margin:var(--cc-space-8) 0 0;}
+.ccd-reads{margin:var(--cc-space-4) 0 0;}
+.ccd-signs{margin:var(--cc-space-8) 0 0;padding-left:var(--cc-space-24);}
+.ccd-signs li{margin-bottom:var(--cc-space-4);}
+.ccd-note{margin:var(--cc-space-8) 0 0;font-size:14px;line-height:1.5;}
+.ccd-meta{opacity:.75;font-size:12.5px;margin:var(--cc-space-8) 0 0;}
+.ccd-check{border-top:1px solid var(--cc-dim);padding:var(--cc-space-16) 0;}
+.ccd-check-head{margin:0;}
+</style>
+<script id="ccDemoAcctScript">
+/* =====================================================================
+   DEMO ACCOUNT + VERDICT SURFACING (Nov 12, 2026 — owner order:
+   account + consent-first saving first, then verdicts lane by lane).
+   Additive block: no existing line above is edited by this script.
+   Talks to the house door's /demo/* endpoints:
+     POST /demo/register /demo/login  -> {token, username, consent}
+     GET  /demo/me                    -> account + consent state
+     POST /demo/consent {agree:true}  -> saving agreement recorded
+     POST /demo/consent-withdraw      -> saving agreement withdrawn
+     GET  /demo/my-checks             -> this account's saved checks,
+                                         each with its read + verdict
+     POST /demo/delete-check          -> delete one saved check
+   Saving contract (owner's consent rule, Oct 24): a check is saved
+   to an account ONLY when the person is signed in AND has agreed.
+   The door hard-enforces it (403 before consent, 401 on bad token);
+   this block only carries the token and shows the agreement first.
+   Guest and name-only paths never touch this block's endpoints and
+   save nothing to any account.
+   Verdict contract: words are only Likely Genuine / Likely
+   Counterfeit / Inconclusive, exactly as the door files them. A
+   verdict renders only when the door returns one — nothing here
+   invents, caches, or defaults a verdict, and no percentages are
+   ever shown. Inconclusive is a first-class result screen.
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  var API = "https://api.cardcauldrontcg.com";
+  var LS_TOKEN = "cc_demo_token", LS_USER = "cc_demo_user";
+  var CONSENT_VERSION = "2026-11-12";
+  var VOCAB = { "Likely Genuine": 1, "Likely Counterfeit": 1, "Inconclusive": 1 };
+  var READWORDS = {
+    above_band: "points to a printed fake",
+    below_band: "points to a genuine print",
+    in_band: "undecided"
+  };
+  var LANE_PLAIN = {
+    "designated-fake-registry": "Designated-fake registry — the owner's own fake list, checked at intake",
+    "crew-manufactured-digital": "Digital-image lane — manufactured-print read (V6-THRESH)",
+    "demo-inconclusive": "Real or Replica — lane result"
+  };
+  var NEXT_STEP = {
+    intake_registry_match: "This is a settled match, not a guess: the photo itself is on the owner's fake list.",
+    physical_lane_closed: "Next step: nothing needed today. When the physical-card lane passes its blind test, saved checks like this can be re-run.",
+    no_library_match: "Next step: nothing needed. As our genuine library grows, cards like this get their comparison.",
+    digital_lane_in_review: "Next step: nothing needed. When this lane's final review lands, saved checks can be re-run and this result can change.",
+    replay_disagreement: "The lane measured twice and the two reads disagreed, so it stayed silent — that silence is the system working as designed.",
+    v6_measured: ""
+  };
+
+  var acct = { token: null, username: null, consent: false, consent_at: null };
+  try {
+    acct.token = localStorage.getItem(LS_TOKEN) || null;
+    acct.username = localStorage.getItem(LS_USER) || null;
+  } catch (e) {}
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function $(id) { return document.getElementById(id); }
+
+  function api(path, opts) {
+    opts = opts || {};
+    var headers = { "Content-Type": "application/json" };
+    if (acct.token) headers["Authorization"] = "Bearer " + acct.token;
+    return fetch(API + path, {
+      method: opts.method || "GET",
+      headers: headers,
+      body: opts.body ? JSON.stringify(opts.body) : undefined
+    }).then(function (r) {
+      return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d || {} }; });
+    });
+  }
+
+  /* ---------------- account state + settings card ---------------- */
+
+  function setMsg(id, text) { var el = $(id); if (el) el.textContent = text || ""; }
+
+  function renderAcctCard() {
+    var out = $("ccAcctOut"), inn = $("ccAcctIn");
+    if (!out || !inn) return;
+    if (acct.token) {
+      out.hidden = true; inn.hidden = false;
+      var st = $("ccAcctState");
+      if (st) st.textContent = "Signed in as " + (acct.username || "your account") + ".";
+      var cs = $("ccConsentState");
+      if (cs) cs.textContent = acct.consent
+        ? "Saving agreement: ON" + (acct.consent_at ? " — agreed " + acct.consent_at.slice(0, 10) : "") + ". Checks you run while signed in save to your account."
+        : "Saving agreement: OFF — your checks are not saved to your account. The check still runs; nothing is kept.";
+      var btn = $("ccConsentBtn");
+      if (btn) btn.innerHTML = acct.consent ? "<span>Withdraw saving agreement</span>" : "<span>Review the saving agreement</span>";
+    } else {
+      out.hidden = false; inn.hidden = true;
+    }
+  }
+
+  function refreshMe() {
+    if (!acct.token) { renderAcctCard(); return; }
+    api("/demo/me").then(function (res) {
+      if (!res.ok) { /* token died — sign out locally, say so in Settings */
+        acct.token = null; acct.username = null; acct.consent = false; acct.consent_at = null;
+        try { localStorage.removeItem(LS_TOKEN); localStorage.removeItem(LS_USER); } catch (e) {}
+        renderAcctCard();
+        setMsg("ccAcctMsg", "Your account sign-in had expired — please sign in again.");
+        return;
+      }
+      acct.username = res.d.username || acct.username;
+      acct.consent = !!res.d.consent;
+      acct.consent_at = res.d.consent_at || null;
+      renderAcctCard();
+    }).catch(function () { renderAcctCard(); });
+  }
+
+  function afterAuth(username, fromGate) {
+    if (fromGate && typeof window.opDoLogin === "function") {
+      try { window.opDoLogin(username); } catch (e) {}
+    }
+    refreshMe();
+    if (!acct.consent) {
+      /* Consent is asked BEFORE any account saving can happen; the
+         door would refuse the save anyway (403), this is the ask. */
+      setTimeout(function () { consentShow(""); }, fromGate ? 600 : 100);
+    } else if (fromGate) {
+      /* already agreed on an earlier visit — nothing to ask */
+    } else {
+      ccLoadMyChecks();
+    }
+  }
+
+  function doAuth(mode, userId, passId, msgId, fromGate) {
+    var u = ($(userId) ? $(userId).value : "").trim();
+    var p = $(passId) ? $(passId).value : "";
+    if (u.length < 3) { setMsg(msgId, "Username needs at least 3 characters."); return; }
+    if (p.length < 6) { setMsg(msgId, "Password needs at least 6 characters."); return; }
+    setMsg(msgId, mode === "register" ? "Creating your account…" : "Signing you in…");
+    api("/demo/" + mode, { method: "POST", body: { username: u, password: p } }).then(function (res) {
+      if (!res.ok || !res.d.token) {
+        setMsg(msgId, res.d.error || "That did not go through — try again.");
+        return;
+      }
+      acct.token = res.d.token;
+      acct.username = res.d.username || u;
+      acct.consent = !!res.d.consent;
+      acct.consent_at = res.d.consent_at || null;
+      try { localStorage.setItem(LS_TOKEN, acct.token); localStorage.setItem(LS_USER, acct.username); } catch (e) {}
+      setMsg(msgId, "");
+      if (fromGate) setMsg("ccGateAcctMsg", "");
+      afterAuth(acct.username, fromGate);
+    }).catch(function () { setMsg(msgId, "Could not reach the server — check your connection and try again."); });
+  }
+
+  window.ccAcctLogin = function () { doAuth("login", "ccAcctUser", "ccAcctPass", "ccAcctMsg", false); };
+  window.ccAcctRegister = function () { doAuth("register", "ccAcctUser", "ccAcctPass", "ccAcctMsg", false); };
+  window.ccGateAcctLogin = function () { doAuth("login", "ccGateUser", "ccGatePass", "ccGateAcctMsg", true); };
+  window.ccGateAcctRegister = function () { doAuth("register", "ccGateUser", "ccGatePass", "ccGateAcctMsg", true); };
+
+  window.ccAcctLogout = function () {
+    acct.token = null; acct.username = null; acct.consent = false; acct.consent_at = null;
+    try { localStorage.removeItem(LS_TOKEN); localStorage.removeItem(LS_USER); } catch (e) {}
+    renderAcctCard();
+    setMsg("ccAcctMsg", "Signed out of your account on this device. (Your local demo name above is separate.)");
+  };
+
+  /* ---------------- consent: privacy notice first ---------------- */
+
+  function consentShow(note) {
+    if (document.getElementById("ccConsentPop")) return;
+    var pop = document.createElement("div");
+    pop.id = "ccConsentPop";
+    pop.style.cssText = "position:fixed;inset:0;z-index:3200;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:24px;";
+    pop.innerHTML = '<div style="background:#2a2138;border:2px solid #f5c542;border-radius:16px;padding:20px;max-width:380px;color:#fff8e7;">'
+      + '<h3 style="color:#f5c542;margin-top:0;">Save your checks to your account?</h3>'
+      + (note ? '<p style="font-weight:800;">' + esc(note) + '</p>' : '')
+      + '<p>If you agree: when you check a card while signed in, the photos and the check result are saved on the Card Cauldron server under your account name, so you can see them again in Your checks (Profile / Settings).</p>'
+      + '<p>Saved checks are tagged as public demo submissions. They help us test and improve the checker, and they are kept separate on purpose: they are <strong>never</strong> added to our genuine-card library and <strong>never</strong> used as graded test answers.</p>'
+      + '<p>You can withdraw this agreement at any time in Profile / Settings — withdrawing stops future saving — and you can delete any saved check from Your checks.</p>'
+      + '<p>If you do not agree, nothing changes: the check still runs, and nothing is saved to your account.</p>'
+      + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap;"><button type="button" class="bubble-btn b-gold" id="ccConsentAgree"><span>I agree — save my checks</span></button><button type="button" class="bubble-btn b-white" id="ccConsentNo"><span>Not now</span></button></div></div>';
+    document.body.appendChild(pop);
+    document.getElementById("ccConsentAgree").addEventListener("click", function () {
+      api("/demo/consent", { method: "POST", body: { agree: true, version: CONSENT_VERSION } }).then(function (res) {
+        pop.remove();
+        if (res.ok) {
+          acct.consent = true; acct.consent_at = res.d.consent_at || null;
+          renderAcctCard();
+          ccLoadMyChecks();
+        }
+      }).catch(function () { pop.remove(); });
+    });
+    document.getElementById("ccConsentNo").addEventListener("click", function () { pop.remove(); });
+  }
+  window.ccConsentShow = consentShow;
+
+  window.ccAcctConsentToggle = function () {
+    if (!acct.token) return;
+    if (acct.consent) {
+      api("/demo/consent-withdraw", { method: "POST", body: {} }).then(function (res) {
+        if (res.ok) { acct.consent = false; acct.consent_at = null; renderAcctCard(); }
+      }).catch(function () {});
+    } else {
+      consentShow("");
+    }
+  };
+
+  /* ---------------- verdict rendering (shows its work) ---------------- */
+
+  function verdictHTML(dv) {
+    if (!dv || !VOCAB[dv.verdict]) return "";
+    var lane = LANE_PLAIN[dv.lane_id] || dv.lane_name || "Lane result";
+    var cls = dv.verdict === "Likely Counterfeit" ? "ccd-fake" : (dv.verdict === "Likely Genuine" ? "ccd-real" : "ccd-inc");
+    var h = '<div class="ccd-card ' + cls + '">';
+    h += '<p class="ccd-word">' + esc(dv.verdict) + '</p>';
+    if (dv.verdict === "Inconclusive") {
+      h += '<p class="ccd-sub">The honest answer for this card today — not a failed check. Here is what was checked:</p>';
+    } else {
+      h += '<p class="ccd-sub">Here is what the lane read:</p>';
+    }
+    h += '<p class="ccd-lane">Lane: ' + esc(lane) + '</p>';
+    var reads = [];
+    if (READWORDS[dv.front_read]) reads.push("Front read: " + READWORDS[dv.front_read]);
+    if (READWORDS[dv.back_read]) reads.push("Back read: " + READWORDS[dv.back_read]);
+    if (READWORDS[dv.fused_read] && dv.lane_id === "crew-manufactured-digital") reads.push("Together: " + READWORDS[dv.fused_read]);
+    if (reads.length) h += '<p class="ccd-reads">' + esc(reads.join(" · ")) + '.</p>';
+    if (dv.signs && dv.signs.length) {
+      h += '<ul class="ccd-signs">';
+      for (var i = 0; i < dv.signs.length; i++) {
+        h += '<li><strong>' + esc(dv.signs[i].name) + '.</strong> ' + esc(dv.signs[i].detail) + '</li>';
+      }
+      h += '</ul>';
+    }
+    if (dv.lane_id === "crew-manufactured-digital") {
+      h += '<p class="ccd-note">How this lane reads: it compares your photo against our scan of the genuine card and measures print-pattern differences. It was proven on manufactured fakes — prints made to imitate real cards — and it reads the image, not the physical card in your hand. It is one lane\u2019s read, never a grade, a certificate, or a guarantee.</p>';
+    }
+    var step = NEXT_STEP[dv.reason];
+    if (step) h += '<p class="ccd-note">' + esc(step) + '</p>';
+    if (dv.measured_at) h += '<p class="ccd-meta">Measured ' + esc(dv.measured_at) + (dv.config ? ' · ' + esc(dv.config) : '') + '</p>';
+    h += '</div>';
+    return h;
+  }
+  window.ccVerdictHTML = verdictHTML;
+
+  /* In-flow surface: after an account save, watch for the verdict and
+     render it on the capture screen. The worker files verdicts after
+     the save, so this polls the same read the identity watch uses. */
+  var watchTimer = null;
+  function watchVerdict(sid) {
+    var slot = $("ccDemoVerdictSlot");
+    if (slot) slot.innerHTML = '<div class="ccd-card"><p class="ccd-sub" style="margin:0;">Saved to your account ✓ — your result will appear here, and stays in Your checks (Profile / Settings), once the house checker has read it.</p></div>';
+    if (watchTimer) clearInterval(watchTimer);
+    var started = Date.now();
+    var tick = function () {
+      if (Date.now() - started > 720000) { clearInterval(watchTimer); watchTimer = null; return; }
+      fetch(API + "/pool/read/" + encodeURIComponent(sid))
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d && d.demo_verdict && VOCAB[d.demo_verdict.verdict]) {
+            clearInterval(watchTimer); watchTimer = null;
+            var s2 = $("ccDemoVerdictSlot");
+            if (s2) s2.innerHTML = verdictHTML(d.demo_verdict);
+          }
+        })
+        .catch(function () { /* a failed poll is not a failed check */ });
+    };
+    watchTimer = setInterval(tick, 5000);
+  }
+
+  /* ---------------- Your checks (real saved data) ---------------- */
+
+  window.ccLoadMyChecks = function () {
+    var box = $("ccMyChecks");
+    if (!box) return;
+    if (!acct.token) { box.innerHTML = '<p class="small dim">Sign in to see your saved checks.</p>'; return; }
+    api("/demo/my-checks").then(function (res) {
+      if (!res.ok) { box.innerHTML = '<p class="small dim">Your checks could not load just now — tap Refresh to try again.</p>'; return; }
+      var checks = res.d.checks || [];
+      if (!checks.length) {
+        box.innerHTML = '<p class="small dim">No saved checks yet. Run a check while signed in' + (acct.consent ? '' : ' and after agreeing to saving') + ' and it will appear here.</p>';
+        return;
+      }
+      var h = "";
+      for (var i = 0; i < checks.length; i++) {
+        var c = checks[i];
+        var label = c.label || {};
+        var parts = [];
+        if (label.name && label.name !== "UNKNOWN") parts.push(label.name);
+        if (label.number && label.number !== "UNKNOWN") parts.push(label.number);
+        var title = parts.length ? parts.join(" · ") : "Card check";
+        if (c.read_state === "done" && c.read) {
+          var rp = [];
+          if (c.read.name) rp.push(c.read.name);
+          if (c.read.number) rp.push(c.read.number);
+          if (rp.length) title = rp.join(" · ");
+        }
+        h += '<div class="ccd-check"><p class="ccd-check-head"><strong>' + esc(title) + '</strong> <span class="ccd-meta">' + esc((c.created || "").slice(0, 10)) + '</span></p>';
+        if (c.demo_verdict && VOCAB[c.demo_verdict.verdict]) {
+          h += verdictHTML(c.demo_verdict);
+        } else if (c.read_state === "done") {
+          h += '<p class="small dim">Identity read is in. No lane result yet — results land here after the house checker reads your check.</p>';
+        } else {
+          h += '<p class="small dim">Waiting for its read — results land here after the house checker reads your check.</p>';
+        }
+        h += '<button type="button" class="bubble-btn b-white small" onclick="ccDeleteCheck(\'' + esc(c.submission_id) + '\')"><span>Delete this check</span></button></div>';
+      }
+      box.innerHTML = h;
+    }).catch(function () { box.innerHTML = '<p class="small dim">Your checks could not load just now — tap Refresh to try again.</p>'; });
+  };
+
+  window.ccDeleteCheck = function (sid) {
+    api("/demo/delete-check", { method: "POST", body: { submission_id: sid } }).then(function () { ccLoadMyChecks(); }).catch(function () { ccLoadMyChecks(); });
+  };
+
+  /* ---------------- token tap on the pool submit ----------------
+     Wraps window.fetch once (the Outbox tap already wraps it too;
+     taps compose — this one only adds the Authorization header to
+     the account submit and watches the response through a clone, so
+     every existing handler behaves byte-for-byte as before). */
+  if (typeof window.fetch === "function" && !window.__ccDemoAcctTap) {
+    window.__ccDemoAcctTap = true;
+    var origFetch = window.fetch;
+    window.fetch = function (input, init) {
+      try {
+        var url = (typeof input === "string") ? input : (input && input.url) || "";
+        var method = (init && init.method) || (typeof input !== "string" && input && input.method) || "GET";
+        if (acct.token && method.toUpperCase() === "POST" && url.indexOf("/pool/submit-pending") >= 0) {
+          init = init || {};
+          var hdrs = {};
+          var src = init.headers || {};
+          for (var k in src) { if (Object.prototype.hasOwnProperty.call(src, k)) hdrs[k] = src[k]; }
+          hdrs["Authorization"] = "Bearer " + acct.token;
+          init.headers = hdrs;
+          return origFetch.call(window, input, init).then(function (resp) {
+            try {
+              resp.clone().json().then(function (d) {
+                if (resp.status === 403 && d && d.consent_required) {
+                  consentShow("Your check just now was NOT saved — saving needs your agreement first.");
+                } else if (resp.status === 401 && d && d.account_error) {
+                  window.ccAcctLogout();
+                  consentShow("");
+                } else if (resp.ok && d && d.submission_id) {
+                  watchVerdict(d.submission_id);
+                  setTimeout(function () { ccLoadMyChecks(); }, 1500);
+                }
+              }).catch(function () {});
+            } catch (e) {}
+            return resp;
+          });
+        }
+      } catch (e) {}
+      return origFetch.call(window, input, init);
+    };
+  }
+
+  /* Refresh the account card whenever Settings is opened. */
+  document.addEventListener("click", function (ev) {
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-nav="settings"]') : null;
+    if (t) setTimeout(function () { renderAcctCard(); ccLoadMyChecks(); }, 350);
+  }, true);
+
+  renderAcctCard();
+  if (acct.token) refreshMe();
+})();
+
+</script>
 </body>
 </html>
