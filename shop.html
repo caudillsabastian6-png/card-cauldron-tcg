@@ -278,7 +278,7 @@
   @media (max-width:760px){ .hit-stage{grid-template-columns:1fr} }
   .hit-hero{position:relative; perspective:1000px}
   .hit-hero img{
-    width:min(230px,60vw); margin:0 auto; border-radius:12px; box-shadow:var(--shadow);
+    width:min(200px,52vw); margin:0 auto; border-radius:12px; box-shadow:var(--shadow);
     transform:rotate(-4deg); animation:hover-float 5s ease-in-out infinite;
   }
   @keyframes hover-float{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(-2deg) translateY(-14px)}}
@@ -972,8 +972,8 @@ footer{
   .fold-hint-line{margin:.45rem 0 0}
 
   #catalog .chips{margin:1.1rem 0 1rem}
-  #catalogGrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.7rem}
-  #catalogGrid .tile{flex:0 0 44%;scroll-snap-align:start}
+  #catalogGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;overflow:visible;padding-bottom:0}
+  #catalogGrid .tile{flex:none;scroll-snap-align:none}
   .promise{padding:.8rem 1rem}
   .packbox{padding:1.05rem 1.05rem 1.1rem;margin-top:1.2rem}
   .wantstrip{padding:1.15rem 1.1rem;margin-top:1.6rem}
