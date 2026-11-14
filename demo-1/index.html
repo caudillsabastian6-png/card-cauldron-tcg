@@ -4887,6 +4887,77 @@ function startMatch(){
   var open = [], matched = {}, attempts = 0, lock = false;
   var visUp = {}, visDone = {};   /* CC3D: render-only — previous render's up/matched sets */
   var peekUsed = false, peeking = false;   /* CC-FIX-27.6 §3.8 Peek Token */
+  /* SPRUCE A1/A2/A5: pinch-zoom state, the tell line that each found
+     pair pays out, and the gesture guard (a pan/pinch must never
+     leak through as a card tap). */
+  var zoom = { s: 1, x: 0, y: 0 };
+  var tellIdx = -1, tellLine = "";
+  var gest = { pts: {}, pinchD: 0, pinchS: 1, dragMoved: 0, suppress: false, wired: false };
+  function applyZoom(){
+    var g = $("matchGrid"); if(!g) return;
+    g.style.transform = "translate(" + zoom.x + "px," + zoom.y + "px) scale(" + zoom.s + ") rotateX(4deg)";
+  }
+  function wireGestures(){
+    if(gest.wired) return; gest.wired = true;
+    body.addEventListener("pointerdown", function(e){
+      var z = e.target.closest ? e.target.closest("#matchZoom") : null;
+      if(!z) return;
+      gest.pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+      gest.dragMoved = 0;
+      var ids = Object.keys(gest.pts);
+      if(ids.length === 2){
+        var a = gest.pts[ids[0]], b = gest.pts[ids[1]];
+        gest.pinchD = Math.hypot(a.x - b.x, a.y - b.y) || 1; gest.pinchS = zoom.s;
+      }
+    });
+    body.addEventListener("pointermove", function(e){
+      var pt = gest.pts[e.pointerId]; if(!pt) return;
+      var dx = e.clientX - pt.x, dy = e.clientY - pt.y;
+      pt.x = e.clientX; pt.y = e.clientY;
+      var ids = Object.keys(gest.pts);
+      if(ids.length === 2){
+        var a = gest.pts[ids[0]], b = gest.pts[ids[1]];
+        var d = Math.hypot(a.x - b.x, a.y - b.y);
+        if(gest.pinchD > 0){ zoom.s = Math.max(1, Math.min(2.3, gest.pinchS * d / gest.pinchD)); applyZoom(); }
+        gest.dragMoved = 99;
+      } else if(ids.length === 1 && zoom.s > 1){
+        zoom.x = Math.max(-160, Math.min(160, zoom.x + dx));
+        zoom.y = Math.max(-160, Math.min(160, zoom.y + dy));
+        applyZoom();
+        gest.dragMoved += Math.abs(dx) + Math.abs(dy);
+      }
+    });
+    function gestEnd(e){
+      if(gest.pts[e.pointerId]) delete gest.pts[e.pointerId];
+      if(gest.dragMoved > 10) gest.suppress = true;
+      if(!Object.keys(gest.pts).length) gest.dragMoved = 0;
+    }
+    body.addEventListener("pointerup", gestEnd);
+    body.addEventListener("pointercancel", gestEnd);
+    body.addEventListener("click", function(e){
+      if(gest.suppress){ gest.suppress = false; e.stopPropagation(); e.preventDefault(); return; }
+      /* SPRUCE A2, the other half of tolerance: a tap that lands in
+         the grid's gaps still finds the card it was aimed at, when
+         one sits within ~20px of the tap point. */
+      if(e.target && (e.target.id === "matchGrid" || e.target.id === "matchZoom")){
+        var cards = body.querySelectorAll(".match-card");
+        var bestEl = null, bestD = 21;
+        cards.forEach(function(c){
+          var r = c.getBoundingClientRect();
+          var cx = Math.max(r.left, Math.min(e.clientX, r.right)), cy = Math.max(r.top, Math.min(e.clientY, r.bottom));
+          var d = Math.hypot(e.clientX - cx, e.clientY - cy);
+          if(d < bestD){ bestD = d; bestEl = c; }
+        });
+        if(bestEl) bestEl.click();
+      }
+    }, true);
+    body.addEventListener("dblclick", function(e){
+      var z = e.target.closest ? e.target.closest("#matchZoom") : null;
+      if(!z) return;
+      if(zoom.s > 1){ zoom.s = 1; zoom.x = 0; zoom.y = 0; } else zoom.s = 1.7;
+      applyZoom();
+    });
+  }
   var body = $("gameMatch-body");
   function render(){
     var pairs = Object.keys(matched).length/2;
@@ -4904,7 +4975,9 @@ function startMatch(){
     var cols = deck.length <= 12 ? 3 : deck.length <= 20 ? 4 : deck.length <= 24 ? 5 : 7;
     body.innerHTML =
       '<p class="scorebar" role="status">Flips: '+attempts+' · Pairs found: '+pairs+' of '+symbols.length+'</p>'
-      + '<div class="match-grid'+(LV.pairs >= 12 ? ' dense' : '')+'" style="grid-template-columns:repeat('+cols+',1fr);">'+cards+'</div>'
+      + '<p class="match-tell" id="matchTell" role="status">' + (tellLine ? '🔎 Tell: ' + tellLine : '') + '</p>'
+      + '<div class="match-zoom" id="matchZoom"><div class="match-grid'+(LV.pairs >= 12 ? ' dense' : '')+'" id="matchGrid" style="grid-template-columns:repeat('+cols+',1fr);">'+cards+'</div></div>'
+      + '<div class="match-zoomctl"><button type="button" id="matchZoomOut" aria-label="Zoom out">−</button><button type="button" id="matchZoomIn" aria-label="Zoom in">+</button><button type="button" id="matchZoomReset" aria-label="Reset zoom">⟲</button></div>'
       + '<div style="margin-top:10px;"><button type="button" class="bubble-btn b-white small" id="matchPeekBtn" '+(peekUsed ? 'disabled' : '')+'><span>👁 Peek token'+(peekUsed ? ' — spent' : ' — one 0.6s glimpse (costs the ⭐)')+'</span></button></div>';
     body.querySelectorAll(".match-card").forEach(function(b){
       b.addEventListener("click", function(){ flip(parseInt(b.getAttribute("data-idx"),10)); });
@@ -4918,6 +4991,13 @@ function startMatch(){
     /* CC3D: remember this render's up/matched sets for change-only flips */
     visUp = {}; visDone = {};
     deck.forEach(function(c, idx){ if(peeking || open.indexOf(idx)>=0 || matched[idx]) visUp[idx] = true; if(matched[idx]) visDone[idx] = true; });
+    /* SPRUCE A1: zoom controls — big targets, same doors as the pinch */
+    var zi = $("matchZoomIn"), zo = $("matchZoomOut"), zr = $("matchZoomReset");
+    if(zi) zi.addEventListener("click", function(){ zoom.s = Math.min(2.3, Math.round((zoom.s + 0.3) * 10) / 10); applyZoom(); });
+    if(zo) zo.addEventListener("click", function(){ zoom.s = Math.max(1, Math.round((zoom.s - 0.3) * 10) / 10); if(zoom.s === 1){ zoom.x = 0; zoom.y = 0; } applyZoom(); });
+    if(zr) zr.addEventListener("click", function(){ zoom.s = 1; zoom.x = 0; zoom.y = 0; applyZoom(); });
+    applyZoom();
+    wireGestures();
   }
   function flip(idx){
     if(lock || peeking || open.indexOf(idx)>=0 || matched[idx]) return;
@@ -4928,6 +5008,9 @@ function startMatch(){
       render(); /* CC-FIX-21: the Flips counter updates the moment the second card flips — not after the ~1.1s flip-back on a mismatch. */
       var a = deck[open[0]], b = deck[open[1]];
       if(a.s === b.s){
+        /* SPRUCE A5: every found pair names a real inspection tell,
+           in Plain Words — the training payload of the whole game */
+        if(window.SPRUCE_TELLS && window.SPRUCE_TELLS.length){ tellIdx++; tellLine = window.SPRUCE_TELLS[tellIdx % window.SPRUCE_TELLS.length]; }
         matched[open[0]] = true; matched[open[1]] = true; open = []; goodSnd(); render(); celebrateMatch();
         if(Object.keys(matched).length === deck.length){
           var sc = Math.max(100, symbols.length*100 - (attempts - symbols.length)*25);
@@ -4946,6 +5029,8 @@ function startMatch(){
           var mnb = body.querySelector("#endBoard"), mw = mm.querySelector(".cc-levelnav-wrap");
           if(mnb && mw) mm.insertBefore(mw, mnb);
           var mab = $("againBtn"); if(mab) mab.style.display = "none";
+          if(window.ccSpruceBow) window.ccSpruceBow(mm, { score: sc, kind: "Careful looking is the whole craft — nicely audited.", award: mAward, replay: function(){ startMatch(); } });
+          if(window.ccSpruceTidyNav) window.ccSpruceTidyNav(mm);
         }
       } else {
         lock = true;
@@ -5095,6 +5180,8 @@ function startBeat(){
     el.type = "button"; el.setAttribute("aria-label","Tap this bubble on the beat");
     el.style.cssText = "position:absolute;width:68px;height:68px;border:none;cursor:pointer;border-radius:50%;box-shadow:0 6px 14px rgba(51,48,94,.2)" + (b.twinOf ? ", inset 0 0 0 4px rgba(255,255,255,.75)" : "") + ";left:"+b.lane+"%;top:"+SPAWN_Y+"px;background:url("+(b.color==="#ffd93d" ? "assets/sweep/beat/bubble-gold.webp" : "assets/sweep/beat/bubble.webp")+") center/contain no-repeat;";
     el.addEventListener("click", function(){ tap(b, el); });
+    /* SPRUCE B4: the bubble squashes on touch-down, before the pop */
+    el.addEventListener("pointerdown", function(){ try{ el.classList.add("bb-squash"); }catch(e){} });
     b.el = el; field.appendChild(el);
   }
   function spawn(){
@@ -5127,6 +5214,11 @@ function startBeat(){
     if(dist <= PERF){ earned = 100 * mult; score += earned; streak++; fever = Math.min(100, fever + 9); if(note) note.textContent = "Perfect beat! +"+earned+" · streak "+streak; blip(760,760,0.18,0.07); }
     else if(dist <= ONB){ earned = 50 * mult; score += earned; streak++; fever = Math.min(100, fever + 5); if(note) note.textContent = "On the beat! +"+earned; blip(560,560,0.18,0.07); }
     else { streak = 0; fever = Math.max(0, fever - 34); if(note) note.textContent = y > RING_Y ? "Too early — let it reach the ring." : "Too late — it floated past the ring."; }
+    /* SPRUCE B4+B1: a burst of particles and the grade — Perfect /
+       Good / Miss — right at the tap point, word as well as colour */
+    var grade = dist <= PERF ? "Perfect!" : (dist <= ONB ? "Good" : "Miss");
+    if(window.ccSpruceBurst) window.ccSpruceBurst(field, "calc(" + b.lane + "% + 34px)", (y - 30) + "px", 5, dist <= PERF ? "#ffd76a" : b.color);
+    if(window.ccSpruceFloat) window.ccSpruceFloat(field, "calc(" + b.lane + "% + 34px)", (y - 54) + "px", grade + (earned > 0 ? " +" + earned : ""), dist <= PERF ? "gold" : (dist <= ONB ? "good" : "miss"));
     if(earned > 0 && fever >= 100 && vnow >= feverUntil){ feverUntil = vnow + 8000; fever = 40; if(note) note.textContent = "🔥 FEVER! Double points for 8 seconds!"; }
     if(twinB && earned > 0){
       score += earned;
@@ -5150,7 +5242,14 @@ function startBeat(){
         if(ring){ ring.style.boxShadow = "0 0 0 8px rgba(255,197,61,.7), 0 0 26px rgba(255,197,61,.9)";
           bag.set(function(){ var r2 = $("beatRing"); if(r2) r2.style.boxShadow = "0 0 0 4px rgba(255,197,61,.35)"; }, 180); }
       }
-      if(p > 1.05){ if(b.el.parentNode) b.el.parentNode.removeChild(b.el); streak = 0; beatClean = false; missCount++; fever = Math.max(0, fever - 34); if(beatMode276 === "encore" && missCount >= 3){ finishBeat(); } }
+      if(p > 1.05){ /* SPRUCE B2: a missed bubble is a stumble, never a
+           wall — the streak drops, the field wobbles, the run rolls on
+           (only the chart ending, or Encore's own three-miss rule that
+           the mode announces up front, ever ends a run) */
+        if(window.ccSpruceFloat) window.ccSpruceFloat(field, "calc(" + b.lane + "% + 34px)", (bubbleY(1.05) - 44) + "px", "Miss", "miss");
+        if(field){ field.classList.remove("bb-stumble"); void field.offsetWidth; field.classList.add("bb-stumble"); }
+        var bnote = $("beatNote"); if(bnote) bnote.textContent = "Stumble — that one slipped past. Streak lost, run rolls on!";
+        if(b.el.parentNode) b.el.parentNode.removeChild(b.el); streak = 0; beatClean = false; missCount++; fever = Math.max(0, fever - 34); if(beatMode276 === "encore" && missCount >= 3){ finishBeat(); } }
       else { b.el.style.top = (bubbleY(p) - 30)+"px"; kept.push(b); }
     });
     bubbles = kept; feverPaint(); updateBar(); checkEnd();
@@ -5182,6 +5281,9 @@ function startBeat(){
       window.ccLevelNav(navMount(), { coinText: dNote,
         replay: function(){ OP_BEAT_DAILY = true; startBeat(); },
         endless: OP_BEAT_UNLOCKED >= OP_BEAT_LEVELS.length ? function(){ OP_BEAT_ENDLESS = true; startBeat(); } : null, endlessLabel: "♾ Encore" });
+      var bdm = body.querySelector(".gdone") || body;
+      if(window.ccSpruceBow) window.ccSpruceBow(bdm, { score: score, kind: "Same chart, same sky — thanks for playing today's Bubble.", payout: dNote, replay: function(){ OP_BEAT_DAILY = true; startBeat(); } });
+      if(window.ccSpruceTidyNav) window.ccSpruceTidyNav(bdm);
       return;
     }
     if(beatMode276 === "encore"){
@@ -5190,6 +5292,9 @@ function startBeat(){
       window.ccLevelNav(navMount(), { coinText: window.ccCoinLine276 ? window.ccCoinLine276(award) : "",
         replay: function(){ startBeat(); },
         endless: function(){ OP_BEAT_ENDLESS = true; startBeat(); }, endlessLabel: "♾ Encore again" });
+      var bem = body.querySelector(".gdone") || body;
+      if(window.ccSpruceBow) window.ccSpruceBow(bem, { score: score, kind: "Three misses end the show — and what a show.", award: award, replay: function(){ startBeat(); } });
+      if(window.ccSpruceTidyNav) window.ccSpruceTidyNav(bem);
       return;
     }
     var isFrontier = OP_BEAT_LEVEL >= OP_BEAT_UNLOCKED;
@@ -5209,6 +5314,9 @@ function startBeat(){
       next: hasNext ? function(){ OP_BEAT_LEVEL = OP_BEAT_LEVEL + 1; startBeat(); } : null,
       replay: function(){ startBeat(); },
       endless: OP_BEAT_UNLOCKED >= OP_BEAT_LEVELS.length ? function(){ OP_BEAT_ENDLESS = true; startBeat(); } : null, endlessLabel: "♾ Encore" });
+    var blm = body.querySelector(".gdone") || body;
+    if(window.ccSpruceBow) window.ccSpruceBow(blm, { score: score, kind: "Every bubble got its moment — thanks for keeping the beat.", award: award, replay: function(){ startBeat(); } });
+    if(window.ccSpruceTidyNav) window.ccSpruceTidyNav(blm);
   }
   bag.every(tick, 50);
   /* CC-FIX-27: shell hooks — pause stills the track (the bubble clock
@@ -5406,18 +5514,30 @@ function startPopPath(){
 function startMystery(){
   var bag = timersBag(); gameCleanup = function(){ bag.clear(); };
   var endlessM = !!OP_MYSTERY_ENDLESS; OP_MYSTERY_ENDLESS = false;
+  var dailyM = !!OP_MYSTERY_DAILY; OP_MYSTERY_DAILY = false;
   var LV = endlessM ? OP_MYSTERY_LEVELS[OP_MYSTERY_LEVELS.length-1] : OP_MYSTERY_LEVELS[OP_MYSTERY_LEVEL-1];
-  var ROUNDS = endlessM ? Infinity : 10, GLIDE = LV.glide, GAP = LV.gap, PEEK = LV.peek;
+  var ROUNDS = dailyM ? 5 : (endlessM ? Infinity : 10), GLIDE = LV.glide, GAP = LV.gap, PEEK = LV.peek;
   if(LV.spotlight){ PEEK = Math.round(LV.peek * 1.4); GLIDE = Math.round(LV.glide * 0.85); GAP = Math.round(LV.gap * 0.85); }
   /* §3.2 Call It Early bookkeeping */
   var swapsTotal = 0, swapsFired = 0, earlyCalled = false, lastBonus = 0;
-  var round = 0, phase = "peek", starId = Math.floor(Math.random()*3);
+  /* SPRUCE M1: the Daily Mystery runs on a date-seeded shuffle — the
+     same sequence for every player today, like the Daily Bubble. */
+  var mRand = Math.random;
+  if (dailyM){
+    var _ms = window.ccToday276 ? window.ccToday276() : "daily";
+    var _mh = 2166136261; for (var _mi = 0; _mi < _ms.length; _mi++){ _mh ^= _ms.charCodeAt(_mi); _mh = Math.imul(_mh, 16777619); }
+    mRand = function(){ _mh |= 0; _mh = (_mh + 0x6D2B79F5) | 0; var t = Math.imul(_mh ^ (_mh >>> 15), 1 | _mh); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  }
+  /* SPRUCE M2: narrowing state for the daily — a ruled-out bubble and
+     the clue line that says what the wrong pick taught you. */
+  var elim = {}, secondPick = false, clueLine = "";
+  var round = 0, phase = "peek", starId = Math.floor(mRand()*3);
   var slotOf = [0,1,2], picked = null, lastOk = null, score = 0, streak = 0, bestStreak = 0, snap = false, built = false;
   var body = $("gameMystery-body"), balls = [];
   function phaseLine(){
     if(phase==="peek") return (round===0 ? "Warm-up — take your time to look. ⭐ See the star? Watch that bubble!" : "⭐ See the star? Watch that bubble!") + (LV.spotlight ? " ✨ Spotlight round — longer peek, faster swaps!" : "");
     if(phase==="shuffle") return "Shuffling — follow the star bubble with your eyes…";
-    if(phase==="pick") return earlyCalled ? "🎯 Called early! Pick now — bonus rides on the swaps you skipped." : "Your pick — which bubble hides the star?";
+    if(phase==="pick") return clueLine ? clueLine : (earlyCalled ? "🎯 Called early! Pick now — bonus rides on the swaps you skipped." : "Your pick — which bubble hides the star?");
     if(phase==="reveal") return lastOk ? "You tracked it! ⭐" + (lastBonus ? " Early-call bonus +"+lastBonus+"!" : "") : "So close — the star was in the glowing bubble. Fresh round coming up.";
     return "";
   }
@@ -5435,7 +5555,8 @@ function startMystery(){
       + '<p class="center" style="margin-top:14px;font-size:17.5px;font-weight:900;min-height:26px;" role="status" id="mysteryPhase"></p>'
       + '<div class="mystery-stage" role="group" aria-label="Three bubbles — one of them hides the star" id="mysteryStage"></div>'
       + '<div id="mysteryEarlySlot" style="text-align:center;margin-top:10px;"><button type="button" class="bubble-btn b-gold small" id="mysteryEarlyBtn" style="display:none;"><span>🎯 Call it early — bonus for the swaps you skip</span></button></div>'
-      + '<p class="small dim center" style="margin-top:14px;">Correct picks score 100, plus 15 for each step of your streak. The shuffle glides slowly on purpose — follow it with your eyes. All three bubbles look the same, no labels.</p>';
+      + '<p class="small dim center" style="margin-top:14px;">Correct picks score 100, plus 15 for each step of your streak. The shuffle glides slowly on purpose — follow it with your eyes. All three bubbles look the same, no labels.</p>'
+      + (dailyM ? '<p class="small center" style="font-weight:800;">📅 Daily Mystery — the same shuffle for everyone today. A wrong pick rules a bubble out, and you pick again for 50.</p>' : '');
     var stage = $("mysteryStage");
     for(var id=0; id<3; id++){
       var b = document.createElement("button");
@@ -5458,7 +5579,7 @@ function startMystery(){
   }
   function update(){
     if(!built) build();
-    var bar = $("mysteryBar"); if(bar) bar.textContent = endlessM ? "Score "+score+" · Streak "+streak+" · Round "+(round+1)+" · Wave "+(Math.floor(round/5)+1)+" · ♾ Marathon" : "Score "+score+" · Streak "+streak+" · Round "+(round+1)+" of "+ROUNDS+(round===0?" · Warm-up":"");
+    var bar = $("mysteryBar"); if(bar) bar.textContent = endlessM ? "Score "+score+" · Streak "+streak+" · Round "+(round+1)+" · Wave "+(Math.floor(round/5)+1)+" · ♾ Marathon" : "Score "+score+" · Streak "+streak+" · Round "+(round+1)+" of "+ROUNDS+(round===0?" · Warm-up":"")+(dailyM?" · 📅 Daily Mystery":"");
     var eb2 = $("mysteryEarlyBtn"); if(eb2) eb2.style.display = (phase === "shuffle") ? "" : "none";
     var ph = $("mysteryPhase"); if(ph) ph.textContent = phaseLine();
     for(var id=0; id<3; id++){
@@ -5467,11 +5588,12 @@ function startMystery(){
       var el = balls[id];
       el.style.left = "calc("+slot+" * (100% - 120px) / 2)";
       el.style.transition = (snap||calm) ? "none" : ("left " + (round===0 ? Math.round(GLIDE*1.8) : GLIDE) + "ms cubic-bezier(.45,0,.25,1)");
-      el.disabled = (phase!=="pick");
+      el.disabled = (phase!=="pick") || !!elim[id];
       el.className = "mystery-ball"
         + (showsStar ? " star" : "")
         + (phase==="reveal" && id===starId ? " good" : "")
-        + (phase==="reveal" && picked===id && !lastOk && id!==starId ? " miss" : "");
+        + (phase==="reveal" && picked===id && !lastOk && id!==starId ? " miss" : "")
+        + (elim[id] ? " elim" : "");
       el.querySelector(".st").textContent = showsStar ? "⭐" : "🫧";
       el.setAttribute("aria-label", (phase==="pick" ? "Pick a bubble" : "A bubble")+(showsStar ? " — the star is here" : ""));
     }
@@ -5487,8 +5609,8 @@ function startMystery(){
     function fire(){
       if(phase !== "shuffle") return;   /* an early call stops the chain */
       fired++; swapsFired = fired;
-      var slotA = Math.floor(Math.random()*3);
-      var slotB = Math.floor(Math.random()*3);
+      var slotA = Math.floor(mRand()*3);
+      var slotB = Math.floor(mRand()*3);
       if(slotB===slotA) slotB = (slotA+1)%3;
       var idA = slotOf.indexOf(slotA), idB = slotOf.indexOf(slotB);
       if(idA>=0 && idB>=0){ slotOf[idA]=slotB; slotOf[idB]=slotA; }
@@ -5507,30 +5629,74 @@ function startMystery(){
     bag.set(fire, calm ? 350 : (round===0 ? 800 : 450));
   }
   function pick(id){
-    if(phase!=="pick") return;
+    if(phase!=="pick" || elim[id]) return;
     var ok = id===starId;
+    /* SPRUCE M2: in the Daily Mystery a wrong pick narrows the field —
+       the bubble is ruled out (the guess buys information, never just
+       "wrong") and you pick again from what's left, for 50. */
+    if(dailyM && !ok && !secondPick){
+      elim[id] = true; secondPick = true; missSnd();
+      clueLine = "Not that one — the star hides under one of the other two. Pick again!";
+      update();
+      return;
+    }
     picked = id; lastOk = ok; lastBonus = 0;
     if(ok){
       goodSnd();
-      var base = 100 + streak*15;
+      var base = secondPick ? 50 : 100 + streak*15;
       score += base;
       if(earlyCalled && swapsTotal > 0){ lastBonus = Math.round(base * 0.5 * (1 - swapsFired/swapsTotal)); score += lastBonus; }
       streak++; bestStreak = Math.max(bestStreak, streak);
     }
     else { missSnd(); streak = 0; }
     phase = "reveal"; update();
+    peggleReveal(ok);
     bag.set(function(){
       if(endlessM && !ok){ finishMystery(true); return; }
       if(round+1 >= ROUNDS){ finishMystery(false); return; }
-      round++; snap = true; slotOf = [0,1,2]; starId = Math.floor(Math.random()*3); picked = null; lastOk = null; earlyCalled = false; lastBonus = 0;
+      round++; snap = true; slotOf = [0,1,2]; starId = Math.floor(mRand()*3); picked = null; lastOk = null; earlyCalled = false; lastBonus = 0; elim = {}; secondPick = false; clueLine = "";
       if(endlessM && round % 5 === 0){ GLIDE = Math.max(150, Math.round(GLIDE * 0.96)); GAP = Math.max(180, Math.round(GAP * 0.96)); }
       built = false; balls = [];
       beginPeek();
       bag.set(function(){ snap = false; }, 80);
     }, 1900);
   }
+  /* SPRUCE M3: Peggle the reveal — a slow-mo swell and a gold burst
+     on the star bubble, with the verdict in big words. The ceremony
+     sits on an outcome the player already earned; the pick is made. */
+  function peggleReveal(ok){
+    try{
+      var stage = $("mysteryStage"); if(!stage) return;
+      var star = balls[starId]; if(!star) return;
+      star.classList.add("peggle");
+      if(window.ccSpruceBurst) window.ccSpruceBurst(stage, star.offsetLeft + 60, star.offsetTop + 60, 6, "#ffd76a");
+      var v = document.createElement("div");
+      v.className = "mystery-verdict" + (ok ? " good" : "");
+      v.textContent = ok ? "You tracked it! ⭐" : "The star was here ⭐";
+      stage.appendChild(v);
+      bag.set(function(){ if(v.parentNode) v.parentNode.removeChild(v); if(star) star.classList.remove("peggle"); }, 1550);
+    }catch(e){}
+  }
   function finishMystery(marathonMiss){
     recordBest("mystery", score);
+    if(dailyM){
+      var mdkey = window.ccToday276 ? window.ccToday276() : "";
+      var mdDone = ""; try{ mdDone = localStorage.getItem("cc_mystery_daily_done") || ""; }catch(e){}
+      var mAward = { paid: 0, capped: false }, mNote;
+      if(mdDone === mdkey){ mNote = "Daily already banked today — this run was for glory 🌟"; }
+      else { mAward = window.ccAwardGame ? window.ccAwardGame("mystery", 15) : mAward; try{ localStorage.setItem("cc_mystery_daily_done", mdkey); }catch(e){} mNote = mAward.paid ? "Daily bonus +15 coins 🪙" : "Game coins maxed for today — the Cauldron refills tomorrow 🌙"; }
+      body.innerHTML = doneHTML(score, "📅 Daily Mystery complete — the same shuffle for everyone today. Best tracking streak: "+bestStreak+" in a row. Come back tomorrow for the next one.");
+      var mm2 = body.querySelector(".gdone") || body;
+      if(window.ccLevelNav) window.ccLevelNav(mm2, { coinText: mNote,
+        replay: function(){ OP_MYSTERY_DAILY = true; startMystery(); },
+        endless: OP_MYSTERY_UNLOCKED >= OP_MYSTERY_LEVELS.length ? function(){ OP_MYSTERY_ENDLESS = true; startMystery(); } : null, endlessLabel: "♾ Shuffle Marathon" });
+      var mnb2 = body.querySelector("#endBoard"), mw2 = mm2.querySelector(".cc-levelnav-wrap");
+      if(mnb2 && mw2) mm2.insertBefore(mw2, mnb2);
+      var mab2 = $("againBtn"); if(mab2) mab2.style.display = "none";
+      if(window.ccSpruceBow) window.ccSpruceBow(mm2, { score: score, kind: "Same shuffle, same stars — thanks for playing today's Mystery.", payout: mNote, replay: function(){ OP_MYSTERY_DAILY = true; startMystery(); } });
+      if(window.ccSpruceTidyNav) window.ccSpruceTidyNav(mm2);
+      return;
+    }
     if(endlessM){
       var wAward = window.ccAwardGame ? window.ccAwardGame("mystery", 7) : { paid: 0, capped: false };
       body.innerHTML = doneHTML(score, "♾ Shuffle Marathon over — the star slipped away in wave "+(Math.floor(round/5)+1)+", round "+(round+1)+". Best tracking streak: "+bestStreak+" in a row.");
@@ -5541,6 +5707,8 @@ function startMystery(){
       var wnb = body.querySelector("#endBoard"), ww = wm.querySelector(".cc-levelnav-wrap");
       if(wnb && ww) wm.insertBefore(ww, wnb);
       var wab = $("againBtn"); if(wab) wab.style.display = "none";
+      if(window.ccSpruceBow) window.ccSpruceBow(wm, { score: score, kind: "The marathon ends — your eyes earned a rest.", award: wAward, replay: function(){ startMystery(); } });
+      if(window.ccSpruceTidyNav) window.ccSpruceTidyNav(wm);
       return;
     }
     var isFrontier = OP_MYSTERY_LEVEL >= OP_MYSTERY_UNLOCKED;
@@ -5556,6 +5724,8 @@ function startMystery(){
     var ynb = body.querySelector("#endBoard"), yw = ym.querySelector(".cc-levelnav-wrap");
     if(ynb && yw) ym.insertBefore(yw, ynb);
     var yab = $("againBtn"); if(yab) yab.style.display = "none";
+    if(window.ccSpruceBow) window.ccSpruceBow(ym, { score: score, kind: "Sharp eyes. The bubbles respect you.", award: yAward, replay: function(){ startMystery(); } });
+    if(window.ccSpruceTidyNav) window.ccSpruceTidyNav(ym);
   }
   build(); update(); beginPeek();
 }
@@ -6013,6 +6183,7 @@ function startStack() {
   var ghosts = [], tower = [], mover = null, debris = [];
   var score = 0, finalScore = 0, height = 0;
   var streak = 0, bestStreak = 0, camRows = 0, dropsDone = 0;
+  var hitStop = 0, sliverUsed = false;   /* SPRUCE S1: frame-freeze on a Perfect + the once-a-run sliver restore */
   var tier = 0;   /* CC-FIX-27.4: current height tier (see STACK_TIERS) */
   var bestScore = stackLoadBest();
   var rafId = null, lastT = 0, endTimer = null, W = 0, H = 0, DPR = 1, bgGrad = null;
@@ -6141,7 +6312,7 @@ function startStack() {
     tower = [{ x: -START_W / 2, w: START_W }];
     debris = [];
     score = 0; finalScore = 0; height = 0;
-    streak = 0; bestStreak = 0; dropsDone = 0; tier = 0; runTierBonus = 0; goldenRun = 0; stackCoinLine276 = "";
+    streak = 0; bestStreak = 0; dropsDone = 0; tier = 0; runTierBonus = 0; goldenRun = 0; stackCoinLine276 = ""; hitStop = 0; sliverUsed = false;
     camRows = camTargetFor(0);   /* 3D build: start framed on the drop zone, no opening swoop */
     playing = true;
     spawnMover();
@@ -6200,9 +6371,20 @@ function startStack() {
       if (goldenRun > 0 && !cur.golden) { gBonus = 2; goldenRun--; }
       if (cur.golden) goldenRun = 3;
       score += gain + gBonus;
-      flashGrade("FLUSH!", "ccstack-g-flush", (cur.golden
+      /* SPRUCE S1: a dead-center drop is a Perfect — the gold flash,
+         a breath of hit-stop so the eye can feel the snap, and at a
+         5+ streak a sliver of width comes back (capped at the start
+         width, once per run — earned, never gifted). */
+      hitStop = 0.075;
+      var sliverNote = "";
+      if (streak >= 5 && !sliverUsed) {
+        var landed = tower[tower.length - 1];
+        var grow = Math.min(0.3, START_W - landed.w);
+        if (grow > 0.01) { landed.x -= grow / 2; landed.w += grow; sliverUsed = true; sliverNote = " · ✨ Perfect streak — a sliver of width restored!"; }
+      }
+      flashGrade(streak > 1 ? "PERFECT ×" + streak + "!" : "PERFECT!", "ccstack-g-flush", (cur.golden
         ? "+" + gain + " · GOLDEN block — streak bonus ×2 · 🔥 Golden Rung Run lit!"
-        : "+" + gain + " · streak ×" + streak) + (gBonus ? " · +2 GOLDEN RUN" : ""));
+        : "+" + gain + " · flush · streak ×" + streak) + (gBonus ? " · +2 GOLDEN RUN" : "") + sliverNote);
       ccStackAudio.sfxLand(); ccStackAudio.sfxFlush(streak);
       afterLand();
       return;
@@ -6274,9 +6456,16 @@ function startStack() {
       }
       endScr.classList.remove("ccstack-hidden");
       if (typeof ccShowEndBoard === "function") ccShowEndBoard($("stackBoardSlot"));
+      /* SPRUCE session bow: kind line + payout + both exits, at the
+         top of the end card; the card's own Play Again steps aside
+         only once the bow is really there */
+      if (window.ccSpruceBow) {
+        var bowEl = window.ccSpruceBow(endScr.querySelector(".ccstack-card"), { score: finalScore, kind: "A tower stood here — every block of it yours.", payout: stackCoinLine276 || "", replay: function () { beginRun(playerKey); } });
+        if (bowEl) { var sag = $("stackAgain"); if (sag) sag.style.display = "none"; }
+      }
     };
-    endDue = Date.now() + 650;
-    endTimer = setTimeout(function () { var f = endPending; endPending = null; if (f) f(); }, 650);
+    endDue = Date.now() + 300;   /* SPRUCE S2: the retry card lands fast — death to replayable stays under a second */
+    endTimer = setTimeout(function () { var f = endPending; endPending = null; if (f) f(); }, 300);
   }
 
   $("stackAgain").addEventListener("click", function (ev) {
@@ -6284,6 +6473,16 @@ function startStack() {
     if (typeof popSnd === "function") popSnd();
     beginRun(playerKey);                       /* one tap, same colour, straight back in */
   });
+  /* SPRUCE verification hook — same pattern as the Cauldron Match
+     window.CM test hooks: lets the harness read the tower and drop
+     on the exact aligned frame, so Perfects can be proven, not
+     hoped. Named apart from the game's own read-only __ccStack
+     probe (CC-STACK3D2), which keeps its name and job. */
+  window.__ccStackSpruce = {
+    state: function () { return { playing: playing, height: height, score: score, streak: streak, sliverUsed: sliverUsed, mover: mover ? { x: mover.x, w: mover.w } : null, top: tower.length ? { x: tower[tower.length - 1].x, w: tower[tower.length - 1].w } : null, endShown: !endScr.classList.contains("ccstack-hidden") }; },
+    drop: function () { if (playing && !paused) drop(); },
+    start: function () { beginRun(playerKey); }
+  };
 
   /* ---------------- input: tap / click / Space — player only ever taps ---------------- */
   /* CC-STACKFIT: touch discipline (owner live catch, Oct 29).
@@ -6501,6 +6700,7 @@ function startStack() {
     if (paused) { lastT = ts; return; }   /* CC-GAMECHROME: frozen — loop idles, nothing advances */
     var dt = Math.min((ts - lastT) / 1000 || 0, 0.05);
     lastT = ts;
+    if (hitStop > 0) { hitStop -= dt; dt = 0; }   /* SPRUCE S1 hit-stop: the world holds its breath for one landing */
     if (!W) resize();
     refreshMusicBtn();
 
@@ -7991,6 +8191,7 @@ var CMCore = (function(){
   var powers = { undo:3, hint:3, shuffle:3 };
   /* CC-FIX-27.6 §3.3/§5: combo chain state + campaign records */
   var combo = 0, lastPickAt = 0, comboBonus = 0, cmEndless = false, towerHeight = 0, lastWon = false;
+  var cmChain = 0, cmLastClearAt = 0;   /* SPRUCE C1: consecutive-CLEAR chain for the praise ladder (the combo above counts fast picks; this counts clears landing close together) */
   function wonSet(){ try { return JSON.parse(localStorage.getItem('cm_match_won') || '[]'); } catch(e){ return []; } }
   function frontier(){ var w = wonSet(); if (!w.length) return Math.min(C.LEVELS.length, level + 1); return Math.min(C.LEVELS.length, Math.max.apply(null, w) + 2); }
   function paintCombo(){
@@ -8176,7 +8377,7 @@ var CMCore = (function(){
     play = C.newPlay(gen.board, gen.faces);
     play.cert = gen.cert;
     powers = { undo:3, hint:3, shuffle:3 };
-    combo = 0; lastPickAt = 0; comboBonus = 0;
+    combo = 0; lastPickAt = 0; comboBonus = 0; cmChain = 0; cmLastClearAt = 0;
     started = false;
     layoutStage(); renderAll(); renderChips(); paintCombo();
   }
@@ -8188,7 +8389,7 @@ var CMCore = (function(){
     if (!C.isFree(play.board, play.present, id)){
       el.classList.remove('denied'); void el.offsetWidth; el.classList.add('denied');
       Snd.bad();
-      combo = 0; paintCombo();   /* §3.3 a dead tap breaks the chain */
+      combo = 0; cmChain = 0; paintCombo();   /* §3.3 a dead tap breaks the chain */
       return;
     }
     Snd.unlock(); Snd.tapSnd();
@@ -8224,6 +8425,12 @@ var CMCore = (function(){
         lastPickAt = nowMs;
         if (ev.cleared) comboBonus += (combo - 1) * 15;
         paintCombo();
+        /* SPRUCE C1: clears that land close together climb the ladder */
+        if (ev.cleared){
+          cmChain = (cmLastClearAt && nowMs - cmLastClearAt <= 1600) ? cmChain + 1 : 1;
+          cmLastClearAt = nowMs;
+          if (cmChain >= 2) cmPraise(cmChain);
+        }
       }
       if (ev.cleared){
         Snd.match();
@@ -8233,6 +8440,24 @@ var CMCore = (function(){
         renderAll(); afterMove(ev);
       }
     };
+  }
+  /* SPRUCE C1: the cascade praise ladder, in Lab voice — Bubbling! →
+     Brewing! → Golden! — floating up from the tray, bigger and warmer
+     as the chain climbs. Praise only ever climbs; a broken chain just
+     goes quiet, it never scolds. */
+  function cmPraise(chain){
+    try{
+      var word = chain >= 4 ? "Golden!" : chain === 3 ? "Brewing!" : "Bubbling!";
+      var el = document.createElement("div");
+      el.className = "cm-praise" + (chain >= 4 ? " heat4" : chain === 3 ? " heat3" : "");
+      el.textContent = word;
+      el.style.fontSize = (20 + Math.min(chain, 6) * 3) + "px";
+      var r = trayEl.getBoundingClientRect();
+      el.style.left = (r.left + r.width / 2) + "px";
+      el.style.top = (r.top - 4) + "px";
+      fxEl.appendChild(el);
+      cmT(function(){ el.remove(); }, 980);
+    }catch(e){}
   }
   function renderTrayPop(displayTray, face){
     /* show the tray as it looked the instant the third tile landed,
@@ -8258,7 +8483,7 @@ var CMCore = (function(){
   }
   function afterMove(ev){
     if (!ev || !ev.ok) return;
-    if (play.status === 'lost'){ combo = 0; paintCombo(); }   /* §3.3 the chain resets when the tray fills */
+    if (play.status === 'lost'){ combo = 0; cmChain = 0; paintCombo(); }   /* §3.3 the chain resets when the tray fills */
     if (play.status === 'won'){ Snd.win(); cmT(function(){ showEnd(true); }, 350); /* CC-FITPAUSE banked */ }
     else if (play.status === 'lost'){
       Snd.lose();
@@ -8376,6 +8601,8 @@ var CMCore = (function(){
     panelStart.style.display = 'none'; panelEnd.style.display = '';
     overlayEl.classList.remove('hidden');
     try{ if (window.ccShowEndBoard) ccShowEndBoard($('cmBoardSlot')); }catch(e){}
+    /* SPRUCE session bow: score, kind line, the payout, both exits */
+    if (window.ccSpruceBow) window.ccSpruceBow(panelEnd, { score: sc, kind: won ? "The cauldron settles, warm and happy." : "The brew spilled — the recipe is still yours.", award: won ? cmAward : null, payout: won ? null : "No coins on a spill — another go costs nothing but the tap.", replay: function(){ deal(level); started = true; overlayEl.classList.add('hidden'); renderHUD(); var ob = panelEnd.querySelector("[data-spruce-bow]"); if (ob) ob.remove(); } });
   }
   $('cm-bigStart').addEventListener('click', function(){
     Snd.unlock(); Snd.click();
@@ -23481,7 +23708,7 @@ window.ccLevelNav = function(mount, opts){
    No level pickers anywhere: every campaign game opens at its frontier,
    finishing offers Next, and progress stays in the records the game already
    kept (OP_*_UNLOCKED, cw_save_v1, cm_match_*, ccCannonFrontier). */
-var OP_BEAT_DAILY = false, OP_BEAT_ENDLESS = false, OP_MYSTERY_ENDLESS = false, OP_POPPATH_ENDLESS = false;
+var OP_BEAT_DAILY = false, OP_BEAT_ENDLESS = false, OP_MYSTERY_ENDLESS = false, OP_MYSTERY_DAILY = false, OP_POPPATH_ENDLESS = false;
 try{ if(typeof OP_BEAT_UNLOCKED === "number") OP_BEAT_LEVEL = OP_BEAT_UNLOCKED; }catch(e){}
 try{ if(typeof OP_MATCH_UNLOCKED === "number") OP_MATCH_LEVEL = OP_MATCH_UNLOCKED; }catch(e){}
 try{ if(typeof OP_MYSTERY_UNLOCKED === "number") OP_MYSTERY_LEVEL = OP_MYSTERY_UNLOCKED; }catch(e){}
@@ -23542,6 +23769,7 @@ window.ccCampaignInfo = function(scr){
         level: OP_MYSTERY_LEVEL, ribbon: { total: OP_MYSTERY_LEVELS.length },
         chapter: ccChapterLine(scr, OP_MYSTERY_LEVEL, OP_MYSTERY_LEVELS.length),
         stepper: OP_MYSTERY_UNLOCKED > 1 ? { max: OP_MYSTERY_UNLOCKED } : null,
+        dailyBtn: "📅 Play today's Daily Mystery",
         endlessBtn: OP_MYSTERY_UNLOCKED >= OP_MYSTERY_LEVELS.length ? "♾ Shuffle Marathon — endless" : null
       };
     }
@@ -23614,7 +23842,10 @@ window.ccSetLevel = function(scr, n){
     else if(scr === "gameCannon"){ if(window.__ccCannon && window.__ccCannon.setLevel) window.__ccCannon.setLevel(n - 1); }
   }catch(e){}
 };
-window.ccArmDaily = function(){ OP_BEAT_DAILY = true; };
+window.ccArmDaily = function(){
+  if (typeof ccInstrScr !== "undefined" && ccInstrScr === "gameMystery") OP_MYSTERY_DAILY = true;
+  else OP_BEAT_DAILY = true;
+};
 window.ccEndlessArm = function(scr){
   try{
     if(scr === "gameBeat") OP_BEAT_ENDLESS = true;
@@ -26557,6 +26788,146 @@ function init(){
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function(){ setTimeout(init, 60); });
 else setTimeout(init, 60);
 })();
+</script>
+
+<style>
+/* ================= SPRUCE TOP-10 (Nov 14) =================
+   Presentation-only juice for the five shelf games. Transform /
+   opacity only, small particle counts, reduced-motion safe. */
+.spruce-float{position:absolute;z-index:30;pointer-events:none;font-weight:900;text-align:center;transform:translate(-50%,-50%);text-shadow:0 2px 8px rgba(20,8,40,.55);animation:spruceFloatUp .85s ease-out forwards;white-space:nowrap}
+.spruce-float.gold{color:#ffd76a}.spruce-float.good{color:#fff8e7}.spruce-float.miss{color:#ffb26b}
+@keyframes spruceFloatUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.7)}18%{opacity:1;transform:translate(-50%,-60%) scale(1.12)}100%{opacity:0;transform:translate(-50%,-190%) scale(1)}}
+.spruce-particle{position:absolute;z-index:29;pointer-events:none;border-radius:50%;animation:spruceParticle .6s ease-out forwards}
+@keyframes spruceParticle{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(calc(-50% + var(--pdx)),calc(-50% + var(--pdy))) scale(.4)}}
+/* Bubble Beat */
+.bb-squash{transform:scale(1.18,.78)!important}
+#beatField.bb-stumble{animation:bbStumble .45s ease}
+@keyframes bbStumble{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px) rotate(-.4deg)}45%{transform:translateX(6px)}70%{transform:translateX(-3px)}}
+/* Mystery Bubble */
+.mystery-ball.peggle{animation:mysteryPeggle 1.15s cubic-bezier(.2,.7,.3,1) both;z-index:3}
+@keyframes mysteryPeggle{0%{transform:scale(1)}35%{transform:scale(1.3)}60%{transform:scale(1.12)}100%{transform:scale(1.18)}}
+.mystery-ball.elim{opacity:.38;filter:grayscale(.7)}
+.mystery-verdict{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:5;pointer-events:none;font-size:24px;font-weight:900;color:#fff8e7;text-shadow:0 3px 14px rgba(20,8,40,.7);animation:mysteryVerdict 1.5s ease forwards;white-space:nowrap}
+.mystery-verdict.good{color:#ffd76a}
+@keyframes mysteryVerdict{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}30%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) scale(1)}}
+/* Match Audit */
+.match-zoom{overflow:hidden;border-radius:1.2rem;touch-action:pan-y}
+#gameMatch-body .match-grid{transform-origin:50% 0%}
+.match-card{position:relative}
+#gameMatch-body .match-card.done{box-shadow:0 0 0 3px #ffc53d,0 0 18px rgba(255,197,61,.55),0 10px 16px rgba(0,0,0,.5)}
+#gameMatch-body .match-card.done::after{content:"✓";position:absolute;top:-8px;right:-6px;z-index:2;width:24px;height:24px;border-radius:50%;background:#ffc53d;color:#2a1745;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.match-tell{min-height:24px;margin-top:10px;font-weight:800;color:#aef2a8;text-align:center}
+.match-zoomctl{display:flex;gap:8px;justify-content:center;margin-top:8px}
+.match-zoomctl button{min-width:48px;min-height:48px;border-radius:14px;border:1.5px solid rgba(255,248,231,.35);background:rgba(42,23,69,.85);color:#fff8e7;font-size:19px;font-weight:900;cursor:pointer}
+/* Cauldron Match */
+.cm-wrap .cm-praise{position:fixed;z-index:70;pointer-events:none;font-weight:900;color:#fff8e7;text-shadow:0 2px 10px rgba(20,8,40,.65);transform:translate(-50%,-100%);animation:cmPraise .95s ease-out forwards;white-space:nowrap}
+.cm-wrap .cm-praise.heat3{color:#ffd76a}
+.cm-wrap .cm-praise.heat4{color:#ffc53d;text-shadow:0 0 18px rgba(255,197,61,.9),0 2px 10px rgba(20,8,40,.65)}
+@keyframes cmPraise{0%{opacity:0;transform:translate(-50%,-70%) scale(.7)}20%{opacity:1;transform:translate(-50%,-110%) scale(1.1)}100%{opacity:0;transform:translate(-50%,-190%) scale(1)}}
+/* The session bow (all five games) */
+.spruce-bow{margin:12px auto 4px;max-width:520px;padding:14px 16px;border-radius:1.2rem;background:linear-gradient(180deg,rgba(124,77,189,.28),rgba(42,23,69,.55));border:1.5px solid rgba(255,197,61,.5);text-align:center}
+.spruce-bow .sb-score{font-size:20px;font-weight:900;margin:0}
+.spruce-bow .sb-kind{margin:6px 0 0;font-weight:700}
+.spruce-bow .sb-pay{margin:4px 0 0;font-weight:900;color:#ffd76a}
+.spruce-bow .sb-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+@media (prefers-reduced-motion: reduce){ .spruce-float,.spruce-particle,.mystery-ball.peggle,.mystery-verdict,.cm-wrap .cm-praise,#beatField.bb-stumble{animation-duration:.01s!important} .bb-squash{transform:none!important} }
+</style>
+<script>
+"use strict";
+/* ================= SPRUCE TOP-10 (Nov 14) =================
+   Shared juice + session-bow helpers for the five shelf games.
+   Pure presentation: no game state lives here. Coins, scores and
+   run counts stay exactly where they always were. */
+window.SPRUCE_TELLS = [
+  "Holo pattern stops at the border — real ones bleed through.",
+  "Lettering should be sharp and clean, never blobby.",
+  "Colours printed too dark and heavy can mean a copy.",
+  "The back design should line up edge to edge, in the right blue.",
+  "Light through the card supports a tell — it never decides alone.",
+  "Real corners wear unevenly; too-perfect corners deserve a look.",
+  "One tell never settles it — tells stack.",
+  "A flat rainbow wash over everything is printed on, not foiled."
+];
+window.ccSpruceFloat = function(host, x, y, text, cls){
+  try{
+    if(!host) return null;
+    var el = document.createElement("div");
+    el.className = "spruce-float " + (cls || "");
+    el.textContent = text;
+    el.style.left = (typeof x === "number" ? x + "px" : x);
+    el.style.top = (typeof y === "number" ? y + "px" : y);
+    host.appendChild(el);
+    setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 900);
+    return el;
+  }catch(e){ return null; }
+};
+window.ccSpruceBurst = function(host, x, y, n, color){
+  try{
+    if(!host) return;
+    n = Math.max(3, Math.min(6, n || 5));
+    for(var i = 0; i < n; i++){
+      var p = document.createElement("span");
+      p.className = "spruce-particle";
+      var ang = (Math.PI * 2 * i) / n + Math.random() * 0.5;
+      var dist = 26 + Math.random() * 22;
+      p.style.setProperty("--pdx", Math.round(Math.cos(ang) * dist) + "px");
+      p.style.setProperty("--pdy", Math.round(Math.sin(ang) * dist) + "px");
+      var sz = 6 + Math.round(Math.random() * 5);
+      p.style.width = sz + "px"; p.style.height = sz + "px";
+      p.style.left = (typeof x === "number" ? x + "px" : x);
+      p.style.top = (typeof y === "number" ? y + "px" : y);
+      p.style.background = color || "#ffd76a";
+      host.appendChild(p);
+      (function(el){ setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 650); })(p);
+    }
+  }catch(e){}
+};
+window.ccSpruceShelf = function(){
+  try{
+    if(window.ccQuitStage) window.ccQuitStage();
+    else if(typeof show === "function") show("games");
+  }catch(e){ try{ if(typeof show === "function") show("games"); }catch(e2){} }
+};
+/* When the bow is present it carries the payout + the two exits, so
+   the level nav keeps only its progression doors (Next / Endless). */
+window.ccSpruceTidyNav = function(mount){
+  try{
+    if(!mount) return;
+    var wrap = mount.querySelector(".cc-levelnav-wrap"); if(!wrap) return;
+    var cl = wrap.querySelector(".cc-coin-line"); if(cl) cl.style.display = "none";
+    wrap.querySelectorAll("button").forEach(function(b){
+      var t = b.textContent || "";
+      if(t.indexOf("Replay") > -1 || t === "Mini Games") b.style.display = "none";
+    });
+  }catch(e){}
+};
+/* The session bow: score, one kind line, the payout that already
+   happened, and the two clean exits. Renders into the game's own
+   end panel; never touches coins, scores, or run counts itself. */
+window.ccSpruceBow = function(mount, opts){
+  try{
+    if(!mount || !opts) return null;
+    var old = mount.querySelector("[data-spruce-bow]"); if(old) old.remove();
+    var bow = document.createElement("div");
+    bow.className = "spruce-bow"; bow.setAttribute("data-spruce-bow", "1");
+    var pay = opts.payout;
+    if(pay == null && opts.award && window.ccCoinLine276) pay = window.ccCoinLine276(opts.award);
+    if(pay == null) pay = "";
+    bow.innerHTML = '<p class="sb-score">🏁 Score: ' + opts.score + '</p>'
+      + (opts.kind ? '<p class="sb-kind">' + opts.kind + '</p>' : '')
+      + '<p class="sb-pay">' + (pay || "No coins this run — thanks for playing.") + '</p>'
+      + '<div class="sb-btns">'
+      + '<button type="button" class="bubble-btn b-gold" data-bow-again><span>↻ Play again</span></button>'
+      + '<button type="button" class="bubble-btn b-white" data-bow-shelf><span>🧺 Back to shelf</span></button></div>';
+    if(mount.firstChild) mount.insertBefore(bow, mount.firstChild);
+    else mount.appendChild(bow);
+    var ag = bow.querySelector("[data-bow-again]");
+    if(ag) ag.addEventListener("click", function(){ try{ if(opts.replay) opts.replay(); }catch(e){} });
+    var sh = bow.querySelector("[data-bow-shelf]");
+    if(sh) sh.addEventListener("click", function(){ window.ccSpruceShelf(); });
+    return bow;
+  }catch(e){ return null; }
+};
 </script>
 
 </body>
