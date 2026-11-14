@@ -1,0 +1,1499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" href="data:," />
+<title>Purchase Screen Design — Real or Replica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --plum-950:#1c0b24; --plum-900:#271133; --plum-800:#351747; --plum-700:#47225e;
+    --plum-card:#2e143f; --plum-card-2:#381a4d;
+    --ink:#f7f0fb; --ink-soft:#d9c8e8; --ink-mute:#b39ec9;
+    --gold:#f2c14e; --gold-deep:#d99e22; --gold-ink:#2a1a05;
+    --mint:#7fe3b0; --line:rgba(242,193,78,.22); --line-soft:rgba(255,255,255,.10);
+    --radius:20px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(1100px 600px at 85% -10%, #4b2566 0%, transparent 55%),
+      radial-gradient(900px 700px at -10% 110%, #3a1a52 0%, transparent 55%),
+      var(--plum-950);
+    color:var(--ink);
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  button,[role="button"]{min-height:44px}
+  a{color:var(--gold)}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 64px;position:relative;z-index:2}
+
+  /* ---------- page intro ---------- */
+  .intro{max-width:720px}
+  .intro h1{font-size:clamp(30px,4.5vw,46px);line-height:1.08;font-weight:900;margin:0 0 12px;letter-spacing:-.01em}
+  .intro h1 .gold{color:var(--gold)}
+  .intro p{color:var(--ink-soft);font-size:17px;margin:0 0 10px;max-width:62ch}
+  .locked{display:inline-flex;align-items:center;gap:8px;background:rgba(242,193,78,.12);border:1px solid var(--line);
+    color:var(--gold);font-weight:800;font-size:13.5px;padding:7px 14px;border-radius:999px;margin-bottom:18px}
+  .locked::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold)}
+
+  /* ---------- layout ---------- */
+  .stage{display:grid;grid-template-columns:400px 1fr;gap:44px;align-items:start;margin-top:26px}
+  @media (max-width:920px){.stage{grid-template-columns:1fr;justify-items:center}}
+
+  /* ---------- phone ---------- */
+  .phone-col{position:sticky;top:20px}
+  @media (max-width:920px){.phone-col{position:static}}
+  .phone{
+    width:min(390px,100%);margin:0 auto;border-radius:44px;padding:11px;
+    background:linear-gradient(160deg,#12071a,#000);
+    box-shadow:0 40px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08),0 0 90px rgba(242,193,78,.10);
+  }
+  .screen{
+    position:relative;border-radius:34px;overflow:hidden;background:linear-gradient(180deg,var(--plum-800),var(--plum-900) 55%,var(--plum-950));
+    height:760px;display:flex;flex-direction:column;
+  }
+  /* rising bubbles — background dressing only */
+  .bubbles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+  .bubbles i{position:absolute;bottom:-40px;border-radius:50%;
+    background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.35),rgba(255,255,255,.05) 60%);
+    border:1px solid rgba(255,255,255,.14);animation:rise linear infinite}
+  .bubbles i:nth-child(1){left:8%;width:26px;height:26px;animation-duration:11s}
+  .bubbles i:nth-child(2){left:22%;width:13px;height:13px;animation-duration:8s;animation-delay:1.4s}
+  .bubbles i:nth-child(3){left:47%;width:34px;height:34px;animation-duration:13s;animation-delay:.6s}
+  .bubbles i:nth-child(4){left:66%;width:15px;height:15px;animation-duration:9s;animation-delay:2.2s}
+  .bubbles i:nth-child(5){left:82%;width:22px;height:22px;animation-duration:12s;animation-delay:.2s}
+  .bubbles i:nth-child(6){left:92%;width:10px;height:10px;animation-duration:7s;animation-delay:3s}
+  @keyframes rise{from{transform:translateY(0)}to{transform:translateY(-840px)}}
+  @media (prefers-reduced-motion:reduce){.bubbles i{animation:none}}
+
+  .scroll{overflow-y:auto;padding:18px 18px 14px;flex:1;position:relative;scrollbar-width:none}
+  .scroll::-webkit-scrollbar{display:none}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .closebtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.07);
+    color:var(--ink);font-size:17px;cursor:pointer;display:grid;place-items:center}
+  .restore{background:none;border:none;color:var(--ink-soft);font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;padding:10px 4px;text-decoration:underline;text-underline-offset:3px}
+  .headline{font-size:25px;line-height:1.18;font-weight:900;margin:2px 0 6px}
+  .subline{color:var(--ink-soft);font-size:14px;margin:0 0 14px}
+  .freebanner{display:flex;gap:10px;align-items:flex-start;background:rgba(127,227,176,.10);border:1px solid rgba(127,227,176,.35);
+    border-radius:14px;padding:10px 12px;font-size:13.5px;margin-bottom:14px}
+  .freebanner b{color:var(--mint)}
+  .freebanner .dot{flex:none;width:22px;height:22px;border-radius:50%;background:rgba(127,227,176,.2);display:grid;place-items:center;font-size:12px}
+  .benefits{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:7px}
+  .benefits li{display:flex;gap:9px;align-items:center;font-size:14px;font-weight:700;color:var(--ink-soft)}
+  .benefits .ic{flex:none;width:24px;height:24px;border-radius:8px;background:rgba(242,193,78,.15);display:grid;place-items:center}
+  .benefits svg{width:14px;height:14px;stroke:var(--gold)}
+
+  /* plan cards */
+  .plan{position:relative;width:100%;text-align:left;font:inherit;color:var(--ink);cursor:pointer;
+    background:var(--plum-card);border:2px solid var(--line-soft);border-radius:var(--radius);
+    padding:16px;margin:0 0 12px;transition:border-color .15s, background .15s}
+  .plan[aria-checked="true"]{border-color:var(--gold);background:var(--plum-card-2)}
+  .plan .row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .plan h3{margin:0;font-size:18px;font-weight:900}
+  .plan .desc{color:var(--ink-soft);font-size:13.5px;margin:3px 0 0}
+  .price{text-align:right;flex:none}
+  .price .amt{font-size:21px;font-weight:900}
+  .price .per{display:block;color:var(--ink-mute);font-size:12px;font-weight:700}
+  .radio{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--ink-mute);margin-top:3px;position:relative}
+  .plan[aria-checked="true"] .radio{border-color:var(--gold)}
+  .plan[aria-checked="true"] .radio::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--gold)}
+  .badge{display:inline-block;background:var(--gold);color:var(--gold-ink);font-size:11.5px;font-weight:900;
+    padding:3px 10px;border-radius:999px;margin-bottom:8px;letter-spacing:.02em}
+  .seg{display:flex;background:rgba(0,0,0,.35);border:1px solid var(--line-soft);border-radius:13px;padding:4px;margin-top:12px}
+  .seg button{flex:1;border:none;background:transparent;color:var(--ink-soft);font:inherit;font-weight:800;font-size:14px;
+    border-radius:9px;padding:9px 4px;cursor:pointer;min-height:44px}
+  .seg button[aria-pressed="true"]{background:var(--gold);color:var(--gold-ink)}
+  .seg button small{display:block;font-size:11.5px;font-weight:700;opacity:.85}
+  .unit{font-size:13px;color:var(--gold);font-weight:800;margin-top:9px}
+  .plan.ultimate{border-color:rgba(242,193,78,.55);background:linear-gradient(160deg,#43300f,#2e143f 70%)}
+  .plan.ultimate[aria-checked="true"]{border-color:var(--gold)}
+  .plan .honest{font-size:12.5px;color:var(--ink-mute);margin-top:8px}
+  .signinrow{margin:2px 0 4px;text-align:center}
+  .gbtn{display:inline-flex;align-items:center;gap:10px;background:#fff;color:#1f1f1f;border:none;border-radius:999px;
+    font:inherit;font-weight:800;font-size:14px;padding:11px 20px;cursor:pointer;min-height:44px}
+  .gbtn svg{width:18px;height:18px}
+  .signinrow p{color:var(--ink-mute);font-size:12px;margin:7px 0 0}
+
+  /* sticky purchase block — extra compact: ~22% of the phone height, plans keep the rest */
+  .sticky{position:relative;background:rgba(24,9,34,.92);backdrop-filter:blur(8px);border-top:1px solid var(--line-soft);padding:6px 14px 6px}
+  .summary{font-size:11.5px;font-weight:800;color:var(--ink-soft);margin:0 0 5px;text-align:center;line-height:1.25}
+  .summary b{color:var(--ink)}
+  .cta{width:100%;border:none;border-radius:12px;background:linear-gradient(180deg,#ffd873,var(--gold-deep));
+    color:var(--gold-ink);font:inherit;font-weight:900;font-size:15.5px;padding:8px 10px;cursor:pointer;min-height:44px;
+    box-shadow:0 6px 16px rgba(242,193,78,.30)}
+  .cta:active{transform:translateY(1px)}
+  .payrow{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:5px;font-size:10.5px;line-height:1.25;color:var(--ink-soft);text-align:center}
+  .payrow svg{flex:none;width:13px;height:13px;stroke:var(--mint)}
+  .disclosure{font-size:10px;line-height:1.3;color:var(--ink-mute);text-align:center;margin:3px 0 0}
+  .footlinks{display:flex;justify-content:center;align-items:center;gap:2px;flex-wrap:nowrap;margin-top:2px}
+  .footlinks button{background:none;border:none;color:var(--ink-soft);font:inherit;font-size:10.5px;font-weight:700;cursor:pointer;padding:2px 3px;text-decoration:underline;text-underline-offset:3px;min-height:22px;white-space:nowrap}
+
+  /* Play sheet overlay */
+  .sheet-veil{position:absolute;inset:0;background:rgba(8,2,14,.62);display:none;z-index:5}
+  .sheet-veil.open{display:block}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;color:#20242b;border-radius:24px 24px 0 0;
+    padding:20px 20px 24px;transform:translateY(105%);transition:transform .28s ease;z-index:6}
+  .sheet[hidden]{display:none}
+  .sheet.open{transform:translateY(0)}
+  @media (prefers-reduced-motion:reduce){.sheet{transition:none}}
+  .sheet .grab{width:38px;height:4px;border-radius:2px;background:#d8dbe0;margin:0 auto 14px}
+  .sheet h4{margin:0 0 2px;font-size:17px;font-weight:900;color:#20242b}
+  .sheet .who{font-size:13px;color:#5f6368;margin:0 0 14px}
+  .sheet .item{display:flex;justify-content:space-between;border-top:1px solid #eceef1;border-bottom:1px solid #eceef1;padding:12px 0;font-size:14.5px}
+  .sheet .item b{font-weight:800}
+  .sheet .method{display:flex;gap:11px;align-items:center;padding:13px 0 4px;font-size:14.5px}
+  .gpaymark{flex:none;display:inline-flex;align-items:center;gap:5px;border:1px solid #dadce0;border-radius:8px;padding:6px 9px;font-weight:800;font-size:13px;color:#3c4043}
+  .gpaymark .g{font-weight:900}
+  .sheet .fine{font-size:12px;color:#5f6368;margin:10px 0 14px}
+  .sheet .confirm{width:100%;border:none;border-radius:999px;background:#0b57d0;color:#fff;font:inherit;font-weight:800;font-size:15.5px;padding:14px;cursor:pointer;min-height:50px}
+  .sheet .cancel{width:100%;background:none;border:none;color:#0b57d0;font:inherit;font-weight:800;font-size:14.5px;padding:12px;cursor:pointer;margin-top:4px}
+  .sheet .done{text-align:center;padding:8px 0 2px}
+  .sheet .done .tick{width:56px;height:56px;border-radius:50%;background:#e6f4ea;display:grid;place-items:center;margin:0 auto 10px}
+  .sheet .done .tick svg{width:28px;height:28px;stroke:#137333}
+  .sheet .done h4{font-size:19px}
+  .sheet .done p{font-size:13.5px;color:#5f6368;margin:4px 0 14px}
+  .tryhint{text-align:center;color:var(--ink-mute);font-size:13.5px;margin-top:14px}
+  .tryhint b{color:var(--gold)}
+
+  /* ---------- whole-app standard ---------- */
+  .standard{margin-top:64px;border-top:1px solid var(--line-soft);padding-top:40px}
+  .standard .intro{margin-bottom:6px}
+  .h-greet{font-size:23px;line-height:1.2;font-weight:900;margin:4px 0 4px}
+  .h-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 14px}
+  .chiprow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid var(--line-soft);
+    border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:800;color:var(--ink-soft)}
+  .chip b{color:var(--gold);font-size:13.5px}
+  .chip .cdot{width:7px;height:7px;border-radius:50%;background:var(--mint)}
+  .hcta{width:100%;border:none;border-radius:18px;background:linear-gradient(180deg,#ffd873,var(--gold-deep));
+    color:var(--gold-ink);font:inherit;padding:16px;cursor:pointer;min-height:60px;text-align:left;
+    box-shadow:0 12px 28px rgba(242,193,78,.30);display:flex;align-items:center;gap:13px}
+  .hcta .big{font-size:18.5px;font-weight:900;display:block;line-height:1.15}
+  .hcta .small{font-size:12.5px;font-weight:700;opacity:.75;display:block;margin-top:2px}
+  .hcta .cam{flex:none;width:44px;height:44px;border-radius:13px;background:rgba(42,26,5,.16);display:grid;place-items:center}
+  .hcta .cam svg{width:23px;height:23px;stroke:var(--gold-ink)}
+  .hcta:active{transform:translateY(1px)}
+  .hsec{font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin:20px 0 10px}
+  .tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+  .tile{background:var(--plum-card);border:1px solid var(--line-soft);border-radius:16px;padding:13px 11px;text-align:left;
+    font:inherit;color:var(--ink);cursor:pointer;min-height:44px}
+  .tile .tic{width:32px;height:32px;border-radius:10px;background:rgba(242,193,78,.15);display:grid;place-items:center;margin-bottom:8px}
+  .tile .tic svg{width:17px;height:17px;stroke:var(--gold)}
+  .tile b{display:block;font-size:14px;font-weight:900;line-height:1.2}
+  .tile span{font-size:11.5px;color:var(--ink-mute);font-weight:700}
+  .recent{display:grid;gap:9px}
+  .rrow{display:flex;gap:11px;align-items:center;background:rgba(255,255,255,.045);border:1px solid var(--line-soft);
+    border-radius:14px;padding:11px 12px}
+  .rrow .thumb{flex:none;width:34px;height:46px;border-radius:6px;background:linear-gradient(160deg,#5b2f7d,#2e143f);
+    border:1px solid rgba(255,255,255,.16)}
+  .rrow .rmain{flex:1;min-width:0}
+  .rrow b{display:block;font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rrow span{font-size:12px;color:var(--ink-mute);font-weight:700}
+  .verdict{flex:none;font-size:11.5px;font-weight:900;padding:5px 9px;border-radius:999px}
+  .verdict.ok{background:rgba(127,227,176,.14);color:var(--mint);border:1px solid rgba(127,227,176,.35)}
+  .verdict.warn{background:rgba(242,193,78,.13);color:var(--gold);border:1px solid var(--line)}
+  .tabbar{position:relative;display:flex;background:rgba(24,9,34,.94);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line-soft);padding:9px 10px 13px}
+  .tab{flex:1;background:none;border:none;font:inherit;color:var(--ink-mute);font-size:11px;font-weight:800;
+    display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer;border-radius:12px;min-height:48px}
+  .tab svg{width:21px;height:21px;stroke:currentColor}
+  .tab[aria-pressed="true"]{color:var(--gold)}
+  /* ---------- slide-out side menu (navigation drawer) ---------- */
+  .appbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .menubtn{flex:none;width:44px;height:44px;border-radius:13px;border:1px solid var(--line-soft);background:rgba(255,255,255,.06);
+    color:var(--ink);cursor:pointer;display:grid;place-items:center}
+  .menubtn svg{width:21px;height:21px;stroke:var(--gold)}
+  .appbar .atitle{flex:1;min-width:0}
+  .appbar .atitle b{display:block;font-size:15px;font-weight:900;line-height:1.15}
+  .appbar .atitle span{font-size:12px;color:var(--ink-mute);font-weight:700}
+  .avatar{flex:none;width:38px;height:38px;border-radius:50%;background:linear-gradient(160deg,#ffd873,var(--gold-deep));
+    color:var(--gold-ink);display:grid;place-items:center;font-weight:900;font-size:14px;border:2px solid rgba(255,255,255,.25)}
+  .scrim{position:absolute;inset:0;background:rgba(8,2,14,.62);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:8}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{position:absolute;top:0;bottom:0;left:0;width:84%;max-width:302px;z-index:9;
+    background:linear-gradient(180deg,var(--plum-800),var(--plum-900) 70%);border-right:1px solid var(--line);
+    box-shadow:24px 0 48px rgba(0,0,0,.45);transform:translateX(-106%);transition:transform .28s ease;
+    display:flex;flex-direction:column}
+  .drawer.open{transform:translateX(0)}
+  @media (prefers-reduced-motion:reduce){.drawer,.scrim{transition:none}}
+  .drawer-head{padding:20px 18px 14px;border-bottom:1px solid var(--line-soft);position:relative}
+  .drawer-head .avatar{width:46px;height:46px;font-size:16px;margin-bottom:10px}
+  .drawer-head b{display:block;font-size:16px;font-weight:900;line-height:1.2}
+  .drawer-head span{font-size:12.5px;color:var(--ink-mute);font-weight:700}
+  .drawer-head .planpill{display:inline-block;margin-top:9px;background:rgba(242,193,78,.14);border:1px solid var(--line);
+    color:var(--gold);font-size:11.5px;font-weight:900;padding:4px 10px;border-radius:999px}
+  .drawer-close{position:absolute;top:14px;right:12px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-soft);
+    background:rgba(255,255,255,.06);color:var(--ink);cursor:pointer;display:grid;place-items:center;font-size:15px}
+  .drawer-nav{flex:1;overflow-y:auto;padding:12px 10px;scrollbar-width:none}
+  .drawer-nav::-webkit-scrollbar{display:none}
+  .drawer-label{font-size:11px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-mute);margin:10px 10px 6px}
+  .drawer-item{width:100%;display:flex;align-items:center;gap:12px;background:none;border:none;border-radius:13px;
+    color:var(--ink-soft);font:inherit;font-weight:800;font-size:14.5px;padding:11px 10px;cursor:pointer;text-align:left;min-height:48px}
+  .drawer-item .dic{flex:none;width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.06);display:grid;place-items:center}
+  .drawer-item .dic svg{width:18px;height:18px;stroke:currentColor}
+  .drawer-item small{margin-left:auto;font-size:11.5px;color:var(--ink-mute);font-weight:800}
+  .drawer-item[aria-current="page"]{background:rgba(242,193,78,.14);color:var(--ink);box-shadow:inset 3px 0 0 var(--gold)}
+  .drawer-item[aria-current="page"] .dic{background:rgba(242,193,78,.20);color:var(--gold)}
+  .drawer-foot{border-top:1px solid var(--line-soft);padding:10px}
+  .drawer-status{min-height:20px;font-size:12.5px;font-weight:800;color:var(--mint);padding:0 18px 12px}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:26px}
+  @media (max-width:920px){.duo{grid-template-columns:1fr;justify-items:center}}
+  .duo .cap{text-align:center;color:var(--ink-mute);font-size:13.5px;margin-top:14px;max-width:390px}
+  .duo .cap b{color:var(--gold)}
+  .stdnotes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}
+  @media (max-width:640px){.stdnotes{grid-template-columns:1fr}}
+
+  /* ---------- sign-in screen ---------- */
+  .l-body{padding:30px 22px 22px;display:flex;flex-direction:column;height:100%;position:relative}
+  .l-kicker{font-size:12.5px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+  .l-title{font-size:29px;line-height:1.15;font-weight:900;margin:0 0 8px}
+  .l-sub{color:var(--ink-soft);font-size:14.5px;margin:0 0 26px}
+  .gbtn-big{width:100%;justify-content:center;font-size:15.5px;padding:14px 20px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+  .gbtn-big svg{width:20px;height:20px}
+  .orow{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--ink-mute);font-size:12.5px;font-weight:800}
+  .orow::before,.orow::after{content:"";flex:1;height:1px;background:var(--line-soft)}
+  .altbtn{width:100%;display:flex;align-items:center;gap:12px;background:var(--plum-card);border:1px solid var(--line-soft);
+    border-radius:16px;color:var(--ink);font:inherit;font-weight:800;font-size:15px;padding:14px 16px;cursor:pointer;margin-bottom:10px;min-height:52px;text-align:left}
+  .altbtn .aic{flex:none;width:34px;height:34px;border-radius:10px;background:rgba(242,193,78,.15);display:grid;place-items:center}
+  .altbtn .aic svg{width:18px;height:18px;stroke:var(--gold)}
+  .altbtn small{display:block;font-size:12px;color:var(--ink-mute);font-weight:700}
+  .l-status{min-height:22px;font-size:13.5px;font-weight:800;color:var(--mint);text-align:center;margin:8px 0 0}
+  .l-spacer{flex:1}
+  .l-fine{font-size:12px;color:var(--ink-mute);text-align:center;margin:0;line-height:1.5}
+  .l-fine a{color:var(--ink-soft)}
+  .l-guest{display:block;margin:14px auto 0;background:none;border:none;color:var(--ink-soft);font:inherit;font-weight:800;
+    font-size:13.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:8px}
+
+  /* ---------- notes column ---------- */
+  .notes h2{font-size:24px;font-weight:900;margin:34px 0 10px}
+  .notes h2:first-child{margin-top:0}
+  .notes p{color:var(--ink-soft);margin:0 0 12px;max-width:65ch}
+  .notes ul{margin:0 0 14px;padding-left:20px;color:var(--ink-soft)}
+  .notes li{margin-bottom:7px}
+  .notes li b,.notes p b{color:var(--ink)}
+  .callout{border:1px solid var(--line);background:rgba(242,193,78,.07);border-radius:16px;padding:16px 18px;margin:0 0 16px}
+  .callout h3{margin:0 0 6px;font-size:16.5px;font-weight:900;color:var(--gold)}
+  .callout p{margin:0}
+  .warn{border-color:rgba(255,150,120,.4);background:rgba(255,120,90,.06)}
+  .warn h3{color:#ffb59d}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr}}
+  .mini{background:rgba(255,255,255,.045);border:1px solid var(--line-soft);border-radius:16px;padding:15px 17px}
+  .mini h3{margin:0 0 8px;font-size:15.5px;font-weight:900}
+  .mini ul{margin:0;padding-left:18px;font-size:14px}
+  .mini li{margin-bottom:5px}
+  .do h3{color:var(--mint)} .dont h3{color:#ffb59d}
+  .srcs{font-size:13.5px}
+  .srcs li{margin-bottom:6px;word-break:break-word}
+  footer.page{margin-top:44px;border-top:1px solid var(--line-soft);padding-top:18px;color:var(--ink-mute);font-size:13px;max-width:70ch}
+
+  /* ---------- guide-driven updates (per-screen research, 2026-11-14) ---------- */
+  .scrim{background:rgba(8,2,14,.48)}
+  .drawer{max-width:320px;border-radius:0 16px 16px 0}
+  .mtab{flex:1;background:none;border:none;font:inherit;color:var(--ink-mute);font-size:11px;font-weight:800;
+    display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer;border-radius:12px;min-height:48px}
+  .mtab svg{width:21px;height:21px;stroke:currentColor}
+  .mtab[aria-pressed="true"]{color:var(--gold)}
+  .checktab{justify-content:flex-end}
+  .checkdot{width:56px;height:56px;border-radius:50%;background:linear-gradient(180deg,#ffd873,var(--gold-deep));
+    display:grid;place-items:center;margin-top:-30px;box-shadow:0 10px 22px rgba(242,193,78,.35);border:3px solid var(--plum-900)}
+  .checkdot svg{width:26px;height:26px;stroke:var(--gold-ink)}
+  .checktab:active .checkdot{transform:scale(.96)}
+  /* home collection band */
+  .collband{background:var(--plum-card);border:1px solid var(--line-soft);border-radius:20px;padding:16px;margin-bottom:12px}
+  .collband .clabel{font-size:12px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);margin:0}
+  .collband .cval{font-size:32px;font-weight:900;line-height:1.1;margin:2px 0 0}
+  .collband .ccap{font-size:12px;color:var(--ink-mute);font-weight:700;margin:0 0 12px}
+  .statrow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px solid var(--line-soft);padding-top:12px}
+  .stat{text-align:left;background:none;border:none;font:inherit;color:var(--ink);padding:2px;cursor:default}
+  .stat b{display:block;font-size:17px;font-weight:900;line-height:1.15}
+  .stat span{font-size:11px;color:var(--ink-mute);font-weight:800;line-height:1.25;display:block}
+  button.stat{cursor:pointer}
+  .doors2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .prorow{display:flex;align-items:center;gap:8px;margin-top:18px;font-size:13px;color:var(--ink-mute);font-weight:700}
+  .prorow button.link{background:none;border:none;color:var(--ink-soft);font:inherit;font-weight:800;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:6px 2px}
+  .prorow button.x{margin-left:auto;background:none;border:1px solid var(--line-soft);border-radius:50%;width:30px;height:30px;color:var(--ink-mute);cursor:pointer;flex:none}
+  /* drawer two-line rows + balance strip */
+  .drawer-head{width:100%;text-align:left;font:inherit;color:var(--ink);cursor:pointer;background:none;border:none;border-bottom:1px solid var(--line-soft)}
+  .drawer-head .chev{float:right;color:var(--ink-mute);font-size:18px;font-weight:900}
+  .dbal{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+  .dbal span{background:rgba(255,255,255,.06);border:1px solid var(--line-soft);border-radius:999px;padding:4px 10px;font-size:11.5px;font-weight:800;color:var(--ink-soft)}
+  .dbal b{color:var(--gold)}
+  .drawer-item .dtxt{flex:1;min-width:0}
+  .drawer-item .dtxt b{display:block;font-size:14.5px;font-weight:800;line-height:1.2}
+  .drawer-item .dtxt span{display:block;font-size:11.5px;color:var(--ink-mute);font-weight:700;line-height:1.3}
+  .drawer-div{height:1px;background:var(--line-soft);margin:8px 4px}
+  .drawer-foot{font-size:12px;color:var(--ink-mute);font-weight:700;line-height:1.9}
+  .drawer-foot a{color:var(--ink-soft)}
+  .drawer-foot button{background:none;border:none;color:var(--ink-soft);font:inherit;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:2px}
+  /* sign-in additions */
+  .applebtn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#000;color:#fff;border:1px solid rgba(255,255,255,.35);
+    border-radius:999px;font:inherit;font-weight:800;font-size:15.5px;padding:14px 20px;cursor:pointer;min-height:52px}
+  .applebtn svg{width:19px;height:19px;fill:#fff}
+  .mailrow{display:flex;gap:8px;margin-bottom:10px}
+  .mailrow input{flex:1;min-width:0;background:var(--plum-card);border:1px solid var(--line-soft);border-radius:14px;color:var(--ink);
+    font:inherit;font-size:14.5px;padding:12px 14px;min-height:52px}
+  .mailrow input::placeholder{color:var(--ink-mute)}
+  .mailbtn{flex:none;background:rgba(242,193,78,.15);border:1px solid var(--line);color:var(--gold);font:inherit;font-weight:900;font-size:13.5px;border-radius:14px;padding:10px 14px;cursor:pointer}
+  .phonelink{width:100%;background:none;border:none;color:var(--ink-soft);font:inherit;font-weight:800;font-size:14px;cursor:pointer;padding:10px;text-decoration:underline;text-underline-offset:3px}
+  /* binder */
+  .bh{position:relative;margin:-18px -18px 12px;padding:16px 18px 10px;background:rgba(24,9,34,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line-soft)}
+  .bh .r1{display:flex;align-items:center;gap:8px}
+  .bh .r1 b{font-size:16.5px;font-weight:900;flex:1}
+  .viewseg{display:flex;background:rgba(0,0,0,.35);border:1px solid var(--line-soft);border-radius:10px;padding:3px}
+  .viewseg button{border:none;background:transparent;color:var(--ink-soft);font:inherit;font-weight:800;font-size:11.5px;border-radius:7px;padding:6px 9px;cursor:pointer;min-height:32px}
+  .viewseg button[aria-pressed="true"]{background:var(--gold);color:var(--gold-ink)}
+  .bh .sumline{font-size:12.5px;color:var(--ink-soft);font-weight:700;margin:7px 0 9px}
+  .bh .sumline b{color:var(--gold)}
+  .bh .r3{display:flex;gap:7px;align-items:center}
+  .bsearch{flex:1;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid var(--line-soft);border-radius:11px;padding:8px 11px;font-size:13px;color:var(--ink-mute);font-weight:700}
+  .fchip{flex:none;background:var(--plum-card);border:1px solid var(--line-soft);border-radius:11px;color:var(--ink);font:inherit;font-weight:800;font-size:12.5px;padding:8px 12px;cursor:pointer;min-height:38px}
+  .covers{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+  .covers::-webkit-scrollbar{display:none}
+  .cover{flex:none;border:1px solid var(--line-soft);background:var(--plum-card);color:var(--ink-soft);font:inherit;font-weight:800;font-size:12px;border-radius:999px;padding:7px 13px;cursor:pointer;min-height:36px}
+  .cover[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
+  .setrow{margin-bottom:12px}
+  .setrow .lab{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--ink-soft);margin-bottom:6px}
+  .prog{height:7px;border-radius:4px;background:rgba(255,255,255,.10);overflow:hidden}
+  .prog i{display:block;height:100%;background:var(--gold);border-radius:4px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+  .gtile{margin:0}
+  .gphoto{position:relative;aspect-ratio:63/88;border-radius:9px;border:1px solid rgba(255,255,255,.16);overflow:hidden}
+  .gp1{background:linear-gradient(160deg,#5b2f7d,#2e143f)} .gp2{background:linear-gradient(160deg,#7d5a2f,#3f2a14)}
+  .gp3{background:linear-gradient(160deg,#2f5a7d,#14293f)} .gp4{background:linear-gradient(160deg,#7d2f4e,#3f1426)}
+  .gp5{background:linear-gradient(160deg,#3f7d2f,#1d3f14)} .gp6{background:linear-gradient(160deg,#4e2f7d,#24143f)}
+  .vpill{position:absolute;top:5px;left:5px;font-size:9.5px;font-weight:900;padding:3px 7px;border-radius:999px;line-height:1.2}
+  .vpill.ok{background:rgba(20,40,28,.85);color:var(--mint)}
+  .vpill.bad{background:rgba(50,22,18,.88);color:#ffb59d}
+  .vpill.warn{background:rgba(50,40,14,.88);color:var(--gold)}
+  .gtile figcaption{padding-top:5px}
+  .gtile figcaption b{display:block;font-size:11.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gtile figcaption span{font-size:11px;color:var(--ink-mute);font-weight:700}
+  .pockets{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;background:rgba(0,0,0,.25);border:1px solid var(--line-soft);border-radius:14px;padding:10px}
+  .pocket{aspect-ratio:63/88;border-radius:7px;border:1px dashed rgba(255,255,255,.20);display:grid;place-items:center}
+  .pocket.full{border-style:solid;border-color:rgba(255,255,255,.16)}
+  .pagedots{text-align:center;font-size:12px;color:var(--ink-mute);font-weight:800;margin-top:9px}
+  /* check capture */
+  .stepind{text-align:center;font-size:13px;font-weight:900;color:var(--ink-soft);margin:4px 0 14px}
+  .stepind b{color:var(--gold)}
+  .capframe{position:relative;margin:0 auto;width:min(250px,80%);aspect-ratio:63/88;border-radius:14px;background:rgba(255,255,255,.04)}
+  .capframe::before,.capframe::after{content:"";position:absolute;width:30px;height:30px;border:3px solid #fff}
+  .capframe::before{top:-3px;left:-3px;border-right:none;border-bottom:none;border-radius:14px 0 0 0}
+  .capframe::after{bottom:-3px;right:-3px;border-left:none;border-top:none;border-radius:0 0 14px 0}
+  .capframe .cf-in{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-mute);font-size:12.5px;font-weight:800;text-align:center;padding:16px}
+  .capinstr{text-align:center;font-size:14.5px;font-weight:800;margin:14px 0 8px}
+  .qualpill{display:table;margin:0 auto;background:rgba(127,227,176,.12);border:1px solid rgba(127,227,176,.35);color:var(--mint);font-size:12px;font-weight:900;border-radius:999px;padding:5px 12px}
+  .shutter{width:62px;height:62px;border-radius:50%;background:linear-gradient(180deg,#ffd873,var(--gold-deep));border:4px solid rgba(255,255,255,.85);cursor:pointer;display:block;margin:16px auto 6px;box-shadow:0 10px 24px rgba(242,193,78,.35)}
+  .shutter:active{transform:scale(.96)}
+  .capopts{display:flex;justify-content:center;gap:6px;align-items:center;font-size:12.5px;color:var(--ink-mute);font-weight:700}
+  .capopts button{background:none;border:none;color:var(--ink-soft);font:inherit;font-weight:800;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:8px 4px}
+  .tips3{display:grid;gap:6px;margin-top:14px;font-size:12.5px;color:var(--ink-soft);font-weight:700}
+  .tips3 span{background:rgba(255,255,255,.045);border:1px solid var(--line-soft);border-radius:11px;padding:8px 11px}
+  /* result */
+  .vhero{text-align:left;padding:6px 0 2px}
+  .vhero .vname{font-size:14px;font-weight:800;color:var(--ink-soft);margin:0}
+  .vhero .vbig{font-size:31px;font-weight:900;line-height:1.12;margin:4px 0 6px;color:var(--mint)}
+  .vhero .vbig.bad{color:#ffb59d} .vhero .vbig.warn{color:var(--gold)}
+  .vhero .vreason{font-size:14px;color:var(--ink-soft);margin:0 0 4px}
+  .vhero .vconf{font-size:12px;font-weight:900;color:var(--ink-mute);text-transform:uppercase;letter-spacing:.05em}
+  .pricecard{background:var(--plum-card);border:1px solid var(--line-soft);border-radius:16px;padding:13px 15px;margin:14px 0}
+  .pricecard .pl{font-size:11.5px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute)}
+  .pricecard .pv{font-size:24px;font-weight:900;line-height:1.15}
+  .pricecard .ps{font-size:12px;color:var(--ink-mute);font-weight:700}
+  .coinline{font-size:12.5px;font-weight:800;color:var(--gold);margin-top:6px}
+  .evlist{display:grid;gap:8px}
+  .evrow{width:100%;text-align:left;background:rgba(255,255,255,.045);border:1px solid var(--line-soft);border-radius:13px;padding:11px 13px;font:inherit;color:var(--ink);cursor:pointer}
+  .evrow .er1{display:flex;justify-content:space-between;gap:8px;align-items:center}
+  .evrow b{font-size:13.5px;font-weight:800}
+  .evrow .st{font-size:11.5px;font-weight:900;flex:none}
+  .evrow .st.ok{color:var(--mint)} .evrow .st.bad{color:#ffb59d} .evrow .st.warn{color:var(--gold)}
+  .evrow .erd{display:none;font-size:12.5px;color:var(--ink-soft);margin-top:7px;line-height:1.45}
+  .evrow.open .erd{display:block}
+  .nextcard{background:var(--plum-card);border:1px solid var(--line-soft);border-radius:16px;padding:14px 15px;margin-top:14px}
+  .nextcard b{font-size:14.5px;font-weight:900;display:block;margin-bottom:8px}
+  .secbtn{width:100%;background:rgba(242,193,78,.14);border:1px solid var(--line);color:var(--ink);font:inherit;font-weight:800;font-size:14px;border-radius:12px;padding:11px;cursor:pointer;margin-bottom:8px;min-height:48px}
+  .plainbtn{width:100%;background:none;border:1px solid var(--line-soft);color:var(--ink-soft);font:inherit;font-weight:800;font-size:14px;border-radius:12px;padding:11px;cursor:pointer;min-height:48px}
+  .rfoot{text-align:center;margin-top:14px;font-size:12.5px;color:var(--ink-mute);font-weight:700;line-height:2}
+  .rfoot button{background:none;border:none;color:var(--ink-soft);font:inherit;font-weight:800;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:4px}
+  /* games */
+  .daily{background:linear-gradient(160deg,#43300f,#2e143f 75%);border:1px solid rgba(242,193,78,.5);border-radius:18px;padding:15px;margin-bottom:14px}
+  .daily b{font-size:16.5px;font-weight:900;display:block}
+  .daily span{font-size:12.5px;color:var(--ink-soft);font-weight:700}
+  .gamegrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .gt2{background:var(--plum-card);border:1px solid var(--line-soft);border-radius:16px;padding:13px 12px;text-align:left;font:inherit;color:var(--ink);cursor:pointer;min-height:44px}
+  .gt2 .gic{width:34px;height:34px;border-radius:10px;background:rgba(242,193,78,.15);display:grid;place-items:center;margin-bottom:8px}
+  .gt2 .gic svg{width:18px;height:18px;stroke:var(--gold)}
+  .gt2 b{display:block;font-size:14px;font-weight:900;line-height:1.2}
+  .gt2 span{display:block;font-size:11.5px;color:var(--ink-mute);font-weight:700;line-height:1.35;margin-top:2px}
+  .gt2 .gst{color:var(--gold);font-size:11px;font-weight:900;margin-top:6px}
+  .lbrow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.045);border:1px solid var(--line-soft);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:800;margin-bottom:7px}
+  .lbrow .rk{flex:none;width:22px;text-align:center;color:var(--ink-mute);font-weight:900}
+  .lbrow .who{flex:1}
+  .lbrow.you{border-color:var(--gold);background:rgba(242,193,78,.10)}
+  /* grader */
+  .gbar{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .gbar .x{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.06);color:var(--ink);cursor:pointer}
+  .gbar .gp{flex:1;text-align:center}
+  .gbar .gp span{font-size:12.5px;font-weight:900;color:var(--ink-soft);display:block;margin-bottom:5px}
+  .progbar{height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
+  .progbar i{display:block;height:100%;background:var(--gold)}
+  .gq{font-size:21px;font-weight:900;line-height:1.25;margin:12px 0 6px}
+  .ghint{font-size:13px;color:var(--ink-soft);margin:0 0 14px}
+  .optcard{width:100%;display:flex;gap:12px;align-items:center;text-align:left;background:var(--plum-card);border:2px solid var(--line-soft);border-radius:16px;padding:13px 14px;font:inherit;color:var(--ink);cursor:pointer;margin-bottom:9px;min-height:56px}
+  .optcard .sw{flex:none;width:40px;height:40px;border-radius:9px;border:1px solid rgba(255,255,255,.2)}
+  .optcard b{font-size:14.5px;font-weight:800;display:block;line-height:1.25}
+  .optcard span{font-size:12px;color:var(--ink-mute);font-weight:700}
+  .optcard[aria-pressed="true"]{border-color:var(--gold);background:var(--plum-card-2)}
+  .estrow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:14px;font-weight:800}
+  .estrow:last-of-type{border-bottom:none}
+  .estrow b{font-size:16.5px;font-weight:900}
+  /* rewards switcher */
+  .rseg{display:flex;background:rgba(0,0,0,.35);border:1px solid var(--line-soft);border-radius:12px;padding:4px;margin-bottom:14px}
+  .rseg button{flex:1;border:none;background:transparent;color:var(--ink-soft);font:inherit;font-weight:800;font-size:12.5px;border-radius:8px;padding:8px 2px;cursor:pointer;min-height:40px}
+  .rseg button[aria-pressed="true"]{background:var(--gold);color:var(--gold-ink)}
+  .balhero{text-align:center;padding:8px 0 4px}
+  .balhero .bn{font-size:38px;font-weight:900;line-height:1}
+  .balhero .bl{font-size:12.5px;color:var(--ink-mute);font-weight:800}
+  .earnrow{display:flex;justify-content:space-between;gap:8px;background:rgba(255,255,255,.045);border:1px solid var(--line-soft);border-radius:12px;padding:10px 13px;font-size:13.5px;font-weight:800;margin-bottom:7px}
+  .earnrow b{color:var(--gold)}
+  .earnrow .neg{color:#ffb59d}
+  .stackphones{display:grid;gap:34px;justify-items:center}
+  .stackphones .cap{text-align:center;color:var(--ink-mute);font-size:13.5px;max-width:390px}
+  .stackphones .cap b{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="intro">
+    <span class="locked">Locked · 3 cards + split rule + Ultimate $14.99</span>
+    <h1>The purchase screen, <span class="gold">bundled down</span> — and built to feel premium</h1>
+    <p>Five stacked plans became three cards and a banner: a slim Free strip, one Checks card with the 100/300 choice inside it, one Grader card, and one gold Ultimate card at $14.99. Checks and Grader keep their prices — one short screen, decision in ten seconds.</p>
+    <p>The phone on this page is live: tap the plans, flip the toggle, and hit the gold button to walk the exact payment flow a user gets. The notes beside it show the research behind every choice.</p>
+    <p><b style="color:var(--gold)">This look is now the standard for the whole app.</b> Below the purchase screen you'll find home rebuilt in the same language — same bubbles, same plum, same gold — because this page is the example every other screen gets matched against.</p>
+  </header>
+
+  <div class="stage">
+
+    <!-- ================= PHONE ================= -->
+    <div class="phone-col">
+      <div class="phone" aria-label="Interactive mockup of the Real or Replica purchase screen">
+        <div class="screen">
+          <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+          <div class="scroll">
+            <div class="topbar">
+              <button class="closebtn" type="button" aria-label="Close purchase screen">✕</button>
+              <button class="restore" type="button">Restore Purchases</button>
+            </div>
+
+            <h2 class="headline">Check a card before you buy, sell or trade it.</h2>
+            <p class="subline">Pick a plan below. Every choice is settled here — then Google Play handles payment with the method already saved to your account.</p>
+
+            <div class="freebanner">
+              <span class="dot" aria-hidden="true">✓</span>
+              <span><b>Free:</b> 10 checks to start, then 5 free checks on the 1st of each month — no card required. Free checks expire at the end of each month. The app works without paying.</span>
+            </div>
+
+            <ul class="benefits">
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Front <em>and</em> back photo checks, tell by tell</li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Plain-words result: Likely Genuine, Likely Counterfeit, or Inconclusive</li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Cancel anytime in Google Play — keep access to the end of the paid month</li>
+            </ul>
+
+            <!-- Checks -->
+            <div class="plan" role="radio" tabindex="0" aria-checked="true" data-plan="checks" data-name="Checks · 300 checks/month">
+              <span class="row">
+                <span>
+                  <h3>Checks</h3>
+                  <p class="desc">A monthly allowance of card checks.</p>
+                </span>
+                <span style="display:flex;gap:10px;align-items:flex-start">
+                  <span class="price"><span class="amt" id="checksPrice">$6.99</span><span class="per">per month</span></span>
+                  <span class="radio" aria-hidden="true"></span>
+                </span>
+              </span>
+              <span class="seg" role="group" aria-label="How many checks per month">
+                <button type="button" id="seg100" aria-pressed="false">100 checks<small>$4.99/mo · ≈5.0¢ each</small></button>
+                <button type="button" id="seg300" aria-pressed="true">300 checks<small>$6.99/mo · ≈2.3¢ each</small></button>
+              </span>
+              <span class="unit" id="checksUnit">Best value per check — 3× the checks for $2 more (≈53% less per check).</span>
+              <span class="honest" style="display:block">Plan checks refresh monthly — unused plan checks don't roll over. Purchased checks never expire.</span>
+            </div>
+
+            <!-- Grader -->
+            <div class="plan" role="radio" tabindex="0" aria-checked="false" data-plan="grader" data-name="Grader" data-price="4.99">
+              <span class="row">
+                <span>
+                  <h3>Grader</h3>
+                  <p class="desc">Grade estimates for your cards, per grading company — labelled as estimates. Includes 20 grade runs a month.</p>
+                </span>
+                <span style="display:flex;gap:10px;align-items:flex-start">
+                  <span class="price"><span class="amt">$4.99</span><span class="per">per month</span></span>
+                  <span class="radio" aria-hidden="true"></span>
+                </span>
+              </span>
+            </div>
+
+            <!-- Ultimate -->
+            <div class="plan ultimate" role="radio" tabindex="0" aria-checked="false" data-plan="ultimate" data-name="Ultimate — everything in one plan" data-price="14.99">
+              <span class="badge">EVERYTHING IN ONE PLAN</span>
+              <span class="row">
+                <span>
+                  <h3>Ultimate</h3>
+                  <p class="desc">Both plans, plus more — 500 checks and 50 grade runs a month in a single plan.</p>
+                </span>
+                <span style="display:flex;gap:10px;align-items:flex-start">
+                  <span class="price"><span class="amt">$14.99</span><span class="per">per month</span></span>
+                  <span class="radio" aria-hidden="true"></span>
+                </span>
+              </span>
+              <span class="honest" style="display:block">Honest math: Checks 300 ($6.99) + Grader ($4.99) bought separately come to $11.98/mo for 300 checks + 20 grade runs. Ultimate is $14.99/mo — $3.01 more — for 500 checks + 50 grade runs. More of everything, not a discount claim. Plan checks refresh monthly; purchased checks never expire.</span>
+            </div>
+
+            <div class="signinrow">
+              <button class="gbtn" type="button" id="gSignIn">
+                <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+                Sign in with Google
+              </button>
+              <p id="signinNote">Optional — restore your plans on a new phone. Never a wall before payment.</p>
+            </div>
+          </div>
+
+          <!-- sticky purchase block -->
+          <div class="sticky">
+            <p class="summary">Selected: <b id="sumName">Checks · 300 checks/month</b> — <b id="sumPrice">$6.99/month</b></p>
+            <button class="cta" type="button" id="ctaBtn">Subscribe — $6.99/month</button>
+            <div class="payrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+              <span>Pay securely through <b>Google Play</b> — use the payment method saved to your Google Account. <b>No card numbers to type here.</b></span>
+            </div>
+            <p class="disclosure" id="disclosure">Renews automatically at $6.99/month until cancelled. Cancel anytime in Google Play → Subscriptions; you keep access until the end of the paid month.</p>
+            <div class="footlinks">
+              <button type="button">Restore Purchases</button><span aria-hidden="true">·</span>
+              <button type="button">Terms</button><span aria-hidden="true">·</span>
+              <button type="button">Privacy</button><span aria-hidden="true">·</span>
+              <button type="button">Manage Subscription</button>
+            </div>
+          </div>
+
+          <!-- Google Play sheet -->
+          <div class="sheet-veil" id="veil"></div>
+          <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Google Play purchase sheet" hidden>
+            <div class="grab" aria-hidden="true"></div>
+            <div id="sheetMain">
+              <h4>Google Play</h4>
+              <p class="who">Real or Replica · <span id="sheetPlan">Checks — 300 checks/month</span></p>
+              <div class="item"><span id="sheetItem">Subscription</span><b id="sheetPrice">$6.99/month</b></div>
+              <div class="method">
+                <span class="gpaymark"><span class="g"><span style="color:#4285F4">G</span></span> Pay</span>
+                <span>Payment method saved to your Google Account</span>
+              </div>
+              <p class="fine">This is the step where the saved Google payment method does the work — confirm here, with a tap, a slide, or biometric/password if you have verification on. No card form ever appears in our app.</p>
+              <button class="confirm" type="button" id="confirmBtn">Confirm in Google Play</button>
+              <button class="cancel" type="button" id="cancelBtn">Cancel</button>
+            </div>
+            <div id="sheetDone" class="done" hidden>
+              <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+              <h4>You're subscribed</h4>
+              <p id="doneText">Checks · 300 checks/month — $6.99/month. Google Play emails your receipt with an Order ID for this purchase and each renewal.</p>
+              <button class="confirm" type="button" id="doneBtn">Done</button>
+              <button class="cancel" type="button" id="manageBtn">Manage subscription in Google Play</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <p class="tryhint">Try it: flip <b>100 / 300</b>, tap <b>Grader</b> or <b>Ultimate</b> — the gold button and the fine print update instantly. Then tap the gold button to see the Play sheet.</p>
+    </div>
+
+    <!-- ================= NOTES ================= -->
+    <div class="notes">
+
+      <h2>Why it looks like this</h2>
+      <p>The best-regarded paywalls share one shape: a single column — visible close button and Restore at the top, one benefit headline, a few scannable benefits, 2–3 plan cards with <b>one</b> clearly highlighted plan, and a sticky full-width call-to-action that repeats the selected plan and price (RevenueCat; Nami; Science of Apps' teardown of 100 paywalls from 66 apps).</p>
+      <p>Premium comes from restraint, not decoration: <b>one accent colour for action</b>, generous whitespace, and the same type and corner radii as the rest of the app. Here, dark plum is the field and <b>gold is reserved</b> — the Ultimate border, the selected-card outline, and the buy button only. If everything is gold, nothing is. The rising bubbles stay in the background, exactly as locked for the app — the cards themselves stay clean.</p>
+      <ul>
+        <li><b>Three plans, not five.</b> 2–3 paid plans is the consensus; three-plan paywalls drive stronger lifetime value than single-plan ones via anchoring (Adapty, 16,000+ apps). The old five-card stack is gone — Free is a banner, and 100 vs 300 lives inside the Checks card.</li>
+        <li><b>The toggle sits inside the card it changes</b>, keeps the same feature list in both states, and updates the sticky button's price instantly. Nothing hides behind it.</li>
+        <li><b>Honest anchoring.</b> 300 checks at $6.99 is ≈2.3¢ a check vs ≈5.0¢ at 100 — about 53% cheaper per check, 3× the checks for $2 more. Both prices are real and purchasable today, which is the test for any anchor: could a customer have paid that price yesterday?</li>
+        <li><b>Ultimate at $14.99 — more, not cheaper.</b> The pitch is capacity, told straight: both plans plus more — 500 checks and 50 grade runs for $3.01 more than buying Checks 300 + Grader apart ($11.98). No “bundle saving” claim, because the numbers don't say that.</li>
+        <li><b>Split rule, printed on the cards.</b> Plan checks refresh monthly and don't roll over; free checks expire each month; checks bought outright never expire. The line sits on the Checks and Ultimate cards, not buried in terms.</li>
+        <li><b>The screen may scroll; the buy button may not leave.</b> 59–76% of top paywalls scroll — the call-to-action and disclosure stay pinned instead.</li>
+        <li><b>No gimmicks.</b> Countdown timers appear on under 1.4% of top paywalls and progress bars under 0.2% (RevenueCat). There are none here — no fake scarcity, no struck-through price that was never charged, no invented user counts.</li>
+      </ul>
+
+      <div class="callout">
+        <h3>Google Pay — first, big, and honest about how it works</h3>
+        <p>On Android, in-app digital goods must go through <b>Google Play Billing</b> — there is no separate Google Pay button to add to this screen in the standard path, and drawing a fake one would promise a checkout the app can't offer. The no-typing experience you want is delivered <b>by Play Billing itself</b>: tap the gold button, Google Play shows its own purchase sheet, and you confirm with the payment method already saved to your Google Account. So the design makes the gold button the largest, highest-contrast element on the screen, puts the “no card details to enter here” reassurance right under it in readable type, settles every choice (plan + toggle) <i>before</i> the tap, and puts nothing — no form, no account wall, no upsell — between the tap and Google's sheet. Copy says “Confirm in Google Play,” never “1-tap,” because Play may ask for biometric/password verification and newer Play versions use a “Slide to buy” gesture. Cancelling in the sheet returns here quietly, selection intact — no guilt copy, no surprise discount pop-up.</p>
+      </div>
+
+      <div class="callout">
+        <h3>Sign in with Google — same idea, our colours</h3>
+        <p>The white Google button sits under the plans in the app's own plum-and-gold frame: one tap, the account you already use, and your plans follow you to a new phone. It's offered, never required — research and Play policy both warn against an account wall between the user and payment, so signing in is a convenience here, not a gate.</p>
+      </div>
+
+      <div class="callout">
+        <h3>Two decisions — locked in</h3>
+        <p><b>1 · Ultimate is $14.99, pitched on more.</b> Checks 300 ($6.99) + Grader ($4.99) bought separately = <b>$11.98/mo</b> for 300 checks + 20 grade runs. Ultimate at <b>$14.99/mo</b> is $3.01 more for <b>500 checks + 50 grade runs</b> — both plans, plus more. That's the whole pitch, printed on the card. It never claims to be a saving or “best value,” because against the separate total it isn't one — it's more allowance for a little more money.</p>
+        <p style="margin-top:10px"><b>2 · The split rule for rollover.</b> Locked: <b>plan checks refresh monthly</b> — the 100/300 (and Ultimate's 500) are a monthly allowance and unused plan checks don't roll over; <b>free checks expire</b> each month; <b>purchased checks never expire</b> — if someone buys checks outright, they're theirs until used. That keeps Checks a genuine recurring monthly allowance, as Play requires for a subscription, and puts the term in plain words on the card itself instead of hiding it.</p>
+      </div>
+
+      <h2>Trust, printed on the screen — not behind a link</h2>
+      <ul>
+        <li><b>Close (✕) visible from the first second</b>, top-left; <b>Restore Purchases</b> top-right and again in the footer. 97 of 100 top paywalls were dismissible — a delayed or hidden close is a dark pattern.</li>
+        <li><b>Full disclosure under the button:</b> renews automatically at the shown price, cancel anytime in Google Play → Subscriptions, access kept until the end of the paid month. Play requires all of this readable with no extra tap.</li>
+        <li><b>Rollover printed where you buy:</b> plan checks refresh monthly, free checks expire, purchased checks never expire — stated on the Checks and Ultimate cards, not only in terms.</li>
+        <li><b>Free framed positively:</b> the banner states the real free allowance and that the app works without paying — Play lists hiding that as a violation.</li>
+        <li><b>No social proof</b> appears on this screen, because there is no verified rating or review to quote yet. Real or none.</li>
+        <li><b>Prices come from Play, not hard-coded strings</b>, so they stay localised and match Play Console — the dollar figures in this mockup are the locked ones from the brief.</li>
+      </ul>
+
+      <div class="grid2">
+        <div class="mini do">
+          <h3>Do</h3>
+          <ul>
+            <li>Single column; headline → benefits → cards → sticky button</li>
+            <li>One highlighted plan — badge, border and per-check math all on the same card</li>
+            <li>Billed price biggest; per-check math second</li>
+            <li>Sticky button repeats plan + price and updates live</li>
+            <li>Button → Play sheet immediately; saved Google method does the rest</li>
+          </ul>
+        </div>
+        <div class="mini dont">
+          <h3>Don't</h3>
+          <ul>
+            <li>Countdowns, “only X left,” invented struck-through prices</li>
+            <li>A fake Google Pay button or an in-app card form</li>
+            <li>“Most popular” or “best value” claims the numbers don't back</li>
+            <li>Terms only behind a link, or in grey micro-type</li>
+            <li>Extra screens between the tap and Google's sheet</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>Sources</h2>
+      <p>Design research read 2026-11-14. “Verified live” means the full page was fetched during research.</p>
+      <ul class="srcs">
+        <li>Science of Apps — Paywall Design: 100 Paywalls From Top Apps, Analysed (verified live): <a href="https://scienceofapps.com/guides/paywall-playbook/" target="_blank" rel="noopener">scienceofapps.com/guides/paywall-playbook</a></li>
+        <li>RevenueCat Codelabs — Design a Paywall That Converts (verified live): <a href="https://revenuecat.github.io/codelabs/monetization-success-formula/paywall-design/index.html" target="_blank" rel="noopener">revenuecat.github.io/codelabs</a></li>
+        <li>Nami — Paywall Design for Mobile Apps: A Pro Guide (verified live): <a href="https://www.nami.ml/blog/paywall-design/" target="_blank" rel="noopener">nami.ml/blog/paywall-design</a></li>
+        <li>Google Play Subscriptions policy (verified live): <a href="https://support.google.com/googleplay/android-developer/answer/9900533?hl=en" target="_blank" rel="noopener">support.google.com/googleplay — subscriptions policy</a></li>
+        <li>Google Play Payments policy (verified live): <a href="https://support.google.com/googleplay/android-developer/answer/10281818?hl=en-GB" target="_blank" rel="noopener">support.google.com/googleplay — payments policy</a></li>
+        <li>Android Developers — Integrate the Google Play Billing Library (verified live): <a href="https://developer.android.com/google/play/billing/integrate.html" target="_blank" rel="noopener">developer.android.com/google/play/billing/integrate</a></li>
+        <li>Google Pay API Brand Guidelines (verified live): <a href="https://developers.google.com/pay/api/android/guides/brand-guidelines" target="_blank" rel="noopener">developers.google.com/pay — brand guidelines</a></li>
+        <li>Adapty — Weekly vs monthly vs annual (search index): <a href="https://adapty.io/blog/weekly-monthly-annual-subscription-plan/" target="_blank" rel="noopener">adapty.io/blog</a></li>
+        <li>“Slide to buy” report, secondary via 9to5Google (search index only — rollout treated as indicative): <a href="https://rottenwifi.com/google-play-store-replaces-1-tap-buy-with-slide-to-buy/" target="_blank" rel="noopener">rottenwifi.com</a></li>
+      </ul>
+
+      <footer class="page">
+        Design mockup for Real or Replica's purchase screen — the locked 3-card bundle (Free banner · Checks 100/300 · Grader · gold Ultimate at $14.99), styled in the app's Arcane colours. Below it, home and sign-in mockups carry the same look as the app-wide standard. The payment sheet shown is a stand-in for Google Play's real billing sheet; no purchase happens on this page. Locked decisions on this page: Ultimate is pitched as both plans plus more — 500 checks + 50 grade runs for $3.01 more than the two plans apart — and the split rule: plan checks refresh monthly, free checks expire, purchased checks never expire.
+      </footer>
+    </div>
+  </div>
+
+  <!-- ================= WHOLE-APP STANDARD ================= -->
+  <section class="standard">
+    <header class="intro">
+      <span class="locked">The standard · every screen, one language</span>
+      <h1>Home and sign-in, <span class="gold">in the same look</span></h1>
+      <p>The purchase screen isn't a one-off. This is what the whole app wears: deep plum fields, bubbles rising quietly behind everything, Nunito rounded type, and gold that only shows up at the moment of action. Whatever a screen doesn't need gets taken out — what's left below is home with the huge menu gone, and sign-in the way the apps you approve do it.</p>
+    </header>
+
+    <div class="duo">
+
+      <!-- ========= HOME ========= -->
+      <div>
+        <div class="phone" aria-label="Mockup of the Real or Replica home screen in the same style">
+          <div class="screen">
+            <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="scroll">
+              <div class="appbar">
+                <span class="atitle"><b>Real or Replica</b><span>Home</span></span>
+                <span class="chip" style="margin-left:auto"><b>240</b> coins</span>
+                <span class="avatar" aria-hidden="true">S</span>
+              </div>
+              <div class="collband">
+                <p class="clabel">Collection value</p>
+                <p class="cval">$1,240</p>
+                <p class="ccap">from 128 checked cards</p>
+                <div class="statrow">
+                  <span class="stat"><b>128</b><span>Cards checked</span></span>
+                  <span class="stat"><b>9</b><span>Fakes caught</span></span>
+                  <button class="stat" type="button"><b>3</b><span>Needs a second look →</span></button>
+                </div>
+              </div>
+              <button class="hcta" type="button" id="homeCheck">
+                <span class="cam"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>
+                <span><span class="big">Check a card</span><span class="small">Front + back photo · free price on every scan</span></span>
+              </button>
+
+              <p class="hsec">Jump in</p>
+              <div class="doors2">
+                <button class="tile" type="button"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><rect x="3" y="7" width="18" height="11" rx="5"/><path d="M8 12h.01M16 10.5v3M14.5 12h3"/></svg></span><b>Play a game</b><span>Today: Spot the Fake</span></button>
+                <button class="tile" type="button"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M12 3l2.5 5.5L20 9.5l-4 4 1 6-5-2.8L7 19.5l1-6-4-4 5.5-1z"/></svg></span><b>Grade a card</b><span>PSA · CGC · BGS · SGC estimates</span></button>
+              </div>
+
+              <p class="hsec">Recent checks</p>
+              <div class="recent">
+                <div class="rrow"><span class="thumb"></span><span class="rmain"><b>Holo rare · English</b><span>Front + back · today</span></span><span class="verdict ok">Likely Genuine</span></div>
+                <div class="rrow"><span class="thumb"></span><span class="rmain"><b>Reverse holo · English</b><span>Front + back · today</span></span><span class="verdict warn">Inconclusive</span></div>
+                <div class="rrow"><span class="thumb"></span><span class="rmain"><b>Full art trainer · Japanese</b><span>Front + back · yesterday</span></span><span class="verdict ok">Likely Genuine</span></div>
+              </div>
+              <div class="prorow" id="proRow"><span>Want more room?</span><button class="link" type="button">See Pro</button><button class="x" type="button" id="proDismiss" aria-label="Dismiss Pro row">✕</button></div>
+            </div>
+            <!-- slide-out side menu -->
+            <div class="scrim" id="drawerScrim"></div>
+            <aside class="drawer" id="homeDrawer" aria-label="Side menu" aria-hidden="true">
+              <button class="drawer-head" type="button" id="drawerHead">
+                <span class="drawer-close" id="drawerClose" aria-hidden="true">✕</span>
+                <span class="avatar" aria-hidden="true">S</span>
+                <b>Your account <span class="chev" aria-hidden="true">›</span></b>
+                <span>Signed in with Google · tap for Profile &amp; Settings</span>
+                <span class="dbal"><span><b>240</b> coins</span><span><b>287</b> checks left</span></span>
+              </button>
+              <nav class="drawer-nav" aria-label="More sections — everything that is not a bottom-bar tab">
+                <button class="drawer-item" type="button" data-go="Grader"><span class="dic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M12 3l2.5 5.5L20 9.5l-4 4 1 6-5-2.8L7 19.5l1-6-4-4 5.5-1z"/></svg></span><span class="dtxt"><b>Grader</b><span>PSA · CGC · BGS · SGC estimates</span></span></button>
+                <button class="drawer-item" type="button" data-go="How checks work"><span class="dic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg></span><span class="dtxt"><b>How checks work</b><span>The tells we look for</span></span></button>
+                <div class="drawer-div" aria-hidden="true"></div>
+                <p class="drawer-label">Rewards &amp; friends</p>
+                <button class="drawer-item" type="button" data-go="Rewards"><span class="dic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span><span class="dtxt"><b>Rewards</b><span>Your coins, in a plain ledger</span></span></button>
+                <button class="drawer-item" type="button" data-go="Leaderboard"><span class="dic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M5 20v-6M10 20V8M15 20v-9M20 20V5"/></svg></span><span class="dtxt"><b>Leaderboard</b><span>Friends · this week</span></span></button>
+                <button class="drawer-item" type="button" data-go="Invite & earn"><span class="dic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M12 8v13M12 8a3 3 0 10-3-3c0 2 3 3 3 3zM12 8a3 3 0 113-3c0 2-3 3-3 3zM5 12h14v9H5z"/></svg></span><span class="dtxt"><b>Invite &amp; earn</b><span>You both get coins — on their first check</span></span></button>
+                <div class="drawer-div" aria-hidden="true"></div>
+                <p class="drawer-label">Help</p>
+                <button class="drawer-item" type="button" data-go="Guide"><span class="dic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 16a3 3 0 013-3h11"/></svg></span><span class="dtxt"><b>Guide</b><span>How the whole app works</span></span></button>
+                <button class="drawer-item" type="button" data-go="Talk to my agent"><span class="dic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><circle cx="12" cy="9" r="3.5"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg></span><span class="dtxt"><b>Talk to my agent</b><span>A person, not a help centre</span></span></button>
+                <button class="drawer-item" type="button" data-go="Feedback"><span class="dic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 6h16v10H9l-5 4z"/></svg></span><span class="dtxt"><b>Feedback</b><span>Tell us what to fix</span></span></button>
+              </nav>
+              <p class="drawer-status" id="drawerStatus" role="status"></p>
+              <div class="drawer-foot">
+                Real or Replica · design mockup<br />
+                <a href="#">Terms</a> · <a href="#">Privacy</a> · <button type="button">Sign out</button>
+              </div>
+            </aside>
+            <nav class="tabbar" aria-label="Bottom navigation">
+              <button class="tab" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 11l8-7 8 7v9H4z"/></svg>Home</button>
+              <button class="tab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 16a3 3 0 013-3h11"/></svg>Binders</button>
+              <button class="tab checktab" type="button" id="homeCheckTab"><span class="checkdot"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>Check</button>
+              <button class="tab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><rect x="3" y="7" width="18" height="11" rx="5"/><path d="M8 12h.01M16 10.5v3M14.5 12h3"/></svg>Games</button>
+              <button class="tab" type="button" id="tabMenuBtn" aria-pressed="false" aria-expanded="false" aria-controls="homeDrawer"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Menu</button>
+            </nav>
+          </div>
+        </div>
+        <p class="cap"><b>Home.</b> Collection first, one gold Check, two quiet doors. The bottom navigation is five slots — <b>Home · Binders · raised Check · Games · Menu</b> — and <b>Menu</b> (or a swipe in from the left edge) slides the drawer out. Tap the dimmed area, the ✕, or any item to close it.</p>
+      </div>
+
+      <!-- ========= SIGN-IN ========= -->
+      <div>
+        <div class="phone" aria-label="Mockup of the Real or Replica sign-in screen in the same style">
+          <div class="screen">
+            <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="l-body">
+              <p class="l-kicker">Real or Replica</p>
+              <h2 class="l-title">Welcome to<br />Real or Replica</h2>
+              <p class="l-sub">Sign in to keep your binders, coins and checks. No password anywhere — nothing to invent, nothing to forget.</p>
+
+              <button class="gbtn gbtn-big" type="button" id="lGoogle">
+                <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+                Continue with Google
+              </button>
+
+              <button class="applebtn" type="button" id="lApple" style="margin-top:10px">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 12.54c-.03-2.89 2.36-4.27 2.47-4.34-1.35-1.97-3.44-2.24-4.18-2.27-1.78-.18-3.47 1.05-4.37 1.05-.9 0-2.29-1.02-3.77-1-1.94.03-3.72 1.13-4.72 2.86-2.01 3.49-.51 8.66 1.45 11.5.96 1.39 2.1 2.95 3.6 2.89 1.45-.06 2-.93 3.74-.93s2.24.93 3.77.9c1.56-.02 2.55-1.41 3.5-2.8 1.1-1.61 1.56-3.17 1.58-3.25-.03-.01-3.04-1.17-3.07-4.61zM14.16 4.06c.8-.97 1.34-2.32 1.19-3.66-1.15.05-2.55.77-3.38 1.74-.74.86-1.39 2.23-1.22 3.55 1.29.1 2.6-.65 3.41-1.63z"/></svg>
+                Continue with Apple
+              </button>
+
+              <div class="orow" aria-hidden="true">or</div>
+
+              <div class="mailrow">
+                <input type="email" id="lEmailField" placeholder="Email address" aria-label="Email address" autocomplete="email" />
+                <button class="mailbtn" type="button" id="lEmail">Email me a sign-in link</button>
+              </div>
+              <button class="phonelink" type="button" id="lPhoneToggle" aria-expanded="false">Use my phone number instead</button>
+              <div id="phoneForm" hidden>
+                <div class="mailrow">
+                  <input type="tel" placeholder="Phone number" aria-label="Phone number" autocomplete="tel" />
+                  <button class="mailbtn" type="button" id="lPhone">Text me a code</button>
+                </div>
+              </div>
+
+              <p class="l-status" id="lStatus" role="status"></p>
+
+              <div class="l-spacer"></div>
+              <p class="l-fine">By continuing you agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>. No sign-in wall: your first check works as a guest — you're asked here when you save to a binder or start a second check, once the app has shown its value.</p>
+              <button class="l-guest" type="button" id="lGuest">Keep exploring as a guest</button>
+            </div>
+          </div>
+        </div>
+        <p class="cap"><b>Sign-in.</b> Google first in Google's own mandated styling (gold yields here — it stays reserved for Check), Apple directly beneath at the same size, then an email magic link, then phone as a collapsed row. Tap any option — it answers.</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:34px">
+      <h3>The menu — a slide-out drawer, built to the researched spec</h3>
+      <p>The per-screen research (sources in the guide section below) fixes the split the way Discord's engineers landed on it: <b>the bottom bar is the primary navigation, the drawer is secondary — and no destination appears in both.</b> The drawer holds only the eight long-tail doors: Grader, How checks work, Rewards, Leaderboard, Invite &amp; earn, Guide, Talk to my agent, Feedback. Home, Binders, Games and Check live in the bar and nowhere else.</p>
+      <ul style="margin:12px 0 0;padding-left:20px;color:var(--ink-soft)">
+        <li><b>Width:</b> min(84% of screen, 320pt), 16pt rounded trailing corners, plum-black scrim at ~45% — a tappable strip of the app always stays visible. (Drawer-width sources disagree — 280dp classic cap vs 360dp Material 3 token — so this is a reconciled rule inside all three ranges, not one canonical number.)</li>
+        <li><b>Exactly two ways in:</b> the labelled <b>Menu</b> slot in the bottom navigation, and a left-edge swipe on root screens. No top hamburger as well — two triggers is the cap, and the bottom slot is the reachable one. Edge-swipe is off inside the camera, games and grader, where it would fight the screen's own gestures.</li>
+        <li><b>Four ways closed:</b> tap the scrim, drag it back left, system Back, or the ✕. Picking a destination closes the drawer first, then navigates. Slide is 250–300ms ease-out; Reduce Motion swaps it for a short fade.</li>
+        <li><b>Header is the account door:</b> avatar, name and the two balance chips (coins · checks left) are <b>display-only</b> — tapping the header itself opens Profile &amp; Settings. No Pro pill or upsell lives in the header, and at most one dot badge ever appears in the drawer (Rewards, only when a reward is genuinely unclaimed).</li>
+        <li><b>Honest caveat from the same research:</b> current platform guidance is cooling on drawers — Material 3 Expressive no longer recommends them, and Reddit removed its side profile drawer in Dec 2025. The owner's drawer still works <i>because</i> it is kept secondary: it must never swallow a primary destination later.</li>
+      </ul>
+    </div>
+
+    <div class="stdnotes">
+      <div class="mini">
+        <h3>What carries to every screen</h3>
+        <ul>
+          <li><b>Bubbles are background dressing only</b> — they rise behind the screen; cards and buttons stay clean on top.</li>
+          <li><b>Gold is the action colour</b> — gradient on the one main button per screen, selected states, nothing else competing.</li>
+          <li><b>One column, generous space</b> — if a screen needs a scroll to find its main button, something comes out.</li>
+          <li><b>Same corners, same type</b> — Nunito, rounded, identical radii from screen to screen.</li>
+        </ul>
+      </div>
+      <div class="mini">
+        <h3>What got taken out</h3>
+        <ul>
+          <li><b>The top drop-down menu</b> — gone. Replaced by a slide-out side menu (the Menu slot in the bottom navigation, or an edge swipe) plus the five-slot bottom navigation.</li>
+          <li><b>“Upgrade” and “Tells” as tabs</b> — gone from the bar. Upgrade becomes a quiet “Pro” inside Profile &amp; Settings and at real feature gates; Tells is renamed <b>“How checks work”</b> — jargon may be taught inside the page, never required on a tab.</li>
+          <li><b>The binder header art</b> — binders open on the cards themselves, not a wall of pictures.</li>
+          <li><b>Sign-in walls</b> — Google leads, email and phone follow quietly, and guests can look around first.</li>
+          <li><b>Anything decorative that doesn't act</b> — every button on these screens does its job when tapped.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PER-SCREEN GUIDE ================= -->
+  <section class="standard">
+    <header class="intro">
+      <span class="locked">The guide · one guided section per screen</span>
+      <h1>Every screen, <span class="gold">guided one by one</span></h1>
+      <p>This is the finished per-screen design research (read 2026-11-14), applied: for each screen the app actually has, the winning layout from the best comparable apps, the patterns that keep it calm and premium, and what to avoid — with a live phone in the same plum-and-gold language beside each guide. The identity never changes: deep plum, rising bubbles behind the hero zone only, Nunito, and <b style="color:var(--gold)">one gold element per screen, maximum</b> — always that screen's single primary step.</p>
+      <p>Global rules the research sets for every screen: an 8pt spacing grid (16pt side margins, 24pt between sections, 12pt inside cards); one card style app-wide (16–20pt radius, flat plum fill, no border-plus-shadow stacking); titles ≤3 words, section headers ≤4, buttons 1–3 words, explanations ≤2 lines before a fold; touch targets ≥44pt iOS / 48dp Android; at most two sticky elements per screen; and the bubbles fade to flat by the first content card and pause under Reduce Motion. Hierarchy comes from scale, spacing and placement — only 2–3 type sizes per screen (NN/g, <a href="https://www.nngroup.com/articles/principles-visual-design/" target="_blank" rel="noopener">nngroup.com</a>).</p>
+    </header>
+
+    <div class="callout warn">
+      <h3>Read the research honestly — what could not be verified</h3>
+      <p>None of the comparable apps (Collectr, Dex, TCGplayer, Ludex, PictureThis, CoinIn, Discord, Reddit, Gmail, YouTube) were hands-on tested in a browser during the research; every claim rests on official help/docs pages, store listings, teardowns and reviews found via the web index on 2026-11-14, and exact current in-app layouts may differ. The Collectr five-tab description comes from a third-party clone template — indicative, not Collectr's official spec. Material 3 Expressive's “drawer no longer recommended” status is reported via a third-party summary, not read on Google's site directly. The purchase screen (§6b of the research) was covered only briefly and should get its own research pass before build. And “Talk to my agent” has no comparable-app pattern at all — its drawer placement is a reasoned recommendation, not a sourced pattern.</p>
+    </div>
+
+    <!-- ========= BINDER ========= -->
+    <div class="stage">
+      <div class="phone-col">
+        <div class="phone" aria-label="Mockup of the Real or Replica binder screen in the guided layout">
+          <div class="screen">
+            <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="scroll" style="padding-top:0">
+              <div class="bh">
+                <div class="r1"><b>My Binder ▾</b>
+                  <span class="viewseg" role="group" aria-label="Binder view">
+                    <button type="button" id="bvGrid" aria-pressed="true">Grid</button>
+                    <button type="button" id="bvBinder" aria-pressed="false">Binder</button>
+                    <button type="button" aria-pressed="false">List</button>
+                  </span>
+                </div>
+                <p class="sumline">128 cards · $1,240 · <b>3 need a second look</b></p>
+                <div class="r3">
+                  <span class="bsearch">Search your cards…</span>
+                  <button class="fchip" type="button">Sort</button>
+                  <button class="fchip" type="button">Filter</button>
+                </div>
+              </div>
+              <div class="covers" role="group" aria-label="Binders">
+                <button class="cover" type="button" aria-pressed="true">All cards</button>
+                <button class="cover" type="button" aria-pressed="false">Binder 1</button>
+                <button class="cover" type="button" aria-pressed="false">Binder 2</button>
+                <button class="cover" type="button" aria-pressed="false">+ New binder</button>
+              </div>
+              <div class="setrow">
+                <div class="lab"><span>Set completion</span><span>214 / 286 · 75%</span></div>
+                <div class="prog"><i style="width:75%"></i></div>
+              </div>
+              <div class="grid3" id="binderGrid">
+                <figure class="gtile"><div class="gphoto gp1"><span class="vpill ok">Likely Genuine</span></div><figcaption><b>Holo rare</b><span>$24.50</span></figcaption></figure>
+                <figure class="gtile"><div class="gphoto gp2"><span class="vpill warn">Inconclusive</span></div><figcaption><b>Reverse holo</b><span>$8.20</span></figcaption></figure>
+                <figure class="gtile"><div class="gphoto gp3"><span class="vpill ok">Likely Genuine</span></div><figcaption><b>Full art trainer</b><span>$61.00</span></figcaption></figure>
+                <figure class="gtile"><div class="gphoto gp4"><span class="vpill bad">Likely Counterfeit</span></div><figcaption><b>Gold star rare</b><span>$112.00</span></figcaption></figure>
+                <figure class="gtile"><div class="gphoto gp5"><span class="vpill ok">Likely Genuine</span></div><figcaption><b>Secret rare</b><span>$43.75</span></figcaption></figure>
+                <figure class="gtile"><div class="gphoto gp6"><span class="vpill ok">Likely Genuine</span></div><figcaption><b>Ultra rare EX</b><span>$18.90</span></figcaption></figure>
+              </div>
+              <div id="binderPage" hidden>
+                <div class="pockets">
+                  <span class="pocket full gp1"></span><span class="pocket full gp2"></span><span class="pocket full gp3"></span>
+                  <span class="pocket full gp4"></span><span class="pocket"></span><span class="pocket full gp5"></span>
+                  <span class="pocket full gp6"></span><span class="pocket"></span><span class="pocket full gp2"></span>
+                </div>
+                <p class="pagedots">● ○ ○ &nbsp;Page 1 of 12 — empty pockets are what's missing, not errors</p>
+              </div>
+            </div>
+            <nav class="tabbar" aria-label="Bottom navigation">
+              <button class="mtab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 11l8-7 8 7v9H4z"/></svg>Home</button>
+              <button class="mtab" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 16a3 3 0 013-3h11"/></svg>Binders</button>
+              <button class="mtab checktab" type="button"><span class="checkdot"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>Check</button>
+              <button class="mtab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><rect x="3" y="7" width="18" height="11" rx="5"/><path d="M8 12h.01M16 10.5v3M14.5 12h3"/></svg>Games</button>
+              <button class="mtab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Menu</button>
+            </nav>
+          </div>
+        </div>
+        <p class="tryhint">Try it: flip <b>Grid / Binder</b> in the header — the 9-pocket page is the delight mode; the grid is the working mode.</p>
+      </div>
+      <div class="notes">
+        <h2>Binders — the guided layout</h2>
+        <p><b>Comparables:</b> Dex (binder display mode + insight cards), Collectr (portfolio grid + filters), Ludex/CollX-style portfolio lists.</p>
+        <ul>
+          <li><b>Slim sticky header, ~96–110pt, collapsing on scroll:</b> binder name (tap = switcher sheet) + view toggle; then <b>one summary line only</b> — “128 cards · $1,240 · 3 need a second look”. Dex leads with a row of insight cards; here the full insights (verdict split, rarity breakdown, set rings) live on a separate Insights view reached from that line, not stacked on the binder.</li>
+          <li><b>Search + two chips only — Sort, Filter.</b> Dex's own release notes show the failure and the fix: binder controls “crowded the filter row” until Sort and Types each collapsed into a single chip that opens a sheet. Chips open sheets; never a wrapping row of six filters.</li>
+          <li><b>Grid: 3 columns, photo-first.</b> The photo fills the tile (cards are portrait — use the ratio), exactly two lines under it (name, price), and the verdict is a <b>small pill overlaid top-left with colour + word, never icon-only</b> — an icon-only verdict is an honesty failure for colour-blind users. Inconclusive cards get a findable treatment so “needs a second look” can be scanned for.</li>
+          <li><b>Binder view: paged 9-pocket pages (3×3), swipe to turn</b> — Dex's Binder Display Mode offers 4 / 9 / 12 / 16 pockets with 9 as default, saved per collection (<a href="https://dextcg.com/help/collection/binder-display-mode" target="_blank" rel="noopener">dextcg.com</a>). Empty pockets render as quiet empty sleeves.</li>
+          <li><b>Set completion is one quiet row</b> — thin bar + “214 / 286 · 75%”, shown when a set filter is active. Never a ring + bar + badge all three.</li>
+          <li><b>Card detail:</b> your own front/back photos first (swipe between them), verdict + date checked, price with source + date, grader entry point, and binder move/remove in an overflow menu — not buttons stacked on the photo.</li>
+        </ul>
+        <div class="callout">
+          <h3>Why it feels premium</h3>
+          <p>Photo-first, metadata-second — the grid reads as a binder, not a spreadsheet. Collectr's two-column tiles carry image, name, set, rarity, grade, quantity, price and change — investor density this app drops to name + price + verdict pill. One sticky slim header, a regular (never staggered) grid, and no floating scan button over the collection: scanning is the centre tab.</p>
+        </div>
+        <p><b>Avoid:</b> filter-chip sprawl; per-tile red/green price-change arrows (stock-ticker noise); multi-select checkboxes visible by default (Dex disables multi-select in Binder mode because it fights the binder illusion — long-press enters select mode instead); and never mix marketplace cards into “my binder” — it holds the user's own checked cards only.</p>
+      </div>
+    </div>
+
+    <!-- ========= CHECK FLOW + RESULT ========= -->
+    <div class="stage">
+      <div class="phone-col" style="position:static">
+        <div class="stackphones">
+          <div class="phone" aria-label="Mockup of the Real or Replica camera check flow">
+            <div class="screen">
+              <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="scroll">
+                <p class="stepind" id="capStepWord">Step <b>1 of 2</b> — Front</p>
+                <div class="capframe"><span class="cf-in" id="capFrameTxt">Card front goes here</span></div>
+                <p class="capinstr" id="capInstr">Fill the frame with the front</p>
+                <span class="qualpill">Good light ✓</span>
+                <button class="shutter" type="button" id="capNext" aria-label="Capture photo"></button>
+                <p style="text-align:center;font-size:12px;color:var(--ink-mute);font-weight:800;margin:0 0 4px" id="capBtnLabel">Tap the shutter — it steps you to the back</p>
+                <div class="capopts"><button type="button">Use a photo instead</button><span aria-hidden="true">·</span><button type="button">Torch</button></div>
+                <div class="tips3">
+                  <span>Flat, plain background</span>
+                  <span>Even light — no flash glare</span>
+                  <span>Front first, then the back</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="cap"><b>Capture.</b> One job per step, words not just dots, live quality feedback in plain words — “Too dark”, “Move closer”, “Glare — tilt the card slightly” — as a single pill, never a checklist on the camera screen.</p>
+          <div class="phone" aria-label="Mockup of the Real or Replica check result screen">
+            <div class="screen">
+              <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="scroll">
+                <div class="vhero">
+                  <p class="vname">Holo rare · English</p>
+                  <p class="vbig">Likely genuine</p>
+                  <p class="vreason">The print, colours and back all match a real card.</p>
+                  <p class="vconf">Strong signs</p>
+                </div>
+                <div class="pricecard">
+                  <span class="pl">Free market price</span>
+                  <div class="pv">$24.50</div>
+                  <span class="ps">TCGplayer Market · today</span>
+                  <div class="coinline">+5 coins for this check</div>
+                </div>
+                <p class="hsec">What we checked</p>
+                <div class="evlist">
+                  <button class="evrow" type="button"><span class="er1"><b>Rosette dot pattern</b><span class="st ok">Matches</span></span><span class="erd">Your photo crop sits beside the reference image here, zoomed on the dot pattern.</span></button>
+                  <button class="evrow" type="button"><span class="er1"><b>Card back colour</b><span class="st ok">Matches</span></span><span class="erd">The back's colour and copyright line match a genuine back.</span></button>
+                  <button class="evrow" type="button"><span class="er1"><b>Holo pattern</b><span class="st ok">Matches</span></span><span class="erd">The rainbow pattern moves the way a real holo does across your photos.</span></button>
+                  <button class="evrow" type="button"><span class="er1"><b>Edges &amp; texture</b><span class="st warn">Couldn't tell</span></span><span class="erd">Edge grooves and hand-feel can't be judged from a photo — the sweep says so instead of guessing.</span></button>
+                  <button class="evrow" type="button"><span class="er1"><b>Text &amp; fonts</b><span class="st ok">Matches</span></span><span class="erd">Name, card number, set and fonts all line up with the genuine card.</span></button>
+                </div>
+                <div class="nextcard">
+                  <b>What to do next</b>
+                  <button class="secbtn" type="button">Add to a binder</button>
+                  <button class="plainbtn" type="button">Grade its condition</button>
+                </div>
+                <button class="cta" type="button" style="margin-top:14px">Check another card</button>
+                <p class="rfoot"><button type="button">How checks work</button> · <button type="button">Tell us if this looks wrong</button><br />Saved to Binders · All checks ✓</p>
+              </div>
+            </div>
+          </div>
+          <p class="cap"><b>Result.</b> Verdict first, price second, evidence third — tap any evidence row to open it. Saved to your binder automatically, with a one-line confirmation instead of a save dialog.</p>
+        </div>
+      </div>
+      <div class="notes">
+        <h2>Check flow + result — the guided layout</h2>
+        <p><b>Comparables:</b> CoinIn (front-then-back, guide frame, price-range-first result), PictureThis (in-camera tips, comparison photos in the result), Google Lens (frame-as-instruction), Collectr's scanner (viewfinder corners).</p>
+        <ul>
+          <li><b>Two steps only, in words:</b> “Step 1 of 2 — Front” → “Step 2 of 2 — Back”, full-screen modal (tab bar and drawer hidden, ✕ top-left). A card-shaped guide frame with corner brackets and the outside dimmed — CoinIn's prominent guide does the same job for a round object (<a href="https://screensdesign.com/showcase/coinin-coin-scan-identifier" target="_blank" rel="noopener">screensdesign.com</a>).</li>
+          <li><b>One instruction line, ≤7 words</b>, changing with state; auto-capture when aligned and sharp, manual shutter (56–64pt) as fallback. Before the first capture only, a dismissible 3-tip mini-sheet — PictureThis puts photo tips in the camera view because they measurably help beginners get accurate matches (<a href="https://www.bitezine.com/reviews/picturethis-review" target="_blank" rel="noopener">bitezine.com</a>).</li>
+          <li><b>Analysing state names real stages</b> — “Checking print details… Checking the back… Looking up the price…” over your two photos side by side. Named stages build trust; a fake percentage does not. Over ~5 seconds, say so in words.</li>
+          <li><b>Result: verdict hero (~35% of screen)</b> — the verdict in the app's largest type, in the plain words Likely genuine / Likely counterfeit / Inconclusive, a one-sentence reason (≤15 words) under it, and confidence as a <b>word</b> (Strong signs / Some signs / Not enough to tell) — never a fake-precise “97.3% authentic” number.</li>
+          <li><b>Price second</b> — one number, source + freshness (“TCGplayer Market · today”), a range if sources spread. CoinIn's result puts the price range upfront, then listings, then detail — adopt that order.</li>
+          <li><b>Evidence rows — “What we checked”:</b> 4–6 tappable rows (tell name in plain words, a status word, your own photo crop zoomed beside a reference when opened). Rows expand in place, ≤2 lines collapsed.</li>
+          <li><b>Next steps are verdict-dependent and calm:</b> Genuine → Add to a binder (filled secondary, <b>not gold</b> — gold was spent on Check) + Grade its condition. Counterfeit → plain next steps, no alarm-red takeover. Inconclusive → exactly which photo to retake and why, with a Retake button that reopens only that step.</li>
+        </ul>
+        <div class="callout warn">
+          <h3>The cautionary tale</h3>
+          <p>PictureThis is the warning: never bury the verdict under price or an upsell, never paywall or blur the verdict or evidence behind Pro, and no upgrade prompt before the result is readable. Pro can gate history depth and exports — never the answer to “is it real?”. No countdowns or “credits running out” pressure on this screen, no rating prompt right after subscribing, no confetti for genuine and no shaming for counterfeit — the tone stays lab-calm in both directions.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========= GAMES ========= -->
+    <div class="stage">
+      <div class="phone-col">
+        <div class="phone" aria-label="Mockup of the Real or Replica games hub">
+          <div class="screen">
+            <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="scroll">
+              <div class="appbar">
+                <span class="atitle"><b>Games</b><span>Short games. New pull every day.</span></span>
+                <span class="chip" style="margin-left:auto"><b>240</b> coins</span>
+              </div>
+              <div class="daily">
+                <b>Today's pull is ready</b>
+                <span>One new pull a day · New pull at midnight</span>
+              </div>
+              <div class="gamegrid">
+                <button class="gt2" type="button"><span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg></span><b>Spot the Fake</b><span>Spot the fake in 10 cards</span><span>About 2 minutes</span><span class="gst">Best: 8 / 10</span></button>
+                <button class="gt2" type="button"><span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M12 3v18M7 8c0-2 2-3 5-3s5 1 5 3-2 2.5-5 3-5 1-5 3 2 3 5 3 5-1 5-3"/></svg></span><b>Price Guess</b><span>Guess the market price</span><span>About 1 minute</span><span class="gst">Played today ✓</span></button>
+                <button class="gt2" type="button"><span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 16a3 3 0 013-3h11"/></svg></span><b>Set Sleuth</b><span>Name the set from one card</span><span>About 2 minutes</span><span class="gst">Best: 6 / 10</span></button>
+                <button class="gt2" type="button"><span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M12 3l2.5 5.5L20 9.5l-4 4 1 6-5-2.8L7 19.5l1-6-4-4 5.5-1z"/></svg></span><b>Holo or No</b><span>Real holo pattern or fake?</span><span>About 1 minute</span><span class="gst">New</span></button>
+              </div>
+              <p class="hsec">Your coins</p>
+              <div class="earnrow"><span>Coins unlock extra pulls and grader reports</span><b>240</b></div>
+              <p class="hsec">Leaderboard preview</p>
+              <div class="lbrow"><span class="rk">4</span><span class="who">Alex</span><span>31 checks</span></div>
+              <div class="lbrow you"><span class="rk">5</span><span class="who">You</span><span>28 checks</span></div>
+              <div class="lbrow"><span class="rk">6</span><span class="who">Sam</span><span>25 checks</span></div>
+              <p class="rfoot"><button type="button">See leaderboard</button></p>
+            </div>
+            <nav class="tabbar" aria-label="Bottom navigation">
+              <button class="mtab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 11l8-7 8 7v9H4z"/></svg>Home</button>
+              <button class="mtab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 16a3 3 0 013-3h11"/></svg>Binders</button>
+              <button class="mtab checktab" type="button"><span class="checkdot"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>Check</button>
+              <button class="mtab" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><rect x="3" y="7" width="18" height="11" rx="5"/><path d="M8 12h.01M16 10.5v3M14.5 12h3"/></svg>Games</button>
+              <button class="mtab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Menu</button>
+            </nav>
+          </div>
+        </div>
+        <p class="tryhint">The hub is a <b>shelf, not a casino floor</b> — five tappable things on the first screen, and every tile states its time cost honestly.</p>
+      </div>
+      <div class="notes">
+        <h2>Games hub — the guided layout</h2>
+        <p><b>Comparables:</b> Duolingo (hub restraint, short sessions), Reddit's Games tab (a warning as much as a model), reward apps generally.</p>
+        <ul>
+          <li><b>Daily shelf first — one wide card:</b> today's featured game / daily pull with its state in words (“Today's pull is ready” / “Come back tomorrow”). A factual state, <b>never a ticking countdown</b> — if a time shows, it's text: “New pull at midnight”.</li>
+          <li><b>Game grid: 2 columns, 3–4 games.</b> Each tile: name (≤3 words), one-line description (≤6 words), an honest time cost (“About 2 minutes”), and a small status line. Duolingo's lesson economics are the model — 3–5 minute sessions that fit gaps in the day, with variety inside a session rather than dozens of doors (<a href="https://www.deconstructoroffun.com/blog/2025/4/14/duolingo-how-the-15b-app-uses-gaming-principles-to-supercharge-dau-growth" target="_blank" rel="noopener">deconstructoroffun.com</a>).</li>
+          <li><b>Rewards strip is one row</b> — your coins and what they actually do, in one sentence, linking to Rewards. No shop catalogue on the hub.</li>
+          <li><b>Leaderboard preview: at most 3 rows</b> — one above you, you, one below — with a “See leaderboard” text link. Never a full league table on the hub.</li>
+          <li><b>Games never interrupt the core job:</b> no game pop-ups after a check, no “play to continue” gates anywhere.</li>
+        </ul>
+        <p><b>Avoid:</b> Reddit promoted Games to a bottom tab in Dec 2025 — this app keeps the Games tab by the owner's call, which makes restraint inside the hub doubly important: the tab is the door, the hub must not also shout. No loot-box reveal choreography, no near-miss “so close — play again to win”, no expiring-coin warnings, no paid extra pulls pushed on the hub (they live inside the game-over screen as one quiet row, if anywhere), and no push bait like “Your pull is waiting!!” — one calm opt-in daily reminder, maximum.</p>
+      </div>
+    </div>
+
+    <!-- ========= GRADER ========= -->
+    <div class="stage">
+      <div class="phone-col">
+        <div class="phone" aria-label="Mockup of the Real or Replica condition grader flow">
+          <div class="screen">
+            <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="scroll">
+              <div class="gbar">
+                <button class="x" type="button" aria-label="Exit grader">✕</button>
+                <span class="gp"><span>Step 2 of 5</span><span class="progbar"><i style="width:40%"></i></span></span>
+                <span style="flex:none;width:38px"></span>
+              </div>
+              <h3 class="gq">Look at the four corners. What do you see?</h3>
+              <p class="ghint">Tap the closest match. The zoomed examples do the teaching — no grading jargon.</p>
+              <button class="optcard" type="button" aria-pressed="false" data-pick="Sharp, no whitening"><span class="sw gp3"></span><span><b>Sharp, no whitening</b><span>All four corners crisp</span></span></button>
+              <button class="optcard" type="button" aria-pressed="true" data-pick="Slight wear or whitening"><span class="sw gp2"></span><span><b>Slight wear or whitening</b><span>A corner or two shows white</span></span></button>
+              <button class="optcard" type="button" aria-pressed="false" data-pick="Rounded or dinged"><span class="sw gp4"></span><span><b>Rounded or dinged</b><span>Corners bent, rounded or creased</span></span></button>
+              <p class="l-status" id="graderStatus" role="status" style="text-align:left"></p>
+              <div class="nextcard">
+                <b>The estimate screen (step 5 lands here)</b>
+                <div class="estrow"><span>PSA</span><b>8–9</b></div>
+                <div class="estrow"><span>CGC</span><b>8.5–9</b></div>
+                <div class="estrow"><span>BGS</span><b>8.5</b></div>
+                <div class="estrow"><span>SGC</span><b>8–9</b></div>
+                <p style="font-size:12.5px;color:var(--ink-soft);margin:8px 0 0">Corners are holding this back. An estimate from photos — the company makes the final call.</p>
+              </div>
+            </div>
+            <div class="sticky">
+              <button class="cta" type="button">Next</button>
+            </div>
+          </div>
+        </div>
+        <p class="tryhint">Try it: tap an answer card — selection is a filled gold-outline state, one question per screen, progress always honest.</p>
+      </div>
+      <div class="notes">
+        <h2>Grader — the guided layout</h2>
+        <p><b>Comparables:</b> Typeform / Duolingo / Monzo one-question-per-screen wizards; grading-company criteria (PSA/CGC/BGS/SGC all grade centering, corners, edges, surface).</p>
+        <ul>
+          <li><b>Five steps, one question per screen, each fitting without scrolling.</b> Persistent slim top bar: ✕ (exit — progress is saved), “Step 2 of 5” in words + a thin bar, nothing else. Any flow of 3+ steps shows honest progress, a back path on every step, and answers that persist through back/forward. The primary button is pinned at the bottom, full-width.</li>
+          <li><b>The sequence:</b> S1 Photos (front + back — if launched from a check, the photos carry over and the screen says so) · S2 Corners · S3 Edges &amp; surface (with a tilt tip: surface flaws “can be invisible until you tilt the card under a light”) · S4 Centering — interactive, the app overlays a centering guide on your front photo; it's the most measurable criterion and the most common reason a clean card misses a 10, and it feels like a lab instrument, not a quiz · S5 Anything else? (creases, writing, stains — multi-select + “None of these”).</li>
+          <li><b>Step titles are questions in the user's words</b>, not database labels, and help text stays ≤20 words per screen — the photo examples inside the option cards do the teaching.</li>
+          <li><b>Estimate screen:</b> one row per company — PSA · CGC · BGS · SGC — each an estimated <b>range</b> in large type plus the limiting factor in one line. Grading works on four criteria (centering, corners, edges, surface) and “a card is held to the level of its weakest one” (<a href="https://www.shopbidz.app/guides/psa-grading-how-the-whole-process-works" target="_blank" rel="noopener">shopbidz.app</a>) — so always name the weakest link; a bare number teaches nothing. BGS-style sub-scores sit below as supporting evidence, then the plain disclaimer: “An estimate from photos — the company makes the final call.”</li>
+        </ul>
+        <p><b>Avoid:</b> one long scrolling form with every condition question (the exact pattern one-question flows beat); questions whose answers can't change the estimate (cut the step); a progress bar that stalls at 90% or invents extra steps; presenting the estimate as a guarantee or a single false-precise number; and never gating the estimate behind Pro <i>after</i> the user answered five steps — if grading depth is Pro, say so on the door, before Step 1.</p>
+      </div>
+    </div>
+
+    <!-- ========= REWARDS / LEADERBOARD / INVITE ========= -->
+    <div class="stage">
+      <div class="phone-col">
+        <div class="phone" aria-label="Mockup of the Real or Replica rewards, leaderboard and invite screens">
+          <div class="screen">
+            <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="scroll">
+              <div class="rseg" role="group" aria-label="Rewards screens">
+                <button type="button" aria-pressed="true" data-panel="panelRewards">Rewards</button>
+                <button type="button" aria-pressed="false" data-panel="panelBoard">Leaderboard</button>
+                <button type="button" aria-pressed="false" data-panel="panelInvite">Invite</button>
+              </div>
+              <div id="panelRewards">
+                <div class="balhero"><div class="bn">240</div><div class="bl">coins · Coins can't be exchanged for money</div></div>
+                <p class="hsec">Ways to earn</p>
+                <div class="earnrow"><span>Check a card</span><b>+5</b></div>
+                <div class="earnrow"><span>Daily pull</span><b>in the Games tab</b></div>
+                <div class="earnrow"><span>Friend's first check (Invite)</span><b>you both earn</b></div>
+                <p class="hsec">History</p>
+                <div class="earnrow"><span>Check — holo rare · today</span><b>+5</b></div>
+                <div class="earnrow"><span>Extra pull · yesterday</span><b class="neg">spent</b></div>
+                <div class="earnrow"><span>Check — reverse holo · yesterday</span><b>+5</b></div>
+                <p style="font-size:12.5px;color:var(--ink-mute);font-weight:700">A visible ledger is what separates a wallet from casino chips. Exact spend costs are shown in words on each spend row in the app — the research names the uses (extra pulls, grader reports) and leaves live amounts to the build, so none are invented here.</p>
+              </div>
+              <div id="panelBoard" hidden>
+                <div class="rseg" role="group" aria-label="Leaderboard scope">
+                  <button type="button" aria-pressed="true">Friends</button>
+                  <button type="button" aria-pressed="false">This week</button>
+                </div>
+                <div class="lbrow you"><span class="rk">5</span><span class="who">You — pinned</span><span>28 checks</span></div>
+                <div class="lbrow"><span class="rk">3</span><span class="who">Maya</span><span>36 checks</span></div>
+                <div class="lbrow"><span class="rk">4</span><span class="who">Alex</span><span>31 checks</span></div>
+                <div class="lbrow you"><span class="rk">5</span><span class="who">You</span><span>28 checks</span></div>
+                <div class="lbrow"><span class="rk">6</span><span class="who">Sam</span><span>25 checks</span></div>
+                <div class="lbrow"><span class="rk">7</span><span class="who">Jo</span><span>21 checks</span></div>
+                <p style="font-size:12.5px;color:var(--ink-mute);font-weight:700">The list centres on you — the people just ahead, not the top 0.1%. The metric is checks this week: effort, never spend.</p>
+              </div>
+              <div id="panelInvite" hidden>
+                <h3 class="gq" style="margin-top:2px">You both get coins when a friend checks their first card</h3>
+                <p class="ghint">The whole offer, readable without tapping anything: what you get, what they get, what they must do, and when it lands.</p>
+                <button class="cta" type="button">Share my invite</button>
+                <p class="hsec">How it works</p>
+                <div class="tips3">
+                  <span>1 · Share — the message is written in your voice, editable, code inside the link</span>
+                  <span>2 · Friend checks their first card</span>
+                  <span>3 · You both get coins</span>
+                </div>
+                <p class="hsec">Your invites</p>
+                <div class="earnrow"><span>Alex</span><b>Rewarded ✓</b></div>
+                <div class="earnrow"><span>Sam</span><b style="color:var(--ink-mute)">Invited</b></div>
+                <p style="font-size:12.5px;color:var(--ink-mute);font-weight:700">Open question, stated plainly: the research gives the wording pattern (“Give 50 coins, get 50 coins” as its example) but the app's live coin amounts aren't in the report — so this mockup promises the structure, not a number. The reward fires on the friend's first completed check, not on install or signup (see the guide).</p>
+              </div>
+            </div>
+            <nav class="tabbar" aria-label="Bottom navigation">
+              <button class="mtab" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 11l8-7 8 7v9H4z"/></svg>Home</button>
+              <button class="mtab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 16a3 3 0 013-3h11"/></svg>Binders</button>
+              <button class="mtab checktab" type="button"><span class="checkdot"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>Check</button>
+              <button class="mtab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><rect x="3" y="7" width="18" height="11" rx="5"/><path d="M8 12h.01M16 10.5v3M14.5 12h3"/></svg>Games</button>
+              <button class="mtab" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Menu</button>
+            </nav>
+          </div>
+        </div>
+        <p class="tryhint">Try it: flip <b>Rewards / Leaderboard / Invite</b> at the top of the phone — three drawer screens, one calm wallet.</p>
+      </div>
+      <div class="notes">
+        <h2>Rewards, leaderboard, invite — the guided layouts</h2>
+        <p><b>Comparables:</b> Duolingo leagues (small, similar-level, weekly), gamification research on leaderboard discouragement, Dropbox-style two-sided referrals, referral-screen teardowns.</p>
+        <ul>
+          <li><b>Rewards:</b> balance hero — one large number with the plain truth under it (what coins unlock; if they have no cash value, “Coins can't be exchanged for money” in the same card). Ways to earn: 3–4 rows, action in plain words + exact amount, no “up to X”. Ways to spend: exact costs, shortfall in words (“30 more coins”), never a buy-coins pop-up. Then the history ledger.</li>
+          <li><b>Leaderboard:</b> scope toggle Friends / This week (never a global all-time board by default), your row pinned, and the list centred on you — research is explicit that boards should show “users who are slightly ahead of them, not just the top 0.1%”, that friend boards beat global ones, and that weekly boards give everyone a fresh start (<a href="https://trophy.so/blog/how-to-add-gamification-to-your-app" target="_blank" rel="noopener">trophy.so</a>). Duolingo's leagues group ~30 similar-level users per week. The metric is effort (checks this week) — a coin-purchase metric on a leaderboard is a casino pattern.</li>
+          <li><b>Invite &amp; earn:</b> the screen must state, without tapping anything, what you get, what your friend gets, what they must do, and when the reward lands (<a href="https://screensdesign.com/articles/mobile-app-referral-program-examples/" target="_blank" rel="noopener">screensdesign.com</a>). One primary button — Share my invite — opening the native share sheet with an editable message in the user's voice and the code inside the link. Below: copyable code, the 3-step sequence, invite statuses in words, and the limits in plain text. Surface the ask after a success moment (a genuine verdict, a grader result), never as an interstitial at signup.</li>
+          <li><b>Store-policy flag:</b> Apple reviewers have objected to rewarding the invited person merely for downloading or registering; the safer construction — used here — is that both rewards fire on an in-app action, the friend's first completed check (<a href="https://warplink.app/blog/app-store-referral-rewards-rules" target="_blank" rel="noopener">warplink.app</a>).</li>
+          <li><b>Feedback timing:</b> rewards land visibly at the moment of earning — the one quiet “+5 coins” line on the Result screen — because delayed, invisible rewards kill repeat behaviour. One line, no coin-shower animation.</li>
+        </ul>
+        <div class="callout warn">
+          <h3>The casino line, explicitly</h3>
+          <p>No demotion or shame mechanics (Duolingo demotes its bottom five — do not copy it), no streak-loss threats, no expiring coins without a long, plainly-stated window, no mystery or variable rewards, no spin wheels, no near-miss copy, no paid leaderboard boosts, no public rank without opt-in. And don't over-reward the core loop: heavy extrinsic rewards can crowd out the intrinsic reason to check a card — coins stay small-denomination garnish, never the reason the verdict screen exists.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========= NAVIGATION + HOME/SIGN-IN RECAP ========= -->
+    <div class="notes" style="max-width:820px">
+      <h2>Navigation — the two dedicated build guides</h2>
+      <p><b>Bottom navigation (the bar).</b> Apple HIG allows 3–5 tabs on iPhone and Material 3 serves 3–5 destinations; NN/g's data (179 participants) found hidden navigation cut discoverability by over 20% and mobile tasks ran 15% slower than combo navigation, which was used 86% of the time on mobile vs 57% for hidden-only. Six slots at 390pt wide leaves ~65pt per slot — labels truncate below comfortable targets. So the bar is <b>5 visual slots, only 3 of them destination tabs</b>: Home · Binders · [Check — raised centre] · Games · Menu. “Upgrade” leaves the bar entirely (a tab bar is for navigation, not actions — and a permanent sales slot is a standing pressure trick); it becomes “Pro” inside Profile &amp; Settings and at genuine feature gates, never gold, never badged. “Tells” is renamed <b>“How checks work”</b> (subtitle: “The tells we look for”; on the Result screen it's linked as “Why this verdict?”).</p>
+      <p><b>The raised centre Check</b> is the category's proven shape: TikTok's and YouTube's centre Create buttons taught it to everyone, and Collectr — per a third-party template description, treated as indicative — puts its scanner in the centre of a five-slot bar (Portfolio, Search, Scan, Social, Shop). Spec: 56–60pt gold circle raised 12–16pt above the bar, “Check” label beneath, full centre slot as the tap target, press = slight sink, never disabled, never badged, never pulsing. Apple HIG says tab bars are for navigation, not actions — this is a deliberate, widely-shipped exception, justified because Check is the app's single gold primary action everywhere and is visually separated from the tabs so it never reads as a fourth tab. Never add a second action to the bar.</p>
+      <p><b>Active states &amp; badges:</b> active tab = filled icon + full-strength label; inactive ≈55–60% opacity; labels always shown on all five slots; re-tapping the active tab scrolls it to top; each tab keeps its own scroll position. Badges are rationed to near-zero: a dot only, never a count, allowed on Games only when today's pull is genuinely unclaimed — never on Menu, never red.</p>
+      <p><b>The drawer</b> is specified in the callout under the home phone above: modal, min(84%, 320pt), eight rows in three groups, tappable identity header with display-only balances, zero duplicated doors. Discord's engineers documented why: running a drawer and bottom tabs as two primary systems “violated Material Design guidelines… made the information hierarchy ambiguous” — the fix was exactly this split (<a href="https://canary.discord.com/blog/how-discord-made-android-in-app-navigation-easier" target="_blank" rel="noopener">discord.com</a>). NN/g's lesson is not “never hide anything” — it's “never hide the primary destinations”; this design hides only weekly-or-less destinations.</p>
+      <p><b>Home (guide applied to the phone above):</b> Collectr's home is a portfolio — one live total value, then lists (<a href="https://selfmadenewbie.com/collectr-app-review/" target="_blank" rel="noopener">selfmadenewbie.com</a>) — adapted as one wide collection card (value + Cards checked · Fakes caught · Needs a second look, the third stat a working door into filtered Binders), the gold Check directly under it, recent checks, then two equal half-width doors. No chart on Home v1 and no red/green gain-loss framing — that makes a collection feel like a casino ticker. Avoid the TCGplayer pattern (scanner buried in a store, marketplace noise above the collection) and the PictureThis pattern (articles, tips and upgrade prompts mixed into home). Exactly three visual weights on the first screen: collection card, gold button, everything else quiet.</p>
+      <p><b>Sign-in (guide applied to the phone above):</b> Google's branding guidelines require the Google button be at least as prominent as any other third-party option, with the standard multicolour G and an approved verb — “Continue” covers new and returning users without a fork (<a href="https://developers.google.com/identity/branding-guidelines" target="_blank" rel="noopener">developers.google.com</a>). If any third-party login is offered, Sign in with Apple must be an equivalent option at the same size and weight (Apple Guideline 4.8). The magic link email sends <b>both</b> a link and a short code — a link only works smoothly on the device that reads the email; a code can be typed anywhere. Ask late: first check as guest, sign-in at save-to-binder or the second check. No password field anywhere.</p>
+      <p><b>Purchase (guide §6b, brief pass):</b> reached only from a Pro door or a feature gate — never the app's first screen, never auto-presented after a check. 2–3 benefit rows tied to real features, plan cards with the full billed amount at least as prominent as any per-month maths, trial and renewal terms in plain words beside the CTA, Restore Purchases present, a visible “Not now” with an equal tap target and neutral wording (never confirmshaming), and “Cancel anytime — as easy as signing up.” RevenueCat's hard-paywall guidance reduces to the same skeleton (<a href="https://www.revenuecat.com/docs/playbooks/guides/hard-paywall" target="_blank" rel="noopener">revenuecat.com</a>) — this app uses a soft, dismissible version. The locked purchase phone at the top of this page already follows it.</p>
+
+      <h2>Never — the consolidated brand-conflict list</h2>
+      <ul>
+        <li><b>Countdown timers / fake urgency</b> anywhere (Games pull, paywall, invite) — the FTC names fake urgency as a dark pattern. State reset times as text instead.</li>
+        <li><b>Paywall before or over the verdict</b> — verdict + evidence are always free.</li>
+        <li><b>Confirmshaming</b> decline copy — neutral “Not now”, equal tap target.</li>
+        <li><b>Hidden renewal price</b>, per-month maths larger than the billed total, hard-to-cancel mazes, delayed or hidden paywall close buttons.</li>
+        <li><b>Always-on badges</b> and a badged Menu — one dot, Games only, genuinely unclaimed only.</li>
+        <li><b>False-precision confidence</b> (“97.3% authentic”) — words + evidence rows instead.</li>
+        <li><b>Demotion leagues, streak threats, mystery rewards</b>, and a permanent “Upgrade” tab or upsell in the drawer header.</li>
+        <li><b>Rewarding a friend's install</b> — store-risk; rewards fire on the first completed check.</li>
+      </ul>
+
+      <h2>Guide sources</h2>
+      <p>Per-screen design research read 2026-11-14 via web index (no hands-on app testing — see the caveat box above).</p>
+      <ul class="srcs">
+        <li>NN/g — Principles of Visual Design: <a href="https://www.nngroup.com/articles/principles-visual-design/" target="_blank" rel="noopener">nngroup.com/articles/principles-visual-design</a></li>
+        <li>Collectr app review (portfolio-first home): <a href="https://selfmadenewbie.com/collectr-app-review/" target="_blank" rel="noopener">selfmadenewbie.com/collectr-app-review</a></li>
+        <li>Dex — Binder Display Mode (official help): <a href="https://dextcg.com/help/collection/binder-display-mode" target="_blank" rel="noopener">dextcg.com/help/collection/binder-display-mode</a></li>
+        <li>Collectr template (five-slot bar, centre Scan — indicative): <a href="https://www.vibecodeapp.com/templates/collectr" target="_blank" rel="noopener">vibecodeapp.com/templates/collectr</a></li>
+        <li>PictureThis review: <a href="https://www.bitezine.com/reviews/picturethis-review" target="_blank" rel="noopener">bitezine.com/reviews/picturethis-review</a></li>
+        <li>CoinIn teardown: <a href="https://screensdesign.com/showcase/coinin-coin-scan-identifier" target="_blank" rel="noopener">screensdesign.com/showcase/coinin-coin-scan-identifier</a></li>
+        <li>PSA grading process &amp; criteria: <a href="https://www.shopbidz.app/guides/psa-grading-how-the-whole-process-works" target="_blank" rel="noopener">shopbidz.app/guides/psa-grading-how-the-whole-process-works</a></li>
+        <li>Duolingo gamification analysis: <a href="https://www.deconstructoroffun.com/blog/2025/4/14/duolingo-how-the-15b-app-uses-gaming-principles-to-supercharge-dau-growth" target="_blank" rel="noopener">deconstructoroffun.com</a></li>
+        <li>Gamification / leaderboard research: <a href="https://trophy.so/blog/how-to-add-gamification-to-your-app" target="_blank" rel="noopener">trophy.so/blog/how-to-add-gamification-to-your-app</a></li>
+        <li>Referral screen teardowns: <a href="https://screensdesign.com/articles/mobile-app-referral-program-examples/" target="_blank" rel="noopener">screensdesign.com/articles/mobile-app-referral-program-examples</a></li>
+        <li>App Store referral-reward rules: <a href="https://warplink.app/blog/app-store-referral-rewards-rules" target="_blank" rel="noopener">warplink.app/blog/app-store-referral-rewards-rules</a></li>
+        <li>Google Sign-in branding guidelines: <a href="https://developers.google.com/identity/branding-guidelines" target="_blank" rel="noopener">developers.google.com/identity/branding-guidelines</a></li>
+        <li>Sign in with Apple guide (Guideline 4.8): <a href="https://www.iossubmissionguide.com/sign-in-with-apple-guide" target="_blank" rel="noopener">iossubmissionguide.com/sign-in-with-apple-guide</a></li>
+        <li>Discord — making Android in-app navigation easier: <a href="https://canary.discord.com/blog/how-discord-made-android-in-app-navigation-easier" target="_blank" rel="noopener">canary.discord.com/blog</a></li>
+        <li>Material 3 drawer worked example: <a href="https://www.designlounge.live/p/m3-navigation-drawer" target="_blank" rel="noopener">designlounge.live/p/m3-navigation-drawer</a></li>
+        <li>RevenueCat — hard paywall playbook: <a href="https://www.revenuecat.com/docs/playbooks/guides/hard-paywall" target="_blank" rel="noopener">revenuecat.com/docs/playbooks/guides/hard-paywall</a></li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var state = { plan:'checks', checksQty:300, price:6.99, name:'Checks · 300 checks/month', sheetName:'Checks — 300 checks/month' };
+  var plans = document.querySelectorAll('.plan');
+  var cta = document.getElementById('ctaBtn');
+  var sumName = document.getElementById('sumName');
+  var sumPrice = document.getElementById('sumPrice');
+  var disclosure = document.getElementById('disclosure');
+  var checksPrice = document.getElementById('checksPrice');
+  var seg100 = document.getElementById('seg100');
+  var seg300 = document.getElementById('seg300');
+
+  function money(n){ return '$' + n.toFixed(2); }
+
+  function render(){
+    sumName.textContent = state.name;
+    sumPrice.textContent = money(state.price) + '/month';
+    cta.textContent = 'Subscribe — ' + money(state.price) + '/month';
+    disclosure.textContent = 'Renews automatically at ' + money(state.price) + '/month until cancelled. Cancel anytime in Google Play → Subscriptions; you keep access until the end of the paid month.';
+    checksPrice.textContent = money(state.checksQty === 300 ? 6.99 : 4.99);
+    seg100.setAttribute('aria-pressed', state.checksQty === 100 ? 'true' : 'false');
+    seg300.setAttribute('aria-pressed', state.checksQty === 300 ? 'true' : 'false');
+    plans.forEach(function(p){ p.setAttribute('aria-checked', p.getAttribute('data-plan') === state.plan ? 'true' : 'false'); });
+  }
+
+  function selectChecks(qty){
+    state.plan = 'checks';
+    state.checksQty = qty;
+    state.price = qty === 300 ? 6.99 : 4.99;
+    state.name = 'Checks · ' + qty + ' checks/month';
+    state.sheetName = 'Checks — ' + qty + ' checks/month';
+    render();
+  }
+
+  plans.forEach(function(p){
+    p.addEventListener('click', function(e){
+      var plan = p.getAttribute('data-plan');
+      if (plan === 'checks'){
+        if (e.target === seg100) { selectChecks(100); return; }
+        if (e.target === seg300 || (seg300.contains(e.target))) { selectChecks(300); return; }
+        if (seg100.contains(e.target)) { selectChecks(100); return; }
+        selectChecks(state.checksQty);
+      } else {
+        state.plan = plan;
+        state.price = parseFloat(p.getAttribute('data-price'));
+        state.name = p.getAttribute('data-name');
+        state.sheetName = p.getAttribute('data-name');
+        render();
+      }
+    });
+  });
+  plans.forEach(function(p){
+    p.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); p.click(); }
+    });
+  });
+  seg100.addEventListener('click', function(e){ e.stopPropagation(); selectChecks(100); });
+  seg300.addEventListener('click', function(e){ e.stopPropagation(); selectChecks(300); });
+
+  /* Play sheet */
+  var veil = document.getElementById('veil');
+  var sheet = document.getElementById('sheet');
+  var sheetMain = document.getElementById('sheetMain');
+  var sheetDone = document.getElementById('sheetDone');
+
+  function openSheet(){
+    document.getElementById('sheetPlan').textContent = state.sheetName;
+    document.getElementById('sheetPrice').textContent = money(state.price) + '/month';
+    sheetMain.hidden = false; sheetDone.hidden = true;
+    sheet.hidden = false;
+    veil.classList.add('open');
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ sheet.classList.add('open'); }); });
+  }
+  function closeSheet(){
+    veil.classList.remove('open'); sheet.classList.remove('open');
+    setTimeout(function(){ sheet.hidden = true; }, 300);
+  }
+  cta.addEventListener('click', openSheet);
+  veil.addEventListener('click', closeSheet);
+  document.getElementById('cancelBtn').addEventListener('click', closeSheet);
+  document.getElementById('confirmBtn').addEventListener('click', function(){
+    document.getElementById('doneText').textContent = state.name + ' — ' + money(state.price) + '/month. Google Play emails your receipt with an Order ID for this purchase and each renewal.';
+    sheetMain.hidden = true; sheetDone.hidden = false;
+  });
+  document.getElementById('doneBtn').addEventListener('click', closeSheet);
+  document.getElementById('manageBtn').addEventListener('click', closeSheet);
+
+  document.getElementById('gSignIn').addEventListener('click', function(){
+    document.getElementById('signinNote').textContent = 'Signed in with Google — your plans and free checks now follow this account.';
+  });
+
+  /* Home tab bar */
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      t.setAttribute('aria-pressed','true');
+    });
+  });
+  document.getElementById('homeCheck').addEventListener('click', function(){
+    tabs.forEach(function(x){ x.setAttribute('aria-pressed', x.textContent.trim() === 'Check' ? 'true' : 'false'); });
+  });
+
+  /* Slide-out side menu (drawer) */
+  var drawer = document.getElementById('homeDrawer');
+  var scrim = document.getElementById('drawerScrim');
+  var tabMenuBtn = document.getElementById('tabMenuBtn');
+  var drawerStatus = document.getElementById('drawerStatus');
+  function openDrawer(){
+    drawer.classList.add('open'); scrim.classList.add('open');
+    drawer.setAttribute('aria-hidden','false'); tabMenuBtn.setAttribute('aria-expanded','true');
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open'); scrim.classList.remove('open');
+    drawer.setAttribute('aria-hidden','true'); tabMenuBtn.setAttribute('aria-expanded','false');
+  }
+  tabMenuBtn.addEventListener('click', openDrawer);
+  document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+  scrim.addEventListener('click', closeDrawer);
+  drawer.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeDrawer(); });
+  document.querySelectorAll('.drawer-item').forEach(function(item){
+    item.addEventListener('click', function(){
+      var go = item.getAttribute('data-go');
+      document.querySelectorAll('.drawer-item').forEach(function(x){ x.removeAttribute('aria-current'); });
+      if (item.closest('.drawer-nav')) item.setAttribute('aria-current','page');
+      drawerStatus.textContent = '';
+      closeDrawer();
+    });
+  });
+  /* swipe in from the left edge of the home phone / swipe left to close */
+  var touchX = null;
+  var homeScreen = drawer.closest('.screen');
+  homeScreen.addEventListener('touchstart', function(e){ touchX = e.changedTouches[0].clientX; }, { passive:true });
+  homeScreen.addEventListener('touchend', function(e){
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    var rect = homeScreen.getBoundingClientRect();
+    var startFromEdge = (touchX - rect.left) < 28;
+    if (!drawer.classList.contains('open') && startFromEdge && dx > 55) openDrawer();
+    if (drawer.classList.contains('open') && dx < -55) closeDrawer();
+    touchX = null;
+  }, { passive:true });
+
+  /* Sign-in screen */
+  var lStatus = document.getElementById('lStatus');
+  document.getElementById('lGoogle').addEventListener('click', function(){ lStatus.textContent = 'Signed in with Google — welcome back.'; });
+  document.getElementById('lEmail').addEventListener('click', function(){ lStatus.textContent = 'Check your inbox — link expires in 15 minutes. A short code is in the same email, if you would rather type it.'; });
+  document.getElementById('lPhone').addEventListener('click', function(){ lStatus.textContent = 'Code sent by text — enter it to finish.'; });
+  document.getElementById('lGuest').addEventListener('click', function(){ lStatus.textContent = 'Looking around as a guest — sign in anytime to keep your plans.'; });
+  document.getElementById('lApple').addEventListener('click', function(){ lStatus.textContent = 'Signed in with Apple — welcome.'; });
+  document.getElementById('lPhoneToggle').addEventListener('click', function(){
+    var f = document.getElementById('phoneForm');
+    var open = f.hidden;
+    f.hidden = !open;
+    this.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  /* Guide-section screens */
+  document.getElementById('proDismiss').addEventListener('click', function(){ document.getElementById('proRow').style.display = 'none'; });
+  document.getElementById('drawerHead').addEventListener('click', function(e){
+    if (e.target.id === 'drawerClose') return;
+    drawerStatus.textContent = 'Profile & Settings opens here in the app.';
+  });
+  document.getElementById('homeCheckTab').addEventListener('click', function(){
+    document.querySelector('.standard .phone .scroll').scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* Binder view toggle */
+  var bvG = document.getElementById('bvGrid'), bvB = document.getElementById('bvBinder');
+  if (bvG && bvB){
+    bvG.addEventListener('click', function(){
+      bvG.setAttribute('aria-pressed','true'); bvB.setAttribute('aria-pressed','false');
+      document.getElementById('binderGrid').hidden = false; document.getElementById('binderPage').hidden = true;
+    });
+    bvB.addEventListener('click', function(){
+      bvB.setAttribute('aria-pressed','true'); bvG.setAttribute('aria-pressed','false');
+      document.getElementById('binderGrid').hidden = true; document.getElementById('binderPage').hidden = false;
+    });
+  }
+
+  /* Capture flow steps */
+  var capStep = 1;
+  var capBtn = document.getElementById('capNext');
+  if (capBtn){
+    capBtn.addEventListener('click', function(){
+      capStep = capStep === 1 ? 2 : 1;
+      document.getElementById('capStepWord').innerHTML = capStep === 1 ? 'Step <b>1 of 2</b> — Front' : 'Step <b>2 of 2</b> — Back';
+      document.getElementById('capInstr').textContent = capStep === 1 ? 'Fill the frame with the front' : 'Front ✓ — now the back, same frame';
+      document.getElementById('capFrameTxt').textContent = capStep === 1 ? 'Card front goes here' : 'Card back goes here';
+      document.getElementById('capBtnLabel').textContent = capStep === 1 ? 'Tap the shutter — it steps you to the back' : 'Back captured in the app — analysing starts';
+    });
+  }
+
+  /* Result evidence accordion */
+  document.querySelectorAll('.evrow').forEach(function(r){
+    r.addEventListener('click', function(){ r.classList.toggle('open'); });
+  });
+
+  /* Grader option cards */
+  document.querySelectorAll('.optcard').forEach(function(o){
+    o.addEventListener('click', function(){
+      document.querySelectorAll('.optcard').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      o.setAttribute('aria-pressed','true');
+      var s = document.getElementById('graderStatus');
+      if (s) s.textContent = 'Picked: ' + o.getAttribute('data-pick') + ' — tap Next in the app to continue.';
+    });
+  });
+
+  /* Rewards / Leaderboard / Invite switcher */
+  document.querySelectorAll('.rseg button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.rseg button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      ['panelRewards','panelBoard','panelInvite'].forEach(function(id){ document.getElementById(id).hidden = true; });
+      document.getElementById(b.getAttribute('data-panel')).hidden = false;
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
