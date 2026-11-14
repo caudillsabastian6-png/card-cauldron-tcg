@@ -2006,6 +2006,228 @@ body.cc-paused .lab-bg i, body.cc-paused .lab-bubbles i{animation-play-state:pau
 .p2-drill p{margin:8px 0 2px;}
 </style>
 
+<style id="lab-arcane-look">
+/* ================================================================
+   LAB — ARCANE LOOK (Nov 14, owner-directed)
+   The whole front end in the one Arcane Lab skin: calm deep-plum
+   ground, quiet rising-bubble dressing, clean rounded panels,
+   hierarchy by contrast, gold ONLY on the action moment.
+   The neon grid canvas (#ccScrollBg) and the floating photo layer
+   (#ccScrollImages) are retired by this sheet alone — no JS was
+   touched; both layers are pure decoration and can be restored by
+   deleting these two rules. Presentation only: no behavior,
+   handler, flow or stored data changes anywhere in this pass.
+   ================================================================ */
+body.neon{
+  --border:#433254; --gold:var(--lab-gold); --gold-deep:var(--lab-gold-2);
+  background:#1C1322;
+}
+#ccScrollBg{display:none !important;}
+#ccScrollImages{display:none !important;}
+
+/* quiet dressing: the selectable background patterns, on-palette */
+body.neon .op-bg::after{
+  background-image:
+    radial-gradient(circle, rgba(155,111,224,.10) 0 3px, transparent 4px),
+    radial-gradient(circle, rgba(232,199,102,.07) 0 2px, transparent 3px),
+    radial-gradient(circle, rgba(124,77,189,.12) 0 4px, transparent 5px),
+    radial-gradient(circle, rgba(247,242,255,.05) 0 2px, transparent 3px);
+}
+body.neon .op-bg[data-bg="stars"]::after{
+  background-image:
+    radial-gradient(circle, rgba(247,242,255,.45) 0 1.2px, transparent 2px),
+    radial-gradient(circle, rgba(232,199,102,.35) 0 1px, transparent 1.8px),
+    radial-gradient(circle, rgba(155,111,224,.30) 0 1.4px, transparent 2.2px);
+}
+body.neon .op-bg[data-bg="embers"]::after{
+  background-image:
+    radial-gradient(circle, rgba(232,199,102,.20) 0 3px, transparent 5px),
+    radial-gradient(circle, rgba(201,162,39,.16) 0 5px, transparent 7px),
+    radial-gradient(circle, rgba(155,111,224,.12) 0 4px, transparent 6px);
+}
+body.neon .op-bg[data-bg="waves"]::after{
+  background-image:
+    radial-gradient(ellipse 65% 15%, rgba(124,77,189,.14) 60%, transparent 100%),
+    radial-gradient(ellipse 75% 17%, rgba(58,34,96,.20) 60%, transparent 100%);
+}
+body.neon .op-bg[data-bg="mist"]::after{
+  background-image:
+    radial-gradient(ellipse 42% 18%, rgba(155,111,224,.10) 55%, transparent 100%),
+    radial-gradient(ellipse 42% 18%, rgba(232,199,102,.06) 55%, transparent 100%);
+}
+body.neon .logo-glow{
+  background:radial-gradient(circle, rgba(155,111,224,.10) 0%, rgba(124,77,189,.05) 45%, transparent 70%);
+}
+
+/* panels: one quiet voice — plum surfaces, soft shadow, no glow */
+body.neon .card, body.neon .band, body.neon .entry, body.neon .cc-qcard,
+body.neon .field, body.neon .chat-bubble, body.neon .cc-lb{
+  background:linear-gradient(180deg, rgba(58,34,96,.55), rgba(42,23,69,.72));
+  border-color:var(--lab-line);
+  box-shadow:0 12px 26px rgba(0,0,0,.5);
+}
+body.neon .band-grape, body.neon .band-teal, body.neon .band-navy{border-color:var(--lab-line);}
+body.neon .gold-box{
+  background:rgba(201,162,39,.05); border-color:rgba(201,162,39,.35);
+  box-shadow:0 12px 26px rgba(0,0,0,.5);
+}
+body.neon .gold-frame{
+  box-shadow:0 12px 26px rgba(0,0,0,.55);
+}
+body.neon .binder-head{box-shadow:0 8px 20px rgba(0,0,0,.45);}
+body.neon .cat-tile{
+  border:1.5px solid var(--lab-line);
+  box-shadow:0 8px 18px rgba(0,0,0,.45);
+}
+
+/* buttons: one plum family; gold stays the action (lab-btn / b-gold) */
+body.neon .bubble-btn, body.neon .b-pink, body.neon .b-brightpink,
+body.neon .b-red, body.neon .b-lemon, body.neon .b-lime,
+body.neon .b-sky, body.neon .b-white{
+  background:linear-gradient(180deg, rgba(58,34,96,.88), rgba(42,23,69,.94));
+  border:1.5px solid var(--lab-line);
+  box-shadow:0 8px 20px rgba(0,0,0,.5);
+  color:var(--lab-ink); text-shadow:0 2px 5px rgba(0,0,0,.9);
+}
+body.neon .bubble-btn:active{box-shadow:0 3px 10px rgba(0,0,0,.6);}
+body.neon .b-gold{box-shadow:0 8px 20px rgba(0,0,0,.55);}
+body.neon .b-gold:active{box-shadow:0 3px 10px rgba(0,0,0,.6);}
+
+/* chrome: top row, menu, profile bubble, dock, pills, fields */
+body.neon #opTopRow{background:rgba(28,19,34,.88); box-shadow:0 2px 12px rgba(0,0,0,.5);}
+body.neon .op-menupanel{
+  background:rgba(28,19,34,.97); border-color:var(--lab-line);
+  box-shadow:0 12px 30px rgba(0,0,0,.55);
+}
+body.neon .op-profilebubble{
+  background:rgba(42,23,69,.88); border:1.5px solid var(--lab-purple);
+  box-shadow:0 8px 20px rgba(0,0,0,.5);
+}
+body.neon .op-coins{color:var(--lab-gold-2); text-shadow:none;}
+body.neon .dock{
+  background:linear-gradient(180deg, rgba(42,23,69,.94), rgba(28,19,34,.97));
+  border-top:1.5px solid var(--lab-line);
+  box-shadow:0 -10px 28px rgba(0,0,0,.6);
+}
+body.neon .dock button.on{
+  background:rgba(201,162,39,.14);
+  box-shadow:inset 0 0 0 1.5px rgba(201,162,39,.5);
+}
+body.neon .dock button.on .tx{color:var(--lab-gold-2);}
+body.neon .icon-btn{
+  background:linear-gradient(180deg, rgba(58,34,96,.88), rgba(42,23,69,.94));
+  border-color:var(--lab-line); box-shadow:0 6px 16px rgba(0,0,0,.5);
+}
+body.neon .pill{
+  background:rgba(42,23,69,.88); border-color:var(--lab-line); box-shadow:none;
+}
+body.neon .pill.sample{
+  background:var(--lab-gold); color:var(--lab-plum); border-color:transparent; box-shadow:none;
+}
+body.neon .op-field input, body.neon .op-field select, body.neon .op-field textarea{
+  background:rgba(28,19,34,.85); border-color:var(--lab-line); box-shadow:none;
+}
+body.neon .demo-banner{
+  background:linear-gradient(180deg,#3A2260,#2A1745);
+  color:var(--lab-ink); box-shadow:0 4px 14px rgba(0,0,0,.4);
+}
+#opLoginGate{background:linear-gradient(180deg,#2A1745,#1C1322) !important;}
+#ccGateAcct{border-top-color:#433254 !important;}
+#ccFreeCheckNote{color:var(--lab-gold-2) !important;}
+
+/* decorative bubble clusters: muted ghosts, motion untouched */
+.decor i{opacity:.30; filter:saturate(.3);}
+
+/* hero: a quiet banner — no sway, no glow, gentle plum settle */
+body.neon .top-banner{
+  animation:none; position:relative; aspect-ratio:2.35/1;
+  border-color:rgba(201,162,39,.25);
+  box-shadow:0 10px 24px rgba(0,0,0,.55);
+}
+body.neon .top-banner video, body.neon .top-banner img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+body.neon .top-banner::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg, rgba(42,23,69,.20), transparent 42%, rgba(28,19,34,.48));
+}
+
+/* the card box: gold frame stays, the glow goes */
+body.neon .frame{
+  border-color:var(--lab-gold);
+  box-shadow:0 0 0 2px rgba(0,0,0,.6), 0 12px 26px rgba(0,0,0,.5);
+}
+body.neon .frame .corner{filter:none;}
+
+/* verdict + state furniture: same words, calmer dress */
+body.neon .verdict-pill{
+  background:rgba(201,162,39,.12); border:1.5px solid rgba(201,162,39,.45);
+  box-shadow:none; color:var(--lab-gold-2);
+}
+body.neon .grade-chip{box-shadow:none;}
+body.neon .hero-badge{box-shadow:0 14px 30px rgba(0,0,0,.45);}
+body.neon .meter i.on{
+  background:rgba(201,162,39,.14); border:2px solid var(--lab-gold); box-shadow:none;
+}
+body.neon .dots i.done{background:var(--lab-gold); box-shadow:none;}
+body.neon .score-track{
+  background:#241536; box-shadow:inset 0 0 0 1px var(--lab-line);
+}
+body.neon .score-track i{background:linear-gradient(90deg, var(--lab-gold), var(--lab-gold-2));}
+body.neon .timerbar{box-shadow:inset 0 0 0 1px var(--lab-line);}
+body.neon .timerbar i{background:linear-gradient(90deg, var(--lab-gold-2), var(--lab-gold)); box-shadow:none;}
+body.neon .timerbar.blue i{background:linear-gradient(90deg, var(--lab-purple-bright), var(--lab-gold-2));}
+body.neon .trail-stop .ball{box-shadow:0 8px 18px rgba(0,0,0,.45);}
+body.neon .match-card{box-shadow:0 6px 14px rgba(0,0,0,.5);}
+body.neon .match-card.done{
+  background:rgba(87,255,176,.10); border-color:rgba(87,255,176,.4);
+  box-shadow:0 6px 14px rgba(0,0,0,.5);
+}
+body.neon .mystery-ball{
+  border-color:var(--lab-purple-bright);
+  box-shadow:0 10px 22px rgba(0,0,0,.5), inset 0 0 14px rgba(124,77,189,.18);
+}
+body.neon .mystery-ball.star{
+  border-color:var(--lab-gold); background:rgba(201,162,39,.18);
+  box-shadow:0 10px 22px rgba(0,0,0,.5);
+}
+body.neon .mystery-ball.good{
+  border-color:rgba(87,255,176,.55); background:rgba(87,255,176,.12);
+  box-shadow:0 10px 22px rgba(0,0,0,.5);
+}
+body.neon .mystery-ball.miss{
+  border-color:rgba(255,122,200,.4); background:rgba(255,122,200,.08);
+  box-shadow:0 10px 22px rgba(0,0,0,.5);
+}
+body.neon .chat-bubble.mine{
+  background:linear-gradient(180deg, var(--lab-gold-2), var(--lab-gold));
+  color:var(--lab-plum); box-shadow:0 8px 20px rgba(0,0,0,.5);
+}
+body.neon .chat-bubble.mine b{color:var(--lab-plum);}
+body.neon .chat-avatar{border-color:var(--lab-purple); box-shadow:none;}
+body.neon .p2-strip, body.neon .p2-shop-row{box-shadow:0 8px 18px rgba(0,0,0,.45);}
+body.neon #capContinuePop, body.neon #rewardsOpenPop, body.neon #rewardsGamePop{
+  background:#241536 !important; border-color:var(--lab-line) !important;
+}
+
+/* Part 3: the standard check-includes element (result surfaces) */
+.lab-inc-row{
+  display:flex; justify-content:space-between; align-items:baseline; gap:16px;
+  margin-top:12px; padding-top:12px; border-top:1px solid var(--lab-line);
+}
+.lab-inc-lab{font-weight:900; font-size:15px;}
+.lab-inc-val{
+  font-weight:800; font-size:13px; color:var(--lab-gold-2);
+  text-align:right; white-space:nowrap;
+}
+
+/* leftover old-gold inline borders (popups, leaderboard card) → lab line */
+[style*="f0b23e"]{border-color:var(--lab-line) !important;}
+/* brand watermark: present, but quiet */
+body.neon .logo-wrap img{
+  opacity:.22; filter:drop-shadow(0 0 14px rgba(124,77,189,.25));
+}
+</style>
 </head>
 <body class="neon">
 <div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first. A name or Guest stays on this device only — it just remembers a name so the top bubble shows who is signed in. A real account is optional, further down: it can save your checks, only with your agreement.</p><label class="op-field" style="width:100%;max-width:320px">Display name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Name and Guest are local only — not real accounts.</p><div id="ccGateAcct" style="width:100%;max-width:320px;border-top:1px solid #3a2c12;padding-top:12px;margin-top:4px;"><p style="font-weight:800;">Have a Card Cauldron account?</p><p class="small dim">Sign in with your account to save your checks (with your agreement, asked next). New here? Create a free account.</p><label class="op-field" style="width:100%;">Username <input type="text" id="ccGateUser" placeholder="Account username" autocomplete="username"></label><label class="op-field" style="width:100%;">Password <input type="password" id="ccGatePass" placeholder="Account password" autocomplete="current-password"></label><button type="button" class="bubble-btn b-gold" style="width:100%;text-align:center;justify-content:center" onclick="ccGateAcctLogin()"><span style="display:block;width:100%;text-align:center">Sign in with account</span></button><button type="button" class="bubble-btn b-white" style="width:100%;text-align:center;justify-content:center;margin-top:8px;" onclick="ccGateAcctRegister()"><span style="display:block;width:100%;text-align:center">Create account</span></button><p class="small" id="ccGateAcctMsg" role="status"></p></div></div>
@@ -2037,7 +2259,7 @@ window.opGateLogin = function(){
 <div class="op-bg" aria-hidden="true"></div>
 <div class="lab-bg" aria-hidden="true"><i style="left:6%;width:14px;height:14px;background:#7C4DBD;animation-duration:11s;animation-delay:-2s;"></i><i style="left:16%;width:22px;height:22px;background:#9B6FE0;animation-duration:13s;animation-delay:-7s;"></i><i style="left:28%;width:12px;height:12px;background:#7C4DBD;animation-duration:9s;animation-delay:-4s;"></i><i style="left:41%;width:18px;height:18px;background:#C9A227;animation-duration:14s;animation-delay:-9s;"></i><i style="left:53%;width:10px;height:10px;background:#9B6FE0;animation-duration:10s;animation-delay:-1s;"></i><i style="left:64%;width:20px;height:20px;background:#7C4DBD;animation-duration:12s;animation-delay:-6s;"></i><i style="left:74%;width:13px;height:13px;background:#9B6FE0;animation-duration:9.5s;animation-delay:-3s;"></i><i style="left:83%;width:16px;height:16px;background:#7C4DBD;animation-duration:13.5s;animation-delay:-8s;"></i><i style="left:91%;width:11px;height:11px;background:#C9A227;animation-duration:10.5s;animation-delay:-5s;"></i><i style="left:97%;width:15px;height:15px;background:#9B6FE0;animation-duration:12.5s;animation-delay:-10s;"></i></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
-<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="agent"><span>🤖 Talk to My Agent</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #28 · Nov 4, 2026</p></div>
+<div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-check-start="1"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="agent"><span>🤖 Talk to My Agent</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #28 · Nov 4, 2026</p></div>
 <div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your pet"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
@@ -2078,33 +2300,23 @@ window.opGateLogin = function(){
       <p style="font-size:18px;font-weight:800;margin-top:8px;" id="ccFreeCheckHeading">10 free checks to start</p>
       <p class="small dim" style="margin-top:4px;" id="homePoolNote">Full app: 10 free checks to start, 5 more on the 1st of every month. Here they count down — and restart at empty so you can watch it work.</p>
       <p class="small" id="ccFreeCheckNote" aria-live="polite" style="margin-top:6px;font-weight:800;color:#ffd76a;"></p>
-      <button type="button" class="lab-btn" data-nav="picker" style="margin-top:12px;">BREW MY RESULT</button>
+      <button type="button" class="lab-btn" data-check-start="1" style="margin-top:12px;">BREW MY RESULT</button>
       <p class="small dim center" style="margin-top:8px;">Sample walkthrough — front photo, back photo, plus an optional light test</p>
     </div>
 
-    <div class="band band-teal mt">
-      <h3>What can we check?</h3>
-      <p class="sub2">Six kinds of treasure — tap one. Every check starts in the picker.</p>
-      <div class="cat-grid" id="homeCatGrid"></div>
-    </div>
-
+    
     <div class="toggle-row">
-      <div>
- <h2>Hi there!</h2>
-        <p class="lead" style="margin-top:4px;">Got a card you're wondering about?</p>
-      <div class="card" style="margin-top:10px;background:#1b2a4a;border-color:#38bdf8;"><p style="font-weight:900;margin:0;">🫧 Juno's reminder: <span id="junoReminder">sleeves before the binder, always.</span></p></div>
-      </div>
-      <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle pop sounds">🔊</button>
+            <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle pop sounds">🔊</button>
     </div>
 
     <div class="band band-navy mt-lg">
  <h3>Your shortcuts</h3>
       <div class="stack" style="margin-top:14px;">
-        <button type="button" class="bubble-btn b-sky" data-nav="picker"><span>🫧 Check something</span><span class="sub">Pick a category, follow the photo steps</span></button>
+        <button type="button" class="bubble-btn b-sky" data-check-start="1"><span>🫧 Check something</span><span class="sub">Front photo, back photo, then the signs</span></button>
         <button type="button" class="bubble-btn b-white small" data-nav="batch"><span>🗂️ Pip's Batch Check</span><span class="sub">Line up to 5 cards, checked in one pass</span></button>
         <button type="button" class="bubble-btn b-pink" data-nav="binders"><span>📒 My Binders</span><span class="sub">A look around the binders — sample cards inside</span></button>
         <button type="button" class="bubble-btn b-white small" data-nav="lightLearn"><span>💡 Lens's Light Test</span></button>
-        <button type="button" class="bubble-btn b-sky" data-nav="agent"><span>🤖 Talk to My Agent</span><span class="sub">Chat with your own AI, running on your own machine</span></button><button type="button" class="bubble-btn b-sky" data-nav="games"><span>🎮 Mini Games</span><span class="sub">9 bubbly crew games — tap in and play</span></button>
+        <button type="button" class="bubble-btn b-sky" data-nav="agent"><span>🤖 Talk to My Agent</span><span class="sub">Chat with your own AI, running on your own machine</span></button><button type="button" class="bubble-btn b-sky" data-nav="games"><span>🎮 Mini Games</span><span class="sub">Five bubbly crew games — tap in and play</span></button>
       </div>
       <p class="sub2 center" style="margin-top:12px;">Games are just for fun — scores are bragging rights for this visit only, never touching free checks.</p>
     </div>
@@ -2125,7 +2337,7 @@ window.opGateLogin = function(){
 
     <p class="center mt" style="font-weight:700;">Bringing a friend? <button type="button" class="backlink" data-nav="invite" style="align-self:center;min-height:32px;">Invite &amp; Earn — you both get +10 free checks →</button></p>
 
-    <img src="assets/sweep/app/explore-hero.webp" alt="" aria-hidden="true" style="width:100%;border-radius:16px;display:block;margin:10px 0;">
+    
     <div class="band band-teal mt">
  <h3>Card Condition Grader</h3>
       <p class="sub2" id="condBandLine">Scan front and back — it grades corners, edges, surface and centering, Mint to Damaged. Condition only — it never calls a card real or fake.</p>
@@ -2140,7 +2352,7 @@ window.opGateLogin = function(){
       <div class="trail" aria-hidden="false">
         <svg viewBox="0 0 340 120" preserveAspectRatio="none" aria-hidden="true"><path d="M 30 78 C 90 30, 140 96, 200 52 C 250 18, 290 44, 322 34" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="6 8"/></svg>
         <div class="trail-stops">
-          <button type="button" class="trail-stop" data-nav="picker" aria-label="Pop Trail: check something — opens the category picker"><span class="ball" style="display:flex !important;align-items:center;justify-content:center;width:70px;height:70px;min-width:70px;min-height:70px;border-radius:50%;opacity:1 !important;visibility:visible !important;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#38bdf8 58%,#38bdf8 100%);border:2.5px solid #ffffff;box-shadow:0 8px 18px rgba(0,0,0,.5),inset 0 -8px 14px rgba(0,0,0,.22);font-size:30px;line-height:1;position:relative;z-index:3;">🃏</span><span class="lbl">Check</span></button>
+          <button type="button" class="trail-stop" data-check-start="1" aria-label="Pop Trail: check something — starts the Pokemon card check"><span class="ball" style="display:flex !important;align-items:center;justify-content:center;width:70px;height:70px;min-width:70px;min-height:70px;border-radius:50%;opacity:1 !important;visibility:visible !important;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#38bdf8 58%,#38bdf8 100%);border:2.5px solid #ffffff;box-shadow:0 8px 18px rgba(0,0,0,.5),inset 0 -8px 14px rgba(0,0,0,.22);font-size:30px;line-height:1;position:relative;z-index:3;">🃏</span><span class="lbl">Check</span></button>
           <button type="button" class="trail-stop" data-nav="binders" style="margin-top:18px;" aria-label="Pop Trail: go to My Binders"><span class="ball" style="display:flex !important;align-items:center;justify-content:center;width:70px;height:70px;min-width:70px;min-height:70px;border-radius:50%;opacity:1 !important;visibility:visible !important;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#ff6b9d 58%,#ff6b9d 100%);border:2.5px solid #ffffff;box-shadow:0 8px 18px rgba(0,0,0,.5),inset 0 -8px 14px rgba(0,0,0,.22);font-size:30px;line-height:1;position:relative;z-index:3;animation-delay:.5s;">📒</span><span class="lbl">Binders</span></button>
           <button type="button" class="trail-stop" data-nav="games" style="margin-top:4px;" aria-label="Pop Trail: go to Mini Games"><span class="ball" style="display:flex !important;align-items:center;justify-content:center;width:70px;height:70px;min-width:70px;min-height:70px;border-radius:50%;opacity:1 !important;visibility:visible !important;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#ffd93d 58%,#ffd93d 100%);border:2.5px solid #ffffff;box-shadow:0 8px 18px rgba(0,0,0,.5),inset 0 -8px 14px rgba(0,0,0,.22);font-size:30px;line-height:1;position:relative;z-index:3;animation-delay:1s;">🎮</span><span class="lbl">Games</span></button>
           <button type="button" class="trail-stop" data-nav="plan" style="margin-top:20px;" aria-label="Pop Trail: go to Checks and Plan"><span class="ball" style="display:flex !important;align-items:center;justify-content:center;width:70px;height:70px;min-width:70px;min-height:70px;border-radius:50%;opacity:1 !important;visibility:visible !important;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#7fe37f 58%,#7fe37f 100%);border:2.5px solid #ffffff;box-shadow:0 8px 18px rgba(0,0,0,.5),inset 0 -8px 14px rgba(0,0,0,.22);font-size:30px;line-height:1;position:relative;z-index:3;animation-delay:1.5s;">📋</span><span class="lbl">Plan</span></button>
@@ -2161,7 +2373,7 @@ window.opGateLogin = function(){
     <div class="card mt">
  <h3 style="font-size:18px;">Plain words</h3>
       <p class="small" style="font-weight:700;color:var(--dim);margin-top:2px;">Wick's idea 🕯️</p>
-      <p class="lead" style="font-size:16px;margin-top:8px;" id="plainCardText1">Words around your check get simpler — shorter sentences, everyday words, hard words explained or left out. Only explaining words change; picker, plan and sample verdict switch.</p>
+      <p class="lead" style="font-size:16px;margin-top:8px;" id="plainCardText1">Words around your check get simpler — shorter sentences, everyday words, hard words explained or left out. Only explaining words change; plan and sample verdict switch.</p>
       <p class="small dim" style="margin-top:8px;" id="plainCardText2">Your verdict words never change, in either mode: Likely Genuine, Likely Counterfeit, and Inconclusive stay word-for-word. In the full app, your device remembers your choice.</p>
       <button type="button" class="bubble-btn b-white small mt" id="plainBtn">Turn on Plain words</button>
       <p class="small dim center" style="margin-top:10px;">Plain-Words Mode by Wick 🕯️</p>
@@ -2170,27 +2382,11 @@ window.opGateLogin = function(){
     <p class="small dim center mt-lg">This is the public demo of <strong>Real or Replica</strong> by Card Cauldron TCG. The full app — real checks, real binders, your own account — opens at launch.</p>
   </section>
 
-  <!-- ================= CATEGORY PICKER ================= -->
-  <section class="screen" id="scr-picker">
-    <div class="decor" aria-hidden="true"><i style="width:70px;height:70px;top:8%;right:-16px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#38bdf8 55%);"></i><i style="width:44px;height:44px;bottom:20%;left:-10px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#ffd93d 55%);animation-delay:1.4s;"></i></div>
-    <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2 style="line-height:1.35;">Check a card here — see if your card is real or fake <span class="pill sample">SAMPLE</span></h2>
-    <div class="cc-purpose" role="note" aria-label="What this check does">
-      <h3>What this check does</h3>
-      <p>You take a front photo and a back photo of your card. This demo walks you through those steps and shows you the signs we look at — the print, the texture, and the small details — compared against real cards we have scanned and labelled ourselves.</p>
-      <p><strong>Honest status:</strong> our checker opens lane by lane, and most lanes are still in their final blind test. A saved check gets a result that shows its work — and today, most results are the honest answer, <strong>Inconclusive</strong>. One result can speak now: if your photo exactly matches a photo our owner has already designated as a fake, the check says <strong>Likely Counterfeit</strong> and shows you why. Nothing here is ever a guarantee — a result is an evidence-based opinion, not a grade or a certificate.</p>
-      <p><strong>Your checks, saved:</strong> with a free account and your agreement, your checks save to your account so you can see them again under Profile / Settings → Your checks. No account, no agreement — nothing is saved to an account.</p>
-    </div>
-    <div class="stack mt" id="pickerList"></div>
-
-    <p class="small dim center mt" id="pickerFoot">Every pick works the same way: front photo, back photo, then the signs — step by step. Saved checks get a result that shows its work; a card that cannot be called yet comes back Inconclusive.</p>
-  </section>
-
   <!-- ================= CAPTURE ================= -->
   <section class="screen" id="scr-capture">
     <div class="decor" aria-hidden="true"><i style="width:60px;height:60px;top:10%;right:-14px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#ff6b9d 55%);"></i></div>
-    <button type="button" class="backlink" id="capBack">← Pick a category</button>
-    <p class="small" style="font-weight:900;color:var(--dim);" id="capMeta">Pick a category to start</p>
+    <button type="button" class="backlink" id="capBack">← Home</button>
+    <p class="small" style="font-weight:900;color:var(--dim);" id="capMeta">Your Pokémon card check</p>
     <ol class="lab-steps" id="capSteps" aria-label="Recipe steps"></ol>
     <h2 id="capTitle" style="margin-top:4px;">First photo</h2>
     <p class="lead" style="margin-top:8px;" id="capGuide"></p>
@@ -2348,14 +2544,14 @@ window.opGateLogin = function(){
       <p class="small dim" style="margin-top:10px;">The Light Test, taught by Lens 🔎</p>
     </div>
     <div class="stack mt-lg">
-      <button type="button" class="bubble-btn b-sky" data-nav="picker"><span>🫧 Try it in the demo check steps</span><span class="sub">Pick Pokémon Card — the light test is offered after the back photo</span></button>
+      <button type="button" class="bubble-btn b-sky" data-check-start="1"><span>🫧 Try it in the demo check steps</span><span class="sub">The light test is offered after the back photo</span></button>
       
     </div>
   </section>
 
   <!-- ================= BATCH CHECK ================= -->
   <section class="screen" id="scr-batch">
-    <button type="button" class="backlink" data-nav="picker">← Pick a category</button>
+    <button type="button" class="backlink" data-nav="home">← Home</button>
     <p class="small" style="font-weight:900;color:var(--dim);">Pip's Batch Check 🦊</p>
     <h2 style="margin-top:4px;">Line up your cards</h2>
     <p class="lead" style="margin-top:8px;" id="batchIntro">Up to 5 cards — say, one binder page — checked in one pass. Batching saves trips, never standards: every card gets its own category pick, its own front AND back photos, its own photo-quality gate, its own identity match, and its own signed verdict on its own record. No shared verdicts, no shortcuts.</p>
@@ -2508,13 +2704,22 @@ window.opGateLogin = function(){
       <p class="lead" style="font-size:16.5px;margin-top:4px;">Lens 🔎 ✍️ · Gauge 📏 ✍️</p>
       <p class="small dim" style="margin-top:10px;">Honest note: this is a sample receipt in a demo. No photos were checked to produce it. In the full app, verdicts are evidence-based opinions from your photos — not a grading service, authentication certificate, or guarantee.</p>
     </div>
+
+    <div class="card mt lab-inc">
+      <p style="font-weight:800;">What every check brings</p>
+      <div class="lab-inc-row"><span class="lab-inc-lab">Market price</span><span class="lab-inc-val">Free with every check</span></div>
+      <p class="small dim" style="margin-top:6px;">This example: <strong>Not priced yet.</strong> A price only shows when it comes from a real market record — nothing is ever made up.</p>
+      <div class="lab-inc-row"><span class="lab-inc-lab">Grade estimate</span><span class="lab-inc-val">Paid add-on</span></div>
+      <p class="small dim" style="margin-top:6px;">A grade estimate is not part of the free check. It comes with the Grading plan, as its own add-on.</p>
+      <button type="button" class="bubble-btn b-white small" data-nav="plan" style="margin-top:10px;"><span>See the Grading plan</span><span class="sub">On the Upgrade page</span></button>
+    </div>
         <div class="p2-strip" id="p2VerdictStripSample" hidden>
       <img id="p2VerdictPetSample" alt="Your pet companion">
       <p id="p2VerdictLineSample"></p>
     </div>
     <div class="stack mt-lg">
       <button type="button" class="bubble-btn b-gold" data-nav="sampleReceipt"><span>See what the checkers saw</span><span class="sub">The receipt — every tell, in plain words</span></button>
-      <button type="button" class="bubble-btn b-sky small" data-nav="picker">Check another card</button>
+      <button type="button" class="bubble-btn b-sky small" data-check-start="1">Check another card</button>
       <button type="button" class="backlink center" data-nav="home" style="align-self:center;">Back home</button>
     </div>
   </section>
@@ -2538,12 +2743,21 @@ window.opGateLogin = function(){
       <p class="lead" style="font-size:16.5px;margin-top:4px;">A checker for printed cards, proven in a blind test on scanner pairs — 399 of 400 printed fakes caught, 3 false alarms in 120. It speaks only for that family and that capture path. A verdict is an evidence-based opinion from measurements — not a grade, not a certificate, never a guarantee.</p>
       <p class="small dim" style="margin-top:10px;" id="psLaneMeta"></p>
     </div>
+
+    <div class="card mt lab-inc">
+      <p style="font-weight:800;">What every check brings</p>
+      <div class="lab-inc-row"><span class="lab-inc-lab">Market price</span><span class="lab-inc-val">Free with every check</span></div>
+      <p class="small dim" style="margin-top:6px;">This card: <strong>Not priced yet.</strong> A price only shows when it comes from a real market record — nothing is ever made up.</p>
+      <div class="lab-inc-row"><span class="lab-inc-lab">Grade estimate</span><span class="lab-inc-val">Paid add-on</span></div>
+      <p class="small dim" style="margin-top:6px;">A grade estimate is not part of the free check. It comes with the Grading plan, as its own add-on.</p>
+      <button type="button" class="bubble-btn b-white small" data-nav="plan" style="margin-top:10px;"><span>See the Grading plan</span><span class="sub">On the Upgrade page</span></button>
+    </div>
         <div class="p2-strip" id="p2VerdictStripLane" hidden>
       <img id="p2VerdictPetLane" alt="Your pet companion">
       <p id="p2VerdictLineLane"></p>
     </div>
     <div class="stack mt-lg">
-      <button type="button" class="bubble-btn b-sky small" data-nav="picker">Check another card</button>
+      <button type="button" class="bubble-btn b-sky small" data-check-start="1">Check another card</button>
       <button type="button" class="backlink center" data-nav="home" style="align-self:center;">Back home</button>
     </div>
   </section>
@@ -2582,6 +2796,15 @@ window.opGateLogin = function(){
     </div>
     <div class="peach-box mt">
       <p class="lead" style="font-size:16px;">When a real check finds worries, they show up here as soft-peach <strong>⚑ Flag</strong> notes with plain-words explanations — never alarm colors, never jargon.</p>
+    </div>
+    
+    <div class="card mt lab-inc">
+      <p style="font-weight:800;">What every check brings</p>
+      <div class="lab-inc-row"><span class="lab-inc-lab">Market price</span><span class="lab-inc-val">Free with every check</span></div>
+      <p class="small dim" style="margin-top:6px;">This example: <strong>Not priced yet.</strong> A price only shows when it comes from a real market record — nothing is ever made up.</p>
+      <div class="lab-inc-row"><span class="lab-inc-lab">Grade estimate</span><span class="lab-inc-val">Paid add-on</span></div>
+      <p class="small dim" style="margin-top:6px;">A grade estimate is not part of the free check. It comes with the Grading plan, as its own add-on.</p>
+      <button type="button" class="bubble-btn b-white small" data-nav="plan" style="margin-top:10px;"><span>See the Grading plan</span><span class="sub">On the Upgrade page</span></button>
     </div>
     <p class="small dim mt">Sample receipt from the public demo. Real receipts in the full app are written from your own photos by both checkers, and a verdict is an evidence-based opinion — not a guarantee.</p>
     <div class="stack mt"><button type="button" class="bubble-btn b-white small" data-nav="home">Back home</button></div>
@@ -2637,7 +2860,7 @@ window.opGateLogin = function(){
     </div>
 
     <div class="card mt-lg" id="binderTracker"><p class="small dim">Session tracker loads on the games shelf.</p></div>
-    <div class="stack mt-lg"><button type="button" class="bubble-btn b-sky" data-nav="picker"><span>🫧 Check a card</span></button></div>
+    <div class="stack mt-lg"><button type="button" class="bubble-btn b-sky" data-check-start="1"><span>🫧 Check a card</span></button></div>
   </section>
 
   <!-- ================= PLAN ================= -->
@@ -3091,7 +3314,7 @@ window.opGateLogin = function(){
   </main>
 
   <nav class="dock" aria-label="Quick hop">
-    <button type="button" data-nav="picker" data-dock="check"><span class="ic" aria-hidden="true">🫧</span><span class="tx">Check</span></button>
+    <button type="button" data-check-start="1" data-dock="check"><span class="ic" aria-hidden="true">🫧</span><span class="tx">Check</span></button>
     <button type="button" data-nav="binders" data-dock="binders"><span class="ic" aria-hidden="true">📒</span><span class="tx">Binders</span></button>
     <button type="button" data-nav="games" data-dock="games"><span class="ic" aria-hidden="true">🎮</span><span class="tx">Games</span></button>
     <button type="button" data-nav="plan" data-dock="plan"><span class="ic" aria-hidden="true">📋</span><span class="tx">Upgrade</span></button>
@@ -3402,28 +3625,15 @@ var CATEGORIES = [
 ];
 var VARCLASS = { sky:"b-sky", pink:"b-pink", lemon:"b-lemon", lime:"b-lime", gold:"b-gold", white:"b-white" };
 
-/* home category strip */
-(function(){
-  var grid = $("homeCatGrid"), html = "";
-  CATEGORIES.forEach(function(c){
-    html += '<button type="button" class="cat-tile '+VARCLASS[c.variant]+'" data-nav="picker" aria-label="'+c.label+' category — opens the category picker"><span class="t">'+c.icon+' '+c.label+'</span><span class="s">'+c.short+'</span></button>';
-  });
-  grid.innerHTML = html;
-})();
-/* picker list — one distinct bubble button per category */
-(function(){
-  var list = $("pickerList"), html = "";
-  CATEGORIES.forEach(function(c, i){
-    if(c.comingSoon){ html += '<button type="button" class="bubble-btn '+VARCLASS[c.variant]+'" disabled aria-disabled="true" style="opacity:.55;" aria-label="'+c.label+' — coming soon, not ready yet"><span>'+c.icon+' '+c.label+' — Coming soon</span><span class="sub">Not ready yet — tap another kind for now</span></button>'; }
-    else { var _sub = c.stepsLine + (c.label==="Pokémon Card" ? " · ⭐ Most verified pool" : ""); html += '<button type="button" class="bubble-btn '+VARCLASS[c.variant]+(i===0?' cc-flagship-kind':'')+'" data-cat="'+i+'" aria-label="Check a '+c.label+'"><span>'+c.icon+' '+c.label+'</span><span class="sub">'+_sub+'</span></button>'; if(i===0){ html += '<button type="button" class="cc-batchline" data-nav="batch">🗂️ Check up to 5 cards at once →</button>'; } }
-  });
-  list.innerHTML = html;
-  list.addEventListener("click", function(e){
-    var b = e.target.closest("[data-cat]");
-    if(!b) return;
-    startCapture(CATEGORIES[parseInt(b.getAttribute("data-cat"),10)]);
-  });
-})();
+/* home category strip — REMOVED (Arcane Look pass, Nov 14): the category
+   picker is retired (owner scope cut: Pokemon cards only). Check entry
+   points start the Pokemon card check directly — see the
+   [data-check-start] listener near the end of this file. */
+
+/* picker list — REMOVED (Arcane Look pass, Nov 14): the picker screen is
+   retired with the category system. CATEGORIES stays as data (saved
+   checks + the capture flow read it); only entry [0], Pokemon Card, is
+   reachable now, via startCapture(CATEGORIES[0]). */
 
 /* ================= capture flow (demo) ================= */
 var capCat = null, capStep = 0, capHas = false;
@@ -3450,7 +3660,7 @@ function renderCaptureStep(){
   $("capEmpty").classList.remove("hidden");
   $("capGot").textContent = "";
   $("capNext").classList.add("hidden");
-  $("capBack").textContent = capStep===0 ? "← Pick a category" : "← "+capCat.steps[capStep-1].cap;
+  $("capBack").textContent = capStep===0 ? "← Home" : "← "+capCat.steps[capStep-1].cap;
   var _pop = $("capContinuePop"); if(_pop) { _pop.hidden = true; _pop.style.display = "none"; }
   if(capStep===0 && !poolOptinAsked){ try{ poolOptinShow(function(){}); }catch(e){} }
   /* Upload #12: camera opens by itself when the step appears. No tap
@@ -3817,7 +4027,7 @@ function renderMyScans(){
 $("gateScanAnother").addEventListener("click", function(){
   popSnd();
   if(capCat){ startCapture(capCat); }
-  else show("picker");
+  else show("home");
 });
 /* ================= burst capture (owner order, Oct 31) =================
    One shutter tap = THREE quick shots, ~0.3s apart, from the live camera
@@ -3959,7 +4169,7 @@ $("capNext").addEventListener("click", function(){
 });
 $("capBack").addEventListener("click", function(){
   popSnd(); capStopLive();
-  if(capStep===0) show("picker");
+  if(capStep===0) show("home");
   else { capStep--; renderCaptureStep(); }
 });
 
@@ -4134,14 +4344,6 @@ var PW_TEXT = {
     normal: "Scan front and back — it grades corners, edges, surface and centering, Mint to Damaged. Condition only — it never calls a card real or fake.",
     plain: "Its own section and its own page. Take a photo of the front and back. We grade the card's shape: corners, edges, surface, and centering. Mint down to Damaged. It never says if a card is real or fake."
   },
-  pickerIntro: {
-    normal: "Pick the thing in your hand — each kind gets its own photo steps, so the checkers know what they're looking at. No scan-anything button, on purpose.",
-    plain: "Pick what you have first. Each kind needs its own photos. This helps the checkers know what to look at. You must pick first."
-  },
-  pickerFoot: {
-    normal: "Every pick works the same way: front photo, back photo, then the signs — step by step. Saved checks get a result that shows its work; a card that cannot be called yet comes back Inconclusive.",
-    plain: "The check works the same for all kinds. Front photo, then back photo, then the signs. Saved checks get a result that shows its work. If we cannot call a card yet, the answer is Inconclusive."
-  },
   planPoolText: {
     normal: "10 Real checks to start, then 5 fresh checks every month. No deep measurement, no Grade. Unused checks never roll over.",
     plain: "10 Real checks to start. Then 5 more checks every month. No deep measurement, no Grade. Unused checks never roll over."
@@ -4151,8 +4353,8 @@ var PW_TEXT = {
     plain: "What we found: in this sample, the print, the shine pattern, and the letters all match a real card.<br>What it's based on: both checkers looked at the front and the back, one tell at a time.<br>What it can't tell you: it is an opinion from photos — not a grade, and not a promise."
   },
   plainCardText1: {
-    normal: "Words around your check get simpler — shorter sentences, everyday words, hard words explained or left out. Only explaining words change; picker, plan and sample verdict switch.",
-    plain: "When this is on, we use short, simple words. Hard words are explained or left out. Only the words around your check change. Try it: the picker, the plan, and the sample verdict all switch."
+    normal: "Words around your check get simpler — shorter sentences, everyday words, hard words explained or left out. Only explaining words change; plan and sample verdict switch.",
+    plain: "When this is on, we use short, simple words. Hard words are explained or left out. Only the words around your check change. Try it: the plan and the sample verdict both switch."
   },
   plainCardText2: {
     normal: "Your verdict words never change, in either mode: Likely Genuine, Likely Counterfeit, and Inconclusive stay word-for-word. In the full app, your device remembers your choice.",
@@ -18921,7 +19123,7 @@ if (typeof document !== "undefined") (function () {
           "No — a demo account is local only: no password, no server, and nothing here saves to an account. The only thing that ever leaves your phone is a photo pair you say yes to sharing with the pool.",
           "§2 + §7"),
         QA("Where do I start a check?",
-          "Start at the category picker — tap Check and tell us what kind of treasure you've got. Each kind asks for its own photos, so picking right there saves retakes later.",
+          "Tap Check and the Pokémon card check starts right away — front photo, back photo, then the signs, step by step.",
           "§3")
       ]
     },
@@ -18932,7 +19134,7 @@ if (typeof document !== "undefined") (function () {
       guide: "First things first — what are we looking at today? Tap the kind of treasure you've got. 🫧 Each kind asks for its own photos, so picking right here saves retakes later.",
       questions: [
         QA("What kinds of things can I check?",
-          "The picker lists the kinds of treasures this app can walk through — Pokémon cards and other collectible cards among them. Each kind has its own photo steps, matched to what the checkers need to see.",
+          "The check covers Pokémon cards. Front photo, back photo, then the signs — the photo steps are matched to what the checkers need to see.",
           "§2 + §3"),
         QA("I have a Pokémon card — which do I pick?",
           "Pick the Pokémon card kind. Its steps are a front photo, then a back photo — and Pokémon cards also get an optional Light Test along the way, which you can always skip.",
@@ -24384,7 +24586,7 @@ function ccBuildOverlays(){
   document.getElementById("ccStageMenuPause").addEventListener("click", function(){ ccCloseStageMenu(); ccPauseGame(true); });
   document.getElementById("ccStageMenuGames").addEventListener("click", function(){ ccCloseStageMenu(); ccExitStage(); if(typeof window.show === "function") window.show("games"); });
   document.getElementById("ccStageMenuHome").addEventListener("click", function(){ ccCloseStageMenu(); ccExitStage(); if(typeof window.show === "function") window.show("home"); });
-  document.getElementById("ccStageMenuCheck").addEventListener("click", function(){ ccCloseStageMenu(); ccExitStage(); if(typeof window.show === "function") window.show("picker"); });
+  document.getElementById("ccStageMenuCheck").addEventListener("click", function(){ ccCloseStageMenu(); ccExitStage(); if(typeof window.startCapture === "function" && window.CATEGORIES) window.startCapture(window.CATEGORIES[0]); });
   document.getElementById("ccStageMenuRefer").addEventListener("click", function(){ ccCloseStageMenu(); ccExitStage(); if(typeof window.show === "function") window.show("invite"); });
   document.getElementById("ccInstrClose").addEventListener("click", function(){ ccCloseInstr(); });
   document.getElementById("ccInstrPlay").addEventListener("click", function(){
@@ -26930,5 +27132,20 @@ window.ccSpruceBow = function(mount, opts){
 };
 </script>
 
+
+<script>
+/* ARCANE LOOK PASS (Nov 14) — check entry points.
+   The category picker is retired (owner scope cut: Pokemon cards only).
+   Every [data-check-start] control starts the existing Pokemon card
+   check flow directly — the same startCapture(CATEGORIES[0]) the old
+   Pokemon Card tile invoked. The capture flow itself is untouched. */
+document.addEventListener("click", function(e){
+  var t = e.target.closest("[data-check-start]");
+  if(!t) return;
+  var mp = document.getElementById("opMenuPanel"); if(mp) mp.hidden = true;
+  if(window.popSnd) popSnd();
+  if(window.startCapture && window.CATEGORIES) startCapture(CATEGORIES[0]);
+});
+</script>
 </body>
 </html>
