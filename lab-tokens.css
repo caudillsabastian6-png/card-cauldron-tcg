@@ -1,0 +1,68 @@
+/* ================================================================
+   CARD CAULDRON TCG — SHARED ARCANE LAB TOKENS (Phase 2, Nov 2026)
+   One token sheet for the whole site, mirroring the app's Lab sheet
+   (demo-1 lab-phase1). Values:
+     plum ground #2A1745 · deep plum #1B0E30 · cauldron purple
+     #7C4DBD · soft purple #A678E8 · gold #C9A227 — GOLD IS RESERVED
+     for the action moment / the seal, never decoration.
+     soft peach #FFB26B — kindness/comfort surfaces ONLY.
+   Type: Nunito (rounded). Spacing rhythm: 4 / 8 / 16 / 24 / 32 / 48 / 64.
+   Loaded BEFORE each page's own <style>, so page styles still win
+   ties — pages adopt the tokens by referencing the variables.
+   ================================================================ */
+:root{
+  --lab-plum:#2A1745;
+  --lab-plum-deep:#1B0E30;
+  --lab-purple:#7C4DBD;
+  --lab-purple-soft:#A678E8;
+  --lab-gold:#C9A227;
+  --lab-gold-ink:#241A02;
+  --lab-ink:#F7F2FF;
+  --lab-body:#E9DFFB;
+  --lab-muted:#CBBCE9;
+  --lab-line:#43325F;
+  --lab-surface:#3A2260;
+  --lab-card:#F4EDFF;
+  --lab-peach:#FFB26B;        /* kindness/comfort surfaces only */
+  --lab-peach-bg:rgba(255,178,107,.16);
+  --lab-peach-line:rgba(255,178,107,.35);
+  --s1:4px; --s2:8px; --s3:16px; --s4:24px; --s5:32px; --s6:48px; --s7:64px;
+  --font-lab:"Nunito","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+
+/* Body copy across the site speaks Nunito now (the Lab voice).
+   Display headings keep each page's face until the post-Dec-4 pass. */
+body{font-family:var(--font-lab);}
+
+/* Retired headline habits (crew polish round, Nov 13): the tracked
+   all-caps eyebrow string and the single-italic-gold-word headline.
+   Eyebrows become quiet sentence-case labels; headline <em> is just
+   part of the sentence again. */
+.num{font-family:var(--font-lab);text-transform:none;letter-spacing:.01em;
+  font-weight:800;font-size:14px;}
+h1 em,h2 em{font-style:normal;color:inherit;}
+
+/* ---------- homepage hero bubble field ----------
+   Background dressing ONLY: the field sits behind the hero copy,
+   the spotlight video and every card photo, and never crosses them.
+   Motion is background dressing; reduced-motion stills it. */
+.lab-bubbles{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+.lab-bubbles i{position:absolute;bottom:-48px;left:var(--x,50%);
+  width:var(--s,26px);height:var(--s,26px);border-radius:50%;
+  background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.5),rgba(166,120,232,.20) 55%,rgba(124,77,189,.10));
+  border:1px solid rgba(214,188,255,.35);
+  animation:labRise var(--d,12s) linear infinite;animation-delay:var(--dl,0s);}
+@keyframes labRise{
+  0%{transform:translateY(0);opacity:0;}
+  8%{opacity:.85;}
+  92%{opacity:.7;}
+  100%{transform:translateY(-96vh);opacity:0;}
+}
+/* On this site's homepage the hero already layers its art at
+   negative z (bg −3, shade −2) inside an isolated stacking
+   context — the bubble field joins at −1: above the shade,
+   below every word, button and card photo, always. */
+.hero .lab-bubbles{z-index:-1;}
+@media (prefers-reduced-motion: reduce){
+  .lab-bubbles i{animation:none;opacity:.35;}
+}

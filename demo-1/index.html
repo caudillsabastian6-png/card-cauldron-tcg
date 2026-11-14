@@ -12,9 +12,9 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/cinzeldecorative/v19/daaHSScvJGqLYhG8nNt8KPPswUAPniZQa9lESTE.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/alegreya/v41/4UaBrEBBsBhlBjvfkSLhx6g.woff2" />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet" />
-<title>Real or Replica — Public Demo (Upscale Build, staged)</title>
+<title>Real or Replica — Public Demo</title>
 <link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#0b0908" />
+<meta name="theme-color" content="#1C1322" />
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
@@ -1782,6 +1782,7 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <script id="cc2713FontInsurance">
 /* CC-27.13 font insurance: pull every declared face at head time so
    first paint is final on any network, and no declared weight can
@@ -1794,9 +1795,220 @@ body.cc-in-game #ccMallowFloatTail{display:none !important;}
 })();
 </script>
 
+<style id="lab-phase1">
+/* ============================================================
+   ARCANE LAB — PHASE 1 TOKEN SHEET (2026-11-13)
+   One token sheet for the app skin, from the owner-locked
+   Arcane Lab direction. Gold is reserved for the action
+   moment (BREW MY RESULT) and the seal. Bubble motion is
+   background dressing only: never inside the card box,
+   never over text or the verdict seal.
+   ============================================================ */
+:root{
+  --lab-plum:#2A1745; --lab-plum-deep:#1C1322; --lab-plum-3:#2F213C;
+  --lab-purple:#7C4DBD; --lab-purple-bright:#9B6FE0;
+  --lab-gold:#C9A227; --lab-gold-2:#E8C766; --lab-gold-dark:#8A6D12;
+  --lab-ink:#F7F2FF; --lab-ink-2:#D6C6F5;
+  --lab-surface:#3A2260; --lab-track:#1E1133; --lab-line:#433254;
+  --lab-radius:16px;
+  --lab-font:"Nunito","Alegreya",system-ui,sans-serif;
+}
+body.neon{
+  --gold:var(--lab-gold); --gold-deep:var(--lab-gold-2);
+  font-family:var(--lab-font);
+}
+body.neon h1, body.neon h2, body.neon h3{
+  font-family:var(--lab-font); font-weight:900; letter-spacing:-.01em;
+  text-shadow:0 2px 8px rgba(0,0,0,.55);
+}
+body.neon .bubble-btn{font-family:var(--lab-font); font-weight:900;}
+body.neon .bubble-btn .sub{font-family:var(--lab-font); font-weight:700;}
+body.neon .logo-bg{background:
+  radial-gradient(ellipse 90% 45% at 50% -5%, rgba(155,111,224,.16), transparent 60%),
+  radial-gradient(ellipse 80% 50% at 50% 112%, rgba(201,162,39,.12), transparent 60%),
+  radial-gradient(ellipse 120% 90% at 50% 45%, transparent 45%, rgba(0,0,0,.55) 100%),
+  linear-gradient(180deg,var(--lab-plum) 0%,var(--lab-plum-deep) 55%,#150D1D 100%);}
+body.neon .card{
+  background:linear-gradient(180deg, rgba(58,34,96,.78) 0%, rgba(42,23,69,.82) 60%, rgba(28,17,51,.85) 100%);
+  border-color:var(--lab-line);
+  box-shadow:0 0 0 1px rgba(155,111,224,.12), 0 12px 26px rgba(0,0,0,.5);
+}
+body.neon .b-gold{
+  background:linear-gradient(105deg,var(--lab-gold-2) 0%,var(--lab-gold) 45%,var(--lab-gold-dark) 78%,var(--lab-gold-2) 100%);
+  color:var(--lab-plum);
+}
+/* --- Lab hero (the check, first screen) --- */
+.lab-hero{border-radius:var(--lab-radius); padding:16px;}
+.lab-hero h2{font-size:26px; line-height:1.05; margin:0;}
+.lab-sub{color:var(--lab-ink-2); font-weight:700; font-size:14px; margin:8px 0 0;}
+.lab-bubbles{position:relative; height:56px; margin-top:8px;}
+.lab-bubbles i{position:absolute; border-radius:50%; background:var(--lab-purple); opacity:.85; animation:labBob 2.6s ease-in-out infinite;}
+.lab-bubbles i:nth-child(1){width:14px;height:14px;left:18%;bottom:0;}
+.lab-bubbles i:nth-child(2){width:22px;height:22px;left:44%;bottom:4px;background:var(--lab-purple-bright);animation-delay:.5s;}
+.lab-bubbles i:nth-child(3){width:12px;height:12px;left:68%;bottom:0;animation-delay:1s;}
+.lab-bubbles i:nth-child(4){width:18px;height:18px;left:84%;bottom:6px;background:var(--lab-gold);animation-delay:.25s;}
+@keyframes labBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.lab-recipe{list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:8px;}
+.lab-recipe li{display:flex; gap:12px; align-items:center; background:var(--lab-surface); border-radius:16px; padding:12px 16px; min-height:56px;}
+.lab-recipe .n{width:36px;height:36px;border-radius:50%;background:var(--lab-purple);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;flex:0 0 auto;}
+.lab-rt{display:flex; flex-direction:column;}
+.lab-recipe b{font-size:15px; line-height:1.2;}
+.lab-recipe small{color:var(--lab-ink-2); font-weight:700;}
+.lab-games{margin-top:16px;}
+.lab-games-h{font-weight:900; font-size:13px; letter-spacing:.06em; color:var(--lab-gold-2); margin:0;}
+.lab-games-row{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px;}
+.lab-game{border:none; cursor:pointer; font:inherit; border-radius:16px; padding:12px 8px; text-align:center; font-size:12px; font-weight:900; line-height:1.2; min-height:72px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; background:var(--lab-surface); color:var(--lab-ink);}
+.lab-game .lg{width:28px; height:28px; display:block;}
+.lab-game .lg-c{background:var(--lab-purple-bright); border-radius:50%;}
+.lab-game .lg-s{background:var(--lab-gold-2); border-radius:8px;}
+.lab-game .lg-d{background:var(--lab-purple); border-radius:4px; transform:rotate(45deg);}
+.lab-btn{min-height:56px; width:100%; border:none; font:inherit; font-weight:900; font-size:16px; letter-spacing:.04em; cursor:pointer; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px; background:var(--lab-gold); color:var(--lab-plum); border-radius:999px;}
+.lab-btn:active{transform:translateY(2px);}
+/* --- recipe step chips (capture flow) --- */
+.lab-steps{list-style:none; display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 0; padding:0;}
+.lab-steps li{display:flex; align-items:center; gap:8px; background:var(--lab-surface); border-radius:999px; padding:6px 12px 6px 6px; font-size:13px; font-weight:800; color:var(--lab-ink-2);}
+.lab-steps .n{width:24px; height:24px; border-radius:50%; background:var(--lab-purple); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; flex:0 0 auto;}
+.lab-steps li.now{color:var(--lab-ink); box-shadow:0 0 0 1.5px var(--lab-purple-bright);}
+.lab-steps li.done{color:var(--lab-ink);}
+.lab-steps li.done .n{background:var(--lab-gold); color:var(--lab-plum);}
+/* --- rising-bubble background layer (dressing only) --- */
+.lab-bg{position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0;}
+.lab-bg i{position:absolute; bottom:-48px; border-radius:50%; opacity:.32; display:block; animation-name:labRise; animation-timing-function:linear; animation-iteration-count:infinite;}
+@keyframes labRise{from{transform:translate(0,0)} to{transform:translate(12px,-112vh)}}
+/* --- motion fences: Calm & Clear, house pause, reduced motion --- */
+.calm .lab-bg i, .calm .lab-bubbles i{animation:none !important;}
+body.cc-paused .lab-bg i, body.cc-paused .lab-bubbles i{animation-play-state:paused !important;}
+@media (prefers-reduced-motion:reduce){.lab-bg i, .lab-bubbles i{animation:none !important;}}
+</style>
+<style id="lab-phase2">
+/* ================================================================
+   ARCANE LAB — PHASE 2 (Nov 13, 2026): pets, coin sinks, games
+   shelf, soft-peach token, Plain Words default.
+   Token additions to the shared Lab sheet (lab-phase1):
+     --lab-peach      #FFB26B  SOFT PEACH — a NAMED Lab token.
+                      ROLE (owner ruling, Nov 13): kindness/comfort
+                      surfaces ONLY — the Replica Binder language
+                      ("kept safe, lesson and all") and the flag
+                      notes that speak it. Never a general accent,
+                      never alarm, never decoration elsewhere.
+     --lab-peach-bg   rgba(255,178,107,.16)  soft-peach surface fill
+     --lab-peach-line rgba(255,178,107,.35)  soft-peach border
+   ================================================================ */
+:root{
+  --lab-peach:#FFB26B;
+  --lab-peach-bg:rgba(255,178,107,.16);
+  --lab-peach-line:rgba(255,178,107,.35);
+}
+/* The kindness surfaces speak through the named token now. */
+.peach-box{background:var(--lab-peach-bg);border-color:var(--lab-peach-line);}
+
+/* --- legacy avatar surfaces retired by Phase 2 (owner ruling:
+   avatars OUT, pets back). The human-avatar picker and companion
+   builder are removed from Settings markup; these rules retire the
+   surfaces the legacy add-on scripts still inject (wardrobe host,
+   avatar stage, Mallow float) so there is exactly ONE pet. --- */
+#ccWardrobeHost,#ccAvatarStage,#ccMallowFloatBtn,#ccMallowFloatSheet,
+#ccMallowFloatScrim,#ccMallowFloatTail,#ccMallowGreet{display:none !important;}
+/* renderGamesHub() still fills the two legacy lists at parse time;
+   they live on as hidden dummies so it never throws. */
+#gamesList1,#gamesList2{display:none !important;}
+
+/* ---------- the pet dock (bottom corner, fenced) ---------- */
+#p2PetDock{position:fixed;right:12px;bottom:12px;z-index:900;width:76px;
+  display:none;flex-direction:column;align-items:center;gap:2px;
+  pointer-events:none;-webkit-tap-highlight-color:transparent;}
+@media (min-width:520px){#p2PetDock{right:calc(50% - 203px);}}
+#p2PetDock.on{display:flex;}
+#p2PetDock .p2-pet-bubble{background:var(--lab-surface,#3A2260);color:var(--lab-ink,#F7F2FF);
+  border:1.5px solid var(--lab-line,#433254);border-radius:14px;padding:6px 9px;
+  font-size:12.5px;font-weight:700;line-height:1.3;text-align:center;max-width:150px;
+  opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s;pointer-events:none;}
+#p2PetDock .p2-pet-bubble.show{opacity:1;transform:none;}
+#p2PetDock .p2-pet-img{width:64px;height:64px;object-fit:contain;pointer-events:auto;cursor:pointer;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,.45));}
+#p2PetDock .p2-pet-zzz{font-size:15px;color:var(--lab-muted,#D6C6F5);opacity:0;font-weight:900;}
+#p2PetDock.sleeping .p2-pet-zzz{opacity:.9;animation:p2Zzz 2.6s ease-in-out infinite;}
+#p2PetDock.sleeping .p2-pet-img{opacity:.75;}
+@keyframes p2Zzz{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+@keyframes p2Bounce{0%,100%{transform:translateY(0);}30%{transform:translateY(-13px);}55%{transform:translateY(0);}75%{transform:translateY(-6px);}}
+@keyframes p2Tilt{0%,100%{transform:rotate(0deg);}25%{transform:rotate(-7deg);}70%{transform:rotate(5deg);}}
+@keyframes p2Sit{from{transform:scale(1,1);}to{transform:scale(1.04,.93);}}
+@keyframes p2Spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+#p2PetDock.react-bounce .p2-pet-img{animation:p2Bounce .9s ease;}
+#p2PetDock.react-tilt .p2-pet-img{animation:p2Tilt 1.1s ease;}
+#p2PetDock.react-sit .p2-pet-img{animation:p2Sit .5s ease forwards;}
+#p2PetDock.react-spin .p2-pet-img{animation:p2Spin .7s ease;}
+/* Calm & Clear stills the pet completely (crew rule #3/#16 fences). */
+#phone.calm #p2PetDock .p2-pet-img,#phone.calm #p2PetDock .p2-pet-zzz{animation:none !important;}
+@media (prefers-reduced-motion: reduce){
+  #p2PetDock .p2-pet-img,#p2PetDock .p2-pet-zzz{animation:none !important;}
+}
+/* 360px: shrink to a small badge, never covering content. */
+@media (max-width:380px){
+  #p2PetDock{width:46px;right:8px;bottom:8px;}
+  #p2PetDock .p2-pet-img{width:42px;height:42px;}
+  #p2PetDock .p2-pet-bubble{display:none;}
+}
+.p2-coinfly{position:fixed;z-index:950;width:22px;height:22px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#FFE9A8,var(--lab-gold,#C9A227) 70%);
+  border:1.5px solid #8a6d14;pointer-events:none;font-size:11px;line-height:20px;
+  text-align:center;color:#5b4303;font-weight:900;}
+
+/* ---------- pet strips (capture coach + verdict reactions) ---------- */
+.p2-strip{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;
+  background:var(--lab-surface,#3A2260);border:1.5px solid var(--lab-line,#433254);border-radius:16px;}
+.p2-strip img{width:52px;height:52px;object-fit:contain;flex:none;}
+.p2-strip p{margin:0;font-size:14.5px;font-weight:700;line-height:1.35;}
+.p2-strip.react-bounce img{animation:p2Bounce .9s ease;}
+.p2-strip.react-tilt img{animation:p2Tilt 1.1s ease;}
+.p2-strip.react-sit img{animation:p2Sit .5s ease forwards;}
+.p2-strip.react-spin img{animation:p2Spin .7s ease;}
+#phone.calm .p2-strip img{animation:none !important;}
+@media (prefers-reduced-motion: reduce){.p2-strip img{animation:none !important;}}
+
+/* ---------- pet picker (Settings) ---------- */
+.p2-pet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+.p2-pet-card{min-height:44px;text-align:center;padding:10px 6px;border-radius:16px;cursor:pointer;
+  border:2px solid var(--lab-line,#433254);background:rgba(28,19,34,.55);color:var(--lab-ink,#F7F2FF);}
+.p2-pet-card img{width:60px;height:60px;object-fit:contain;display:block;margin:0 auto 4px;}
+.p2-pet-card b{font-size:13.5px;display:block;line-height:1.25;}
+.p2-pet-card.on{border-color:var(--lab-gold,#C9A227);outline:2px solid var(--lab-gold,#C9A227);}
+.p2-tint-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.p2-tint{min-height:44px;padding:8px 14px;border-radius:999px;cursor:pointer;font-weight:800;
+  border:2px solid var(--lab-line,#433254);background:rgba(28,19,34,.55);color:var(--lab-ink,#F7F2FF);}
+.p2-tint.on{border-color:var(--lab-gold,#C9A227);outline:2px solid var(--lab-gold,#C9A227);}
+
+/* ---------- coin jar (Rewards) ---------- */
+.p2-jar-wrap{display:flex;align-items:center;gap:16px;}
+.p2-jar{position:relative;width:74px;height:88px;flex:none;border:3px solid var(--lab-line,#433254);
+  border-top-width:8px;border-radius:14px 14px 20px 20px;overflow:hidden;background:rgba(28,19,34,.5);}
+.p2-jar-fill{position:absolute;left:0;right:0;bottom:0;height:0%;
+  background:linear-gradient(180deg,var(--lab-gold-light,#E8C766),var(--lab-gold,#C9A227));transition:height .6s ease;}
+.p2-jar-num{font-size:32px;font-weight:900;margin:0;}
+.p2-donate-jar{position:relative;height:18px;border-radius:999px;background:rgba(28,19,34,.55);
+  border:1.5px solid var(--lab-line,#433254);overflow:hidden;margin-top:10px;}
+.p2-donate-fill{position:absolute;left:0;top:0;bottom:0;width:0%;min-width:0;
+  background:linear-gradient(90deg,var(--lab-purple-bright,#9B6FE0),var(--lab-gold,#C9A227));transition:width .6s ease;}
+
+/* ---------- rewards sink rows ---------- */
+.p2-shop-row{display:flex;justify-content:space-between;align-items:center;gap:8px;
+  background:#1e1a2e;border-radius:10px;padding:10px;}
+.p2-shop-row .bubble-btn{min-height:44px;}
+.p2-owned{font-weight:800;color:#7fe37f;}
+
+/* ---------- games shelf ---------- */
+.p2-runs{display:block;font-size:12.5px;font-weight:700;opacity:.85;margin-top:2px;}
+#p2PracticeBar{border-color:var(--lab-gold,#C9A227);}
+
+/* ---------- tell drills ---------- */
+.p2-drill{border:1.5px solid var(--lab-line,#433254);border-radius:12px;padding:10px 12px;margin-top:8px;background:rgba(28,19,34,.4);}
+.p2-drill summary{cursor:pointer;font-weight:800;min-height:32px;}
+.p2-drill p{margin:8px 0 2px;}
+</style>
+
 </head>
 <body class="neon">
-<div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first. A name or Guest stays on this device only — it just remembers a name so the top bubble shows who is signed in. A real account is optional, further down: it can save your checks, only with your agreement.</p><label class="op-field" style="width:100%;max-width:320px">Login name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Name and Guest are local only — not real accounts.</p><div id="ccGateAcct" style="width:100%;max-width:320px;border-top:1px solid #3a2c12;padding-top:12px;margin-top:4px;"><p style="font-weight:800;">Have a Card Cauldron account?</p><p class="small dim">Sign in with your account to save your checks (with your agreement, asked next). New here? Create a free account.</p><label class="op-field" style="width:100%;">Username <input type="text" id="ccGateUser" placeholder="Account username" autocomplete="username"></label><label class="op-field" style="width:100%;">Password <input type="password" id="ccGatePass" placeholder="Account password" autocomplete="current-password"></label><button type="button" class="bubble-btn b-gold" style="width:100%;text-align:center;justify-content:center" onclick="ccGateAcctLogin()"><span style="display:block;width:100%;text-align:center">Sign in with account</span></button><button type="button" class="bubble-btn b-white" style="width:100%;text-align:center;justify-content:center;margin-top:8px;" onclick="ccGateAcctRegister()"><span style="display:block;width:100%;text-align:center">Create account</span></button><p class="small" id="ccGateAcctMsg" role="status"></p></div></div>
+<div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first. A name or Guest stays on this device only — it just remembers a name so the top bubble shows who is signed in. A real account is optional, further down: it can save your checks, only with your agreement.</p><label class="op-field" style="width:100%;max-width:320px">Display name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Name and Guest are local only — not real accounts.</p><div id="ccGateAcct" style="width:100%;max-width:320px;border-top:1px solid #3a2c12;padding-top:12px;margin-top:4px;"><p style="font-weight:800;">Have a Card Cauldron account?</p><p class="small dim">Sign in with your account to save your checks (with your agreement, asked next). New here? Create a free account.</p><label class="op-field" style="width:100%;">Username <input type="text" id="ccGateUser" placeholder="Account username" autocomplete="username"></label><label class="op-field" style="width:100%;">Password <input type="password" id="ccGatePass" placeholder="Account password" autocomplete="current-password"></label><button type="button" class="bubble-btn b-gold" style="width:100%;text-align:center;justify-content:center" onclick="ccGateAcctLogin()"><span style="display:block;width:100%;text-align:center">Sign in with account</span></button><button type="button" class="bubble-btn b-white" style="width:100%;text-align:center;justify-content:center;margin-top:8px;" onclick="ccGateAcctRegister()"><span style="display:block;width:100%;text-align:center">Create account</span></button><p class="small" id="ccGateAcctMsg" role="status"></p></div></div>
 <script id="cc2713GateEarly">
 /* CC-27.13 gate early-tap guard: queue gate taps that land before the
    login system (defined near the end of this document) has parsed. */
@@ -1823,9 +2035,10 @@ window.opGateLogin = function(){
 </script>
 <div class="phone" id="phone">
 <div class="op-bg" aria-hidden="true"></div>
+<div class="lab-bg" aria-hidden="true"><i style="left:6%;width:14px;height:14px;background:#7C4DBD;animation-duration:11s;animation-delay:-2s;"></i><i style="left:16%;width:22px;height:22px;background:#9B6FE0;animation-duration:13s;animation-delay:-7s;"></i><i style="left:28%;width:12px;height:12px;background:#7C4DBD;animation-duration:9s;animation-delay:-4s;"></i><i style="left:41%;width:18px;height:18px;background:#C9A227;animation-duration:14s;animation-delay:-9s;"></i><i style="left:53%;width:10px;height:10px;background:#9B6FE0;animation-duration:10s;animation-delay:-1s;"></i><i style="left:64%;width:20px;height:20px;background:#7C4DBD;animation-duration:12s;animation-delay:-6s;"></i><i style="left:74%;width:13px;height:13px;background:#9B6FE0;animation-duration:9.5s;animation-delay:-3s;"></i><i style="left:83%;width:16px;height:16px;background:#7C4DBD;animation-duration:13.5s;animation-delay:-8s;"></i><i style="left:91%;width:11px;height:11px;background:#C9A227;animation-duration:10.5s;animation-delay:-5s;"></i><i style="left:97%;width:15px;height:15px;background:#9B6FE0;animation-duration:12.5s;animation-delay:-10s;"></i></div>
 <div class="op-toprow" id="opTopRow"><button type="button" id="opBurgerBtn" aria-label="Open menu" onclick="opToggleMenu()">☰</button><button type="button" class="bubble-btn b-gold" onclick="opToggleMenu()"><span>☰ MENU</span></button><button type="button" class="bubble-btn b-white" onclick="opToggleMusic()"><span id="opMusicLabel" class="op-music-label">🎵 MUSIC</span></button></div>
 <div class="op-menupanel" id="opMenuPanel" hidden><button type="button" class="bubble-btn b-white" id="opMenuMusicRow" onclick="opToggleMusic()"><span class="op-music-label">🎵 MUSIC</span></button><button type="button" class="bubble-btn b-white" data-nav="home"><span>Home</span></button><button type="button" class="bubble-btn b-white" data-nav="picker"><span>Check</span></button><button type="button" class="bubble-btn b-white" data-nav="games"><span>Games</span></button><button type="button" class="bubble-btn b-white" data-nav="binders"><span>Binders</span></button><button type="button" class="bubble-btn b-white" data-nav="plan"><span>⬆️ Upgrade</span></button><button type="button" class="bubble-btn b-white" data-nav="leaderboard"><span>🏆 Global Leaderboard</span></button><button type="button" class="bubble-btn b-white" data-nav="feedback"><span>💬 Feedback &amp; Ideas</span></button><button type="button" class="bubble-btn b-white" data-nav="chatroom"><span>💬 Feedback &amp; Chat Room</span></button><button type="button" class="bubble-btn b-white" data-nav="agent"><span>🤖 Talk to My Agent</span></button><button type="button" class="bubble-btn b-white" data-nav="rewards"><span>🎁 Rewards</span></button><button type="button" class="bubble-btn b-white" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button><button type="button" class="bubble-btn b-white" data-nav="tells"><span>Tells</span></button><button type="button" class="bubble-btn b-white" data-nav="condition"><span>Card Condition Grader</span></button><button type="button" class="bubble-btn b-white" data-nav="lightLearn"><span>Light Test — Learn</span></button><button type="button" class="bubble-btn b-white" data-nav="batch"><span>Pip's Batch Check</span></button><button type="button" class="bubble-btn b-white" data-nav="settings"><span>Profile / Settings</span></button><button type="button" class="bubble-btn b-white" data-nav="website"><span>🌐 Check out my website</span></button><p class="small dim" style="text-align:center;margin:8px 0 2px;">Build #28 · Nov 4, 2026</p></div>
-<div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your avatar"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
+<div class="op-toprow"><button type="button" class="op-profilebubble" data-nav="settings"><img id="opTopAvatar" alt="Your pet"><span id="opTopName">Guest</span><span> · Profile / Settings</span></button><span class="op-coins" id="opTopCoins">🪙 0</span></div>
 
 
   <div class="logo-bg" aria-hidden="true"><div class="logo-glow"></div><div class="logo-wrap"><img src="data:image/webp;base64,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" alt="" /></div></div>
@@ -1845,25 +2058,59 @@ window.opGateLogin = function(){
       <i style="width:38px;height:38px;top:44%;left:6%;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#ffd93d 55%);animation-delay:2.1s;"></i>
       <i style="width:66px;height:66px;bottom:16%;right:-18px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#7fe37f 55%);animation-delay:.6s;"></i>
     </div>
+
+    <div class="card lab-hero">
+      <h2>Brew a check</h2>
+      <p class="lab-sub">Add the ingredients. We’ll do the stirring.</p>
+      <div class="lab-bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <ol class="lab-recipe">
+        <li><span class="n">1</span><span class="lab-rt"><b>Front photo</b><small>The face of the card — nice and sharp</small></span></li>
+        <li><span class="n">2</span><span class="lab-rt"><b>Back photo</b><small>Shows print &amp; copyright line</small></span></li>
+        <li><span class="n">3</span><span class="lab-rt"><b>Edge close-up</b><small>Get close — fill the frame</small></span></li>
+      </ol>
+      <div class="lab-games">
+        <p class="lab-games-h">WHILE YOU’RE HERE — PLAY</p>
+        <div class="lab-games-row">
+          <button type="button" class="lab-game" data-nav="games" style="flex:1 1 100%;"><i class="lg lg-c" aria-hidden="true"></i>Games — the shelf<span style="display:block;font-size:12px;font-weight:700;opacity:.85;">Five games, one door</span></button>
+        </div>
+      </div>
+      <div class="free-bubbles" id="ccFreeCheckBubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p style="font-size:18px;font-weight:800;margin-top:8px;" id="ccFreeCheckHeading">10 free checks to start</p>
+      <p class="small dim" style="margin-top:4px;" id="homePoolNote">Full app: 10 free checks to start, 5 more on the 1st of every month. Here they count down — and restart at empty so you can watch it work.</p>
+      <p class="small" id="ccFreeCheckNote" aria-live="polite" style="margin-top:6px;font-weight:800;color:#ffd76a;"></p>
+      <button type="button" class="lab-btn" data-nav="picker" style="margin-top:12px;">BREW MY RESULT</button>
+      <p class="small dim center" style="margin-top:8px;">Sample walkthrough — front photo, back photo, plus an optional light test</p>
+    </div>
+
+    <div class="band band-teal mt">
+      <h3>What can we check?</h3>
+      <p class="sub2">Six kinds of treasure — tap one. Every check starts in the picker.</p>
+      <div class="cat-grid" id="homeCatGrid"></div>
+    </div>
+
     <div class="toggle-row">
       <div>
-        <h2>Hi there! 👋</h2>
+ <h2>Hi there!</h2>
         <p class="lead" style="margin-top:4px;">Got a card you're wondering about?</p>
       <div class="card" style="margin-top:10px;background:#1b2a4a;border-color:#38bdf8;"><p style="font-weight:900;margin:0;">🫧 Juno's reminder: <span id="junoReminder">sleeves before the binder, always.</span></p></div>
       </div>
       <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle pop sounds">🔊</button>
     </div>
 
-    <div class="card center mt">
-      <div class="free-bubbles" id="ccFreeCheckBubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <p style="font-size:18px;font-weight:800;margin-top:8px;" id="ccFreeCheckHeading">10 free checks to start</p>
-      <p class="small dim" style="margin-top:4px;" id="homePoolNote">Full app: 10 free checks to start, 5 more on the 1st of every month. Here they count down — and restart at empty so you can watch it work.</p>
-      <p class="small" id="ccFreeCheckNote" aria-live="polite" style="margin-top:6px;font-weight:800;color:#ffd76a;"></p>
-      <button type="button" class="bubble-btn b-gold" data-nav="picker" style="margin-top:12px"><span>🫧 Check your card — Real or Fake</span><span class="sub">Sample walkthrough — front photo, back photo, plus an optional light test</span></button>
+    <div class="band band-navy mt-lg">
+ <h3>Your shortcuts</h3>
+      <div class="stack" style="margin-top:14px;">
+        <button type="button" class="bubble-btn b-sky" data-nav="picker"><span>🫧 Check something</span><span class="sub">Pick a category, follow the photo steps</span></button>
+        <button type="button" class="bubble-btn b-white small" data-nav="batch"><span>🗂️ Pip's Batch Check</span><span class="sub">Line up to 5 cards, checked in one pass</span></button>
+        <button type="button" class="bubble-btn b-pink" data-nav="binders"><span>📒 My Binders</span><span class="sub">A look around the binders — sample cards inside</span></button>
+        <button type="button" class="bubble-btn b-white small" data-nav="lightLearn"><span>💡 Lens's Light Test</span></button>
+        <button type="button" class="bubble-btn b-sky" data-nav="agent"><span>🤖 Talk to My Agent</span><span class="sub">Chat with your own AI, running on your own machine</span></button><button type="button" class="bubble-btn b-sky" data-nav="games"><span>🎮 Mini Games</span><span class="sub">9 bubbly crew games — tap in and play</span></button>
+      </div>
+      <p class="sub2 center" style="margin-top:12px;">Games are just for fun — scores are bragging rights for this visit only, never touching free checks.</p>
     </div>
 
     <div class="card mt">
-      <h3 style="font-size:24px;">✨ Pull of the Day</h3>
+ <h3 style="font-size:24px;">Pull of the Day</h3>
       <p style="font-weight:800;color:var(--gold-deep);margin-top:2px;">Juno's Pull of the Day</p>
       <p class="lead" style="font-size:16px;margin-top:8px;">Today's card from the DEMO-ONLY pool — built for this demo, never linked to the real app or tracker. No pack opened, nothing won.</p>
       <p class="small dim" style="margin-top:6px;" id="potdDate">Everyone sees this same card today.</p>
@@ -1876,15 +2123,11 @@ window.opGateLogin = function(){
       <p class="small dim center" style="margin-top:4px;" id="potdCap">Demo pool card 3784 of 6,000 · Official image (pokemontcg.io) · Not a scan of Sabastian's card, not a check, not a verdict.</p>
     </div>
 
-    <div class="band band-grape mt">
-      <h3>🤝 Invite &amp; Earn</h3>
-      <p class="sub2">Send a friend your invite link — you both get +10 free checks when they join, and +100 coins each when they grab their first coin pack.</p>
-      <button type="button" class="bubble-btn b-gold small mt" data-nav="invite"><span>🤝 Invite &amp; Earn</span></button>
-    </div>
+    <p class="center mt" style="font-weight:700;">Bringing a friend? <button type="button" class="backlink" data-nav="invite" style="align-self:center;min-height:32px;">Invite &amp; Earn — you both get +10 free checks →</button></p>
 
     <img src="assets/sweep/app/explore-hero.webp" alt="" aria-hidden="true" style="width:100%;border-radius:16px;display:block;margin:10px 0;">
     <div class="band band-teal mt">
-      <h3>🩹 Card Condition Grader</h3>
+ <h3>Card Condition Grader</h3>
       <p class="sub2" id="condBandLine">Scan front and back — it grades corners, edges, surface and centering, Mint to Damaged. Condition only — it never calls a card real or fake.</p>
       <p style="font-weight:900;margin-top:10px;">5 free condition grades to start — the grader's own pool</p>
       <button type="button" class="bubble-btn b-gold small mt" data-nav="condition"><span>🩹 Grade a card's condition</span></button>
@@ -1892,7 +2135,7 @@ window.opGateLogin = function(){
     </div>
 
     <div class="band band-grape mt">
-      <h3>🫧 Juno's Pop Trail</h3>
+ <h3>Juno's Pop Trail</h3>
       <p class="sub2">Follow the bubbles — every stop opens part of this demo.</p>
       <div class="trail" aria-hidden="false">
         <svg viewBox="0 0 340 120" preserveAspectRatio="none" aria-hidden="true"><path d="M 30 78 C 90 30, 140 96, 200 52 C 250 18, 290 44, 322 34" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="6 8"/></svg>
@@ -1905,28 +2148,10 @@ window.opGateLogin = function(){
       </div>
     </div>
 
-    <div class="band band-teal mt">
-      <h3>What can we check?</h3>
-      <p class="sub2">Six kinds of treasure — tap one. Every check starts in the picker.</p>
-      <div class="cat-grid" id="homeCatGrid"></div>
-    </div>
-
-    <div class="band band-navy mt-lg">
-      <h3>⭐ Your shortcuts</h3>
-      <div class="stack" style="margin-top:14px;">
-        <button type="button" class="bubble-btn b-sky" data-nav="picker"><span>🫧 Check something</span><span class="sub">Pick a category, follow the photo steps</span></button>
-        <button type="button" class="bubble-btn b-white small" data-nav="batch"><span>🗂️ Pip's Batch Check</span><span class="sub">Line up to 5 cards, checked in one pass</span></button>
-        <button type="button" class="bubble-btn b-pink" data-nav="binders"><span>📒 My Binders</span><span class="sub">A look around the binders — sample cards inside</span></button>
-        <button type="button" class="bubble-btn b-white small" data-nav="lightLearn"><span>💡 Lens's Light Test</span></button>
-        <button type="button" class="bubble-btn b-sky" data-nav="agent"><span>🤖 Talk to My Agent</span><span class="sub">Chat with your own AI, running on your own machine</span></button><button type="button" class="bubble-btn b-gold" data-nav="games"><span>🎮 Mini Games</span><span class="sub">9 bubbly crew games — tap in and play</span></button>
-      </div>
-      <p class="sub2 center" style="margin-top:12px;">Games are just for fun — scores are bragging rights for this visit only, never touching free checks.</p>
-    </div>
-
     <div class="card mt">
       <div class="toggle-row">
         <div>
-          <h3 style="font-size:18px;">🌿 Calm &amp; Clear Mode</h3>
+ <h3 style="font-size:18px;">Calm &amp; Clear Mode</h3>
           <p class="small dim" style="margin-top:3px;" id="calmText">Turns off the drifting and bobbing. Everything still works, just quietly.</p>
         </div>
       </div>
@@ -1934,7 +2159,7 @@ window.opGateLogin = function(){
     </div>
 
     <div class="card mt">
-      <h3 style="font-size:18px;">🕯️ Plain words</h3>
+ <h3 style="font-size:18px;">Plain words</h3>
       <p class="small" style="font-weight:700;color:var(--dim);margin-top:2px;">Wick's idea 🕯️</p>
       <p class="lead" style="font-size:16px;margin-top:8px;" id="plainCardText1">Words around your check get simpler — shorter sentences, everyday words, hard words explained or left out. Only explaining words change; picker, plan and sample verdict switch.</p>
       <p class="small dim" style="margin-top:8px;" id="plainCardText2">Your verdict words never change, in either mode: Likely Genuine, Likely Counterfeit, and Inconclusive stay word-for-word. In the full app, your device remembers your choice.</p>
@@ -1965,7 +2190,8 @@ window.opGateLogin = function(){
   <section class="screen" id="scr-capture">
     <div class="decor" aria-hidden="true"><i style="width:60px;height:60px;top:10%;right:-14px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#ff6b9d 55%);"></i></div>
     <button type="button" class="backlink" id="capBack">← Pick a category</button>
-    <p class="small" style="font-weight:900;color:var(--dim);" id="capMeta">Checking: —</p>
+    <p class="small" style="font-weight:900;color:var(--dim);" id="capMeta">Pick a category to start</p>
+    <ol class="lab-steps" id="capSteps" aria-label="Recipe steps"></ol>
     <h2 id="capTitle" style="margin-top:4px;">First photo</h2>
     <p class="lead" style="margin-top:8px;" id="capGuide"></p>
     <div class="frame" id="capFrame">
@@ -1990,7 +2216,12 @@ window.opGateLogin = function(){
       <button type="button" class="bubble-btn b-white small" id="capUploadFile">Upload a file instead</button>
       <p class="small dim center">Photos you pick stay on your device unless you choose to share them — pool sharing and account saving are always your choice, and you are asked first.</p>
     </div>
-  </section>
+  
+    <div class="p2-strip" id="p2CoachStrip">
+      <img id="p2CoachPet" alt="Your pet companion">
+      <p id="p2CoachText">Your pet is here for company — the quality gate does the measuring, and your pet will cheer (or hold up a sign) from what it measures.</p>
+    </div>
+</section>
 
   <!-- ================= CONTINUE-TO-BACK POPUP (upload #12) ================= -->
   <div id="capContinuePop" hidden style="position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;">
@@ -2027,7 +2258,7 @@ window.opGateLogin = function(){
       <button type="button" id="rewardsGameX" aria-label="Close — back to the finish screen" style="position:absolute;top:8px;right:10px;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,248,231,.4);background:rgba(255,248,231,.08);color:#fff8e7;font-size:16px;line-height:1;cursor:pointer;">✕</button>
       <div style="font-size:44px;">&#129689;</div>
       <h2 style="margin:10px 0 6px;">Spin your rewards!</h2>
-      <p class="lead" style="margin:0;">Nice finish &#8212; your coins are in the top bubble. Keep playing to stack them up for the rewards store and avatar goodies at launch.</p>
+      <p class="lead" style="margin:0;">Nice finish &#8212; your coins are in the top bubble. Keep playing to stack them up for the pet corner, practice runs and the donation cauldron.</p>
       <p class="small dim" style="margin-top:8px;">Coins and scores here are device-local only, never real money, and they never touch your free checks.</p>
       <div class="stack" style="margin-top:16px;">
         <button type="button" class="bubble-btn b-brightpink" id="rewardsGameAgain"><span>▶ Play again</span></button>
@@ -2060,8 +2291,9 @@ window.opGateLogin = function(){
     <div class="decor" aria-hidden="true"><i style="width:60px;height:60px;top:10%;right:-14px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#ffd93d 55%);"></i></div>
     <button type="button" class="backlink" id="ltBack">← Back photo</button>
     <p class="small" style="font-weight:900;color:var(--dim);">Checking: Pokémon Card · Optional extra · DEMO</p>
-    <h2 style="margin-top:4px;">The Light Test 💡</h2>
+    <h2 style="margin-top:4px;">Light photo — optional extra</h2>
     <p class="small" style="font-weight:700;color:var(--dim);margin-top:4px;">By Lens 🔎 — one more photo, only if you want it</p>
+    <p class="small" style="margin-top:6px;">New to this? <button type="button" class="backlink" data-nav="lightLearn" style="min-height:32px;">Learn the Light Test first</button></p>
     <p class="lead" style="margin-top:10px;">Hold the card in front of a bright light or your phone flashlight and take the photo. Real card stock has a dark core and blocks the light — a dull glow at most. Thin fake stock glows translucent.</p>
     <div class="frame gold" id="ltFrame">
       <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
@@ -2094,7 +2326,7 @@ window.opGateLogin = function(){
   <!-- ================= LIGHT TEST — LEARN ================= -->
   <section class="screen" id="scr-lightLearn">
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>The Light Test 💡</h2>
+ <h2>The Light Test</h2>
     <p class="lead" style="margin-top:6px;">By Lens 🔎 — a pocket check for card stock, and one of the oldest tells in the binder.</p>
     <div class="card mt">
       <h3 style="font-size:18px;">How to do it</h3>
@@ -2175,7 +2407,7 @@ window.opGateLogin = function(){
   <section class="screen" id="scr-condition">
     <div class="decor" aria-hidden="true"><i style="width:64px;height:64px;top:8%;right:-14px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#7fe37f 55%);"></i></div>
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>Card Condition Grader 🩹</h2>
+ <h2>Card Condition Grader</h2>
     <p class="lead" style="margin-top:6px;" id="condIntro">Its own window, its own job: scan a photo of your card — front and back — and get its condition graded: corners, edges, surface, and centering, on the standard scale from Mint down to Damaged.</p>
     <div class="gold-box mt">
       <p style="font-weight:900;color:var(--gold-deep);font-size:17px;">Condition is not real-or-fake</p>
@@ -2243,7 +2475,7 @@ window.opGateLogin = function(){
       <p class="small dim" style="margin-top:12px;">Honest note: this is a sample grade in a demo — no photos were graded to produce it. In the full app, a grade is read from your photos; a photo grade can miss wear hiding in glare or shadow, and it is a careful read of the photos, not a grading company's in-hand grade. A completed grade pops 1 free condition grade — this demo pops none.</p>
     </div>
     <div class="band band-teal mt-lg">
-      <h3>🩹 Condition Pass — paid</h3>
+ <h3>Condition Pass — paid</h3>
       <p class="sub2">The Condition Grader's own paid option — separate from Unlimited, separate from checks.</p>
     </div>
     <div class="card mt">
@@ -2276,6 +2508,10 @@ window.opGateLogin = function(){
       <p class="lead" style="font-size:16.5px;margin-top:4px;">Lens 🔎 ✍️ · Gauge 📏 ✍️</p>
       <p class="small dim" style="margin-top:10px;">Honest note: this is a sample receipt in a demo. No photos were checked to produce it. In the full app, verdicts are evidence-based opinions from your photos — not a grading service, authentication certificate, or guarantee.</p>
     </div>
+        <div class="p2-strip" id="p2VerdictStripSample" hidden>
+      <img id="p2VerdictPetSample" alt="Your pet companion">
+      <p id="p2VerdictLineSample"></p>
+    </div>
     <div class="stack mt-lg">
       <button type="button" class="bubble-btn b-gold" data-nav="sampleReceipt"><span>See what the checkers saw</span><span class="sub">The receipt — every tell, in plain words</span></button>
       <button type="button" class="bubble-btn b-sky small" data-nav="picker">Check another card</button>
@@ -2286,21 +2522,25 @@ window.opGateLogin = function(){
   <!-- ================= PAIR-SHEET LANE VERDICT (activation candidate — flag-dark) ================= -->
   <section class="screen" id="scr-laneVerdict">
     <div class="decor" aria-hidden="true"><i style="width:64px;height:64px;top:8%;right:-14px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#6fd0fc 55%);"></i></div>
-    <p class="center"><span class="pill sky">🖨️ PRINTED PAIR-SHEET LANE — MEASURED VERDICT</span></p>
-    <p class="center small dim" style="margin-top:8px;">Measured from a scanner pair by the Printed Pair-Sheet Lane — the printed-card checker</p>
-    <p class="center" style="margin-top:14px;"><span class="verdict-pill" id="psLaneVerdictWord">…</span></p>
+    <p class="center"><span class="pill sky">Measured verdict — from your scan pair</span></p>
+    <p class="center small dim" style="margin-top:8px;">Measured from the front and back scans filed with this check</p>
+    <p class="center" style="margin-top:14px;"><span class="verdict-pill" id="psLaneVerdictWord">No measured verdict yet</span></p>
     <div class="hero-badge" aria-hidden="true">🖨️</div>
     <h2 class="center" style="margin-top:16px;font-size:30px;">A measured verdict — not an example</h2>
     <p class="center small dim" style="margin-top:10px;">Every verdict lands on one of three words — <strong>Likely Genuine</strong>, <strong>Likely Counterfeit</strong>, or <strong>Inconclusive</strong> — and those words never change. This one was measured from the scan pair filed with this check.</p>
     <div class="card mt center">
-      <p style="font-weight:700;text-align:left;">Front print read: <span id="psLaneFront">…</span></p>
-      <p style="font-weight:700;text-align:left;margin-top:6px;">Back print read: <span id="psLaneBack">…</span></p>
+      <p style="font-weight:700;text-align:left;">Front print read: <span id="psLaneFront">Not measured yet</span></p>
+      <p style="font-weight:700;text-align:left;margin-top:6px;">Back print read: <span id="psLaneBack">Not measured yet</span></p>
       <p class="lead" style="font-size:18px;margin-top:14px;text-align:left;" id="psLaneExplain"></p>
     </div>
     <div class="card mt">
       <p style="font-weight:800;">What this lane is:</p>
-      <p class="lead" style="font-size:16.5px;margin-top:4px;">A checker for printed pair-sheet cards, proven in a blind test on scanner pairs — 399 of 400 printed fakes caught, 3 false alarms in 120. It speaks only for that family and that capture path. A verdict is an evidence-based opinion from measurements — not a grade, not a certificate, never a guarantee.</p>
+      <p class="lead" style="font-size:16.5px;margin-top:4px;">A checker for printed cards, proven in a blind test on scanner pairs — 399 of 400 printed fakes caught, 3 false alarms in 120. It speaks only for that family and that capture path. A verdict is an evidence-based opinion from measurements — not a grade, not a certificate, never a guarantee.</p>
       <p class="small dim" style="margin-top:10px;" id="psLaneMeta"></p>
+    </div>
+        <div class="p2-strip" id="p2VerdictStripLane" hidden>
+      <img id="p2VerdictPetLane" alt="Your pet companion">
+      <p id="p2VerdictLineLane"></p>
     </div>
     <div class="stack mt-lg">
       <button type="button" class="bubble-btn b-sky small" data-nav="picker">Check another card</button>
@@ -2316,7 +2556,7 @@ window.opGateLogin = function(){
     <p class="lead" style="margin-top:6px;">Every tell, from both checkers, in plain words. These are example entries showing the format — not findings about any real card.</p>
     <div class="stack mt">
       <div class="card">
-        <h3>Lens 🔎 — Checker 1</h3>
+ <h3>Lens — Checker 1</h3>
         <ul class="tells">
           <li><div class="row"><span class="name">Print &amp; colors</span><span class="chip pass">✓ Pass</span></div><p class="note">Sample note: colors sit where a genuine print puts them.</p></li>
           <li><div class="row"><span class="name">Holo pattern</span><span class="chip pass">✓ Pass</span></div><p class="note">Sample note: the shine breaks up the way real holofoil does.</p></li>
@@ -2328,7 +2568,7 @@ window.opGateLogin = function(){
         <p style="font-weight:800;margin-top:12px;">Signed: Lens 🔎 ✍️</p>
       </div>
       <div class="card">
-        <h3>Gauge 📏 — Checker 2</h3>
+ <h3>Gauge — Checker 2</h3>
         <ul class="tells">
           <li><div class="row"><span class="name">Print &amp; colors</span><span class="chip pass">✓ Pass</span></div><p class="note">Sample note: second pair of eyes, same read as Checker 1.</p></li>
           <li><div class="row"><span class="name">Holo pattern</span><span class="chip pass">✓ Pass</span></div><p class="note">Sample note: pattern scale matches reference examples.</p></li>
@@ -2354,7 +2594,7 @@ window.opGateLogin = function(){
     <h2>My Binders</h2>
     <p class="lead" style="margin-top:6px;">Every card you check files itself by verdict — you never file by hand. Cards you scan and say yes to the pool land below as PENDING: photos saved, still under review, no verdict claimed. Reviewed cards file into Genuine or Replica; anything undecided waits in the pocket.</p>
     <div class="band band-navy mt">
-      <h3>🗂️ All your binders</h3>
+ <h3>All your binders</h3>
       <p class="sub2" id="opBinderSummary">Your scanned cards live here — see the pocket below.</p>
       <div aria-hidden="true" style="display:flex;gap:8px;margin-top:10px;">
         <img src="assets/sweep/app/binder-cover-1-cauldron.webp" alt="" style="flex:1;min-width:0;border-radius:10px;">
@@ -2365,7 +2605,7 @@ window.opGateLogin = function(){
 
     <div class="mt-lg">
       <div class="binder-head" style="background:linear-gradient(135deg,#0b4f4a,#12836f);">
-        <h3 style="color:#fff;">🏅 Genuine Binder</h3>
+ <h3 style="color:#fff;">Genuine Binder</h3>
         <p class="sub2">Every card the checkers sign Likely Genuine lives here.</p>
         <p style="font-weight:900;margin-top:8px;">No cards filed here yet</p>
       </div>
@@ -2377,7 +2617,7 @@ window.opGateLogin = function(){
 
     <div class="mt-lg">
       <div class="binder-head" style="background:linear-gradient(135deg,#3d1566,#6d28a8);">
-        <h3 style="color:#fff;">🍑 Replica Binder</h3>
+ <h3 style="color:#fff;">Replica Binder</h3>
         <p class="sub2">Cards signed Likely Counterfeit — kept safe, lesson and all. Soft peach, never alarm colors.</p>
         <p style="font-weight:900;margin-top:8px;">No cards filed here yet</p>
       </div>
@@ -2389,7 +2629,7 @@ window.opGateLogin = function(){
 
     <div class="mt-lg">
       <div class="binder-head" style="background:linear-gradient(135deg,#23235f,#33509e);">
-        <h3 style="color:#fff;">🫧 Undecided Pocket</h3>
+ <h3 style="color:#fff;">Undecided Pocket</h3>
         <p class="sub2">Inconclusive verdicts wait here — nothing files under a guess.</p>
         <p style="font-weight:900;margin-top:8px;" id="opPocketCount">Your scans, under review</p>
       </div>
@@ -2408,31 +2648,31 @@ window.opGateLogin = function(){
 
     <div class="card mt">
       <h3>Free — $0</h3>
-      <p class="lead" style="font-size:16px;margin-top:8px;" id="planPoolText">10 Real checks to start, then 5 fresh checks every month. No SAM, no Grade. Unused checks never roll over.</p>
+      <p class="lead" style="font-size:16px;margin-top:8px;" id="planPoolText">10 Real checks to start, then 5 fresh checks every month. No deep measurement, no Grade. Unused checks never roll over.</p>
       <button type="button" class="bubble-btn b-white mt" disabled><span>Free — included</span></button>
     </div>
 
     <div class="card mt">
       <h3>$4.99/month</h3>
-      <p class="lead" style="font-size:16px;margin-top:8px;">100 Real checks/month. SAM escalation-only. No Grade. Unused checks never roll over.</p>
+      <p class="lead" style="font-size:16px;margin-top:8px;">100 Real checks/month. Deep measurement only when a check needs a second look. No Grade. Unused checks never roll over.</p>
       <button type="button" class="bubble-btn b-white mt" disabled aria-label="Get the $4.99 a month plan — coming at launch"><span>Get $4.99/month</span><span class="sub">Coming at launch</span></button>
     </div>
 
     <div class="card mt">
       <h3>$6.99/month</h3>
-      <p class="lead" style="font-size:16px;margin-top:8px;">300 Real checks/month, fair-use cap. SAM escalation-only. No Grade. Unused checks never roll over.</p>
+      <p class="lead" style="font-size:16px;margin-top:8px;">300 Real checks/month, fair-use cap. Deep measurement only when a check needs a second look. No Grade. Unused checks never roll over.</p>
       <button type="button" class="bubble-btn b-white mt" disabled aria-label="Get the $6.99 a month plan — coming at launch"><span>Get $6.99/month</span><span class="sub">Coming at launch</span></button>
     </div>
 
     <div class="card mt">
       <h3>Grading — $4.99/month</h3>
-      <p class="lead" style="font-size:16px;margin-top:8px;">20 Grade runs/month, estimate-only, SAM front+back. Grading only, no Real checks. Unused grades never roll over.</p>
+      <p class="lead" style="font-size:16px;margin-top:8px;">20 Grade runs/month, estimate-only, Deep measurement of the front and back. Grading only, no Real checks. Unused grades never roll over.</p>
       <button type="button" class="bubble-btn b-white mt" disabled aria-label="Get the Grading plan for $4.99 a month — coming at launch"><span>Get Grading — $4.99/month</span><span class="sub">Coming at launch</span></button>
     </div>
 
     <div class="card mt" style="background:linear-gradient(180deg,#3a2f14 0%,#241d0d 100%);">
       <h3>The Ultimate Package — $19.99/month</h3>
-      <p class="lead" style="font-size:16px;margin-top:8px;">500 Real checks/month + 50 Grade runs/month. SAM escalation-only, Grade estimate-only. Not unlimited. Unused never roll over.</p>
+      <p class="lead" style="font-size:16px;margin-top:8px;">500 Real checks/month + 50 Grade runs/month. Deep measurement only when a check needs a second look. Grade estimate-only. Not unlimited. Unused never roll over.</p>
       <button type="button" class="bubble-btn b-white mt" disabled aria-label="Get The Ultimate Package for $19.99 a month — coming at launch"><span>Get The Ultimate Package — $19.99/month</span><span class="sub">Coming at launch</span></button>
     </div>
 
@@ -2443,17 +2683,30 @@ window.opGateLogin = function(){
   <!-- ================= MINI GAMES HUB ================= -->
   <section class="screen" id="scr-games">
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>Mini Games 🎮</h2><p class="small dim" id="opGamesAvatarLine"></p>
-    <div class="stack" id="gamesList1"></div>
-    <div class="card mt" role="note" aria-label="About these games — not a button">
-      <p class="small" style="margin:0;">🫧 Short bubbly games from the crew, just for fun. Best scores land on the live global leaderboard below — bragging rights for everybody.</p>
+    <h2>Mini Games</h2>
+    <p class="small dim" id="opGamesAvatarLine"></p>
+    <p class="small dim">Five games live in the app — one shelf, one door. The rest moved to the website arcade; nothing was deleted.</p>
+    <div id="p2PracticeBar" class="card mt" hidden></div>
+    <div class="stack" id="p2ShelfList">
+      <button type="button" class="bubble-btn b-lime" data-game="gameBeat"><span>🎵 Bubble Beat</span><span class="sub">by Juno 🎵 · Tap each bubble as it crosses the gold ring.</span><span class="p2-runs" data-runs-for="gameBeat"></span></button>
+      <button type="button" class="bubble-btn b-lemon" data-game="gameMystery"><span>🔮 Mystery Bubble</span><span class="sub">by Milo 🎲 · Track the star through the shuffle, then pick it.</span><span class="p2-runs" data-runs-for="gameMystery"></span></button>
+      <button type="button" class="bubble-btn b-pink" data-game="gameCMatch"><span>🀄 Cauldron Match</span><span class="sub">by Potion 🌙 · Tap free tiles in — three of a kind pops.</span><span class="p2-runs" data-runs-for="gameCMatch"></span></button>
+      <button type="button" class="bubble-btn b-pink" data-game="gameMatch"><span>🃏 Match Audit</span><span class="sub">by Noor 🦉 · Flip two at a time; match every pair.</span><span class="p2-runs" data-runs-for="gameMatch"></span></button>
+      <button type="button" class="bubble-btn b-gold" data-game="gameStack"><span>🧱 Cardboard Stack</span><span class="sub">by Potion 🌙 · Drop each slab flush — the overhang breaks off.</span><span class="p2-runs" data-runs-for="gameStack"></span></button>
     </div>
-    <div class="stack mt" id="gamesList2"></div>
-    <div class="band band-grape mt">
-      <h3>🏆 Global Leaderboard</h3>
-      <p class="sub2">Live top 5 for every game — everybody's best scores, not just this visit. Finish a game and your best score posts under your profile name.</p>
+    <div class="card mt" role="note" aria-label="About practice runs">
+      <p class="small" style="margin:0;">🫧 Each game gives you <b>3 free runs a day</b>. After that, a practice run costs 🪙 10 — practice scores never post to any leaderboard, ever.</p>
     </div>
-    <div class="card mt" id="gamesBoardPanel"><p class="small dim">Loading the global leaderboard…</p></div>
+    <div class="card mt center">
+      <p class="small" style="margin:0;">Live top 5 for the games that post — everybody's best scores, not just this visit. Finish a game and your best score posts under your profile name.</p>
+      <button type="button" class="bubble-btn b-sky small mt" data-nav="leaderboard"><span>See the Global Leaderboard</span></button>
+    </div>
+    <div class="card mt center">
+      <p class="small" style="margin:0;">More games live in the website arcade — Cauldron Words, Cauldron Cannon, Pop Path, Rapid Fire and Guess the Price moved there. Cardboard Stack plays in both places — it's the owner's favourite.</p>
+      <a class="bubble-btn b-white small mt" href="../arcade.html" style="text-decoration:none;"><span>Visit the website arcade →</span></a>
+    </div>
+    <div id="gamesList1" hidden></div>
+    <div id="gamesList2" hidden></div>
   </section>
 
 
@@ -2508,7 +2761,13 @@ window.opGateLogin = function(){
       <button type="button" class="bubble-btn b-white small" id="tellsReset">Start over (clears photos and marks on this page only)</button>
       <p class="small dim center" style="margin-top:10px;">Photos and marks live only in this page visit. Reloading clears them. Nothing is uploaded or stored.</p>
     </div>
-  </section>
+  
+    <div class="card mt">
+      <h3 style="font-size:18px;">Bonus tell practice</h3>
+      <p class="small dim">Extra drills, unlocked with coins in Rewards. The checklist above is the whole free lesson — these are only more reps of it.</p>
+      <div id="p2DrillsList"></div>
+    </div>
+</section>
 
 <section class="screen" id="scr-settings">
     <button type="button" class="backlink" data-nav="home">← Home</button>
@@ -2519,6 +2778,12 @@ window.opGateLogin = function(){
     <label class="op-field">Bio / tagline <input type="text" id="opBio" placeholder="A short line about you" autocomplete="off"></label>
     <button type="button" class="bubble-btn b-gold" onclick="opSaveProfile()"><span>Save profile (this device only)</span></button>
     <p class="small dim" id="opProfileSaved" hidden>Saved on this device.</p></div>
+    <div class="card mt"><h3>Display name for leaderboards (this device only)</h3>
+    <p class="small dim">This is not an account sign-in. It only remembers the name shown in the top bubble and on the leaderboards. No password, no server, nothing leaves this device, and nothing is saved to an account. For a real account, use the Card Cauldron account card on this screen.</p>
+    <label class="op-field">Display name <input type="text" id="opLoginName" placeholder="Username for this demo" autocomplete="off"></label>
+    <button type="button" class="bubble-btn b-gold" onclick="opSettingsLogin()"><span>Use this name</span></button>
+    <button type="button" class="bubble-btn b-white" onclick="opLogout()"><span>Clear name</span></button>
+    <p class="small dim" id="opLoginState"></p></div>
     <div class="card mt"><h3>Pool sharing</h3>
     <p class="small dim">Asked once, remembered on this device — you are not asked again at every scan. ON sends your scans to the pending pool (see the <a href="/pool-privacy.html" target="_blank" rel="noopener" style="color:#f5c542;">pool privacy page</a>). OFF keeps every scan on this device only. Change it any time, right here.</p>
     <p style="font-weight:800;margin:8px 0;" id="opPoolShareState">Pool sharing: not set yet — you will be asked once, at your first scan.</p>
@@ -2544,41 +2809,17 @@ window.opGateLogin = function(){
     <button type="button" class="bubble-btn b-white small" onclick="ccLoadMyChecks()"><span>Refresh your checks</span></button>
     </div>
     </div>
-    <div class="card mt"><h3>Login — local demo only</h3>
-    <p class="small dim">This is NOT a real account login. It only remembers a name so the top bubble shows who is signed in. No password, no server, nothing leaves this device, nothing is saved to an account.</p>
-    <label class="op-field">Login name <input type="text" id="opLoginName" placeholder="Username for this demo" autocomplete="off"></label>
-    <button type="button" class="bubble-btn b-gold" onclick="opSettingsLogin()"><span>Log in locally (demo only)</span></button>
-    <button type="button" class="bubble-btn b-white" onclick="opLogout()"><span>Log out (clear local login)</span></button>
-    <p class="small dim" id="opLoginState"></p></div>
-    <div class="card mt"><h3>Your avatar — pick yours (FREE)</h3>
-    <button type="button" class="bubble-btn b-gold" id="opHumanAvatarToggle" aria-expanded="true" onclick="opToggleHumanAvatarPicker()"><span>Choose your avatar ▾ — FREE</span></button>
-    <div id="opHumanAvatarGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px;">
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-01-original.webp" aria-label="Original base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-01-original.webp')"><img src="assets/avatars/avatar-01-original.webp" alt="Original base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Original</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-02-female.webp" aria-label="Female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-02-female.webp')"><img src="assets/avatars/avatar-02-female.webp" alt="Female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Female</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-03-african-american.webp" aria-label="African American base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-03-african-american.webp')"><img src="assets/avatars/avatar-03-african-american.webp" alt="African American base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">African American</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-04-chinese.webp" aria-label="Chinese base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-04-chinese.webp')"><img src="assets/avatars/avatar-04-chinese.webp" alt="Chinese base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Chinese</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-05-blonde-white.webp" aria-label="Blonde hair, white skin base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-05-blonde-white.webp')"><img src="assets/avatars/avatar-05-blonde-white.webp" alt="Blonde hair, white skin base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Blonde hair, white skin</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-06-red-light-female.webp" aria-label="Red hair, light skin, female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-06-red-light-female.webp')"><img src="assets/avatars/avatar-06-red-light-female.webp" alt="Red hair, light skin, female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Red hair, light skin, female</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-07-blackhair-black-female.webp" aria-label="Black hair, Black skin, female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-07-blackhair-black-female.webp')"><img src="assets/avatars/avatar-07-blackhair-black-female.webp" alt="Black hair, Black skin, female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Black hair, Black skin, female</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-08-darkbrown-tan.webp" aria-label="Dark brown hair, tan skin base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-08-darkbrown-tan.webp')"><img src="assets/avatars/avatar-08-darkbrown-tan.webp" alt="Dark brown hair, tan skin base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Dark brown hair, tan skin</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-09-longblonde-female.webp" aria-label="Long blonde hair, female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-09-longblonde-female.webp')"><img src="assets/avatars/avatar-09-longblonde-female.webp" alt="Long blonde hair, female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Long blonde hair, female</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-10-longblonde-male.webp" aria-label="Long blonde hair, male base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-10-longblonde-male.webp')"><img src="assets/avatars/avatar-10-longblonde-male.webp" alt="Long blonde hair, male base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Long blonde hair, male</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-11-curlybrown-female.webp" aria-label="Curly brown hair, female base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-11-curlybrown-female.webp')"><img src="assets/avatars/avatar-11-curlybrown-female.webp" alt="Curly brown hair, female base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Curly brown hair, female</span></button>
-      <button type="button" class="op-human-avatar-btn" data-file="avatar-12-shortblack-asian-male.webp" aria-label="Short black hair, East Asian male base" aria-pressed="false" onclick="opPickHumanAvatar('avatar-12-shortblack-asian-male.webp')"><img src="assets/avatars/avatar-12-shortblack-asian-male.webp" alt="Short black hair, East Asian male base" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><span class="op-av-name">Short black hair, East Asian male</span></button>
-    </div>
-    <p class="small dim" id="opHumanAvatarNote" style="margin-top:10px;"></p>
-    <p class="small">All 12 bases are FREE. Hair, hats, clothes and accessories are bought with coins in Rewards — bases and skin tones are never sold.</p></div>
-    <div class="card mt"><h3>Companion — pick a creature buddy</h3>
-    <p class="small dim">Your avatar is the person you picked above. These illustrated original creatures (Mallow/Ember-style) are companions — pick one as your buddy and customise it: colour by tinting the illustration AND/OR by choosing a pre-coloured variant, plus an accessory and a background colour. If you have not picked a person yet, your companion shows in the top bubble meanwhile. Never official Pokémon art, never real card photos.</p>
-    <p class="center"><span style="position:relative;display:inline-block"><img id="opAvatarPreviewImg" style="width:96px;height:96px;object-fit:contain;border-radius:50%"><img id="opAvatarAccessoryImg" style="display:none;position:absolute;right:0;top:0;width:32px;height:32px"></span></p>
-    <div id="opAvatarPickerCards"></div>
-    <label class="op-field">Creature base <select id="opBuilderBase" onchange="opUpdateAvatarPreview()"><option value="mallow">Mallow — fluffy cub</option><option value="ember">Ember — fire drake</option><option value="bubble">Bubble buddy</option><option value="star">Star sprite</option><option value="fern">Fern — leaf sprout</option><option value="moon">Moon — crescent friend</option></select></label>
-    <label class="op-field">Colour — tint the illustration <select id="opBuilderTint" onchange="opUpdateAvatarPreview()"><option value="none">No tint (original)</option><option value="mint">Mint tint</option><option value="gold">Gold tint</option><option value="sky">Sky tint</option><option value="pink">Pink tint</option><option value="purple">Purple tint</option></select></label>
-    <label class="op-field">Colour — pre-coloured variant <select id="opBuilderVariant" onchange="opUpdateAvatarPreview()"><option value="original">Original</option><option value="sunset">Sunset</option><option value="forest">Forest</option><option value="ocean">Ocean</option><option value="berry">Berry</option></select></label>
-    <label class="op-field">Ears / accessory <select id="opBuilderAccessory" onchange="opUpdateAvatarPreview()"><option value="">None</option><option value="crown">Crown</option><option value="sparkle">Sparkles</option><option value="flame">Flame</option></select></label>
-    <label class="op-field">Avatar background colour <select id="opBuilderBg" onchange="opUpdateAvatarPreview()"><option value="#3a2c12">Gold dark</option><option value="#3a5a4a">Mint</option><option value="#1d2a3a">Sky</option><option value="#4a1d33">Pink</option><option value="#2b1d4e">Purple</option></select></label>
-    <button type="button" class="bubble-btn b-gold" onclick="opApplyAvatar()"><span>Use this companion</span></button>
-    <p class="small dim" id="opBuilderNote"></p></div>
+
+        <div class="card mt"><h3>Plain words</h3>
+    <p class="small dim">Simpler words around your check — shorter sentences, everyday words, hard words explained or left out. Your verdict words never change. New visitors start with Plain words on; the choice is remembered on this device.</p>
+    <button type="button" class="bubble-btn b-white" id="p2PlainBtn" onclick="p2TogglePlain()"><span>Turn on Plain words</span></button></div>
+    <div class="card mt"><h3>Your pet — pick your companion</h3>
+    <p class="small dim">Person-avatars are gone — pets are back. Pick one creature and one tint; that's the whole customising, kept simple on purpose. Your pet lives in the corner of the main screens, coaches your photos, and shares your verdicts honestly. It never sits on a receipt.</p>
+    <p class="center"><img id="opAvatarPreviewImg" style="width:96px;height:96px;object-fit:contain;border-radius:50%" alt="Your pet preview"></p>
+    <div class="p2-pet-grid" id="p2PetGrid"></div>
+    <p class="small" style="font-weight:800;margin-top:14px;">Tint — pick one</p>
+    <div class="p2-tint-row" id="p2TintRow"></div>
+    <p class="small dim" id="p2PetNote" style="margin-top:10px;"></p></div>
     <div class="card mt"><h3>Background animation</h3>
     <p class="small dim">Pick a different live scrolling animation for the background behind the app. It saves on this device only, and Calm &amp; Clear / reduced-motion still stops it.</p>
     <label class="op-field">Background animation <select id="opBgAnim" onchange="opSetBg(this.value)"><option value="bubbles">Bubbles — coloured dots, diagonal scroll</option><option value="stars">Stars — tiny gold and white stars, drifting up</option><option value="embers">Ember sparks — orange sparks rising</option><option value="waves">Waves — soft teal and violet waves, sliding sideways</option><option value="mist">Cauldron mist — slow gold and violet glow, drifting</option></select></label>
@@ -2587,13 +2828,13 @@ window.opGateLogin = function(){
 
   <section class="screen" id="scr-leaderboard">
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>🏆 Global Leaderboard — Mini Games</h2>
+ <h2>Global Leaderboard — Mini Games</h2>
     <p class="small dim">This board is for everybody who plays, not just this visit. Global scores are live now on the SSD backend at api.cardcauldrontcg.com. Post a score from any game's end screen, by name only, and it shows here for everybody. No fake names or scores are shown here.</p>
-    <div class="card mt" style="border:3px solid #f0b23e;"><h3>🏆 Total leaderboard — all games combined</h3>
+ <div class="card mt" style="border:3px solid #f0b23e;"><h3>Total leaderboard — all games combined</h3>
     <p class="small dim">Most points out of all games combined, at the top. Each player's total is the sum of their best score in each game — not an average.</p>
     <p class="small dim" id="lbTotalStatus">Loading total scores…</p>
     <div id="lbTotalTop" style="margin-top:10px;"></div>
-    <p class="small dim">Guess the Price does not post scores, so it is not in this total.</p></div>
+</div>
     <div class="card mt"><h3>Global board — live</h3>
     <p class="small dim" id="opGlobalStatus">Pick a game from the dropdown, then its top scores load live from the backend.</p>
     <div id="opLbPicker" style="margin-top:10px;"></div>
@@ -2606,7 +2847,7 @@ window.opGateLogin = function(){
 
   <section class="screen" id="scr-website">
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>🌐 Check out my website</h2>
+ <h2>Check out my website</h2>
     <p class="small dim">These links leave the demo and open the real Card Cauldron TCG website and social pages in a new tab.</p>
     <div class="card mt"><h3>Website pages</h3>
     <div class="stack">
@@ -2633,7 +2874,7 @@ window.opGateLogin = function(){
 
   <section class="screen" id="scr-feedback">
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>💬 Feedback &amp; Ideas</h2>
+ <h2>Feedback &amp; Ideas</h2>
     <p class="small dim">Tell us what broke, what confused you, or what you want next. No account, no tracking — only what you type here is sent.</p>
     <div class="card mt">
       <label class="op-field">What is this about?
@@ -2653,7 +2894,7 @@ window.opGateLogin = function(){
 
   <section class="screen" id="scr-chatroom">
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>💬 Feedback &amp; Chat Room</h2>
+ <h2>Feedback &amp; Chat Room</h2>
     <p class="small dim">Chat with other people here, and leave feedback as a chat message — everybody in the demo can read it. Your name and message show to everybody, nothing else. Do not share private info (no address, phone, passwords, or payment details). Be kind — rude messages can be removed.</p>
     <div class="card mt">
       <div id="chatList" style="max-height:320px;overflow-y:auto;text-align:left;"></div>
@@ -2679,10 +2920,10 @@ window.opGateLogin = function(){
   </style>
   <section class="screen" id="scr-agent">
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>🤖 Talk to My Agent</h2>
+ <h2>Talk to My Agent</h2>
     <p class="small dim">Chat with <b>your own</b> AI — a model running on your own computer, on your own network. This page talks straight from your browser to the address you type in. Nothing passes through Card Cauldron's servers.</p>
     <div class="card mt">
-      <h3 style="margin:0;">🔌 Connect to your agent</h3>
+ <h3 style="margin:0;">Connect to your agent</h3>
       <label class="op-field">Your agent's address — an IP, IP:port, or full address
         <input type="text" id="agEndpoint" inputmode="url" autocomplete="off" spellcheck="false" placeholder="e.g. 192.168.1.213 or 192.168.1.213:8080">
       </label>
@@ -2696,7 +2937,7 @@ window.opGateLogin = function(){
       </label>
     </div>
     <div class="card mt">
-      <h3 style="margin:0;">💬 Chat</h3>
+ <h3 style="margin:0;">Chat</h3>
       <div id="agLog" class="ag-log"><div class="ag-msg ag-bot">Hi! Connect to your agent above, then say hello here. Your chat stays between this browser and your own machine.</div></div>
       <label class="op-field">Message
         <textarea id="agInput" rows="3" maxlength="4000" placeholder="Type a message to your agent… (Enter sends, Shift+Enter for a new line)"></textarea>
@@ -2705,57 +2946,71 @@ window.opGateLogin = function(){
       <button type="button" class="bubble-btn b-white" id="agClearBtn"><span>Clear chat</span></button>
     </div>
     <details class="card mt">
-      <summary style="font-weight:900;cursor:pointer;">❓ Help — how this works</summary>
-      <p class="small dim">Run the House AI kit on a computer on your network, type its address here. Just the IP works (we add port 8080 for you), or type IP:port if your kit uses a different port, or paste a full address starting with http:// or https://.</p>
-      <p class="small dim">Only the address is remembered on this device — never the API key, never the chat.</p>
-      <p class="small dim"><b>One honest catch:</b> this page lives on the secure web (https), and browsers stand guard over that — they may block this page from calling a plain-http home address like 192.168.1.213:8080, even when your kit is running perfectly. If Connect can't get through, that's the browser standing guard, not your kit being broken. The reliable paths are the chat page built into the House AI kit itself (it opens right on the kit's own machine, no guard in the way), or a Tailscale address — Tailscale gives your home machine a secure https name that this page is allowed to call.</p>
+      <summary style="font-weight:900;cursor:pointer;">🪙 How coins work</summary>
+      <p class="small dim">Your coins live on this device only, for now. They are never real money. When real sign-in lands, your coins move to your account — until then, nobody else's device can see your coins, and we cannot see theirs either.</p>
+      <h3 style="margin:0;">How you earn coins right now</h3>
+      <p class="small">🎮 Games pay coins — the first clear of a level pays most: Bubble Beat 50 · Cauldron Match 30 · Mystery Bubble 20 · Match Audit 20 · Cardboard Stack 10 (+2 a rung crossed). 📅 Daily check-in pays +10. 🫧 Scanning a card pays +10. The five games that moved to the website arcade pay their coins over there.</p>
+      <h3 style="margin:0;">What coins buy now</h3>
+      <p class="small">Treats and corner dressing for your pet (a small shelf, capped for good), practice runs past the free daily cap — whose scores never post — bonus tell-training packs, and pours into the donation cauldron. Coins never buy a check, a grade, a verdict, or a tier. That fence is permanent.</p>
     </details>
   </section>
 
 <section class="screen" id="scr-rewards">
-    <!-- CC-AVATAR-REWARDS SPAN-1: avatar stage, FIRST element of #scr-rewards (filled + unhidden by #ccAvatarRewardsScript; stays hidden if the script is absent, so Rewards is untouched without it) -->
-    <div class="card ccar-stage" id="ccAvatarStage" hidden>
-      <div class="ccar-stage-main">
-        <div class="ccar-figure" id="ccAvatarStageFigure">
-          <img class="ccar-base" id="ccAvatarStageImg" alt="Your avatar">
-          <div class="ccar-fallback" id="ccAvatarStageFallback">🧑</div>
-          <div class="ccar-overlays" id="ccAvatarStageOverlays" aria-hidden="true"></div>
-        </div>
-        <div class="ccar-stage-side">
-          <h3 style="margin:0;" id="ccAvatarStageName">Your avatar</h3>
-          <p class="small ccar-coins" id="ccAvatarStageCoins">Your coins: 🪙 0 total · 0 earned · 0 purchased</p>
-          <p class="small dim ccar-status" id="ccAvatarStageStatus">Tap a look to preview it on you — buying and wearing happen right here.</p>
-        </div>
-      </div>
-      <div class="ccar-rail" id="ccAvatarRail" aria-label="Wearable looks"></div>
-    </div>
-    <!-- /CC-AVATAR-REWARDS SPAN-1 -->
+    
     <img src="assets/sweep/app/rewards-hero.webp" alt="" aria-hidden="true" style="width:100%;border-radius:16px;display:block;margin:4px 0 10px;">
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>🎁 Rewards</h2>
+ <h2>Rewards</h2>
     <div class="card mt">
-      <h3 style="margin:0;">Your coins</h3>
-      <p style="font-size:32px;margin:8px 0;" id="rewardsCoins">🪙 0</p>
-      <p class="small dim">Leaderboard scores are different — those ARE saved on the backend for everybody to see. Coins are not, yet.</p>
+      <h3 style="margin:0;">Your coin jar</h3>
+      <div class="p2-jar-wrap" style="margin-top:10px;">
+        <div class="p2-jar" aria-hidden="true"><div class="p2-jar-fill" id="p2JarFill"></div></div>
+        <div>
+          <p class="p2-jar-num" id="p2JarNum">🪙 0</p>
+          <p class="small dim">The jar is the charm — the number is the truth. Leaderboard scores are different: those ARE saved on the backend for everybody to see. Coins are not, yet.</p>
+        </div>
+      </div>
     </div>
+    
     <div class="card mt">
-      <h3 style="margin:0;">📅 Daily check-in</h3>
+ <h3 style="margin:0;">Daily check-in</h3>
       <p class="small dim">Come back each day and check in for <b>+10 coins</b>. Check in two days in a row and your streak grows.</p>
       <p id="dailyStreak">Streak: 0 days</p>
       <p class="small dim" id="dailyStatus"></p>
       <button type="button" class="bubble-btn b-gold" id="dailyBtn" onclick="opDailyCheckin()"><span>Check in today (+10 coins)</span></button>
     </div>
     <div class="card mt">
-      <h3 style="margin:0;">🛍️ Reward Shop — all 27, spend your coins here</h3>
-      <p class="small dim">Bases are FREE, skin tones are FREE. Everything below costs coins, device-local only, never money, never buys a check, grade, verdict, or tier.</p>
-      <div id="shopList" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
+      <h3 style="margin:0;">Your pet's corner</h3>
+      <p class="center" style="margin-top:8px;"><img id="p2PetFigure" style="width:96px;height:96px;object-fit:contain" alt="Your pet"></p>
+      <p class="small dim center" id="p2DressingLine">The corner is bare for now — dressing you buy shows up here.</p>
+      <div id="p2PetShop" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
+      <p class="small dim" id="p2CornerStatus" style="margin-top:8px;"></p>
+    </div>
+    <div class="card mt">
+      <h3 style="margin:0;">Play &amp; learn — practice with coins</h3>
+      <p class="small dim">Every game on the shelf gives 3 free runs a day. Past that, a practice run costs 🪙 10 — and its score <b>never</b> posts to any leaderboard. The tell lessons themselves stay free forever; coins only ever buy <i>more practice</i>, never the lesson.</p>
+      <div id="p2TrainShop" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
+      <p class="small dim" id="p2TrainStatus" style="margin-top:8px;"></p>
+    </div>
+    <div class="card mt">
+      <h3 style="margin:0;">The donation cauldron</h3>
+      <p class="small">Pour coins into the shared cauldron. When the community jar fills, Card Cauldron TCG donates $25 of Pokémon product (at our cost) through Child's Play — games for kids in hospitals — and posts the receipt and a photo right here, where everyone can see it. One fill is always that same $25 of product: coins never convert to money at any other rate, and the donation is always made by hand, never charged automatically. More cards into more players' hands.</p>
+      <p class="p2-jar-num" id="p2PourCount">🪙 0</p>
+      <p class="small dim">poured by you, on this device. In the full app the jar is shared by every user, and the running total is public.</p>
+      <div class="p2-donate-jar" aria-hidden="true"><div class="p2-donate-fill" id="p2DonateFill"></div></div>
+      <p class="small dim" id="p2DonatePct" style="margin-top:6px;"></p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+        <button type="button" class="bubble-btn b-white" onclick="p2Pour(10)"><span>Pour 🪙 10</span></button>
+        <button type="button" class="bubble-btn b-white" onclick="p2Pour(25)"><span>Pour 🪙 25</span></button>
+        <button type="button" class="bubble-btn b-gold" onclick="p2Pour(100)"><span>Pour 🪙 100</span></button>
+      </div>
+      <p class="small dim" id="p2PourStatus" style="margin-top:8px;"></p>
     </div>
     <details class="card mt">
       <summary style="font-weight:900;cursor:pointer;">🪙 How coins work</summary>
       <p class="small dim">Your coins live on this device only, for now. They are never real money. When real sign-in lands, your coins move to your account — until then, nobody else's device can see your coins, and we cannot see theirs either.</p>
       <h3 style="margin:0;">How you earn coins right now</h3>
       <p class="small">🎮 Games pay coins — the first clear of a level pays most: Bubble Beat 50 · Cauldron Words 25 · Cauldron Match 30 · Cauldron Cannon 30 · Mystery Bubble 20 · Match Audit 20 · Pop Path 25 (a full run) · Rapid Fire 15 (a full run, +1 a stage past the first) · Cardboard Stack 10 (+2 a rung crossed). Replays pay a smaller amount, and each game pays up to 150 coins a day.<br>📅 Daily check-in — +10 coins<br>🃏 Scan a card (front + back) — +10 coins per scan, max 50 a day from scans</p>
-      <h3 style="margin:0;">👤 Avatar bases &amp; looks</h3>
+ <h3 style="margin:0;">Avatar bases &amp; looks</h3>
       <p class="small">Avatar bases are picked free in Profile / Settings, and avatar looks/accessories live in the shop below.</p>
     </details>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -2768,9 +3023,9 @@ window.opGateLogin = function(){
   <!-- ================= INVITE & EARN (CC-FIX-27.8) ================= -->
   <section class="screen" id="scr-invite">
     <button type="button" class="backlink" data-nav="home">← Home</button>
-    <h2>🤝 Invite &amp; Earn</h2>
+ <h2>Invite &amp; Earn</h2>
     <div class="card mt" id="ccRefPendingCard" hidden>
-      <h3 style="margin:0;">🎉 You came in on an invite</h3>
+ <h3 style="margin:0;">You came in on an invite</h3>
       <p class="small" style="margin-top:6px;">A friend's invite is saved on this device. Sign in with your own name and the bonus lands — +10 free checks for you, +10 for them.</p>
     </div>
     <div class="card mt">
@@ -3207,6 +3462,8 @@ function renderCaptureStep(){
     dots += '<i class="'+(i<capStep?"done":(i===capStep?"now":""))+'"></i>';
   }
   $("capDots").innerHTML = dots;
+  var _cs = $("capSteps");
+  if(_cs){ var _ch = ""; for(var k=0;k<capCat.steps.length;k++){ _ch += '<li class="'+(k<capStep?"done":(k===capStep?"now":""))+'"><span class="n">'+(k<capStep?"\u2713":(k+1))+'</span><span>'+capCat.steps[k].cap+'</span></li>'; } if(capCat.label==="Pok\u00e9mon Card"){ _ch += '<li><span class="n">'+(capCat.steps.length+1)+'</span><span>Light test \u00b7 optional</span></li>'; } _cs.innerHTML = _ch; }
   if(capStep===0 && !capHas){ poolFrontImg = null; poolBackImg = null; poolSubmittedId = null; }
 }
 function capPhotoReady(){
@@ -3886,8 +4143,8 @@ var PW_TEXT = {
     plain: "The check works the same for all kinds. Front photo, then back photo, then the signs. Saved checks get a result that shows its work. If we cannot call a card yet, the answer is Inconclusive."
   },
   planPoolText: {
-    normal: "10 Real checks to start, then 5 fresh checks every month. No SAM, no Grade. Unused checks never roll over.",
-    plain: "10 Real checks to start. Then 5 more checks every month. No SAM, no Grade. Unused checks never roll over."
+    normal: "10 Real checks to start, then 5 fresh checks every month. No deep measurement, no Grade. Unused checks never roll over.",
+    plain: "10 Real checks to start. Then 5 more checks every month. No deep measurement, no Grade. Unused checks never roll over."
   },
   verdictSummary: {
     normal: "What we found: in this sample, the print, the holo pattern, and the lettering all line up with a genuine card.<br>What it's based on: both checkers comparing the front and the back, tell by tell.<br>What it can't tell you: a check is an opinion from photos — not a grade, not a certificate, never a guarantee.",
@@ -12451,8 +12708,8 @@ if (GAME_STARTERS_MISSING.length) { try { console.warn("CC games: starters missi
     in_band: "undecided"
   };
   var EXPLAIN = {
-    "Likely Counterfeit": "The measured print tells match the printed pair-sheet fakes this lane was proven on.",
-    "Likely Genuine": "The measured print tells line up with genuine prints, not with the pair-sheet fakes this lane was proven on.",
+    "Likely Counterfeit": "The measured print tells match the printed fakes this check was proven on.",
+    "Likely Genuine": "The measured print tells line up with genuine prints, not with the printed fakes this check was proven on.",
     "Inconclusive": "The lane's two reads did not settle — an honest no-call from this lane, not a pass."
   };
 
@@ -12478,7 +12735,7 @@ if (GAME_STARTERS_MISSING.length) { try { console.warn("CC games: starters missi
     var e = document.getElementById("psLaneExplain");
     if (e) e.textContent = EXPLAIN[lv.verdict] || "";
     var m = document.getElementById("psLaneMeta");
-    if (m) m.textContent = "Lane: Printed Pair-Sheet Lane · measured " + (lv.measured_at || "") + " · recipe " + (lv.config || "frozen") + ".";
+    if (m) m.textContent = "Print check · measured " + (lv.measured_at || "") + " · recipe " + (lv.config || "frozen") + ".";
     var btn = document.querySelector('#scr-gate [data-nav="sampleVerdict"]');
     if (btn) btn.setAttribute("data-nav", "laneVerdict");
   }
@@ -12905,7 +13162,7 @@ function opRenderAvatar(){
   var nm = document.getElementById('opTopName'); if(nm) nm.textContent = opProfile.displayName || opProfile.username || 'Guest';
   var pv = document.getElementById('opAvatarPreviewImg'); if(pv){ pv.src = avatarSrc; pv.style.filter = human ? 'none' : (OP_TINTS[opProfile.avatarTint] || 'none'); pv.style.objectFit = human ? 'cover' : 'contain'; }
   var ai = document.getElementById('opAvatarAccessoryImg'); if(ai){ if(!human && opProfile.avatarAccessory){ ai.src = OP_AVATAR_DATA['acc-'+opProfile.avatarAccessory] || ''; ai.style.display = 'block'; } else { ai.style.display = 'none'; } }
-  var line = 'Your avatar <img src="'+avatarSrc+'" style="width:32px;height:32px;border-radius:50%;object-fit:'+(human ? 'cover' : 'contain')+';vertical-align:middle" alt="Your avatar"> is playing as '+(opProfile.displayName || opProfile.username || 'Guest')+'.';
+  var line = 'Your pet <img src="'+avatarSrc+'" style="width:32px;height:32px;border-radius:50%;object-fit:'+(human ? 'cover' : 'contain')+';vertical-align:middle" alt="Your pet"> is playing as '+(opProfile.displayName || opProfile.username || 'Guest')+'.';
   var ga = document.getElementById('opGamesAvatarLine'); if(ga) ga.innerHTML = line;
   var ba = document.getElementById('opBindersAvatarLine'); if(ba) ba.innerHTML = line;
   var cards = document.querySelectorAll('.op-avatar-card'); cards.forEach(function(c){ c.classList.toggle('on', c.getAttribute('data-creature') === opProfile.avatarBase); });
@@ -25668,5 +25925,639 @@ body.neon textarea:focus-visible{
 })();
 
 </script>
+<script id="ccLabPhase2Script">
+/* ================================================================
+   ARCANE LAB — PHASE 2 (Nov 13, 2026)
+   Pets replace avatars · coin sinks A/B/C · games shelf of five ·
+   soft-peach token surfaces · Plain Words first-run default.
+   Appended-block pattern: this block ADDS the Phase 2 systems and
+   retires the avatar surfaces; it edits no earlier block. Every
+   hook into an older system goes through that system's own public
+   path (opRenderAvatar, opAddCoins, CCQG.verdict, the hub's
+   data-game click path) so the older code keeps owning its state.
+   House fences held here: verdict words are only ever Likely
+   Genuine / Likely Counterfeit / Inconclusive; coins are never
+   real money and never buy a check, a grade, a verdict, or a tier;
+   the pet reacts only to what a system already measured — it never
+   judges a card or a photo itself.
+   ================================================================ */
+(function(){
+"use strict";
+function $(id){ return document.getElementById(id); }
+function lsGet(k, d){ try{ var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function lsGetRaw(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSetRaw(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function todayKey(){ var d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+function esc(s){ return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function petSrc(){ try{ return (typeof opAvatarSrc === "function") ? opAvatarSrc() : ""; }catch(e){ return ""; } }
+function petFilter(){ try{ return (typeof OP_TINTS !== "undefined" && OP_TINTS[opProfile.avatarTint]) || "none"; }catch(e){ return "none"; } }
+function petName(){ try{ return (OP_CREATURE_NAMES[opProfile.avatarBase] || "Mallow").split(" — ")[0]; }catch(e){ return "Mallow"; } }
+function react(el, kind){ if(!el) return; var cls = ["react-bounce","react-tilt","react-sit","react-spin"]; cls.forEach(function(c){ el.classList.remove(c); }); void el.offsetWidth; el.classList.add("react-" + kind); setTimeout(function(){ el.classList.remove("react-" + kind); }, 1400); }
+function spend(n){
+  if (typeof opCoins !== "number" || opCoins < n) return false;
+  opCoins -= n; lsSetRaw("op_coins", String(opCoins));
+  if (typeof opRenderCoins === "function") opRenderCoins();
+  if (typeof opRenderRewards === "function") opRenderRewards();
+  renderJar();
+  return true;
+}
+function notEnough(n){ alert("Not enough coins yet — you have 🪙 " + opCoins + ", this costs 🪙 " + n + ". Play games, check in daily, or scan a card to earn more."); }
+
+/* ================= 0. Migration: person-avatars retire ============ */
+try{ localStorage.removeItem("cc_demo_human_avatar"); }catch(e){}
+try{ if (window.opProfile && opProfile.avatarAccessory){ opProfile.avatarAccessory = ""; if (typeof opSaveProfileData === "function") opSaveProfileData(); } }catch(e){}
+
+/* ================= 1. Pet picker (Settings) ======================== */
+var P2_TINTS = [["original","Original"],["sunset","Sunset"],["forest","Forest"],["ocean","Ocean"],["berry","Berry"]];
+function refreshPetFaces(){
+  var s = petSrc(), f = petFilter();
+  ["p2PetImg","p2CoachPet","p2VerdictPetSample","p2VerdictPetLane","p2PetFigure"].forEach(function(id){
+    var el = $(id); if (el){ el.src = s; el.style.filter = f; el.alt = petName() + ", your pet companion"; }
+  });
+  var ss = $("p2VerdictStripSample"); if (ss && !ss.hidden) initSampleStrip(); laneLastWord = "";
+}
+function renderPetPicker(){
+  var grid = $("p2PetGrid");
+  if (grid && typeof OP_CREATURES !== "undefined"){
+    grid.innerHTML = OP_CREATURES.map(function(c){
+      var on = opProfile.avatarBase === c;
+      return '<button type="button" class="p2-pet-card' + (on ? " on" : "") + '" aria-pressed="' + on + '" onclick="p2PickPet(\'' + c + '\')"><img src="' + (OP_AVATAR_DATA[c + "-" + opProfile.avatarVariant] || OP_AVATAR_DATA[c + "-original"] || "") + '" alt=""><b>' + esc(OP_CREATURE_NAMES[c]) + '</b></button>';
+    }).join("");
+  }
+  var row = $("p2TintRow");
+  if (row){
+    row.innerHTML = P2_TINTS.map(function(t){
+      var on = opProfile.avatarVariant === t[0];
+      return '<button type="button" class="p2-tint' + (on ? " on" : "") + '" aria-pressed="' + on + '" onclick="p2PickTint(\'' + t[0] + '\')">' + t[1] + '</button>';
+    }).join("");
+  }
+  var pv = $("opAvatarPreviewImg"); if (pv){ pv.src = petSrc(); pv.style.filter = petFilter(); }
+  refreshPetFaces();
+  renderCorner();
+}
+window.p2PickPet = function(c){
+  opProfile.avatarBase = c; opProfile.avatarAccessory = "";
+  if (typeof opSaveProfileData === "function") opSaveProfileData();
+  if (typeof opRenderAvatar === "function") opRenderAvatar();
+  renderPetPicker();
+  var n = $("p2PetNote"); if (n) n.textContent = "Pet saved on this device: " + (OP_CREATURE_NAMES[c] || c) + ", " + opProfile.avatarVariant + " tint.";
+  react($("p2PetDock"), "bounce");
+};
+window.p2PickTint = function(v){
+  opProfile.avatarVariant = v;
+  if (typeof opSaveProfileData === "function") opSaveProfileData();
+  if (typeof opRenderAvatar === "function") opRenderAvatar();
+  renderPetPicker();
+  var n = $("p2PetNote"); if (n) n.textContent = "Tint saved on this device: " + v + ". One tint, that's the whole customising — simple on purpose.";
+};
+
+/* ================= 2. Plain Words: default for new users =========== */
+function syncPlainMirror(){
+  var b = $("p2PlainBtn"); if (!b) return;
+  b.innerHTML = window.plainOn ? "<span>🕯️ Plain words is ON — tap to turn off</span>" : "<span>Turn on Plain words</span>";
+}
+window.p2TogglePlain = function(){ var b = $("plainBtn"); if (b) b.click(); syncPlainMirror(); };
+(function initPlain(){
+  var stored = lsGetRaw("cc_plain_words");
+  var btn = $("plainBtn");
+  if (!btn) return;
+  if (stored === null || stored === "on"){
+    /* New user (no stored choice) starts in Plain Words — owner
+       ruling Nov 13. A stored "off" is respected exactly as-is. */
+    if (!window.plainOn) btn.click();
+  }
+  btn.addEventListener("click", function(){
+    lsSetRaw("cc_plain_words", window.plainOn ? "on" : "off");
+    setTimeout(syncPlainMirror, 0);
+  });
+  syncPlainMirror();
+})();
+
+/* ================= 3. The pet dock + five behaviours =============== */
+var P2_DOCK_SCREENS = { "scr-home":1, "scr-games":1, "scr-rewards":1, "scr-binders":1, "scr-settings":1, "scr-tells":1, "scr-leaderboard":1, "scr-invite":1, "scr-plan":1, "scr-website":1, "scr-feedback":1, "scr-lightLearn":1, "scr-batch":1 };
+var dock, bubbleEl, lastAct = Date.now(), greeted = false, bubbleTimer = null;
+function buildDock(){
+  dock = document.createElement("div");
+  dock.id = "p2PetDock";
+  dock.innerHTML = '<div class="p2-pet-bubble" id="p2PetBubble" role="status"></div>'
+    + '<div class="p2-pet-zzz" aria-hidden="true">z z</div>'
+    + '<img class="p2-pet-img" id="p2PetImg" alt="Your pet companion">';
+  document.body.appendChild(dock);
+  bubbleEl = $("p2PetBubble");
+  var img = $("p2PetImg");
+  img.addEventListener("click", function(){
+    react(dock, "bounce");
+    showBubble("That's " + petName() + " — your Lab companion.", 2600);
+    lastAct = Date.now(); dock.classList.remove("sleeping");
+  });
+  refreshPetFaces();
+}
+function showBubble(text, ms){
+  if (!bubbleEl) return;
+  bubbleEl.textContent = text;
+  bubbleEl.classList.add("show");
+  if (bubbleTimer) clearTimeout(bubbleTimer);
+  bubbleTimer = setTimeout(function(){ bubbleEl.classList.remove("show"); }, ms || 3000);
+}
+window.p2React = function(kind){ react(dock, kind); };
+["pointerdown","keydown","touchstart"].forEach(function(ev){
+  document.addEventListener(ev, function(){ lastAct = Date.now(); if (dock) dock.classList.remove("sleeping"); }, { passive: true });
+});
+function activeScreenId(){
+  var s = document.querySelector(".screen.active");
+  return s ? s.id : "";
+}
+function gateUp(){
+  var g = $("opLoginGate");
+  return !!(g && g.style.display !== "none" && g.offsetParent !== null);
+}
+var lastTickId = "";
+function watchTick(){
+  if (!dock) return;
+  var id = activeScreenId();
+  if (id !== lastTickId){
+    if (id === "scr-rewards"){ renderJar(); renderDonation(); renderCorner(); renderTraining(); }
+    lastTickId = id;
+  }
+  var show = !!P2_DOCK_SCREENS[id] && !gateUp() && !(document.body && document.body.classList.contains("cc-in-game"));
+  dock.classList.toggle("on", show);
+  if (show){
+    /* Behaviour 5 — sleep: after ~75 quiet seconds the pet dozes.
+       Calm & Clear stills it entirely via CSS (no zzz drift). */
+    var calm = $("phone") && $("phone").classList.contains("calm");
+    if (!calm && Date.now() - lastAct > 75000) dock.classList.add("sleeping");
+    /* Behaviour 1 — greet: once a day, on Home, one bubble. */
+    if (id === "scr-home" && !greeted){
+      greeted = true;
+      if (lsGetRaw("cc_p2_greet_day") !== todayKey()){
+        lsSetRaw("cc_p2_greet_day", todayKey());
+        showBubble("Got a card you're wondering about?", 6000);
+      }
+    }
+    if (id === "scr-games") renderShelfMeta();
+    if (id === "scr-settings") syncPlainMirror();
+  }
+  if (id === "scr-laneVerdict") updateLaneStrip();
+}
+
+/* ================= 4. Coach: react to the quality gate ============= */
+function coachSay(text, kind){
+  var strip = $("p2CoachStrip"); if (!strip) return;
+  var t = $("p2CoachText"); if (t) t.textContent = text;
+  if (kind) react(strip, kind);
+}
+window.__p2PetCoach = function(res){
+  if (!res) return;
+  if (!res.fail){
+    coachSay(petName() + " bounces — that photo measured sharp, bright and big enough. The gate is happy with it.", "bounce");
+  } else {
+    var signs = {
+      small: "Try again — a closer photo works better.",
+      dark: "Try again — more light on the card will help.",
+      glare: "Try again — tilt the card a little to lose the glare.",
+      blur: "Try again — hold steady and tap the card to focus."
+    };
+    coachSay(petName() + " holds up a sign: " + (signs[res.reason] || signs.blur), "tilt");
+  }
+};
+try{
+  if (window.CCQG && typeof CCQG.verdict === "function"){
+    var _p2Verdict = CCQG.verdict;
+    CCQG.verdict = function(m, w, h){
+      var r = _p2Verdict(m, w, h);
+      try{ window.__p2PetCoach(r ? { fail: true, reason: r.reason } : { fail: false }); }catch(e){}
+      return r;
+    };
+  }
+}catch(e){}
+
+/* ================= 5. Verdict reactions (never on receipts) ======== */
+function setStrip(stripId, lineId, text, kind){
+  var strip = $(stripId); if (!strip) return;
+  if (!text){ strip.hidden = true; return; }
+  strip.hidden = false;
+  var t = $(lineId); if (t) t.textContent = text;
+  react(strip, kind);
+}
+function initSampleStrip(){
+  /* The sample verdict is the demo's fixed, clearly-labelled sample:
+     its word is Likely Genuine, printed on the screen itself. */
+  setStrip("p2VerdictStripSample", "p2VerdictLineSample",
+    petName() + " does a proud little bounce — this sample landed Likely Genuine.", "bounce");
+}
+var laneLastWord = "";
+function updateLaneStrip(){
+  var w = $("psLaneVerdictWord");
+  var word = w ? w.textContent.trim() : "";
+  if (word === laneLastWord) return;
+  laneLastWord = word;
+  if (/Likely Genuine/.test(word))
+    setStrip("p2VerdictStripLane", "p2VerdictLineLane", petName() + " does a proud little bounce.", "bounce");
+  else if (/Likely Counterfeit/.test(word))
+    setStrip("p2VerdictStripLane", "p2VerdictLineLane", petName() + " sits down quietly beside this one — kept safe, lesson and all.", "sit");
+  else if (/Inconclusive/.test(word))
+    setStrip("p2VerdictStripLane", "p2VerdictLineLane", petName() + " tilts its head — the honest answer this time is: can't tell yet.", "tilt");
+  else
+    setStrip("p2VerdictStripLane", "p2VerdictLineLane", "", null);
+}
+
+/* ================= 6. Coin catch (Behaviour 4) ===================== */
+function coinCatch(){
+  var d = dock, pet = $("p2PetImg");
+  if (!d || !pet || !d.classList.contains("on") || typeof pet.animate !== "function") return;
+  var top = $("opTopCoins");
+  var r1 = top ? top.getBoundingClientRect() : { left: window.innerWidth / 2, top: 8, width: 44, height: 20 };
+  var r2 = pet.getBoundingClientRect();
+  if (!r2.width) return;
+  var dot = document.createElement("div");
+  dot.className = "p2-coinfly";
+  dot.style.left = (r1.left + r1.width / 2 - 11) + "px";
+  dot.style.top = (r1.top + r1.height / 2 - 11) + "px";
+  document.body.appendChild(dot);
+  var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2);
+  var dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
+  var anim = dot.animate(
+    [{ transform: "translate(0,0)", opacity: 1 }, { transform: "translate(" + dx + "px," + dy + "px)", opacity: .92 }],
+    { duration: 620, easing: "cubic-bezier(.3,.7,.4,1)" });
+  anim.onfinish = function(){ dot.remove(); react(d, "bounce"); };
+}
+if (typeof window.opAddCoins === "function"){
+  var _p2AddCoins = window.opAddCoins;
+  window.opAddCoins = function(n){
+    var before = opCoins;
+    _p2AddCoins(n);
+    if (typeof opCoins === "number" && opCoins > before) coinCatch();
+    renderJar();
+  };
+}
+
+/* ================= 7. Coin jar (Rewards, idea #14) ================= */
+function renderJar(){
+  var num = $("p2JarNum"); if (num) num.textContent = "🪙 " + (typeof opCoins === "number" ? opCoins : 0);
+  var fill = $("p2JarFill");
+  if (fill) fill.style.height = Math.min(100, Math.max(0, (opCoins || 0) / 500 * 100)) + "%";
+}
+
+/* ================= 8. Sink A — pet treats & corner dressing ========
+   HARD CAP: 8 items, ever (4 treats + 4 dressing). No seasons, no
+   limited editions — the cap is written here so the shelf can never
+   grow back into a store. =========================================== */
+var P2_TREATS = [
+  { id: "treat-berry", name: "Berry treat", price: 15 },
+  { id: "treat-honey", name: "Honey drop", price: 25 },
+  { id: "treat-star", name: "Star biscuit", price: 40 },
+  { id: "treat-gold", name: "Golden crumb cake", price: 75 }
+];
+var P2_DRESSING = [
+  { id: "corner-rug", name: "Tiny woven rug", price: 60 },
+  { id: "corner-wand", name: "Bubble wand", price: 90 },
+  { id: "corner-plant", name: "Little cauldron plant", price: 120 },
+  { id: "corner-shelf", name: "Corner shelf", price: 150 }
+];
+function cornerState(){ return lsGet("cc_p2_petcorner", { stock: {}, dressing: [] }); }
+function saveCorner(st){ lsSet("cc_p2_petcorner", st); }
+function renderCorner(){
+  var fig = $("p2PetFigure"); if (fig){ fig.src = petSrc(); fig.style.filter = petFilter(); }
+  var st = cornerState();
+  var dl = $("p2DressingLine");
+  if (dl){
+    var names = P2_DRESSING.filter(function(d){ return st.dressing.indexOf(d.id) >= 0; }).map(function(d){ return d.name; });
+    dl.textContent = names.length ? "On the corner: " + names.join(" · ") + "." : "The corner is bare for now — dressing you buy shows up here.";
+  }
+  var host = $("p2PetShop"); if (!host) return;
+  var html = '<p class="small dim" style="margin:0 0 6px;">Treats — feed one and watch the spin</p>';
+  html += P2_TREATS.map(function(it){
+    var have = st.stock[it.id] || 0;
+    return '<div class="p2-shop-row"><span><b>' + it.name + '</b><br><span class="small dim">Treat · 🪙 ' + it.price + (have ? ' · you have ' + have : '') + '</span></span>'
+      + '<span style="display:flex;gap:6px;"><button type="button" class="bubble-btn b-gold small" onclick="p2BuyTreat(\'' + it.id + '\')"><span>Buy 🪙 ' + it.price + '</span></button>'
+      + (have ? '<button type="button" class="bubble-btn b-white small" onclick="p2GiveTreat(\'' + it.id + '\')"><span>Feed</span></button>' : '') + '</span></div>';
+  }).join("");
+  html += '<p class="small dim" style="margin:10px 0 6px;">Corner dressing — 4 pieces, that\'s the whole shelf, forever</p>';
+  html += P2_DRESSING.map(function(it){
+    var owned = st.dressing.indexOf(it.id) >= 0;
+    return '<div class="p2-shop-row"><span><b>' + it.name + '</b><br><span class="small dim">Pet corner · 🪙 ' + it.price + '</span></span>'
+      + (owned ? '<span class="p2-owned">Owned ✓</span>' : '<button type="button" class="bubble-btn b-gold small" onclick="p2BuyDressing(\'' + it.id + '\')"><span>Buy 🪙 ' + it.price + '</span></button>') + '</div>';
+  }).join("");
+  host.innerHTML = html;
+}
+function findItem(list, id){ var f = null; list.forEach(function(x){ if (x.id === id) f = x; }); return f; }
+window.p2BuyTreat = function(id){
+  var it = findItem(P2_TREATS, id); if (!it) return;
+  if (!spend(it.price)){ notEnough(it.price); return; }
+  var st = cornerState(); st.stock[id] = (st.stock[id] || 0) + 1; saveCorner(st); renderCorner();
+  var s = $("p2CornerStatus"); if (s) s.textContent = "One " + it.name + " in the treat pouch. Tap Feed when your pet deserves it.";
+};
+window.p2GiveTreat = function(id){
+  var it = findItem(P2_TREATS, id); if (!it) return;
+  var st = cornerState(); if (!st.stock[id]) return;
+  st.stock[id] -= 1; saveCorner(st); renderCorner();
+  react($("p2PetDock"), "spin");
+  var fig = $("p2PetFigure");
+  if (fig){ fig.style.animation = "p2Spin .7s ease"; setTimeout(function(){ fig.style.animation = ""; }, 750); }
+  var s = $("p2CornerStatus"); if (s) s.textContent = petName() + " loved the " + it.name + ". Happy spin, every time.";
+};
+window.p2BuyDressing = function(id){
+  var it = findItem(P2_DRESSING, id); if (!it) return;
+  var st = cornerState(); if (st.dressing.indexOf(id) >= 0) return;
+  if (!spend(it.price)){ notEnough(it.price); return; }
+  st.dressing.push(id); saveCorner(st); renderCorner();
+  var s = $("p2CornerStatus"); if (s) s.textContent = it.name + " is on the corner now.";
+};
+
+/* ================= 9. Sink B — practice runs + training ============ */
+var P2_FREE_RUNS = 3, P2_PRACTICE_COST = 10;
+var P2_SHELF = {
+  gameBeat: { gid: "beat", title: "Bubble Beat" },
+  gameMystery: { gid: "mystery", title: "Mystery Bubble" },
+  gameCMatch: { gid: "cmatch", title: "Cauldron Match" },
+  gameMatch: { gid: "match", title: "Match Audit" },
+  gameStack: { gid: "stack", title: "Cardboard Stack" }
+};
+function runsState(){
+  var st = lsGet("cc_p2_runs", null);
+  if (!st || st.day !== todayKey()) st = { day: todayKey(), counts: {} };
+  return st;
+}
+function saveRuns(st){ lsSet("cc_p2_runs", st); }
+function runsLeft(scr){ var st = runsState(); return Math.max(0, P2_FREE_RUNS - (st.counts[scr] || 0)); }
+function renderShelfMeta(){
+  Object.keys(P2_SHELF).forEach(function(scr){
+    var el = document.querySelector('[data-runs-for="' + scr + '"]');
+    if (!el) return;
+    if (window.__p2Practice === scr) el.textContent = "Practice mode — scores never post";
+    else {
+      var n = runsLeft(scr);
+      el.textContent = n > 0 ? "Free runs left today: " + n + " of " + P2_FREE_RUNS : "Free runs used — next run is a 🪙 " + P2_PRACTICE_COST + " practice run";
+    }
+  });
+}
+function showPracticeBar(scr){
+  var bar = $("p2PracticeBar"); if (!bar) return;
+  var g = P2_SHELF[scr];
+  bar.hidden = false;
+  bar.innerHTML = '<h3 style="margin:0;">' + g.title + ' — free runs done for today</h3>'
+    + '<p class="small dim">You\'ve had today\'s ' + P2_FREE_RUNS + ' free runs of ' + g.title + '. A practice run costs 🪙 ' + P2_PRACTICE_COST + ' — and practice scores <b>never</b> post to any leaderboard.</p>'
+    + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">'
+    + '<button type="button" class="bubble-btn b-gold" onclick="p2StartPractice(\'' + scr + '\')"><span>Start practice run — 🪙 ' + P2_PRACTICE_COST + '</span></button>'
+    + '<button type="button" class="bubble-btn b-white" onclick="p2HidePractice()"><span>Not now</span></button></div>';
+  try{ bar.scrollIntoView({ block: "center", behavior: "smooth" }); }catch(e){}
+}
+window.p2HidePractice = function(){ var bar = $("p2PracticeBar"); if (bar) bar.hidden = true; };
+window.p2StartPractice = function(scr){
+  if (!spend(P2_PRACTICE_COST)){ notEnough(P2_PRACTICE_COST); return; }
+  var st = runsState(); st.counts[scr] = (st.counts[scr] || 0) + 1; saveRuns(st);
+  window.__p2Practice = scr;
+  window.p2HidePractice();
+  renderShelfMeta();
+  window.__p2Bypass = scr;
+  var tile = document.querySelector('#p2ShelfList [data-game="' + scr + '"]');
+  if (tile) tile.click();
+  else { window.__p2Bypass = null; }
+};
+/* The shelf door is where runs begin: a capturing listener counts a
+   run (or offers the practice run) BEFORE the hub's own handler
+   launches the game. In-game restarts continue the same run.
+   GATEFIX (Nov 14): the instruction card's ▶ PLAY re-fires the tile
+   click under window.__ccPlayBypass to launch the game — that re-fire
+   is the SAME run, never a second one. The gate remembers its
+   decision from the tile tap in window.__p2Admit: a re-fire whose tap
+   was admitted (a free run counted, or a bought practice run via
+   __p2Bypass) passes without counting again; a re-fire whose tap was
+   refused (free runs gone, no practice bought) is refused here too,
+   so a card that opened anyway can never launch a free extra run. */
+document.addEventListener("click", function(e){
+  var b = e.target && e.target.closest ? e.target.closest("[data-game]") : null;
+  if (!b) return;
+  var scr = b.getAttribute("data-game");
+  if (!P2_SHELF[scr]) return;
+  if (window.__p2Bypass === scr){ window.__p2Bypass = null; window.__p2Admit = scr; return; }
+  if (window.__ccPlayBypass){
+    if (window.__p2Admit === scr || window.__p2Practice === scr){ window.__p2Admit = null; return; }
+    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+    showPracticeBar(scr);
+    return;
+  }
+  var st = runsState();
+  if ((st.counts[scr] || 0) < P2_FREE_RUNS){
+    st.counts[scr] = (st.counts[scr] || 0) + 1; saveRuns(st);
+    if (window.__p2Practice === scr) window.__p2Practice = null;
+    window.__p2Admit = scr;
+    renderShelfMeta();
+    return;
+  }
+  window.__p2Admit = null;
+  e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+  showPracticeBar(scr);
+}, true);
+/* Practice runs never post: both score doors check the flag first. */
+if (typeof window.ccSubmitBest === "function"){
+  var _p2SubmitBest = window.ccSubmitBest;
+  window.ccSubmitBest = function(id, score){
+    var p = window.__p2Practice;
+    if (p && P2_SHELF[p] && P2_SHELF[p].gid === id) return;
+    return _p2SubmitBest(id, score);
+  };
+}
+if (typeof window.opPostScore === "function"){
+  var _p2PostScore = window.opPostScore;
+  window.opPostScore = function(game, score, nm, onDone, onFail){
+    var p = window.__p2Practice;
+    if (p && (game === p || (P2_SHELF[p] && P2_SHELF[p].gid === game))){
+      if (onDone) onDone({ practice: true });
+      return Promise.resolve();
+    }
+    return _p2PostScore(game, score, nm, onDone, onFail);
+  };
+}
+
+/* ---------- bonus tell-training sets (basic lessons stay free) ---- */
+var P2_PACKS = [
+  { id: "train-print", name: "Spot the Tell — Print & Colour", price: 60, drills: [
+    { q: "A card's colours look a little too dark and heavy next to a copy you know is genuine. Which tell are you marking?",
+      a: "Print & colours. Heavy, dark printing is one of the oldest replica tells — always compare in the same light, against a card you know is real." },
+    { q: "The lettering on a card looks blobby, like a photocopy of lettering. Which tell?",
+      a: "Lettering & fonts. Genuine cards are printed sharp from real plates; blobby, fuzzy letter shapes mean the print was copied, not struck." },
+    { q: "A 'holo' card shines in one flat sheet of rainbow, corner to corner. What are you looking at?",
+      a: "The holo pattern tell. A genuine holo breaks its shine into a pattern inside the art window; a flat, even rainbow wash over everything is printed on, not foiled." },
+    { q: "You get one minute under a bright lamp. Where do you spend it?",
+      a: "On the print itself — colours and lettering together. Under good light, most replica tells are print tells, and they stack up fast." }
+  ]},
+  { id: "train-holo", name: "Spot the Tell — Holo & Light", price: 90, drills: [
+    { q: "You tilt a holo card and the sparkle sits on top of the whole card instead of living in the art. Suspicious, or fine?",
+      a: "Suspicious. On a genuine card the holo pattern lives in the art window and shifts as you tilt; a pattern pasted over everything is a replica tell." },
+    { q: "What is the Light Test actually checking?",
+      a: "How light passes through the card's layered stock. It is an optional extra photo — it supports the other tells and never decides anything on its own." },
+    { q: "A card behaves itself in the light test, but its lettering is blobby. Does the light result clear it?",
+      a: "No. One tell never settles a verdict — tells stack. Blobby lettering is a real flag, and a quiet light test cannot cancel it." },
+    { q: "The shine on a card breaks into tiny, regular stars that match a known-good copy exactly. Which way does that point?",
+      a: "Toward genuine — pattern scale and shape matching a known-good reference is what the holo tell is for. Pointing is all one tell does; the stack decides." }
+  ]},
+  { id: "train-stock", name: "Spot the Tell — Stock, Edges & Back", price: 120, drills: [
+    { q: "A card feels flimsy and bends far more than your other cards. Which tell can a photo NOT settle?",
+      a: "Card stock & edges. Feel and flex live in your hands, not in a photo — that is why honest checkers mark it 'can't tell' from pictures alone." },
+    { q: "The back of a card is a slightly wrong blue and the design kisses the edge unevenly. Which tell?",
+      a: "Back print. The back design should line up edge to edge, in the right colours — a wrong-tinted or drifting back is a classic replica tell." },
+    { q: "A card's corners are all perfectly, identically sharp — sharper than any pack-pulled card you own. Tell?",
+      a: "Corners & wear. Real cards pick up natural, uneven wear; printed-on or factory-fresh-uniform corners on a 'played' card deserve a flag and a second look." },
+    { q: "Two cards from the same set: one is a hair narrower than every other copy. Which tell covers it?",
+      a: "Size & proportions. Cards are cut to a standard; a copy that measures off its siblings is worth flagging, even when everything else looks right." }
+  ]}
+];
+function trainState(){ return lsGet("cc_p2_training", { owned: [] }); }
+function renderTraining(){
+  var st = trainState();
+  var host = $("p2TrainShop");
+  if (host){
+    host.innerHTML = P2_PACKS.map(function(p){
+      var owned = st.owned.indexOf(p.id) >= 0;
+      return '<div class="p2-shop-row"><span><b>' + p.name + '</b><br><span class="small dim">' + p.drills.length + ' practice drills · 🪙 ' + p.price + '</span></span>'
+        + (owned ? '<button type="button" class="bubble-btn b-white small" data-nav="tells"><span>Open in Tells</span></button>'
+                 : '<button type="button" class="bubble-btn b-gold small" onclick="p2BuyTrain(\'' + p.id + '\')"><span>Buy 🪙 ' + p.price + '</span></button>') + '</div>';
+    }).join("");
+  }
+  var list = $("p2DrillsList");
+  if (list){
+    var mine = P2_PACKS.filter(function(p){ return st.owned.indexOf(p.id) >= 0; });
+    if (!mine.length){
+      list.innerHTML = '<p class="small dim">No bonus packs yet. The checklist above is the whole free lesson — packs never gate it; they only add more practice, over in Rewards.</p>';
+    } else {
+      list.innerHTML = mine.map(function(p){
+        return '<h3 style="font-size:16px;margin-top:14px;">' + p.name + '</h3>' + p.drills.map(function(d){
+          return '<details class="p2-drill"><summary>' + esc(d.q) + '</summary><p class="small">' + esc(d.a) + '</p></details>';
+        }).join("");
+      }).join("");
+    }
+  }
+}
+window.p2BuyTrain = function(id){
+  var p = findItem(P2_PACKS, id); if (!p) return;
+  var st = trainState(); if (st.owned.indexOf(id) >= 0) return;
+  if (!spend(p.price)){ notEnough(p.price); return; }
+  st.owned.push(id); lsSet("cc_p2_training", st); renderTraining();
+  var s = $("p2TrainStatus"); if (s) s.textContent = p.name + " unlocked — its drills are waiting on the Tells page.";
+};
+
+/* ================= 10. Sink C — the donation cauldron ==============
+   Threshold math (earn rates from the app's own coin table): a keen
+   user earns roughly 60–120 coins/day (daily check-in 10, scans 10
+   each, game clears 20–50 first time, small repeats). Even if all
+   12 closed-test testers poured EVERY coin for the 21 days to
+   Dec 4 — 12 × ~100 × 21 ≈ 25,200 — the jar cannot fill before
+   Dec 4. First fill lands well after public launch, by design. */
+var P2_DONATE_TARGET = 250000;
+function donateState(){ return lsGet("cc_p2_donation", { poured: 0 }); }
+function renderDonation(){
+  var st = donateState();
+  var n = $("p2PourCount"); if (n) n.textContent = "🪙 " + st.poured;
+  var pct = st.poured / P2_DONATE_TARGET * 100;
+  var f = $("p2DonateFill"); if (f) f.style.width = Math.min(100, pct) + "%";
+  var t = $("p2DonatePct");
+  if (t) t.textContent = "Your pours are " + (pct < 0.01 ? pct.toFixed(3) : pct.toFixed(2)) + "% of the 🪙 " + P2_DONATE_TARGET.toLocaleString("en-US") + " community target.";
+}
+window.p2Pour = function(n){
+  if (!spend(n)){ notEnough(n); return; }
+  var st = donateState(); st.poured += n; lsSet("cc_p2_donation", st); renderDonation();
+  var s = $("p2PourStatus"); if (s) s.textContent = "You poured 🪙 " + n + " into the cauldron. Thank you — generosity is the house style.";
+  react(dock, "bounce");
+};
+
+/* ================= 11. Guess the Price (the fifth game) ============
+   Data: OP_PRICE_CARDS — real recorded eBay solds (demo snapshot,
+   Oct 25, 2026). A card with no recorded sold never appears; no
+   price is ever invented. This game never posts scores — that has
+   always been its rule, and the code simply never calls a post. */
+var guessState = null;
+function fmtUSD(v){ return "$" + Number(v).toFixed(2); }
+function renderGuessRound(){
+  var body = $("gameGuess-body"); var st = guessState;
+  if (!body || !st) return;
+  if (st.round >= st.deck.length){
+    var awarded = "";
+    if (lsGetRaw("cc_p2_guess_day") !== todayKey()){
+      lsSetRaw("cc_p2_guess_day", todayKey());
+      if (typeof opAddCoins === "function") opAddCoins(10);
+      awarded = " Finishing a set pays 🪙 10, once a day.";
+    }
+    body.innerHTML = '<div class="card mt center"><h3 style="margin:0;">You called ' + st.right + ' of ' + st.deck.length + '</h3>'
+      + '<p class="small dim" style="margin-top:8px;">Every price was a real recorded eBay sold from the demo snapshot (Oct 25, 2026) — never a made-up number.' + awarded + '</p>'
+      + '<p class="small dim">Guess the Price never posts scores. This one is just your eye against the market.</p>'
+      + '<div class="stack mt"><button type="button" class="bubble-btn b-gold" onclick="startGuess()"><span>Play again</span></button></div></div>';
+    return;
+  }
+  var c = st.deck[st.round];
+  st.current = c; st.locked = false;
+  var price = Number(c.price);
+  var d1 = Math.max(0.99, Math.round(price * 0.55 * 100) / 100);
+  var d2 = Math.round(price * 1.8 * 100) / 100;
+  if (d1 === price) d1 = price + 1.50;
+  if (d2 === price || d2 === d1) d2 = Math.round(price * 2.2 * 100) / 100;
+  var opts = [price, d1, d2];
+  for (var i = opts.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = opts[i]; opts[i] = opts[j]; opts[j] = t; }
+  var meta = [c.name, c.set, c.num].filter(Boolean).join(" · ");
+  var sub = [c.variant, c.condition].filter(Boolean).join(" · ");
+  body.innerHTML = '<div class="card mt"><p class="small dim">Round ' + (st.round + 1) + ' of ' + st.deck.length + ' · called ' + st.right + ' so far</p>'
+    + '<h3 style="margin:10px 0 2px;">' + esc(meta) + '</h3>'
+    + (sub ? '<p class="small dim">' + esc(sub) + '</p>' : '')
+    + '<p style="font-weight:800;margin-top:12px;">What did this card actually sell for?</p>'
+    + '<div class="stack mt">' + opts.map(function(v){ return '<button type="button" class="bubble-btn b-white" onclick="p2GuessPick(' + v.toFixed(2) + ')"><span>' + fmtUSD(v) + '</span></button>'; }).join("") + '</div>'
+    + '<div id="guessReveal"></div></div>';
+}
+window.startGuess = function(){
+  var body = $("gameGuess-body"); if (!body) return;
+  var cards = (window.OP_PRICE_CARDS || []).slice();
+  if (cards.length < 5){
+    body.innerHTML = '<p class="center" style="margin-top:26px;font-weight:800;">The price shelf is empty right now — this game only deals in recorded sold prices, and none are loaded. Nothing was made up to fill it.</p>';
+    return;
+  }
+  for (var i = cards.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = cards[i]; cards[i] = cards[j]; cards[j] = t; }
+  guessState = { deck: cards.slice(0, 5), round: 0, right: 0, locked: false, current: null };
+  renderGuessRound();
+};
+window.p2GuessPick = function(v){
+  var st = guessState; if (!st || st.locked || !st.current) return;
+  st.locked = true;
+  var c = st.current;
+  var right = Math.abs(Number(v) - Number(c.price)) < 0.005;
+  if (right) st.right++;
+  var rv = $("guessReveal"); if (!rv) return;
+  rv.innerHTML = '<p style="font-weight:800;margin-top:12px;">' + (right ? "That's the one." : "Not quite.") + ' It sold for ' + fmtUSD(c.price) + (c.sold_at ? ' on ' + esc(String(c.sold_at).slice(0, 10)) : '') + '.</p>'
+    + '<p class="small dim">Recorded eBay sold — Card Cauldron TCG tracker record, from the demo snapshot dated Oct 25, 2026.</p>'
+    + '<div class="stack mt"><button type="button" class="bubble-btn b-gold" onclick="p2GuessNext()"><span>' + (st.round + 1 >= st.deck.length ? "See the score" : "Next card") + '</span></button></div>';
+};
+window.p2GuessNext = function(){ if (!guessState) return; guessState.round++; renderGuessRound(); };
+function buildGuessSection(){
+  if ($("scr-gameGuess")) return;
+  var main = $("main"); if (!main) return;
+  var html;
+  if (typeof gameShell === "function")
+    html = gameShell("gameGuess", "Guess the Price", "by the crew · real recorded solds only · never posts scores", '<p class="center" style="margin-top:26px;font-weight:800;">Popping the game open… 🫧</p>');
+  else
+    html = '<section class="screen" id="scr-gameGuess"><h2 style="font-size:25px;">Guess the Price</h2><div id="gameGuess-body"></div><div style="margin-top:auto;padding-top:22px;"><button type="button" class="bubble-btn b-white" data-nav="games"><span>Back to Mini Games</span></button></div></section>';
+  var tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  while (tmp.firstChild) main.appendChild(tmp.firstChild);
+  if (window.GAME_STARTERS) window.GAME_STARTERS.gameGuess = window.startGuess;
+}
+
+/* ================= init ============================================ */
+function init(){
+  buildDock();
+  renderPetPicker();
+  renderJar();
+  renderCorner();
+  renderTraining();
+  renderDonation();
+  renderShelfMeta();
+  initSampleStrip();
+  buildGuessSection();
+  setInterval(watchTick, 450);
+  watchTick();
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function(){ setTimeout(init, 60); });
+else setTimeout(init, 60);
+})();
+</script>
+
 </body>
 </html>
