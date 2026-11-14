@@ -2272,7 +2272,7 @@ body.neon[data-palette="ocean"] .gold-box, body.neon[data-palette="forest"] .gol
 </style>
 </head>
 <body class="neon">
-<div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first. A name or Guest stays on this device only — it just remembers a name so the top bubble shows who is signed in. A real account is optional, further down: it can save your checks, only with your agreement.</p><label class="op-field" style="width:100%;max-width:320px">Display name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Name and Guest are local only — not real accounts.</p><div id="ccGateAcct" style="width:100%;max-width:320px;border-top:1px solid #3a2c12;padding-top:12px;margin-top:4px;"><p style="font-weight:800;">Have a Card Cauldron account?</p><p class="small dim">Sign in with your account to save your checks (with your agreement, asked next). New here? Create a free account.</p><label class="op-field" style="width:100%;">Username <input type="text" id="ccGateUser" placeholder="Account username" autocomplete="username"></label><label class="op-field" style="width:100%;">Password <input type="password" id="ccGatePass" placeholder="Account password" autocomplete="current-password"></label><button type="button" class="bubble-btn b-gold" style="width:100%;text-align:center;justify-content:center" onclick="ccGateAcctLogin()"><span style="display:block;width:100%;text-align:center">Sign in with account</span></button><button type="button" class="bubble-btn b-white" style="width:100%;text-align:center;justify-content:center;margin-top:8px;" onclick="ccGateAcctRegister()"><span style="display:block;width:100%;text-align:center">Create account</span></button><p class="small" id="ccGateAcctMsg" role="status"></p></div></div>
+<div id="opLoginGate" style="position:fixed;inset:0;z-index:3000;background:#0b0908;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center"><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first. A name or Guest stays on this device only — it just remembers a name so the top bubble shows who is signed in. A real account is optional, further down: while you test, it saves your checks to your account.</p><label class="op-field" style="width:100%;max-width:320px">Display name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Name and Guest are local only — not real accounts.</p><div id="ccGateAcct" style="width:100%;max-width:320px;border-top:1px solid #3a2c12;padding-top:12px;margin-top:4px;"><p style="font-weight:800;">Have a Card Cauldron account?</p><p class="small dim">Sign in with your account — while you test, your checks save to your account. New here? Create a free account.</p><label class="op-field" style="width:100%;">Username <input type="text" id="ccGateUser" placeholder="Account username" autocomplete="username"></label><label class="op-field" style="width:100%;">Password <input type="password" id="ccGatePass" placeholder="Account password" autocomplete="current-password"></label><button type="button" class="bubble-btn b-gold" style="width:100%;text-align:center;justify-content:center" onclick="ccGateAcctLogin()"><span style="display:block;width:100%;text-align:center">Sign in with account</span></button><button type="button" class="bubble-btn b-white" style="width:100%;text-align:center;justify-content:center;margin-top:8px;" onclick="ccGateAcctRegister()"><span style="display:block;width:100%;text-align:center">Create account</span></button><p class="small" id="ccGateAcctMsg" role="status"></p></div></div>
 <script id="cc2713GateEarly">
 /* CC-27.13 gate early-tap guard: queue gate taps that land before the
    login system (defined near the end of this document) has parsed. */
@@ -2412,6 +2412,15 @@ window.opGateLogin = function(){
     </div>
     <p class="center" style="margin-top:10px;font-weight:800;" id="capGot"></p>
     <div id="ccDemoVerdictSlot" aria-live="polite"></div>
+    <div id="capDesignate" class="card hidden" style="margin-top:12px;text-align:center;">
+      <p style="font-weight:900;margin:0 0 4px;">One quick question — do you know this card is fake?</p>
+      <p class="small dim" style="margin:0 0 10px;">Your answer is saved with the scan. It is your call about your card — not a verdict.</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <button type="button" class="bubble-btn b-gold" id="capDesigYes"><span>Yes — I know it's fake</span></button>
+        <button type="button" class="bubble-btn b-white" id="capDesigNo"><span>No</span></button>
+        <button type="button" class="bubble-btn b-white" id="capDesigUnsure"><span>Not sure</span></button>
+      </div>
+    </div>
     <div class="dots" id="capDots" aria-hidden="true" style="margin-top:10px;"></div>
     <input type="file" id="capFile" accept="image/*" class="hidden" />
     <input type="file" id="capCamFile" accept="image/*" capture="environment" class="hidden" />
@@ -2420,7 +2429,7 @@ window.opGateLogin = function(){
       <button type="button" class="bubble-btn b-gold hidden" id="capNext">Next →</button>
       <button type="button" class="bubble-btn b-sky" id="capTake">Take the photo</button>
       <button type="button" class="bubble-btn b-white small" id="capUploadFile">Upload a file instead</button>
-      <p class="small dim center">Photos you pick stay on your device unless you choose to share them — pool sharing and account saving are always your choice, and you are asked first.</p>
+      <p class="small dim center">Testing is on: every check you run is saved to the test pool — photos and result — so the checker can learn. That's what this test is for. (In the full app, saving becomes your choice again, and you are asked first.)</p>
     </div>
   
     <div class="p2-strip" id="p2CoachStrip">
@@ -2596,7 +2605,7 @@ window.opGateLogin = function(){
       <button type="button" class="bubble-btn b-gold" id="bcTake">📸 Take the photo</button>
       <button type="button" class="bubble-btn b-white small" id="bcUploadFile">Upload a file instead</button>
       <button type="button" class="bubble-btn b-white small hidden" id="bcLeave">Leave it out after all</button>
-      <p class="small dim center">Photos you take here stay on your device — this demo doesn't upload or store anything.</p>
+      <p class="small dim center">Photos you take here stay on your device — batch check doesn't send photos anywhere.</p>
     </div>
     <div class="stack mt hidden" id="bcDone">
       <button type="button" class="bubble-btn b-sky" data-nav="batch"><span>← Back to batch</span></button>
@@ -2832,7 +2841,7 @@ window.opGateLogin = function(){
     <div class="decor" aria-hidden="true"><i style="width:70px;height:70px;top:6%;right:-16px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),#ff6b9d 55%);"></i></div>
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>My Binders</h2>
-    <p class="lead" style="margin-top:6px;">Every card you check files itself by verdict — you never file by hand. Pool scans you share wait in the Undecided Pocket as PENDING — photos saved, still under review, no verdict claimed.</p>
+    <p class="lead" style="margin-top:6px;">Every card you check files itself by verdict — you never file by hand. Checks you run during testing wait in the Undecided Pocket as PENDING — photos saved, still under review, no verdict claimed.</p>
     <div class="band band-navy mt">
  <h3>All your binders</h3>
       <p class="sub2" id="opBinderSummary">Your scanned cards live here — see the pocket below.</p>
@@ -2945,7 +2954,7 @@ window.opGateLogin = function(){
   <section class="screen" id="scr-tells">
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <div class="card" role="note" aria-label="Scan consent and verification gates">
-      <p><strong>Scan gates (full app):</strong> a scan joins the database ONLY if (1) you explicitly agreed first, AND (2) the card is verified — verified as legitimately genuine, or verified as legitimately fake (a confirmed fake counts). Inconclusive / unverified scans are never filed. If you do not agree, a scan is used for that one check only and is not kept. In this demo, photos stay on your device and nothing is filed at all.</p>
+      <p><strong>Testing saves (right now):</strong> while this public test runs, every check is saved to the test pool automatically — photos and result, unverified — so the checker can learn. Test scans are never filed as verified, never added to the genuine-card library, and never used as graded test answers. <strong>Scan gates (full app, at launch):</strong> a scan joins the database ONLY if (1) you explicitly agreed first, AND (2) the card is verified — verified as legitimately genuine, or verified as legitimately fake (a confirmed fake counts). Inconclusive / unverified scans are never filed. If you do not agree, a scan is used for that one check only and is not kept.</p>
     </div>
     
     <div class="demo-banner" role="note" aria-label="Tells checklist is not a real card check">
@@ -3018,14 +3027,14 @@ window.opGateLogin = function(){
     <button type="button" class="bubble-btn b-white" onclick="opLogout()"><span>Clear name</span></button>
     <p class="small dim" id="opLoginState"></p></div>
     <div class="card mt"><h3>Pool sharing</h3>
-    <p class="small dim">Asked once, remembered on this device.</p>
-    <details class="why"><summary>More</summary><p class="small dim" style="margin-top:4px;">You are not asked again at every scan. ON sends your scans to the pending pool (see the <a href="/pool-privacy.html" target="_blank" rel="noopener" style="color:#f5c542;">pool privacy page</a>). OFF keeps every scan on this device only. Change it any time, right here.</p></details>
-    <p style="font-weight:800;margin:8px 0;" id="opPoolShareState">Pool sharing: not set yet — you will be asked once, at your first scan.</p>
+    <p class="small dim">During testing: always ON.</p>
+    <details class="why"><summary>More</summary><p class="small dim" style="margin-top:4px;">While the public test runs, every check is saved to the test pool automatically — that's what the test is for (see the <a href="/pool-privacy.html" target="_blank" rel="noopener" style="color:#f5c542;">pool privacy page</a>). In the full app the ask-first choice returns: ON sends your scans to the pending pool, OFF keeps every scan on this device only.</p></details>
+    <p style="font-weight:800;margin:8px 0;" id="opPoolShareState">Pool sharing: ON — testing saves every check to the test pool.</p>
     <button type="button" class="bubble-btn b-gold" onclick="poolShareSet(true)"><span>Pool sharing ON</span></button>
     <button type="button" class="bubble-btn b-white" onclick="poolShareSet(false)"><span>Pool sharing OFF</span></button></div>
     <div class="card mt" id="ccAcctCard"><h3>Card Cauldron account — save your checks</h3>
     <div id="ccAcctOut">
-    <p class="small dim">A free, real account. With your agreement, checks you run while signed in are saved to your account, and each one gets a result that shows its work — most results are Inconclusive while our checker lanes finish their blind tests; an exact photo match to a known fake is called Likely Counterfeit. Saving is off until you agree — you are asked first, and you can withdraw any time.</p>
+    <p class="small dim">A free, real account. While this test runs, checks you run while signed in are saved to your account, and each one gets a result that shows its work — most results are Inconclusive while our checker lanes finish their blind tests; an exact photo match to a known fake is called Likely Counterfeit. During testing, saving is automatic; you can delete any saved check at any time.</p>
     <label class="op-field">Username <input type="text" id="ccAcctUser" placeholder="Pick a username (3–24 characters)" autocomplete="username"></label>
     <label class="op-field">Password <input type="password" id="ccAcctPass" placeholder="At least 6 characters" autocomplete="current-password"></label>
     <button type="button" class="bubble-btn b-gold" onclick="ccAcctLogin()"><span>Sign in</span></button>
@@ -3464,7 +3473,7 @@ function renderTracker(){
   if(bt){
     bt.innerHTML = '<p style="font-weight:900;">Session tracker — this visit only</p>'
       + '<p class="small dim" style="margin-top:6px;">Games played: '+sessionTracker.plays+' · Total score: '+sessionTracker.total
-      + ' · Best scores: '+Object.keys(sessionBests).length+' of 9 games. No cards are filed here in the demo — in the full app, checked cards file themselves by verdict.</p>';
+      + ' · Best scores: '+Object.keys(sessionBests).length+' of 9 games. Games never file cards — filing happens in the checker: during testing, checks file into the test pool; in the full app, checked cards file themselves by verdict.</p>';
   }
 }
 
@@ -3711,7 +3720,7 @@ function renderCaptureStep(){
   $("capDots").innerHTML = dots;
   var _cs = $("capSteps");
   if(_cs){ var _ch = ""; for(var k=0;k<capCat.steps.length;k++){ _ch += '<li class="'+(k<capStep?"done":(k===capStep?"now":""))+'"><span class="n">'+(k<capStep?"\u2713":(k+1))+'</span><span>'+capCat.steps[k].cap+'</span></li>'; } if(capCat.label==="Pok\u00e9mon Card"){ _ch += '<li><span class="n">'+(capCat.steps.length+1)+'</span><span>Light test \u00b7 optional</span></li>'; } _cs.innerHTML = _ch; }
-  if(capStep===0 && !capHas){ poolFrontImg = null; poolBackImg = null; poolSubmittedId = null; }
+  if(capStep===0 && !capHas){ poolFrontImg = null; poolBackImg = null; poolSubmittedId = null; poolDesignation = null; var _dg = $("capDesignate"); if(_dg) _dg.classList.add("hidden"); }
 }
 function capPhotoReady(){
   capHas = true;
@@ -3732,7 +3741,7 @@ function capPhotoReady(){
       else if(_img.src.indexOf("blob:") === 0){ fetch(_img.src).then(function(r){ return r.blob(); }).then(function(b){ var fr = new FileReader(); fr.onload = function(){ _store(fr.result); }; fr.readAsDataURL(b); }).catch(function(){}); }
     }
   }catch(e){}
-  _lbl.textContent = "Labelled: " + _side + " photo captured — name: UNKNOWN, number: UNKNOWN, pool: " + (poolOptinYes ? "YES, pending pool" : "NO, on-screen only") + " — not a verdict.";
+  _lbl.textContent = "Labelled: " + _side + " photo captured — name: UNKNOWN, number: UNKNOWN, pool: " + (CC_TEST_INTAKE ? "YES — this check saves to the test pool" : (poolOptinYes ? "YES, pending pool" : "NO, on-screen only")) + " — not a verdict.";
   $("capGot").textContent = "POP! Got it. 🎉";
   var step = capCat.steps[capStep];
   $("capTake").innerHTML = "<span>"+step.take.replace("Take","Retake")+"</span>";
@@ -3763,13 +3772,38 @@ var poolOptinAsked = false, poolOptinYes = false;
 /* Pool ask is ONE-TIME per device (owner, Oct 29): the Yes/No answer is
    remembered on this device and never re-asked. Change it any time in
    Profile / Settings ("Pool sharing"). */
+/* TESTING INTAKE (owner order, Nov 14, 2026): while this demo is the
+   public test, EVERY check is saved to the test pool automatically —
+   that is what the test is for. The flag below suspends the ask-first
+   pool choice (and its Settings OFF state) for the testing phase only;
+   the copy on every surface says so plainly. The full app / Play launch
+   build flips CC_TEST_INTAKE off and the Oct 29 ask-first regime below
+   governs again, exactly as written. */
+var CC_TEST_INTAKE = true;
+var poolDesignation = null; /* tester's own call: "yes-fake" | "no" | "unsure" | null */
 try{ var _ps = localStorage.getItem("cc_pool_share"); if(_ps === "yes"){ poolOptinYes = true; poolOptinAsked = true; } else if(_ps === "no"){ poolOptinYes = false; poolOptinAsked = true; } }catch(e){}
+if(CC_TEST_INTAKE){ poolOptinYes = true; poolOptinAsked = true; }
+function poolShareStateText(){
+  if(CC_TEST_INTAKE) return "ON — testing saves every check to the test pool";
+  return poolOptinYes ? "ON — my scans go to the pending pool" : "OFF — my scans stay on this device only";
+}
 function poolShareSet(v){
+  var _b = document.getElementById("opPoolShareState");
+  if(CC_TEST_INTAKE && !v){
+    /* Testing phase: the OFF request is answered honestly, not faked —
+       saving stays on, and the state line says why. */
+    if(_b) _b.textContent = "Still ON — during testing every check is saved to the test pool. The OFF switch returns with the full app.";
+    return;
+  }
   poolOptinYes = !!v; poolOptinAsked = true;
   try{ localStorage.setItem("cc_pool_share", v ? "yes" : "no"); }catch(e){}
-  var _b = document.getElementById("opPoolShareState"); if(_b) _b.textContent = v ? "ON — my scans go to the pending pool" : "OFF — my scans stay on this device only";
+  if(_b) _b.textContent = poolShareStateText();
 }
 function poolOptinShow(next){
+  /* Testing intake (Nov 14, 2026): no choice popup during the test —
+     saving is automatic and the capture screen + pool privacy page say
+     so in plain words. The ask-first popup below is the launch form. */
+  if(CC_TEST_INTAKE){ next(); return; }
   if(poolOptinAsked){ next(); return; }
   poolOptinAsked = true;
   var pop = document.createElement("div");
@@ -3820,6 +3854,13 @@ function poolSubmitAndConfirm(next){
     _fwFinish(); return;
   }
   var _payload = {opt_in:true, front_image:frontWire, back_image:(backWire || null), number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"};
+  /* Testing intake (Nov 14, 2026): the marker tells the door this is a
+     test-phase check, so it files into the tester-scans intake even
+     without a recorded account agreement; the designation is the
+     tester's own answer to "Do you know this card is fake?" — their
+     call about their card, saved with the scan, never a verdict. */
+  if(CC_TEST_INTAKE) _payload.testing_intake = true;
+  _payload.designation = poolDesignation || null;
   /* Burst provenance (owner ruling, Oct 31): every burst frame plus the
      sharpness/glare receipt rides with the pool submission; the winner
      stays the primary photo. Additive + fail-open: any problem here
@@ -4100,7 +4141,7 @@ function ccBurstScore(srcCanvas){
   return { sharp: (sum2 / Math.max(1, n)) - mean * mean, glare: glare };
 }
 function ccBurstUsePhoto(canvas){
-  var img = $("capImg"); img.src = canvas.toDataURL("image/jpeg", 0.85); img.alt = capCat.steps[capStep].cap + " — your photo (stays on your device)"; img.classList.remove("hidden"); $("capSample").classList.add("hidden"); capStopLive(); $("capTake").innerHTML = "<span>" + capCat.steps[capStep].take + "</span>"; capPhotoReady();
+  var img = $("capImg"); img.src = canvas.toDataURL("image/jpeg", 0.85); img.alt = capCat.steps[capStep].cap + " — your photo"; img.classList.remove("hidden"); $("capSample").classList.add("hidden"); capStopLive(); $("capTake").innerHTML = "<span>" + capCat.steps[capStep].take + "</span>"; capPhotoReady();
   try{
     var st = ccBurstStats[/back/i.test(capCat.steps[capStep].cap) ? "back" : "front"];
     var lbl = document.getElementById("capLabelLine");
@@ -4165,7 +4206,7 @@ $("capFile").addEventListener("change", function(){
   if(!f) return;
   var url = URL.createObjectURL(f);
   var img = $("capImg");
-  img.src = url; img.alt = capCat.steps[capStep].cap+" — your photo (stays on your device)";
+  img.src = url; img.alt = capCat.steps[capStep].cap+" — your photo";
   img.classList.remove("hidden");
   $("capSample").classList.add("hidden");
   capPhotoReady();
@@ -4176,15 +4217,34 @@ $("capCamFile").addEventListener("change", function(){
   if(!f) return;
   var url = URL.createObjectURL(f);
   var img = $("capImg");
-  img.src = url; img.alt = capCat.steps[capStep].cap+" — your photo (stays on your device)";
+  img.src = url; img.alt = capCat.steps[capStep].cap+" — your photo";
   img.classList.remove("hidden");
   $("capSample").classList.add("hidden");
   capPhotoReady();
+});
+/* Designation question (Nov 14, 2026): asked once per check, only when
+   a real captured pair is about to be saved (sample-photo checks save
+   nothing, so they are never asked). One tap on an answer files the
+   check — the answer rides with the scan as the tester's own call. */
+function capDesignateAnswer(v){
+  poolDesignation = v;
+  var _dg = $("capDesignate"); if(_dg) _dg.classList.add("hidden");
+  var _nx = $("capNext"); if(_nx) _nx.click();
+}
+[["capDesigYes","yes-fake"],["capDesigNo","no"],["capDesigUnsure","unsure"]].forEach(function(pair){
+  var _db = document.getElementById(pair[0]);
+  if(_db) _db.addEventListener("click", function(){ capDesignateAnswer(pair[1]); });
 });
 $("capNext").addEventListener("click", function(){
   if(!capHas) return;
   popSnd();
   if(capStep >= capCat.steps.length-1){
+    if(CC_TEST_INTAKE && !poolDesignation && !poolSubmittedId && poolFrontImg){
+      var _dg2 = $("capDesignate");
+      if(_dg2){ _dg2.classList.remove("hidden"); try{ _dg2.scrollIntoView({block:"nearest"}); }catch(e){} }
+      var _cg = $("capGot"); if(_cg) _cg.textContent = "One quick question before this files ↓";
+      return;
+    }
     /* FIX-WAVE F6: when this check's photos are being saved to
        the pool, the confirmation sheet (with the live identity
        read) comes FIRST and the finish below waits for the
@@ -13635,7 +13695,7 @@ function opRenderAvatar(){
   opRenderHumanAvatarPicker();
   opRenderCoins();
   try{ renderMyScans(); }catch(e){}
-  try{ var _pss = document.getElementById("opPoolShareState"); if(_pss){ var _sv = localStorage.getItem("cc_pool_share"); _pss.textContent = _sv === "yes" ? "Pool sharing: ON — my scans go to the pending pool" : (_sv === "no" ? "Pool sharing: OFF — my scans stay on this device only" : "Pool sharing: not set yet — you will be asked once, at your first scan."); } }catch(e){}
+  try{ var _pss = document.getElementById("opPoolShareState"); if(_pss){ _pss.textContent = (typeof CC_TEST_INTAKE !== "undefined" && CC_TEST_INTAKE) ? "Pool sharing: ON — testing saves every check to the test pool." : (function(){ var _sv = localStorage.getItem("cc_pool_share"); return _sv === "yes" ? "Pool sharing: ON — my scans go to the pending pool" : (_sv === "no" ? "Pool sharing: OFF — my scans stay on this device only" : "Pool sharing: not set yet — you will be asked once, at your first scan."); })(); } }catch(e){}
 }
 function opBuildAvatarPicker(){
   var host = document.getElementById('opAvatarPickerCards'); if(!host) return;
@@ -16330,7 +16390,7 @@ var CCMF_CONTENT = {
       ["Can I check more than one card?",
        "One card at a time on this path — a check is a matched pair, one front and one back. To line up several cards in one pass, look for Pip's Batch Check; it runs up to five cards through the photo steps together."],
       ["What is the pool?",
-       "The pool is our shared library of card photo pairs — it's what teaches and calibrates the checkers, and what human reviewers work from. Joining is always your choice: the app asks once, before your first photo is sent, and No is a complete answer."]
+       "The pool is our shared library of card photo pairs — it's what teaches and calibrates the checkers, and what human reviewers work from. During this public test, every check joins it automatically — that's what the test is for. In the full app, joining becomes your choice: the app asks once, before your first photo is sent, and No is a complete answer."]
     ]
   },
 
@@ -16392,11 +16452,11 @@ var CCMF_CONTENT = {
     line: "That's the pair — front and back, same card. Hit Finish when you're happy with them. Finish is the moment a check gets spent — one of your free checks — so give the pair one last look first.",
     qa: [
       ["What does Finish actually do?",
-       "Finish spends one of your free checks and sends the pair on its way. If you told the pool yes, the pair also files into the pending pool, and you'll find it later in your Binders, under review. If you said no, nothing is kept or sent anywhere."],
+       "Finish spends one of your free checks and sends the pair on its way. During testing, the pair also files into the test pool automatically — that's how the checker learns — and you'll find it later in your Binders, under review."],
       ["How many free checks do I get?",
        "Everyone starts with 10 free checks — in the full app, 5 more float in on the 1st of every month. In this demo the count is real but kind: when your checks run out, they restart, so you can keep watching how it works."],
       ["Can I undo a check?",
-       "There's no undo button in the demo. Before Finish, everything is free to redo — retake any photo as often as you like. After Finish, a pool-yes pair stays filed as it is, marked under review; a pool-no check simply leaves nothing behind."]
+       "There's no undo button in the demo. Before Finish, everything is free to redo — retake any photo as often as you like. After Finish, the pair stays filed in the test pool as it is, marked under review — and if you're signed in, you can delete it from Your checks."]
     ]
   },
 
@@ -16433,7 +16493,7 @@ var CCMF_CONTENT = {
   },
   bindersNo: {
     title: "Your Binders",
-    line: "All done — and because you kept this one private, nothing was saved or sent anywhere. Your photos lived only on this screen. That's a promise the app keeps.",
+    line: "All done — during testing, this check saved to the test pool, like every test check; that's what the test is for. In the full app, keeping a check private becomes a choice again — and a private check saves nothing, anywhere.",
     qa: null
   },
   bindersNew: {
@@ -16498,7 +16558,7 @@ CCMF_CONTENT.home = {
     ["What kinds of things can I check?",
      "Pokémon cards, Pokémon plush, and graded slabs — PSA, CGC, TAG, and BGS. Each kind asks for its own photo steps, because what the checkers look for changes with the treasure. Pick the one that matches what's in your hand."],
     ["What is the pool?",
-     "The pool is our shared library of card photo pairs — it's what teaches and calibrates the checkers, and what human reviewers work from. Joining is always your choice: the app asks once, before your first photo is sent, and No is a complete answer."]
+     "The pool is our shared library of card photo pairs — it's what teaches and calibrates the checkers, and what human reviewers work from. During this public test, every check joins it automatically — that's what the test is for. In the full app, joining becomes your choice: the app asks once, before your first photo is sent, and No is a complete answer."]
   ]
 };
 
@@ -16673,7 +16733,7 @@ CCMF_CONTENT.generic = {
     ["How do checks work?",
      "Photograph a card's front and back, and the app measures the photos on the spot. In the full app, two checkers then compare the card tell by tell. In this demo the photo steps are live and full checks open at launch, so a check today ends at the honest gate screen."],
     ["What is the pool?",
-     "The pool is our shared library of card photo pairs — it's what teaches and calibrates the checkers, and what human reviewers work from. Joining is always your choice: the app asks once, before your first photo is sent, and No is a complete answer."],
+     "The pool is our shared library of card photo pairs — it's what teaches and calibrates the checkers, and what human reviewers work from. During this public test, every check joins it automatically — that's what the test is for. In the full app, joining becomes your choice: the app asks once, before your first photo is sent, and No is a complete answer."],
     ["How many free checks do I get?",
      "Everyone starts with 10 free checks — in the full app, 5 more float in on the 1st of every month. In this demo the count is real but kind: when your checks run out, they restart, so you can keep watching how it works."]
   ]
@@ -19345,7 +19405,7 @@ if (typeof document !== "undefined") (function () {
       guide: "That's the pair — front and back, same card. Hit Finish when you're happy with them. Finish is the moment a check gets spent — one of your free checks — so give the pair one last look first.",
       questions: [
         QA("What does Finish actually do?",
-          "Finish spends one check and sends the pair on its way — to the pool, if you said yes to sharing. It's the one moment in the whole walk where a check gets spent.",
+          "Finish spends one check and sends the pair on its way — during testing, straight to the test pool. It's the one moment in the whole walk where a check gets spent.",
           "§3 + §7"),
         QA("How many free checks do I get?",
           "Everyone starts with 10 free checks. In the full app, 5 more float in on the 1st of every month. In this demo, if you run out they restart — a demo kindness, so testers can keep watching the economy work.",
@@ -19354,7 +19414,7 @@ if (typeof document !== "undefined") (function () {
           "My book doesn't hold an undo — Finish is written as the moment the check is spent and the pair goes on its way. That's exactly why I ask for one last look at the pair before you tap it.",
           "§7", { gap: true }),
         QA("What happens to my photos at Finish?",
-          "If you said yes to the pool, the pair files into your Binders' Undecided Pocket as a pending card, under review. If you said no, nothing is saved or sent anywhere — the photos lived only on your screen.",
+          "During testing, the pair files into your Binders' Undecided Pocket as a pending card, under review — every test check does. In the full app, if you say no to the pool, nothing is saved or sent anywhere — the photos live only on your screen.",
           "§5 + §3")
       ]
     },
@@ -19400,19 +19460,19 @@ if (typeof document !== "undefined") (function () {
     },
     "after-no": {
       screen: "binders",
-      guide: "All done — and because you kept this one private, nothing was saved or sent anywhere. Your photos lived only on this screen. That's a promise the app keeps.",
+      guide: "All done — during testing, this check saved to the test pool, like every test check; that's what the test is for. In the full app, keeping a check private becomes a choice again — and a private check saves nothing, anywhere.",
       questions: [
         QA("Where did my card go?",
-          "Nowhere — that's the promise kept. Because you said no to the pool, nothing was saved or sent anywhere; your photos lived only on the check screen.",
+          "Into the test pool, marked under review — during testing, every check files there automatically. In the full app, a private check will go nowhere at all: nothing saved, nothing sent.",
           "§5"),
         QA("Was anything sent anywhere?",
-          "No. With pool set to no, photos are used for that one check only, stay on the device, and are not kept or sent anywhere.",
+          "Yes — during testing, the pair is sent to the test pool when you tap Finish; that saving is the test working as designed. In the full app, saying no to the pool will mean photos are used for that one check only, stay on the device, and are not kept or sent anywhere.",
           "§5"),
         QA("Can I change my mind about the pool?",
-          "Yes — your answer is remembered on this device, and you can change it later in Profile / Settings. Saying yes on a future check shares that check's pair with the pool from then on.",
+          "During testing there is no switch — saving is on for every check, and the Settings card says so plainly. In the full app the choice returns: your answer is remembered on your device, and you can change it any time in Profile / Settings.",
           "§3 + §5"),
         QA("Did that still spend a check?",
-          "Yes — one check is spent at Finish, when a photo pair is completed, whichever way the pool question was answered. Browsing, games, and looking at samples never spend one.",
+          "Yes — one check is spent at Finish, when a photo pair is completed. Browsing, games, and looking at samples never spend one.",
           "§7")
       ]
     },
@@ -26059,7 +26119,7 @@ body.neon textarea:focus-visible{
 
   var API = "https://api.cardcauldrontcg.com";
   var LS_TOKEN = "cc_demo_token", LS_USER = "cc_demo_user";
-  var CONSENT_VERSION = "2026-11-12";
+  var CONSENT_VERSION = "2026-11-14";
   var VOCAB = { "Likely Genuine": 1, "Likely Counterfeit": 1, "Inconclusive": 1 };
   var READWORDS = {
     above_band: "points to a printed fake",
@@ -26120,9 +26180,9 @@ body.neon textarea:focus-visible{
       var cs = $("ccConsentState");
       if (cs) cs.textContent = acct.consent
         ? "Saving agreement: ON" + (acct.consent_at ? " — agreed " + acct.consent_at.slice(0, 10) : "") + ". Checks you run while signed in save to your account."
-        : "Saving agreement: OFF — your checks are not saved to your account. The check still runs; nothing is kept.";
+        : "Saving agreement: not recorded yet. During testing, checks you run while signed in still save to the test pool and appear in Your checks — agreeing lets the house checker file results on them.";
       var btn = $("ccConsentBtn");
-      if (btn) btn.innerHTML = acct.consent ? "<span>Withdraw saving agreement</span>" : "<span>Review the saving agreement</span>";
+      if (btn) btn.innerHTML = acct.consent ? "<span>Withdraw agreement</span>" : "<span>How saving works</span>";
     } else {
       out.hidden = false; inn.hidden = true;
     }
@@ -26203,12 +26263,12 @@ body.neon textarea:focus-visible{
     pop.id = "ccConsentPop";
     pop.style.cssText = "position:fixed;inset:0;z-index:3200;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:24px;";
     pop.innerHTML = '<div style="background:#2a2138;border:2px solid #f5c542;border-radius:16px;padding:20px;max-width:380px;color:#fff8e7;">'
-      + '<h3 style="color:#f5c542;margin-top:0;">Save your checks to your account?</h3>'
+      + '<h3 style="color:#f5c542;margin-top:0;">How saving works in this test</h3>'
       + (note ? '<p style="font-weight:800;">' + esc(note) + '</p>' : '')
-      + '<p>If you agree: when you check a card while signed in, the photos and the check result are saved on the Card Cauldron server under your account name, so you can see them again in Your checks (Profile / Settings).</p>'
+      + '<p>This demo is a public test. While testing runs, every check is saved to the Card Cauldron test pool automatically — the photos and the check result — because test checks are how the checker learns. Signed in, your checks also list under your account name, so you can see them again in Your checks (Profile / Settings).</p>'
       + '<p>Saved checks are tagged as public demo submissions. They help us test and improve the checker, and they are kept separate on purpose: they are <strong>never</strong> added to our genuine-card library and <strong>never</strong> used as graded test answers.</p>'
-      + '<p>You can withdraw this agreement at any time in Profile / Settings — withdrawing stops future saving — and you can delete any saved check from Your checks.</p>'
-      + '<p>If you do not agree, nothing changes: the check still runs, and nothing is saved to your account.</p>'
+      + '<p>Agreeing here lets the house checker file a result on your saved checks. You can delete any saved check from Your checks at any time. In the full app, saving becomes an ask-first choice again — withdrawing the agreement there stops future saving.</p>'
+      + '<p>If you tap Not now, the test itself does not change: checks still save while testing runs. This note is here so you hear it from us first, in plain words.</p>'
       + '<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap;"><button type="button" class="bubble-btn b-gold" id="ccConsentAgree"><span>I agree — save my checks</span></button><button type="button" class="bubble-btn b-white" id="ccConsentNo"><span>Not now</span></button></div></div>';
     document.body.appendChild(pop);
     document.getElementById("ccConsentAgree").addEventListener("click", function () {
@@ -26308,7 +26368,7 @@ body.neon textarea:focus-visible{
       if (!res.ok) { box.innerHTML = '<p class="small dim">Your checks could not load just now — tap Refresh to try again.</p>'; return; }
       var checks = res.d.checks || [];
       if (!checks.length) {
-        box.innerHTML = '<p class="small dim">No saved checks yet. Run a check while signed in' + (acct.consent ? '' : ' and after agreeing to saving') + ' and it will appear here.</p>';
+        box.innerHTML = '<p class="small dim">No saved checks yet. Run a check while signed in and it will appear here.</p>';
         return;
       }
       var h = "";
@@ -26366,7 +26426,7 @@ body.neon textarea:focus-visible{
             try {
               resp.clone().json().then(function (d) {
                 if (resp.status === 403 && d && d.consent_required) {
-                  consentShow("Your check just now was NOT saved — saving needs your agreement first.");
+                  consentShow("Your check just now was NOT saved to your account — please try once more.");
                 } else if (resp.status === 401 && d && d.account_error) {
                   window.ccAcctLogout();
                   consentShow("");
