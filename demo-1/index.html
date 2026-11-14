@@ -26317,20 +26317,36 @@ window.p2StartPractice = function(scr){
 };
 /* The shelf door is where runs begin: a capturing listener counts a
    run (or offers the practice run) BEFORE the hub's own handler
-   launches the game. In-game restarts continue the same run. */
+   launches the game. In-game restarts continue the same run.
+   GATEFIX (Nov 14): the instruction card's ▶ PLAY re-fires the tile
+   click under window.__ccPlayBypass to launch the game — that re-fire
+   is the SAME run, never a second one. The gate remembers its
+   decision from the tile tap in window.__p2Admit: a re-fire whose tap
+   was admitted (a free run counted, or a bought practice run via
+   __p2Bypass) passes without counting again; a re-fire whose tap was
+   refused (free runs gone, no practice bought) is refused here too,
+   so a card that opened anyway can never launch a free extra run. */
 document.addEventListener("click", function(e){
   var b = e.target && e.target.closest ? e.target.closest("[data-game]") : null;
   if (!b) return;
   var scr = b.getAttribute("data-game");
   if (!P2_SHELF[scr]) return;
-  if (window.__p2Bypass === scr){ window.__p2Bypass = null; return; }
+  if (window.__p2Bypass === scr){ window.__p2Bypass = null; window.__p2Admit = scr; return; }
+  if (window.__ccPlayBypass){
+    if (window.__p2Admit === scr || window.__p2Practice === scr){ window.__p2Admit = null; return; }
+    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+    showPracticeBar(scr);
+    return;
+  }
   var st = runsState();
   if ((st.counts[scr] || 0) < P2_FREE_RUNS){
     st.counts[scr] = (st.counts[scr] || 0) + 1; saveRuns(st);
     if (window.__p2Practice === scr) window.__p2Practice = null;
+    window.__p2Admit = scr;
     renderShelfMeta();
     return;
   }
+  window.__p2Admit = null;
   e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
   showPracticeBar(scr);
 }, true);
