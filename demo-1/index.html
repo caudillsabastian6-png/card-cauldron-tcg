@@ -2692,17 +2692,17 @@ window.opGateLogin = function(){
       <button type="button" class="bubble-btn b-lemon" data-game="gameMystery"><span>🔮 Mystery Bubble</span><span class="sub">by Milo 🎲 · Track the star through the shuffle, then pick it.</span><span class="p2-runs" data-runs-for="gameMystery"></span></button>
       <button type="button" class="bubble-btn b-pink" data-game="gameCMatch"><span>🀄 Cauldron Match</span><span class="sub">by Potion 🌙 · Tap free tiles in — three of a kind pops.</span><span class="p2-runs" data-runs-for="gameCMatch"></span></button>
       <button type="button" class="bubble-btn b-pink" data-game="gameMatch"><span>🃏 Match Audit</span><span class="sub">by Noor 🦉 · Flip two at a time; match every pair.</span><span class="p2-runs" data-runs-for="gameMatch"></span></button>
-      <button type="button" class="bubble-btn b-sky" data-game="gameGuess"><span>🏷️ Guess the Price</span><span class="sub">by the crew · Real recorded solds — call the price. Never posts scores.</span><span class="p2-runs" data-runs-for="gameGuess"></span></button>
+      <button type="button" class="bubble-btn b-gold" data-game="gameStack"><span>🧱 Cardboard Stack</span><span class="sub">by Potion 🌙 · Drop each slab flush — the overhang breaks off.</span><span class="p2-runs" data-runs-for="gameStack"></span></button>
     </div>
     <div class="card mt" role="note" aria-label="About practice runs">
       <p class="small" style="margin:0;">🫧 Each game gives you <b>3 free runs a day</b>. After that, a practice run costs 🪙 10 — practice scores never post to any leaderboard, ever.</p>
     </div>
     <div class="card mt center">
-      <p class="small" style="margin:0;">Live top 5 for the games that post — everybody's best scores, not just this visit. Finish a game and your best score posts under your profile name. Guess the Price never posts scores.</p>
+      <p class="small" style="margin:0;">Live top 5 for the games that post — everybody's best scores, not just this visit. Finish a game and your best score posts under your profile name.</p>
       <button type="button" class="bubble-btn b-sky small mt" data-nav="leaderboard"><span>See the Global Leaderboard</span></button>
     </div>
     <div class="card mt center">
-      <p class="small" style="margin:0;">More games live in the website arcade — Cauldron Words, Cauldron Cannon, Pop Path, Rapid Fire and Cardboard Stack moved there, scores and all.</p>
+      <p class="small" style="margin:0;">More games live in the website arcade — Cauldron Words, Cauldron Cannon, Pop Path, Rapid Fire and Guess the Price moved there. Cardboard Stack plays in both places — it's the owner's favourite.</p>
       <a class="bubble-btn b-white small mt" href="../arcade.html" style="text-decoration:none;"><span>Visit the website arcade →</span></a>
     </div>
     <div id="gamesList1" hidden></div>
@@ -2834,7 +2834,7 @@ window.opGateLogin = function(){
     <p class="small dim">Most points out of all games combined, at the top. Each player's total is the sum of their best score in each game — not an average.</p>
     <p class="small dim" id="lbTotalStatus">Loading total scores…</p>
     <div id="lbTotalTop" style="margin-top:10px;"></div>
-    <p class="small dim">Guess the Price does not post scores, so it is not in this total.</p></div>
+</div>
     <div class="card mt"><h3>Global board — live</h3>
     <p class="small dim" id="opGlobalStatus">Pick a game from the dropdown, then its top scores load live from the backend.</p>
     <div id="opLbPicker" style="margin-top:10px;"></div>
@@ -2949,7 +2949,7 @@ window.opGateLogin = function(){
       <summary style="font-weight:900;cursor:pointer;">🪙 How coins work</summary>
       <p class="small dim">Your coins live on this device only, for now. They are never real money. When real sign-in lands, your coins move to your account — until then, nobody else's device can see your coins, and we cannot see theirs either.</p>
       <h3 style="margin:0;">How you earn coins right now</h3>
-      <p class="small">🎮 Games pay coins — the first clear of a level pays most: Bubble Beat 50 · Cauldron Match 30 · Mystery Bubble 20 · Match Audit 20 · Guess the Price 10 for finishing a set (once a day). 📅 Daily check-in pays +10. 🫧 Scanning a card pays +10. The five games that moved to the website arcade pay their coins over there.</p>
+      <p class="small">🎮 Games pay coins — the first clear of a level pays most: Bubble Beat 50 · Cauldron Match 30 · Mystery Bubble 20 · Match Audit 20 · Cardboard Stack 10 (+2 a rung crossed). 📅 Daily check-in pays +10. 🫧 Scanning a card pays +10. The five games that moved to the website arcade pay their coins over there.</p>
       <h3 style="margin:0;">What coins buy now</h3>
       <p class="small">Treats and corner dressing for your pet (a small shelf, capped for good), practice runs past the free daily cap — whose scores never post — bonus tell-training packs, and pours into the donation cauldron. Coins never buy a check, a grade, a verdict, or a tier. That fence is permanent.</p>
     </details>
@@ -26272,7 +26272,7 @@ var P2_SHELF = {
   gameMystery: { gid: "mystery", title: "Mystery Bubble" },
   gameCMatch: { gid: "cmatch", title: "Cauldron Match" },
   gameMatch: { gid: "match", title: "Match Audit" },
-  gameGuess: { gid: "guess", title: "Guess the Price" }
+  gameStack: { gid: "stack", title: "Cardboard Stack" }
 };
 function runsState(){
   var st = lsGet("cc_p2_runs", null);
