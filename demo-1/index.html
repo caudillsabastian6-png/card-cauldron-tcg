@@ -30490,6 +30490,34 @@ if(note){
 #fp2AvatarBtn b{display:block;font-size:16.5px;}
 #fp2AvatarBtn .sub{display:block;font-size:12.5px;opacity:.75;margin-top:2px;}
 .cc-pet-flash{outline:3px solid #ffd76a;outline-offset:3px;}
+/* Item 39 (owner phone walk of FP2, Nov 16): BINDERS WOULD NOT SCROLL.
+   Root cause: the Binders flow kept the shared .ccx-flow height:100dvh,
+   but Binders is a dock screen that starts BELOW the demo banner + shell
+   header (~128px down at 390x844) — so #binderScroll ran one full
+   viewport tall starting partway down the screen, and its bottom band
+   sat below the visible viewport, behind the fixed dock. Scrolled to
+   its maximum, the last row aligned with that hidden bottom edge
+   (measured: container bottom y=972 on an 844px viewport, dock top
+   y=767) and could never be seen; overscroll-behavior:contain on the
+   container blocked the document-scroll rescue the bench harness
+   accidentally relied on. FP2's item-31 fix cured this same defect for
+   the fixed-overlay flows (check/grader/purchase) but Binders was left
+   out. Fix: below the desktop breakpoint the Binders screen fills its
+   main region exactly (absolute inset:0 — main is positioned, so the
+   screen spans banner-bottom to viewport-bottom), its flow flex-fills
+   the screen instead of taking a viewport height, the scroll region
+   may shrink (min-height:0), and the scroll region gets bottom
+   clearance so the last row always scrolls fully clear of the dock +
+   raised Check button. Verified by touch-drag: container reaches its
+   max, last row bottom lands 33px above the dock with zero document
+   scroll. (A flex-only fix does NOT work here: with no definite height
+   anywhere in the .phone/main chain, flex:1 alone lets the flow grow
+   to content height and the scroller never engages.) */
+@media (max-width:1023px){
+  #scr-binders.active{position:absolute;inset:0;}
+  #scr-binders .ccx-flow{height:auto;flex:1;min-height:0;}
+}
+#binderScroll{min-height:0;padding-bottom:110px;}
 </style>
 <script id="fp2-glue">
 /* ===== FIX PASS 2 GLUE — items 25-30, 38; Bravio 7 ===== */
