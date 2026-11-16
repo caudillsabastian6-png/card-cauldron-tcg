@@ -3026,8 +3026,9 @@ window.opGateLogin = function(){
               <div class="idfield"><label for="idSet">Set</label><input id="idSet" type="text" autocomplete="off"></div>
               <p class="idhint" id="idHint" hidden></p>
               <div class="pricecard" style="margin-top:4px">
-                <span class="pl">Free market price</span>
+                <span class="pl" id="idPriceLabel">Free market price</span>
                 <div class="pv" id="idPrice">—</div>
+                <span class="sampletag" id="idPriceTag" hidden>SAMPLE PRICE — NOT A REAL MARKET PRICE</span>
                 <span class="ps" id="idPriceSrc">Priced once the card is confirmed</span>
               </div>
               <button class="cta" type="button" id="btnConfirmCard">Yes — that's the card</button>
@@ -3070,8 +3071,9 @@ window.opGateLogin = function(){
               </div>
               <p id="rSampleTag" hidden><span class="sampletag">SAMPLE RESULT — built-in sample photos, not your card</span></p>
               <div class="pricecard">
-                <span class="pl">Free market price</span>
+                <span class="pl" id="rPriceLabel">Free market price</span>
                 <div class="pv" id="rPrice">—</div>
+                <span class="sampletag" id="rPriceTag" hidden>SAMPLE PRICE — NOT A REAL MARKET PRICE</span>
                 <span class="ps" id="rPriceSrc">—</span>
                 <div class="coinline" id="rCoins">+5 coins for this check</div>
               </div>
@@ -14279,7 +14281,11 @@ document.addEventListener("click", function(e){
 function opDoLogin(name){
   var n = (name||'').trim() || opProfile.displayName || opProfile.username || 'Guest';
   opProfile.username = n; opProfile.loggedIn = true; opSaveProfileData(); opRenderAvatar(); opHideGate();
-  rewardsShowOpenOnce();
+  /* Item 57: do NOT fire the rewards pop the instant the gate closes — that
+     stacked it on top of the consent step and the first-run guide. Arm it;
+     the first-run sequencer (fp2 lane) shows it once the user is on Home
+     and the guide has been seen/closed. Once per session, as before. */
+  try{ sessionStorage.setItem("ccRewardsArmed","1"); }catch(e){}
   var s = document.getElementById('opLoginState'); if(s) s.textContent = 'Signed in locally as '+n+' — demo only, not a real account.';
 }
 function opGateLogin(){ var inp = document.getElementById('opGateLoginName'); opDoLogin(inp ? inp.value : ''); }
@@ -29226,6 +29232,7 @@ function freshState(mode){
            sample:null,
            side:"front",         // "front" | "back"
            front:null, back:null, // dataURL or {art:"sa-…"} placeholder
+           frontPhoto:false, backPhoto:false, // item 57: a real photo was actually submitted this session, per side
            read:null,            // identify read {name, number, set}
            spent:false,
            designation:null, intakeFiled:false };
@@ -29290,12 +29297,13 @@ $("btnShutter").addEventListener("click", () => {
   c.getContext("2d").drawImage(v, 0, 0);
   const url = c.toDataURL("image/jpeg", 0.85);
   S[S.side] = url;
+  if (S.side === "front") S.frontPhoto = true; else S.backPhoto = true;
   const img = $("capShot"); img.src = url; img.hidden = false;
   v.hidden = true; $("capFrameTxt").textContent = "";
   $("capLive").hidden = true; $("capReview").hidden = false;   // review: Use / Retake (item 12)
   $("qualPill").textContent = "Check it — use it or retake";
 });
-$("btnRetake").addEventListener("click", () => { S[S.side] = null; setSide(S.side); if (stream){$("capLive").hidden=false;} });
+$("btnRetake").addEventListener("click", () => { S[S.side] = null; if (S.side === "front") S.frontPhoto = false; else S.backPhoto = false; setSide(S.side); if (stream){$("capLive").hidden=false;} });
 $("btnUsePhoto").addEventListener("click", () => acceptSide());
 $("btnTorch").addEventListener("click", () => { $("qualPill").textContent = "Torch is a phone control"; });
 
@@ -29307,7 +29315,10 @@ async function acceptSide(){
     return;
   }
   // Back accepted → TRIPLY BUG #3: warn if the "back" is the front again.
-  if (typeof S.front === "string" && typeof S.back === "string") {
+  // Item 57: the warning may ONLY evaluate when a new photo was actually
+  // submitted against an existing front photo in THIS session — never from
+  // carried/sample state sitting in the same fields.
+  if (S.frontPhoto && S.backPhoto && typeof S.front === "string" && typeof S.back === "string") {
     const d = await hashDistance(S.front, S.back);
     if (d <= 4) { openWarn(); return; }   // near-identical → warning before accepting
   }
@@ -29339,9 +29350,9 @@ async function hashDistance(a, b){
 }
 
 /* same-photo warning sheet */
-function openWarn(){ $("warnVeil").classList.add("open"); $("warnSheet").classList.add("open"); }
+function openWarn(){ if (!(S && S.frontPhoto && S.backPhoto)) return; $("warnVeil").classList.add("open"); $("warnSheet").classList.add("open"); }
 function closeWarn(){ $("warnVeil").classList.remove("open"); $("warnSheet").classList.remove("open"); }
-$("btnWarnRetake").addEventListener("click", () => { closeWarn(); S.back = null; setSide("back"); if (stream) $("capLive").hidden = false; show("capture"); });
+$("btnWarnRetake").addEventListener("click", () => { closeWarn(); S.back = null; S.backPhoto = false; setSide("back"); if (stream) $("capLive").hidden = false; show("capture"); });
 $("btnWarnUse").addEventListener("click", () => { closeWarn(); fillPair(); show("pair"); });
 
 /* ---------------- Testing-only upload (item 15) ----------------
@@ -29355,8 +29366,10 @@ $("testUpload").addEventListener("change", (e) => {
   r.onload = async () => {
     if (!S) S = freshState("upload");
     S[S.side] = r.result;
+    if (S.side === "front") S.frontPhoto = true; else S.backPhoto = true;
     if (await looksLikeScreenPhoto(r.result)) { show("screenphoto"); return; }  // item 10 still applies
     await acceptSide();
+    if ($("warnSheet").classList.contains("open")) return;   // item 57: duplicate-photo warning is up — leave it; the show() below would closeWarn() it in the same tick
     if ($("cs-pair").classList.contains("on")) return;   // back accepted → pair screen stays
     show("capture");
     if (S.side === "back") $("qualPill").textContent = "Front uploaded (testing) — now the back";
@@ -29438,6 +29451,8 @@ function fillConfirm(){
   if (anyUnk) $("idHint").textContent = "Couldn't read the name/number — try closer, straight-on, no glare, or type what you see on the card.";
   const p = priceLookup(r);
   $("idPrice").textContent = p ? p.price : "—";
+  $("idPriceLabel").textContent = S.sample ? "Sample price — not a real market price" : "Free market price";
+  $("idPriceTag").hidden = !S.sample;
   $("idPriceSrc").textContent = p ? p.src : "Priced once the card is confirmed";
   ["idName","idNumber","idSet"].forEach(id => $(id).addEventListener("input", refreshConfirmPrice, {once:false}));
 }
@@ -29448,7 +29463,7 @@ function currentRead(){
 }
 function refreshConfirmPrice(){
   const p = priceLookup(currentRead());
-  if (p) { $("idPrice").textContent = p.price; $("idPriceSrc").textContent = p.src; }
+  if (p) { $("idPrice").textContent = p.price; $("idPriceSrc").textContent = p.src; $("idPriceLabel").textContent = S.sample ? "Sample price — not a real market price" : "Free market price"; $("idPriceTag").hidden = !S.sample; }
 }
 $("btnConfirmRetake").addEventListener("click", () => { show("capture"); setSide("front"); });
 $("btnConfirmCard").addEventListener("click", () => {
@@ -29500,6 +29515,11 @@ function renderResult(){
   if (kind === "unknown") { V.textContent = "Inconclusive"; V.className = "vbig warn"; R.textContent = "We couldn't get a clean enough look to call this one."; C.textContent = "Not enough to tell"; }
   $("rSampleTag").hidden = !S.sample;
   const p = priceLookup(r);
+  /* Item 59: on a sample result the marking rides on the price itself —
+     the label over the figure and a tag directly under it — so no
+     screenshot of the number can read as a real market price. */
+  $("rPriceLabel").textContent = S.sample ? "Sample price — not a real market price" : "Free market price";
+  $("rPriceTag").hidden = !S.sample;
   $("rPrice").textContent = p ? p.price : "—";
   $("rPriceSrc").textContent = p ? p.src : "No price until the card is identified";
   // A submitted live check spends one check; samples and screen-photos never do (items 9–10).
@@ -29556,7 +29576,7 @@ function renderBinder(){
     const f = document.createElement("button");
     f.className = "gtile" + (c.verdict === "warn" ? " incon" : ""); f.type = "button";
     f.innerHTML = '<div class="gphoto ' + c.gp + '">' + (c.img ? '<img src="' + c.img + '" alt="" loading="lazy" onerror="this.remove()">' : '') + '<span class="vpill ' + c.verdict + '">' + c.pill + '</span></div>' +
-      "<figcaption><b>" + c.name + "</b><span>" + c.price + "</span></figcaption>";
+      "<figcaption><b>" + c.name + "</b><span>" + c.price + (c.own ? "" : ' <i class="sampletag" style="font-style:normal">SAMPLE</i>') + "</span></figcaption>";
     f.addEventListener("click", () => openDetail(c));
     grid.appendChild(f);
   });
@@ -29615,7 +29635,7 @@ function openDetail(c){
   ccxDetailCard = c;
   $("dName").textContent = c.name;
   $("dMeta").textContent = c.pill + " · checked " + c.date;
-  $("dPrice").textContent = c.own ? (c.price === "\u2014" ? "Not priced yet \u00b7 checked " + c.date : c.price + " \u00b7 checked " + c.date) : c.price + " \u2014 sample price \u00b7 checked " + c.date;
+  $("dPrice").textContent = c.own ? (c.price === "\u2014" ? "Not priced yet \u00b7 checked " + c.date : c.price + " \u00b7 checked " + c.date) : c.price + " \u2014 SAMPLE PRICE, not a real market price \u00b7 checked " + c.date;
   const art = (el, src, label) => { el.innerHTML = "";
     if (src) { const im = document.createElement("img"); im.src = src; im.alt = label;
       im.style.cssText = "width:100%;height:100%;object-fit:cover;border-radius:9px;display:block";
@@ -30330,6 +30350,15 @@ if(note){
    full viewport as fixed overlays; their flows fill them exactly. */
 #scr-check.active, #scr-condition.active, #scr-plan.active{position:fixed;inset:0;z-index:55;overflow:hidden;background:radial-gradient(1100px 600px at 85% -10%, #4b2566 0%, transparent 55%),radial-gradient(900px 700px at -10% 110%, #3a1a52 0%, transparent 55%),#1c0b24;}
 #scr-check .ccx-flow, #scr-condition .ccx-flow, #scr-plan .ccxm-flow{height:100%;}
+/* Item 58: the grader's step bar (Back/Next) sat at the very bottom of the
+   flow, directly under the fixed bottom tab bar (.dock.ccs-tabbar, z-60,
+   ~78px tall) — visible but unclickable, worst on desktop where the bar is
+   a centred pill over the flow. Pad the step bar so its buttons always
+   render fully above the dock (same clearance family as the item 39
+   binder padding and the bottom:86px sheets). */
+#scr-condition .stickybar{padding-bottom:calc(96px + env(safe-area-inset-bottom));}
+/* Item 59: the sample-price tag rides directly under the price figure */
+#rPriceTag, #idPriceTag{display:inline-block;margin-top:7px;}
 /* Item 24: drawer flush to the left screen edge at phone widths */
 @media (max-width:900px){
   .ccs-drawerwrap{left:0;right:0;margin:0;max-width:none;}
@@ -30601,6 +30630,51 @@ if (window.CC_GUIDE && typeof window.CC_GUIDE.open === "function") {
     else _origGuideOpen();
   };
 }
+/* ---- Item 57: first-run sequencer. opDoLogin now only ARMS the rewards
+        pop (sessionStorage ccRewardsArmed); this poller is the single place
+        it may actually appear — gate closed, user on Home, welcome guide
+        seen or opened-and-closed, plus a short grace after each step — so
+        first-load surfaces arrive one at a time: consent/gate → guide →
+        rewards, never stacked. ---- */
+var _frArmSeenAt = 0, _frGuideOpenAt = 0;
+setInterval(function(){
+  var g = $("ccGuide");
+  if (g && g.classList.contains("open")) _frGuideOpenAt = Date.now();
+}, 300);
+setInterval(function(){
+  try{
+    if (!sessionStorage.getItem("ccRewardsArmed") || sessionStorage.getItem("rewardsOpenShown")) return;
+    if (!_frArmSeenAt) { _frArmSeenAt = Date.now(); return; }
+    if (Date.now() - _frArmSeenAt < 1500) return;
+    var gate = $("opLoginGate");
+    if (gate && gate.style.display !== "none" && getComputedStyle(gate).display !== "none") return;
+    var home = $("scr-home");
+    if (!home || !home.classList.contains("active")) return;
+    var g = $("ccGuide");
+    if (g && g.classList.contains("open")) return;
+    var guideDone = false;
+    try{ guideDone = !!(window.CC_GUIDE && window.CC_GUIDE.seen()); }catch(e){}
+    if (!guideDone && !_frGuideOpenAt) return;
+    if (_frGuideOpenAt && Date.now() - _frGuideOpenAt < 2000) return;
+    sessionStorage.removeItem("ccRewardsArmed");
+    if (typeof window.rewardsShowOpenOnce === "function") window.rewardsShowOpenOnce();
+  }catch(e){}
+}, 700);
+/* ---- Item 58: while the condition grader is open, keyboard Tab stays
+        inside it — focus must not escape to the pages behind the flow ---- */
+document.addEventListener("keydown", function(e){
+  if (e.key !== "Tab") return;
+  var scr = $("scr-condition");
+  if (!scr || !scr.classList.contains("active")) return;
+  var f = Array.prototype.slice.call(scr.querySelectorAll(
+    'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+  )).filter(function(el){ return !el.hidden && el.getClientRects().length > 0; });
+  if (!f.length) return;
+  var first = f[0], last = f[f.length - 1];
+  if (!scr.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+  else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
 /* ---- Items 20/33: Binders re-renders when opened (FP1 rendered only at
         load and on chip clicks, so a card saved minutes ago never appeared
         until some other binder action forced a render), then the saved
