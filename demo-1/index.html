@@ -3157,6 +3157,7 @@ window.opGateLogin = function(){
               <div class="lab"><span>Set completion</span><span>214 / 286 · 75%</span></div>
               <div class="prog"><i style="width:75%"></i></div>
             </div>
+            <p class="ccx-binder-note">Demo binder — sample cards show official images (pokemontcg.io) with sample prices. Cards you check appear here with your own photos.</p>
             <div class="grid3" id="binderGrid"></div>
             <div id="binderPage" hidden>
               <div class="pockets" id="pocketPage"></div>
@@ -3174,6 +3175,7 @@ window.opGateLogin = function(){
               <div class="pairthumb"><div class="ph" id="dBack"></div><p class="cap">Back</p></div>
             </div>
             <p id="dPrice" style="font-weight:800">—</p>
+            <button class="secbtn" type="button" id="dMove">Move to another binder</button>
             <button class="secbtn" type="button" id="dGrade">Grade its condition</button>
             <button class="plainbtn" type="button" id="dClose">Close</button>
           </div>
@@ -3827,6 +3829,7 @@ window.opGateLogin = function(){
       <button class="ccs-signin-btn" type="button" id="ccsDrawerSignIn" data-nav="settings" hidden>Sign in</button>
     </div>
     <nav class="ccs-drawer-nav" aria-label="More sections — everything that is not a bottom-bar tab">
+      <button class="ccs-drawer-item" type="button" data-check-start="1" data-drawer-row="check" id="ccsDrawerCheck"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span class="dtxt"><b>Check a card</b><span>Real or Replica — front and back</span></span></button>
       <button class="ccs-drawer-item" type="button" data-nav="condition" data-drawer-row="condition"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><path d="M12 3l2.5 5.5L20 9.5l-4 4 1 6-5-2.8L7 19.5l1-6-4-4 5.5-1z"/></svg></span><span class="dtxt"><b>Grader</b><span>PSA · CGC · BGS · SGC estimates</span></span></button>
       <button class="ccs-drawer-item" type="button" data-nav="tells" data-drawer-row="tells"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg></span><span class="dtxt"><b>How checks work</b><span>The tells we look for</span></span></button>
       <div class="ccs-drawer-div" aria-hidden="true"></div>
@@ -28332,7 +28335,10 @@ button.ccs-stat:active{background:rgba(255,255,255,.05);}
           var nm = (r && typeof r.name === "string" && r.name) ? r.name : "Your scanned card";
           var sub = "Front photo · " + relDay(r.when);
           if(typeof r.price === "number" && isFinite(r.price)) sub += " · " + fmtMoney(r.price);
-          return '<div class="ccs-rrow"><span class="thumb" aria-hidden="true"></span><span class="rmain"><b>' +
+          var th = (r && typeof r.thumb === "string" && r.thumb.indexOf("data:image") === 0)
+            ? '<img class="thumb" src="' + r.thumb + '" alt="Your scanned card front">'
+            : '<span class="thumb" aria-hidden="true">🃏</span>';
+          return '<div class="ccs-rrow">' + th + '<span class="rmain"><b>' +
             esc(nm) + "</b><span>" + esc(sub) + '</span></span><span class="ccs-verdict ' + cls + '">' + pill + "</span></div>";
         }).join("");
       }
@@ -28500,6 +28506,12 @@ button.ccs-stat:active{background:rgba(255,255,255,.05);}
 .ccxg .cc-guide-next, .cc-guide-next.ccxg{width:100%;min-height:52px;border:none;border-radius:999px;cursor:pointer;font:inherit;font-weight:900;font-size:15.5px;
   background:linear-gradient(105deg,#f6d47c,var(--gx-gold) 55%,var(--gx-gold-deep));color:var(--gx-gold-ink)}
 .ccxg .cc-guide-next.quiet, .cc-guide-next.ccxg.quiet{background:rgba(255,255,255,.07);border:1px solid var(--gx-line-soft);color:var(--gx-ink)}
+.ccxg .cc-pull-reveal, .cc-pull-reveal.ccxg{display:block;margin-top:10px;text-align:center;animation:gxPullIn .5s ease}
+.ccxg .cc-pull-reveal img, .cc-pull-reveal.ccxg img{width:150px;max-width:60%;border-radius:12px;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+.ccxg .cc-pull-reveal-cap, .cc-pull-reveal-cap.ccxg{display:block;font-weight:900;margin:0 0 8px}
+.ccxg .cc-pull-reveal-name, .cc-pull-reveal-name.ccxg{display:block;font-weight:800;margin:8px 0 2px}
+.ccxg .cc-pull-reveal-sub, .cc-pull-reveal-sub.ccxg{display:block;font-size:11px;opacity:.75;margin:0}
+@keyframes gxPullIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
 /* --- check lane (scoped .ccx) --- */
 .ccx{
   --cx-plum-950:#1c0b24; --cx-plum-900:#271133; --cx-plum-800:#351747; --cx-plum-700:#47225e;
@@ -28860,6 +28872,36 @@ button.ccs-stat:active{background:rgba(255,255,255,.05);}
 #scr-binders .veil, #scr-check .veil{z-index:69}
 .ccxm-flow .sheet{z-index:76}
 .ccxm-flow .sheet-veil{z-index:75}
+/* ===== FIX PASS 1 (owner phone walk Nov 15, items 8-18) ===== */
+/* item 16: edge-to-edge on phone widths — the centred 430px column and the
+   capped bars are a desktop-only treatment; below 900px the app shell runs
+   the full width of the screen, no black side bars. */
+@media (max-width:900px){
+  .phone{max-width:none;box-shadow:none}
+  .dock{max-width:none}
+  body .dock.ccs-tabbar{width:100%;max-width:none}
+  .ccxm-gate,.ccxm-gate-local{max-width:none}
+}
+/* item 18: sheets float fully inside the viewport, above the bottom bar,
+   in one motion — they were anchored to the bottom of a taller-than-screen
+   section, so they opened half off-screen. */
+#scr-binders .sheetbox, #scr-check .sheetbox{position:fixed;left:50%;right:auto;width:100%;max-width:430px;bottom:86px;transform:translate(-50%,130%);border-radius:24px;max-height:calc(100dvh - 200px);box-shadow:0 18px 50px rgba(0,0,0,.55)}
+#scr-binders .sheetbox.open, #scr-check .sheetbox.open{transform:translate(-50%,0)}
+#scr-binders .veil, #scr-check .veil{position:fixed;inset:0}
+@media (max-width:900px){
+  #scr-binders .sheetbox, #scr-check .sheetbox{max-width:none}
+}
+/* item 8: a recent-check row's own scan photo fills the same thumb box */
+.ccs-rrow img.thumb{object-fit:cover;background:none}
+/* items 10+11: binder tile photos + the demo-binder honesty note; the slim
+   header collapse is neutralised — it changed layout height mid-scroll and
+   snapped the grid (item 10). The header now scrolls away plainly. */
+.ccx .gphoto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ccx-binder-note{font-size:11.5px;color:var(--cx-ink-mute);font-weight:700;margin:0 0 10px}
+.ccx .bh.slim{padding:16px 18px 10px}
+.ccx .bh.slim .sumline{display:block}
+.ccx .bh.slim .r3{display:flex}
+.ccx-scroll{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 
 </style>
 <script id="ccmerge-games">
@@ -28876,21 +28918,23 @@ button.ccs-stat:active{background:rgba(255,255,255,.05);}
 "use strict";
 
 /* ---------- 1) Hub data ----------
-   Shelf is settled law: Bubble Beat · Mystery Bubble · Cauldron Match ·
-   Match Audit · Cardboard Stack. (Guess the Price stays arcade-only and
+   Shelf (owner order Nov 15): Cardboard Stack · Match Audit · Cauldron Words ·
+   Bubble Beat · Mystery Bubble · Cauldron Cannon. (Guess the Price stays arcade-only and
    is NOT in this list.) ids/scr match the monolith's LB_GAMES + starters.
    Descriptions ≤6 words. Time costs are crew estimates — see REPORT.md. */
 var CC_GAMES = [
+  { id:"stack",   scr:"gameStack",   name:"Cardboard Stack",
+    desc:"Drop slabs flush, keep stacking",     time:"About 2 minutes" },
+  { id:"match",   scr:"gameMatch",   name:"Match Audit",
+    desc:"Flip pairs, match them all",          time:"About 3 minutes" },
+  { id:"words",   scr:"gameWords",   name:"Cauldron Words",
+    desc:"Drag bubbles, spell the words",       time:"About 3 minutes" },
   { id:"beat",    scr:"gameBeat",    name:"Bubble Beat",
     desc:"Tap bubbles on the gold ring",        time:"About 2 minutes" },
   { id:"mystery", scr:"gameMystery", name:"Mystery Bubble",
     desc:"Track the star, pick the bubble",     time:"About 1 minute" },
-  { id:"cmatch",  scr:"gameCMatch",  name:"Cauldron Match",
-    desc:"Match three free tiles to pop",       time:"About 3 minutes" },
-  { id:"match",   scr:"gameMatch",   name:"Match Audit",
-    desc:"Flip pairs, match them all",          time:"About 3 minutes" },
-  { id:"stack",   scr:"gameStack",   name:"Cardboard Stack",
-    desc:"Drop slabs flush, keep stacking",     time:"About 2 minutes" }
+  { id:"cannon",  scr:"gameCannon",  name:"Cauldron Cannon",
+    desc:"Topple towers with every orb",        time:"About 3 minutes" }
 ];
 
 /* Simple stroke icons (crew-drawn, no card imagery) — same icon language
@@ -28900,7 +28944,9 @@ var CC_ICONS = {
   mystery:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><circle cx="12" cy="12" r="8"/><path d="M12 7l1.2 2.6L16 10l-2 2 .5 2.8L12 13.5 9.5 14.8 10 12 8 10l2.8-.4z"/></svg>',
   cmatch: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="8.5" y="13" width="7" height="7" rx="1.5"/></svg>',
   match:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><rect x="3" y="5" width="8" height="12" rx="2"/><rect x="13" y="5" width="8" height="12" rx="2"/></svg>',
-  stack:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 19h16M6 15h12M8 11h8M10 7h4"/></svg>'
+  stack:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M4 19h16M6 15h12M8 11h8M10 7h4"/></svg>',
+  words:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><circle cx="8" cy="9" r="3.5"/><circle cx="16" cy="9" r="3.5"/><circle cx="12" cy="16" r="3.5"/></svg>',
+  cannon: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><circle cx="9" cy="15" r="4"/><path d="M12 12l7-7M15 4h5v5"/></svg>'
 };
 
 /* Status line per tile.
@@ -28943,6 +28989,15 @@ function ccDailyState(){
   try{ claimed = (localStorage.getItem(CC_PULL_KEY) === today); }catch(e){}
   return claimed ? "done" : "ready";
 }
+function ccPullRevealHTML(){
+  var img = document.getElementById('potdImg'), nm = document.getElementById('potdName');
+  var name = (nm && nm.textContent) ? nm.textContent : "Today's demo pool card";
+  var src = (img && img.getAttribute('src')) ? img.getAttribute('src') : '';
+  return '<span class="cc-pull-reveal"><span class="cc-pull-reveal-cap">\uD83C\uDF89 Your pull for today</span>'
+    + (src ? '<img src="' + src + '" alt="Your daily pull card">' : '')
+    + '<span class="cc-pull-reveal-name">' + name + '</span>'
+    + '<span class="cc-pull-reveal-sub">Demo pool card \u00b7 Official image (pokemontcg.io) \u00b7 not a scan of Sabastian\u2019s card, not a check, not a verdict.</span></span>';
+}
 function ccDailyHTML(){
   if(ccDailyState() === "ready"){
     return '<b>Today\u2019s pull is ready</b>'
@@ -28950,7 +29005,8 @@ function ccDailyHTML(){
       + '<span class="cc-daily-cta">Pull today\u2019s card</span>';
   }
   return '<b>Pull done for today</b>'
-    + '<span>Come back tomorrow \u00B7 New pull at midnight</span>';
+    + '<span>Come back tomorrow \u00B7 New pull at midnight</span>'
+    + ccPullRevealHTML();
 }
 function ccClaimPull(){
   try{ localStorage.setItem(CC_PULL_KEY, new Date().toDateString()); }catch(e){}
@@ -29465,22 +29521,22 @@ function renderResult(){
 
 /* ---------------- Binders ---------------- */
 const BINDER_CARDS = [
-  {name:"Holo rare", price:"$24.50", verdict:"ok", pill:"Likely Genuine", gp:"gp1", date:"12 Nov"},
-  {name:"Reverse holo", price:"$8.20", verdict:"warn", pill:"Inconclusive", gp:"gp2", date:"11 Nov"},
-  {name:"Full art trainer", price:"$61.00", verdict:"ok", pill:"Likely Genuine", gp:"gp3", date:"10 Nov"},
-  {name:"Gold star rare", price:"$112.00", verdict:"bad", pill:"Likely Counterfeit", gp:"gp4", date:"9 Nov"},
-  {name:"Secret rare", price:"$43.75", verdict:"ok", pill:"Likely Genuine", gp:"gp5", date:"8 Nov"},
-  {name:"Ultra rare EX", price:"$18.90", verdict:"ok", pill:"Likely Genuine", gp:"gp6", date:"8 Nov"},
-  {name:"Reverse holo · 2", price:"$6.40", verdict:"warn", pill:"Inconclusive", gp:"gp2", date:"7 Nov"},
-  {name:"Holo rare · 2", price:"$21.00", verdict:"ok", pill:"Likely Genuine", gp:"gp1", date:"6 Nov"},
-  {name:"Full art trainer · 2", price:"$58.25", verdict:"warn", pill:"Inconclusive", gp:"gp3", date:"5 Nov"},
-  {name:"Secret rare · 2", price:"$39.99", verdict:"ok", pill:"Likely Genuine", gp:"gp5", date:"4 Nov"},
-  {name:"Gold star rare · 2", price:"$98.00", verdict:"ok", pill:"Likely Genuine", gp:"gp4", date:"3 Nov"},
-  {name:"Ultra rare EX · 2", price:"$17.50", verdict:"ok", pill:"Likely Genuine", gp:"gp6", date:"2 Nov"}
+  {key:"demo:applin", name:"Applin", price:"$0.35", verdict:"ok", pill:"Likely Genuine", gp:"gp5", date:"14 Nov", img:"samples/sample-a-front.jpg", back:"samples/sample-a-back.jpg", binder:"Binder 1"},
+  {key:"demo:pikachu", name:"Pikachu \u00b7 Base 58/102", price:"$2.50", verdict:"ok", pill:"Likely Genuine", gp:"gp2", date:"12 Nov", img:"https://images.pokemontcg.io/base1/58_hires.png", back:null, binder:"Binder 1"},
+  {key:"demo:eevee", name:"Eevee \u00b7 Jungle 51/111", price:"$1.25", verdict:"ok", pill:"Likely Genuine", gp:"gp3", date:"11 Nov", img:"https://images.pokemontcg.io/base2/51_hires.png", back:null, binder:"Binder 1"},
+  {key:"demo:snorlax", name:"Snorlax \u00b7 Jungle 11/64", price:"$6.75", verdict:"ok", pill:"Likely Genuine", gp:"gp6", date:"10 Nov", img:"https://images.pokemontcg.io/base2/11_hires.png", back:null, binder:"Binder 1"},
+  {key:"demo:blastoise", name:"Blastoise \u00b7 Base 2/102", price:"$32.00", verdict:"ok", pill:"Likely Genuine", gp:"gp1", date:"8 Nov", img:"https://images.pokemontcg.io/base1/2_hires.png", back:null, binder:"Binder 1"},
+  {key:"demo:lucario", name:"Lucario \u00b7 Diamond & Pearl 6/130", price:"$3.75", verdict:"warn", pill:"Inconclusive", gp:"gp3", date:"6 Nov", img:"https://images.pokemontcg.io/dp1/6_hires.png", back:null, binder:"Binder 1"},
+  {key:"demo:disco", name:"Charizard (Disco test print) \u00b7 Base 4/102", price:"$0.10", verdict:"bad", pill:"Likely Counterfeit", gp:"gp4", date:"9 Nov", img:"samples/sample-b-front.jpg", back:"samples/sample-b-back.jpg", binder:"Binder 2"},
+  {key:"demo:mew", name:"Mew \u00b7 Black Star Promo 8", price:"$12.00", verdict:"warn", pill:"Inconclusive", gp:"gp4", date:"8 Nov", img:"https://images.pokemontcg.io/basep/8_hires.png", back:null, binder:"Binder 2"},
+  {key:"demo:gengar", name:"Gengar \u00b7 Fossil 5/62", price:"$14.50", verdict:"ok", pill:"Likely Genuine", gp:"gp1", date:"7 Nov", img:"https://images.pokemontcg.io/base3/5_hires.png", back:null, binder:"Binder 2"},
+  {key:"demo:dragonite", name:"Dragonite \u00b7 Fossil 4/62", price:"$18.25", verdict:"ok", pill:"Likely Genuine", gp:"gp2", date:"5 Nov", img:"https://images.pokemontcg.io/base3/4_hires.png", back:null, binder:"Binder 2"},
+  {key:"demo:venusaur", name:"Venusaur \u00b7 Base 15/102", price:"$24.00", verdict:"ok", pill:"Likely Genuine", gp:"gp5", date:"4 Nov", img:"https://images.pokemontcg.io/base1/15_hires.png", back:null, binder:"Binder 2"},
+  {key:"demo:umbreon", name:"Umbreon \u00b7 Neo Discovery 13/75", price:"$21.50", verdict:"ok", pill:"Likely Genuine", gp:"gp6", date:"3 Nov", img:"https://images.pokemontcg.io/neo2/13_hires.png", back:null, binder:"Binder 2"}
 ];
 let binderFilter = "all", binderSort = "recent", binderPage = 0;
 function binderVisible(){
-  let list = BINDER_CARDS.filter(c => binderFilter === "all" || c.verdict === binderFilter);
+  let list = binderAllCards().filter(c => (binderCur() === "all" || binderOf(c) === binderCur()) && (binderFilter === "all" || c.verdict === binderFilter));
   const q = $("binderSearch").value.trim().toLowerCase();
   if (q) list = list.filter(c => c.name.toLowerCase().includes(q));
   if (binderSort === "name") list = list.slice().sort((a,b) => a.name.localeCompare(b.name));
@@ -29494,7 +29550,7 @@ function renderBinder(){
   list.forEach(c => {
     const f = document.createElement("button");
     f.className = "gtile" + (c.verdict === "warn" ? " incon" : ""); f.type = "button";
-    f.innerHTML = '<div class="gphoto ' + c.gp + '"><span class="vpill ' + c.verdict + '">' + c.pill + '</span></div>' +
+    f.innerHTML = '<div class="gphoto ' + c.gp + '">' + (c.img ? '<img src="' + c.img + '" alt="" loading="lazy" onerror="this.remove()">' : '') + '<span class="vpill ' + c.verdict + '">' + c.pill + '</span></div>' +
       "<figcaption><b>" + c.name + "</b><span>" + c.price + "</span></figcaption>";
     f.addEventListener("click", () => openDetail(c));
     grid.appendChild(f);
@@ -29508,11 +29564,14 @@ function renderBinder(){
     const c = list[binderPage * 9 + i];
     const s = document.createElement("span");
     s.className = "pocket" + (c ? " full " + c.gp : "");
+    if (c && c.img) { s.style.backgroundImage = "url(" + c.img + ")"; s.style.backgroundSize = "cover"; s.style.backgroundPosition = "center"; }
     pk.appendChild(s);
   }
   $("pageDots").textContent = "● ".repeat(1) + "Page " + (binderPage + 1) + " of " + pages + " — empty pockets are what's missing, not errors";
-  const inc = BINDER_CARDS.filter(c => c.verdict === "warn").length;
-  $("binderSummary").innerHTML = "128 cards · $1,240 · <b>" + inc + " need a second look</b>";
+  const bset = binderAllCards().filter(c => binderCur() === "all" || binderOf(c) === binderCur());
+  const inc = bset.filter(c => c.verdict === "warn").length;
+  const bsum = bset.reduce((a, c) => a + (parseFloat(String(c.price).slice(1)) || 0), 0);
+  $("binderSummary").innerHTML = bset.length + (bset.length === 1 ? " card" : " cards") + (bsum > 0 ? " \u00b7 $" + bsum.toFixed(2) : "") + " \u00b7 <b>" + inc + " need a second look</b>";
 }
 $("bvGrid").addEventListener("click", () => { $("bvGrid").setAttribute("aria-pressed","true"); $("bvBinder").setAttribute("aria-pressed","false"); $("binderGrid").hidden = false; $("binderPage").hidden = true; });
 $("bvBinder").addEventListener("click", () => { $("bvBinder").setAttribute("aria-pressed","true"); $("bvGrid").setAttribute("aria-pressed","false"); $("binderGrid").hidden = true; $("binderPage").hidden = false; });
@@ -29548,15 +29607,34 @@ function closeSheets(){
 }
 $("detailVeil").addEventListener("click", closeSheets);
 function openDetail(c){
+  ccxDetailCard = c;
   $("dName").textContent = c.name;
   $("dMeta").textContent = c.pill + " · checked " + c.date;
-  $("dPrice").textContent = c.price + " — TCGplayer Market · " + c.date;
-  const art = (el) => { el.innerHTML = ""; const d = document.createElement("div"); d.className = "gphoto " + c.gp; d.style.height = "100%"; el.appendChild(d); };
-  art($("dFront")); art($("dBack"));
+  $("dPrice").textContent = c.own ? (c.price === "\u2014" ? "Not priced yet \u00b7 checked " + c.date : c.price + " \u00b7 checked " + c.date) : c.price + " \u2014 sample price \u00b7 checked " + c.date;
+  const art = (el, src, label) => { el.innerHTML = "";
+    if (src) { const im = document.createElement("img"); im.src = src; im.alt = label;
+      im.style.cssText = "width:100%;height:100%;object-fit:cover;border-radius:9px;display:block";
+      im.onerror = () => { im.remove(); const d = document.createElement("div"); d.className = "gphoto " + c.gp; d.style.height = "100%"; el.appendChild(d); };
+      el.appendChild(im); return; }
+    const d = document.createElement("div"); d.className = "gphoto " + c.gp; d.style.height = "100%";
+    d.innerHTML = '<span style="display:grid;place-items:center;height:100%;padding:8px;text-align:center;font-size:11px;font-weight:800;color:var(--ink-soft)">' + label + "</span>";
+    el.appendChild(d); };
+  art($("dFront"), c.img || null, "Front");
+  art($("dBack"), c.back || null, c.own ? "Back photo isn't saved in this demo" : "No back photo in this demo");
   $("detailVeil").classList.add("open"); $("detailSheet").classList.add("open");
 }
 $("dClose").addEventListener("click", closeSheets);
-$("dGrade").addEventListener("click", closeSheets);
+$("dGrade").addEventListener("click", () => {
+  const c = ccxDetailCard;
+  closeSheets();
+  if (c) {
+    GR.step = 1; GR.done = false;
+    GR.answers = { photos:"check", corners:null, edges:null, surface:null, centering:null, extra:[] };
+    GR.cardName = c.name; GR.cardFront = c.img || null; GR.cardBack = c.back || null;
+    renderGrader();
+  }
+  if (window.show) window.show("condition");
+});
 /* slim collapsing header (guide §2a.1) */
 $("binderScroll").addEventListener("scroll", (e) => {
   $("binderHeader").classList.toggle("slim", e.target.scrollTop > 46);
@@ -29620,7 +29698,14 @@ function renderGrader(){
     mkOptions(st.options2, st.key2);
   }
   if (GR.step === 1 && GR.answers.photos === "check") {
-    const n = document.createElement("p"); n.className = "ghint"; n.textContent = "Using the photos from your check ✓"; body.appendChild(n);
+    const n = document.createElement("p"); n.className = "ghint";
+    if (GR.cardFront) {
+      const im = document.createElement("img"); im.src = GR.cardFront; im.alt = "";
+      im.style.cssText = "width:44px;height:62px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px";
+      n.appendChild(im);
+      n.appendChild(document.createTextNode("Grading " + (GR.cardName || "your card") + " \u2014 using this card's photos \u2713"));
+    } else n.textContent = "Using the photos from your check \u2713";
+    body.appendChild(n);
   }
   $("graderScroll").scrollTop = 0;
 }
@@ -29710,6 +29795,127 @@ function fileTesterIntake(){
     }
   }).catch(() => { if (saved) saved.textContent = "Pool send did not go through — your scan was not saved to the pool."; });
 }
+
+
+/* ---------------- FIX PASS 1: working binders (items 9 + 11) ----------------
+   The .covers row shipped unwired: no click handlers existed. Binder state
+   lives on this device (ccx_binders = names, ccx_binder_assign = card key ->
+   binder name); every card also carries a default home binder. The user's
+   own checked cards (cc_my_scans records with a stored front photo) join
+   the binder with their own photos — the same records Home's Recent Checks
+   reads. A created binder exists immediately, persists, and can hold cards
+   via the detail sheet's Move button. */
+var CCX_BIND = null;
+var ccxDetailCard = null;
+function ccxBindState(){
+  if (CCX_BIND) return CCX_BIND;
+  var names = ["Binder 1", "Binder 2"], assign = {};
+  try {
+    var n = JSON.parse(localStorage.getItem("ccx_binders") || "null");
+    if (Array.isArray(n) && n.length) names = n.filter(function(x){ return typeof x === "string" && !!x; });
+    var a = JSON.parse(localStorage.getItem("ccx_binder_assign") || "null");
+    if (a && typeof a === "object") assign = a;
+  } catch(e) {}
+  CCX_BIND = { names: names, assign: assign, current: "all" };
+  return CCX_BIND;
+}
+function ccxBindSave(){
+  try {
+    localStorage.setItem("ccx_binders", JSON.stringify(CCX_BIND.names));
+    localStorage.setItem("ccx_binder_assign", JSON.stringify(CCX_BIND.assign));
+  } catch(e) {}
+}
+function binderCur(){ return ccxBindState().current; }
+function binderOf(c){
+  var st = ccxBindState();
+  if (c.key && st.assign[c.key]) return st.assign[c.key];
+  return c.binder || st.names[0];
+}
+function binderAllCards(){
+  var own = [];
+  try {
+    var recs = JSON.parse(localStorage.getItem("cc_my_scans") || "[]");
+    if (Array.isArray(recs)) recs.forEach(function(r, i){
+      if (!r || typeof r.thumb !== "string" || r.thumb.indexOf("data:image") !== 0) return;
+      var v = (typeof r.verdict === "string" && r.verdict) ? r.verdict : "";
+      var verdict = "warn", pill = "Under review";
+      if (/counterfeit/i.test(v)) { verdict = "bad"; pill = "Likely Counterfeit"; }
+      else if (/genuine/i.test(v)) { verdict = "ok"; pill = "Likely Genuine"; }
+      else if (v) { pill = "Inconclusive"; }
+      own.push({ key: "own:" + (r.id || ("scan" + i)), own: true,
+        name: (typeof r.name === "string" && r.name) ? r.name : "Your scanned card",
+        price: (typeof r.price === "number" && isFinite(r.price)) ? "$" + r.price.toFixed(2) : "\u2014",
+        verdict: verdict, pill: pill, gp: "gp6",
+        date: r.when ? new Date(r.when).toLocaleDateString("en-US", { day: "numeric", month: "short" }) : "",
+        img: r.thumb, back: null, binder: ccxBindState().names[0] });
+    });
+  } catch(e) {}
+  return own.concat(BINDER_CARDS.slice());
+}
+function ccxBinderTitle(){
+  var hb = document.querySelector("#binderHeader .r1 b");
+  if (hb) hb.textContent = (binderCur() === "all" ? "My Binder" : binderCur()) + " \u25be";
+}
+function renderCovers(){
+  var st = ccxBindState();
+  var row = document.querySelector("#binderScroll .covers");
+  if (!row) return;
+  row.innerHTML = "";
+  var mk = function(label, val){
+    var b = document.createElement("button");
+    b.className = "cover"; b.type = "button"; b.textContent = label;
+    b.setAttribute("aria-pressed", st.current === val ? "true" : "false");
+    b.addEventListener("click", function(){
+      if (val === "__new") { openNewBinder(); return; }
+      st.current = val; binderPage = 0;
+      renderCovers(); renderBinder(); ccxBinderTitle();
+    });
+    row.appendChild(b);
+  };
+  mk("All cards", "all");
+  st.names.forEach(function(n){ mk(n, n); });
+  mk("+ New binder", "__new");
+}
+function openNewBinder(){
+  $("sortTitle").textContent = "New binder";
+  var body = $("sortBody"); body.innerHTML = "";
+  var inp = document.createElement("input");
+  inp.type = "text"; inp.maxLength = 24; inp.placeholder = "Binder name";
+  inp.setAttribute("aria-label", "Binder name");
+  inp.style.cssText = "width:100%;padding:10px;border-radius:10px;font:inherit;margin-bottom:8px";
+  var go = document.createElement("button");
+  go.className = "secbtn"; go.type = "button"; go.textContent = "Create binder"; go.style.margin = "0";
+  go.addEventListener("click", function(){
+    var st = ccxBindState();
+    var name = inp.value.trim() || ("Binder " + (st.names.length + 1));
+    if (st.names.indexOf(name) < 0) st.names.push(name);
+    st.current = name; ccxBindSave(); binderPage = 0;
+    closeSheets(); renderCovers(); renderBinder(); ccxBinderTitle();
+  });
+  body.appendChild(inp); body.appendChild(go);
+  $("detailVeil").classList.add("open"); $("sortSheet").classList.add("open");
+  setTimeout(function(){ try { inp.focus(); } catch(e) {} }, 60);
+}
+function openMoveSheet(){
+  if (!ccxDetailCard) return;
+  $("sortTitle").textContent = "Move to binder";
+  var body = $("sortBody"); body.innerHTML = "";
+  ccxBindState().names.forEach(function(n){
+    var b = document.createElement("button");
+    b.className = "secbtn"; b.type = "button"; b.style.margin = "0";
+    b.textContent = n + (binderOf(ccxDetailCard) === n ? " \u00b7 here now" : "");
+    b.addEventListener("click", function(){
+      ccxBindState().assign[ccxDetailCard.key] = n; ccxBindSave();
+      closeSheets(); renderBinder();
+    });
+    body.appendChild(b);
+  });
+  $("detailSheet").classList.remove("open");
+  $("sortSheet").classList.add("open");
+}
+var ccxMoveBtn = $("dMove");
+if (ccxMoveBtn) ccxMoveBtn.addEventListener("click", openMoveSheet);
+renderCovers();
 
 })();
 </script>
@@ -29929,6 +30135,11 @@ document.addEventListener('click', function(e){
       (The money lane's own listener also fires and sets its status line first.) */
 var lg = $('lGuest');
 if(lg) lg.addEventListener('click', function(){ if(window.opGateLoginGuest) window.opGateLoginGuest(); });
+/* 5b) FIX PASS 1, item 15: the drawer's "Check a card" door starts the check
+      flow through the [data-check-start] handler; the drawer only auto-closes
+      on [data-nav] taps, so close it here explicitly. */
+var cd = $('ccsDrawerCheck');
+if(cd) cd.addEventListener('click', function(){ var c = $('ccsDrawerClose'); if(c) c.click(); });
 /* 6) Purchase screen: close goes Home; Restore/Terms/Privacy/Manage answer honestly
       in the screen's own note line instead of sitting dead (staging behaviour). */
 var pc = document.querySelector('#scr-plan .closebtn');
