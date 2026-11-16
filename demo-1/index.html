@@ -2304,9 +2304,14 @@ body.neon[data-palette="ocean"] .gold-box, body.neon[data-palette="forest"] .gol
             <p class="l-status" id="lStatus" role="status"></p>
 
             <div class="l-spacer"></div>
-            <p class="l-fine">By continuing you agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>. No sign-in wall: your first check works as a guest — you're asked here when you save to a binder or start a second check, once the app has shown its value. Guest is enough for the demo.</p>
+            <p class="l-fine">By continuing you agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>. Sign up first — one tap, no password — then one quick question about the pool, and you're in. Payments run through Google Play.</p>
             <button class="l-guest" type="button" id="lGuest">Keep exploring as a guest</button>
-          </div><div class="ccxm-gate-local" aria-label="Demo local sign-in kept from the current demo"><p class="ccxm-local-note">Demo sign-in — the demo’s own local + account sign-in, kept working below the new screen.</p><h2 style="font-size:32px">Real or Replica</h2><p class="small dim">Sign in first. A name or Guest stays on this device only — it just remembers a name so the top bubble shows who is signed in. A real account is optional, further down: while you test, it saves your checks to your account.</p><label class="op-field" style="width:100%;max-width:320px">Display name <input type="text" id="opGateLoginName" placeholder="Username for this demo" autocomplete="off"></label><button type="button" class="bubble-btn b-gold" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLogin()"><span style="display:block;width:100%;text-align:center">Sign in and open the app</span></button><button type="button" class="bubble-btn b-white" style="width:100%;max-width:320px;text-align:center;justify-content:center" onclick="opGateLoginGuest()"><span style="display:block;width:100%;text-align:center">Sign in as Guest</span></button><p class="small dim">Name and Guest are local only — not real accounts.</p><div id="ccGateAcct" style="width:100%;max-width:320px;border-top:1px solid #3a2c12;padding-top:12px;margin-top:4px;"><p style="font-weight:800;">Have a Card Cauldron account?</p><p class="small dim">Sign in with your account — while you test, your checks save to your account. New here? Create a free account.</p><label class="op-field" style="width:100%;">Username <input type="text" id="ccGateUser" placeholder="Account username" autocomplete="username"></label><label class="op-field" style="width:100%;">Password <input type="password" id="ccGatePass" placeholder="Account password" autocomplete="current-password"></label><button type="button" class="bubble-btn b-gold" style="width:100%;text-align:center;justify-content:center" onclick="ccGateAcctLogin()"><span style="display:block;width:100%;text-align:center">Sign in with account</span></button><button type="button" class="bubble-btn b-white" style="width:100%;text-align:center;justify-content:center;margin-top:8px;" onclick="ccGateAcctRegister()"><span style="display:block;width:100%;text-align:center">Create account</span></button><p class="small" id="ccGateAcctMsg" role="status"></p></div></div></div>
+          </div><div class="ccxm cc-consent" id="ccConsentStep" hidden>
+  <h3>One quick question</h3>
+  <p>May Card Cauldron keep photos of the cards you check for the shared pool — the database that teaches the checker to tell real from fake? Your cards save to your own binders either way, and only verified photos are ever kept.</p>
+  <button type="button" id="ccConsentAgree">Agree</button>
+  <button type="button" id="ccConsentDeny">Do not agree</button>
+</div></div>
 <script id="cc2713GateEarly">
 /* CC-27.13 gate early-tap guard: queue gate taps that land before the
    login system (defined near the end of this document) has parsed. */
@@ -2347,7 +2352,7 @@ window.opGateLogin = function(){
 
   <div class="demo-banner" role="note" aria-label="This is a public demo">
     <strong>🫧 PUBLIC DEMO</strong>
-    <span>Look around &amp; play the games — full checks open at launch. Nothing here saves to an account.</span>
+    <span>Look around &amp; play the games — full checks open at launch. Checks save on this device and file to the test pool — there is no account in the demo yet.</span>
   </div>
 
   <main id="main">
@@ -2397,12 +2402,19 @@ window.opGateLogin = function(){
   <div class="ccs-mallowrow"><button type="button" id="ccMallowPlay" class="cc-mallow-play" aria-label="Play Mallow's welcome"><span class="cc-mallow-play-disc" aria-hidden="true"><span class="cc-mallow-play-tri"></span></span><span class="cc-mallow-play-label" aria-hidden="true">Hear Mallow!</span></button></div>
   <audio id="ccWelcomeAudio" src="../assets/mallow-welcome-take1.mp3" preload="auto"></audio>
 
-  <nav class="slim-trail ccs-trail" id="homeTrail" aria-label="Quick doors">
-    <button type="button" class="slim-trail-stop" data-check-start="1"><span class="st-ball" aria-hidden="true">🫧</span><span class="st-label">Check</span></button>
-    <button type="button" class="slim-trail-stop" data-nav="binders"><span class="st-ball" aria-hidden="true">📒</span><span class="st-label">Binders</span></button>
-    <button type="button" class="slim-trail-stop" data-nav="games"><span class="st-ball" aria-hidden="true">🎮</span><span class="st-label">Games</span></button>
-    <button type="button" class="slim-trail-stop" data-nav="plan"><span class="st-ball" aria-hidden="true">📋</span><span class="st-label">Plan</span></button>
-  </nav>
+  <div class="band band-grape mt">
+ <h3>Juno's Pop Trail</h3>
+      <p class="sub2">Follow the bubbles — every stop opens part of this demo.</p>
+      <div class="trail" aria-hidden="false">
+        <svg viewBox="0 0 340 120" preserveAspectRatio="none" aria-hidden="true"><path d="M 30 78 C 90 30, 140 96, 200 52 C 250 18, 290 44, 322 34" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="6 8"/></svg>
+        <div class="trail-stops">
+          <button type="button" class="trail-stop" data-check-start="1" aria-label="Pop Trail: check something — starts the Pokemon card check"><span class="ball" style="display:flex !important;align-items:center;justify-content:center;width:70px;height:70px;min-width:70px;min-height:70px;border-radius:50%;opacity:1 !important;visibility:visible !important;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#38bdf8 58%,#38bdf8 100%);border:2.5px solid #ffffff;box-shadow:0 8px 18px rgba(0,0,0,.5),inset 0 -8px 14px rgba(0,0,0,.22);font-size:30px;line-height:1;position:relative;z-index:3;">🃏</span><span class="lbl">Check</span></button>
+          <button type="button" class="trail-stop" data-nav="binders" style="margin-top:18px;" aria-label="Pop Trail: go to My Binders"><span class="ball" style="display:flex !important;align-items:center;justify-content:center;width:70px;height:70px;min-width:70px;min-height:70px;border-radius:50%;opacity:1 !important;visibility:visible !important;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#ff6b9d 58%,#ff6b9d 100%);border:2.5px solid #ffffff;box-shadow:0 8px 18px rgba(0,0,0,.5),inset 0 -8px 14px rgba(0,0,0,.22);font-size:30px;line-height:1;position:relative;z-index:3;animation-delay:.5s;">📒</span><span class="lbl">Binders</span></button>
+          <button type="button" class="trail-stop" data-nav="games" style="margin-top:4px;" aria-label="Pop Trail: go to Mini Games"><span class="ball" style="display:flex !important;align-items:center;justify-content:center;width:70px;height:70px;min-width:70px;min-height:70px;border-radius:50%;opacity:1 !important;visibility:visible !important;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#ffd93d 58%,#ffd93d 100%);border:2.5px solid #ffffff;box-shadow:0 8px 18px rgba(0,0,0,.5),inset 0 -8px 14px rgba(0,0,0,.22);font-size:30px;line-height:1;position:relative;z-index:3;animation-delay:1s;">🎮</span><span class="lbl">Games</span></button>
+          <button type="button" class="trail-stop" data-nav="plan" style="margin-top:20px;" aria-label="Pop Trail: go to Checks and Plan"><span class="ball" style="display:flex !important;align-items:center;justify-content:center;width:70px;height:70px;min-width:70px;min-height:70px;border-radius:50%;opacity:1 !important;visibility:visible !important;background:radial-gradient(circle at 32% 28%,#ffffff 0%,#7fe37f 58%,#7fe37f 100%);border:2.5px solid #ffffff;box-shadow:0 8px 18px rgba(0,0,0,.5),inset 0 -8px 14px rgba(0,0,0,.22);font-size:30px;line-height:1;position:relative;z-index:3;animation-delay:1.5s;">📋</span><span class="lbl">Plan</span></button>
+        </div>
+      </div>
+    </div>
 
   <div id="ccsBeatWrap"><div class="card mt" id="homeBeatBlock">
  <h3 style="font-size:20px;">🎵 Bubble Beat</h3>
@@ -2910,6 +2922,7 @@ window.opGateLogin = function(){
   <!-- ================= BINDERS ================= -->
   <section class="screen" id="scr-check">
 <div class="ccx ccx-flow">
+<div class="ccx-exitbar"><span class="ccx-exitbar-t">Card check</span><button type="button" class="ccx-exit" id="ccxExit" aria-label="Close the check and go Home">✕</button></div>
 <div class="ccx-scroll" id="checkScroll">
 
             <!-- ===== ENTRY ===== -->
@@ -3066,7 +3079,7 @@ window.opGateLogin = function(){
               <div class="evlist" id="rEvidence"></div>
               <div class="nextcard" id="rNext"></div>
               <button class="cta" type="button" data-restart="1" style="margin-top:14px">Check another card</button>
-              <p class="rfoot"><button type="button">How checks work</button> · <button type="button">Tell us if this looks wrong</button><br><span id="rSaved">Saved to Binders · All checks ✓</span></p>
+              <p class="rfoot"><button type="button" id="rHow">How checks work</button> · <button type="button" id="rTell">Tell us if this looks wrong</button> · <button type="button" id="rHome">Home</button><br><span id="rSaved">Not saved yet — tap Save this result to keep it in your binder on this device.</span></p>
             </section>
 
           </div>
@@ -3235,17 +3248,17 @@ window.opGateLogin = function(){
             </div>
 
             <h2 class="headline">Check a card before you buy, sell or trade it.</h2>
-            <p class="subline">Pick a plan below. Every choice is settled here — then Google Play handles payment with the method already saved to your account.</p>
+            
 
             <div class="freebanner">
               <span class="dot" aria-hidden="true">✓</span>
-              <span><b>Free:</b> 10 checks to start, then 5 free checks on the 1st of each month — no card required. Free checks expire at the end of each month. The app works without paying.</span>
+              <span><b>Free:</b> 10 checks to start, 5 more on the 1st each month — no card required; free checks expire monthly.</span>
             </div>
 
             <ul class="benefits">
-              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Front <em>and</em> back photo checks, tell by tell</li>
-              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Plain-words result: Likely Genuine, Likely Counterfeit, or Inconclusive</li>
-              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Cancel anytime in Google Play — keep access to the end of the paid month</li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Front + back checks, tell by tell</li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Plain-words verdicts — no jargon</li>
+              <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Cancel anytime in Google Play</li>
             </ul>
 
             <!-- Checks -->
@@ -3273,7 +3286,7 @@ window.opGateLogin = function(){
               <span class="row">
                 <span>
                   <h3>Grader</h3>
-                  <p class="desc">Grade estimates for your cards, per grading company — labelled as estimates. Includes 20 grade runs a month.</p>
+                  <p class="desc">Grade estimates per company, labelled estimates. 20 grade runs a month.</p>
                 </span>
                 <span style="display:flex;gap:10px;align-items:flex-start">
                   <span class="price"><span class="amt" data-price="grader">$4.99</span><span class="per">per month</span></span>
@@ -3295,16 +3308,10 @@ window.opGateLogin = function(){
                   <span class="radio" aria-hidden="true"></span>
                 </span>
               </span>
-              <span class="honest" style="display:block">Honest math: Checks 300 (<span data-price="checks300">$6.99</span>) + Grader (<span data-price="grader">$4.99</span>) bought separately come to $11.98/mo for 300 checks + 20 grade runs. Ultimate is <span data-price="ultimate">$14.99</span>/mo — $3.01 more — for 500 checks + 50 grade runs. More of everything, not a discount claim. Plan checks refresh monthly; purchased checks never expire.</span>
+              <span class="honest" style="display:block">Honest math: Checks 300 (<span data-price="checks300">$6.99</span>) + Grader (<span data-price="grader">$4.99</span>) = $11.98/mo for 300 checks + 20 grade runs. Ultimate is <span data-price="ultimate">$14.99</span>/mo for 500 + 50 — more of everything, not a discount claim. Plan checks refresh monthly; purchased checks never expire.</span>
             </div>
 
-            <div class="signinrow">
-              <button class="gbtn" type="button" id="gSignIn">
-                <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
-                Sign in with Google
-              </button>
-              <p id="signinNote">Optional — restore your plans on a new phone. Never a wall before payment.</p>
-            </div>
+            
 
             <!-- Donation Cauldron — settled design; self-contained .cauldron block, liftable to Rewards at merge -->
             <div class="cauldron" id="cauldronBlock">
@@ -3318,13 +3325,16 @@ window.opGateLogin = function(){
               <p class="slogan">Pokémon is hard for kids to get these days. We catch the fakes — and a slice of every upgrade puts sealed packs in kids' hands.</p>
               <div class="potbar" role="img" aria-label="Donation pot progress"><i id="potFill" style="width:0%"></i></div>
               <p class="potline"><span><b id="potCoins">🪙 0</b> in the pot</span><span>Goal 🪙 250,000</span></p>
-              <ul>
+              <button type="button" class="cauldron-toggle" id="cauldronToggle" aria-expanded="false">How the Cauldron works ▾</button>
+<div class="cauldron-more" id="cauldronMore" hidden>
+<ul>
                 <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>Coins spent in the app fill the pot. At 🪙 250,000 it tips.</span></li>
                 <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>Each fill sends Child's Play $25 worth of sealed Pokémon packs — real product from our own shelves, at our cost.</span></li>
                 <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>5% of every upgrade builds the fund that pays for the packs.</span></li>
                 <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>The receipt and a photo get posted here every time a pot ships.</span></li>
               </ul>
               <p class="chones">The pot fills for real as coins are spent. A donation goes out only when the pot is full <b>and</b> the fund covers the full $25 — until then, nothing is promised and nothing is sent.</p>
+</div>
             </div>
           </div>
 <div class="sticky">
@@ -3332,7 +3342,7 @@ window.opGateLogin = function(){
             <button class="cta" type="button" id="ctaBtn">Subscribe — $6.99/month</button>
             <div class="payrow">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
-              <span>Pay securely through <b>Google Play</b> — use the payment method saved to your Google Account. <b>No card details to enter here.</b></span>
+              <span>Pay securely through <b>Google Play</b> — <b>no card details to enter here.</b></span>
             </div>
             <p class="disclosure" id="disclosure">Renews automatically at $6.99/month until cancelled. Cancel anytime in Google Play → Subscriptions; you keep access until the end of the paid month.</p>
             <div class="footlinks">
@@ -3341,6 +3351,7 @@ window.opGateLogin = function(){
               <button type="button">Privacy</button><span aria-hidden="true">·</span>
               <button type="button">Manage Subscription</button>
             </div>
+<p id="signinNote" class="honest" style="text-align:center;margin:2px 0 0"></p>
           </div>
 <div class="sheet-veil" id="veil"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Google Play purchase sheet" hidden>
@@ -3456,7 +3467,8 @@ window.opGateLogin = function(){
 <section class="screen" id="scr-settings">
     <button type="button" class="backlink" data-nav="home">← Home</button>
     <h2>Settings &amp; Profile</h2>
-    <p class="small dim">Saves on this device only — two exceptions, below.</p>
+    <p class="small dim">Your checks save on this device and file to the test pool during testing — there is no account in the demo yet.</p>
+    <div class="card mt"><button type="button" id="fp2AvatarBtn" aria-label="Change your avatar"><img id="fp2AvatarTop" alt=""><span><b id="fp2AvatarName">Your avatar</b><span class="sub">Tap to change your pet &amp; colours</span></span></button></div>
     <div class="card mt"><h3>Profile</h3>
     <label class="op-field">Display name <input type="text" id="opDisplayName" placeholder="Name shown in the app" autocomplete="off"></label>
     <label class="op-field">Bio / tagline <input type="text" id="opBio" placeholder="A short line about you" autocomplete="off"></label>
@@ -3516,19 +3528,7 @@ window.opGateLogin = function(){
     <div class="card mt"><h3 style="font-size:18px;">Pop sounds</h3>
     <p class="small dim" style="margin-top:3px;">The little pops as you tap around.</p>
     <div class="toggle-row" style="margin-top:8px;"><button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle pop sounds">🔊</button></div></div>
-  <div class="card mt">
-    <h3>App colors</h3>
-    <p class="small dim">Same app, your colors.</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-      <button type="button" class="pal-swatch" data-pal="arcane" aria-pressed="true" onclick="ccSetPalette('arcane')"><span class="pal-dot" style="background:#2A1745"></span><span class="pal-dot" style="background:#C9A227"></span>Arcane</button>
-      <button type="button" class="pal-swatch" data-pal="ocean" aria-pressed="false" onclick="ccSetPalette('ocean')"><span class="pal-dot" style="background:#0B3049"></span><span class="pal-dot" style="background:#6EC6D8"></span>Midnight Ocean</button>
-      <button type="button" class="pal-swatch" data-pal="forest" aria-pressed="false" onclick="ccSetPalette('forest')"><span class="pal-dot" style="background:#14382A"></span><span class="pal-dot" style="background:#B7D977"></span>Forest Lab</button>
-      <button type="button" class="pal-swatch" data-pal="ember" aria-pressed="false" onclick="ccSetPalette('ember')"><span class="pal-dot" style="background:#3D1E12"></span><span class="pal-dot" style="background:#F5A65B"></span>Ember</button>
-      <button type="button" class="pal-swatch" data-pal="berry" aria-pressed="false" onclick="ccSetPalette('berry')"><span class="pal-dot" style="background:#3A1745"></span><span class="pal-dot" style="background:#F2A3C0"></span>Berry</button>
-    </div>
-    <p class="small dim" id="palStatus" style="margin-top:8px;">Arcane — the house palette. Saved on this device.</p>
-  </div>
-    <div class="card mt"><h3>Your pet — pick your companion</h3>
+  <div class="card mt"><h3>Your pet — pick your companion</h3>
     <p class="small dim">Person-avatars are gone — pets are back. Pick one creature and one tint; that's the whole customising, kept simple on purpose. Your pet lives in the corner of the main screens, coaches your photos, and shares your verdicts honestly. It never sits on a receipt.</p>
     <p class="center"><img id="opAvatarPreviewImg" style="width:96px;height:96px;object-fit:contain;border-radius:50%" alt="Your pet preview"></p>
     <div class="p2-pet-grid" id="p2PetGrid"></div>
@@ -3829,6 +3829,7 @@ window.opGateLogin = function(){
       <button class="ccs-signin-btn" type="button" id="ccsDrawerSignIn" data-nav="settings" hidden>Sign in</button>
     </div>
     <nav class="ccs-drawer-nav" aria-label="More sections — everything that is not a bottom-bar tab">
+      <button class="ccs-drawer-item" type="button" data-nav="plan" data-drawer-row="plan"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><path d="M5 8h14l-1.2 12.2a1.8 1.8 0 0 1-1.8 1.8H8a1.8 1.8 0 0 1-1.8-1.8L5 8z"/><path d="M8.5 10.5V6.5a3.5 3.5 0 0 1 7 0v4"/></svg></span><span class="dtxt"><b>Upgrade &amp; plans</b><span>Check packs · Grader runs · Ultimate</span></span></button>
       <button class="ccs-drawer-item" type="button" data-check-start="1" data-drawer-row="check" id="ccsDrawerCheck"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span class="dtxt"><b>Check a card</b><span>Real or Replica — front and back</span></span></button>
       <button class="ccs-drawer-item" type="button" data-nav="condition" data-drawer-row="condition"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><path d="M12 3l2.5 5.5L20 9.5l-4 4 1 6-5-2.8L7 19.5l1-6-4-4 5.5-1z"/></svg></span><span class="dtxt"><b>Grader</b><span>PSA · CGC · BGS · SGC estimates</span></span></button>
       <button class="ccs-drawer-item" type="button" data-nav="tells" data-drawer-row="tells"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg></span><span class="dtxt"><b>How checks work</b><span>The tells we look for</span></span></button>
@@ -3842,7 +3843,9 @@ window.opGateLogin = function(){
       <button class="ccs-drawer-item" type="button" id="ccsGuideRow"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 16a3 3 0 013-3h11"/></svg></span><span class="dtxt"><b>Guide</b><span>How the whole app works</span></span></button>
       <button class="ccs-drawer-item" type="button" data-nav="agent" data-drawer-row="agent"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><circle cx="12" cy="9" r="3.5"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg></span><span class="dtxt"><b>Talk to my agent</b><span>A person, not a help centre</span></span></button>
       <button class="ccs-drawer-item" type="button" data-nav="feedback" data-drawer-row="feedback"><span class="dic"><svg viewBox="0 0 24 24" stroke-width="2.2"><path d="M4 6h16v10H9l-5 4z"/></svg></span><span class="dtxt"><b>Feedback</b><span>Tell us what to fix</span></span></button>
-    </nav>
+    <div class="ccs-drawer-label">App colors</div>
+<div class="ccs-drawer-pal"><div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:4px"><button type="button" class="pal-swatch" data-pal="arcane" aria-pressed="true" onclick="ccSetPalette('arcane')"><span class="pal-dot" style="background:#2A1745"></span><span class="pal-dot" style="background:#C9A227"></span>Arcane</button><button type="button" class="pal-swatch" data-pal="ocean" aria-pressed="false" onclick="ccSetPalette('ocean')"><span class="pal-dot" style="background:#0B3049"></span><span class="pal-dot" style="background:#6EC6D8"></span>Midnight Ocean</button><button type="button" class="pal-swatch" data-pal="forest" aria-pressed="false" onclick="ccSetPalette('forest')"><span class="pal-dot" style="background:#14382A"></span><span class="pal-dot" style="background:#B7D977"></span>Forest Lab</button><button type="button" class="pal-swatch" data-pal="ember" aria-pressed="false" onclick="ccSetPalette('ember')"><span class="pal-dot" style="background:#3D1E12"></span><span class="pal-dot" style="background:#F5A65B"></span>Ember</button><button type="button" class="pal-swatch" data-pal="berry" aria-pressed="false" onclick="ccSetPalette('berry')"><span class="pal-dot" style="background:#3A1745"></span><span class="pal-dot" style="background:#F2A3C0"></span>Berry</button></div><p class="pal-note" id="palStatus"></p></div>
+</nav>
     <p class="ccs-drawer-status" id="ccsDrawerStatus" role="status"></p>
     <div class="ccs-drawer-foot">
       Real or Replica · demo build<br>
@@ -4348,9 +4351,10 @@ function poolSubmitAndConfirm(next){
   var _payload = {opt_in:true, front_image:frontWire, back_image:(backWire || null), number:"UNKNOWN", set_logo:"UNKNOWN", name:"UNKNOWN"};
   /* Testing intake (Nov 14, 2026): the marker tells the door this is a
      test-phase check, so it files into the tester-scans intake even
-     without a recorded account agreement; the designation is the
-     tester's own answer to "Do you know this card is fake?" — their
-     call about their card, saved with the scan, never a verdict. */
+     without a recorded account agreement. The designation is always
+     null in this build (owner ruling, Nov 15, 2026): the tester is
+     never asked to label their own card, and no scan is ever filed
+     with a tester-supplied genuine/fake call. */
   if(CC_TEST_INTAKE) _payload.testing_intake = true;
   _payload.designation = poolDesignation || null;
   /* Burst provenance (owner ruling, Oct 31): every burst frame plus the
@@ -16346,7 +16350,7 @@ if (typeof document !== "undefined") (function(){
     }, 400);
   }
 
-  if (playBtn && playBtn.parentNode) {
+  if (false && playBtn && playBtn.parentNode) { /* FP2 item 36: the Home trail area carries no mute toggle; window.ccMuted state stays for the Settings pop-sounds control */
     muteBtn = document.createElement("button");
     muteBtn.type = "button";
     muteBtn.id = "ccMuteBtn";
@@ -29405,7 +29409,7 @@ function identifyFromFront(){
    shape — one number, source + freshness — for confirmed identities. */
 function priceLookup(read){
   if (!read || read.name === "UNKNOWN") return null;
-  if (S && S.sample) return { price:S.sample.price, src:"TCGplayer Market · today (sample price)" };
+  if (S && S.sample) return { price:S.sample.price, src:"Sample price — not a real price" };
   return { price:"$4.20", src:"TCGplayer Market · today" };
 }
 function fillPair(){
@@ -29515,6 +29519,7 @@ function renderResult(){
   else nx.innerHTML = "<b>What to do next</b><p style='font-size:13.5px;color:var(--ink-soft);margin:0 0 8px'>Retake the back in daylight, straight-on — that's the photo the sweep couldn't judge. A retake spends nothing.</p><button class='secbtn' type='button' id='rRetakeBack'>Retake the back</button>";
   const rb = $("rRetakeBack");
   if (rb) rb.addEventListener("click", () => { show("capture"); setSide("back"); });
+  ccxWireResultActions();
   show("result");
   fileTesterIntake();
 }
@@ -29573,8 +29578,8 @@ function renderBinder(){
   const bsum = bset.reduce((a, c) => a + (parseFloat(String(c.price).slice(1)) || 0), 0);
   $("binderSummary").innerHTML = bset.length + (bset.length === 1 ? " card" : " cards") + (bsum > 0 ? " \u00b7 $" + bsum.toFixed(2) : "") + " \u00b7 <b>" + inc + " need a second look</b>";
 }
-$("bvGrid").addEventListener("click", () => { $("bvGrid").setAttribute("aria-pressed","true"); $("bvBinder").setAttribute("aria-pressed","false"); $("binderGrid").hidden = false; $("binderPage").hidden = true; });
-$("bvBinder").addEventListener("click", () => { $("bvBinder").setAttribute("aria-pressed","true"); $("bvGrid").setAttribute("aria-pressed","false"); $("binderGrid").hidden = true; $("binderPage").hidden = false; });
+$("bvGrid").addEventListener("click", () => ccxSetBinderView("grid"));
+$("bvBinder").addEventListener("click", () => ccxSetBinderView("binder"));
 $("pgPrev").addEventListener("click", () => { binderPage = Math.max(0, binderPage - 1); renderBinder();
 window.__ccxSetBinderFilter = function(f){ binderFilter = f; renderBinder(); }; });
 $("pgNext").addEventListener("click", () => { binderPage++; renderBinder(); });
@@ -29620,7 +29625,7 @@ function openDetail(c){
     d.innerHTML = '<span style="display:grid;place-items:center;height:100%;padding:8px;text-align:center;font-size:11px;font-weight:800;color:var(--ink-soft)">' + label + "</span>";
     el.appendChild(d); };
   art($("dFront"), c.img || null, "Front");
-  art($("dBack"), c.back || null, c.own ? "Back photo isn't saved in this demo" : "No back photo in this demo");
+  art($("dBack"), c.back || null, c.own ? "No back photo saved for this check" : "No back photo in this demo");
   $("detailVeil").classList.add("open"); $("detailSheet").classList.add("open");
 }
 $("dClose").addEventListener("click", closeSheets);
@@ -29720,8 +29725,8 @@ $("grNext").addEventListener("click", () => {
   if (!graderValid()) { $("grNext").textContent = "Pick an answer first"; setTimeout(renderGrader, 900); return; }
   if (GR.step < 5) { GR.step++; renderGrader(); } else renderEstimate();
 });
-$("grBack").addEventListener("click", () => { if (GR.step > 1) { GR.step--; renderGrader(); } });
-$("grExit").addEventListener("click", () => { /* progress persists in GR — leaving and returning keeps answers */ $("grStepWord").textContent = "Saved — Step " + GR.step + " of 5"; });
+$("grBack").addEventListener("click", () => { if (GR.done) GR.done = false; if (GR.step > 1) { GR.step--; renderGrader(); } });
+$("grExit").addEventListener("click", () => { /* progress persists in GR — leaving and returning keeps answers; the X itself leaves to Home (items 37-38) */ if (window.show) window.show("home"); });
 function renderEstimate(){
   GR.done = true;
   $("grStepWord").textContent = "Your estimate";
@@ -29761,6 +29766,7 @@ renderGrader();
    path or placeholder art, never a captured photo, so the dataURL guard
    below excludes them twice over. */
 function intakeOn(){
+  try { if (window.__ccPoolConsent === "deny") return false; } catch(e) {}
   try {
     if (typeof CC_TEST_INTAKE !== "undefined" && CC_TEST_INTAKE) return true;
     if (typeof poolOptinYes !== "undefined" && poolOptinYes) return true;
@@ -29787,7 +29793,7 @@ function fileTesterIntake(){
     method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)
   }).then(res => res.json()).then(d => {
     if (d && d.submission_id) {
-      try { if (typeof poolSaveMyScan === "function") poolSaveMyScan(d.submission_id, front); } catch(e) {}
+      try { if (typeof poolSaveMyScan === "function") poolSaveMyScan(d.submission_id, front); ccxAttachBack(d.submission_id); } catch(e) {}
       try { if (window.ccAwardScan) window.ccAwardScan(); } catch(e) {}
       if (saved) saved.textContent = "Saved to the test pool ✓ · Saved to Binders · All checks ✓";
     } else if (saved) {
@@ -29847,7 +29853,7 @@ function binderAllCards(){
         price: (typeof r.price === "number" && isFinite(r.price)) ? "$" + r.price.toFixed(2) : "\u2014",
         verdict: verdict, pill: pill, gp: "gp6",
         date: r.when ? new Date(r.when).toLocaleDateString("en-US", { day: "numeric", month: "short" }) : "",
-        img: r.thumb, back: null, binder: ccxBindState().names[0] });
+        img: r.thumb, back: (typeof r.back === "string" && r.back.indexOf("data:image") === 0) ? r.back : null, binder: ccxBindState().names[0] });
     });
   } catch(e) {}
   return own.concat(BINDER_CARDS.slice());
@@ -29916,6 +29922,166 @@ function openMoveSheet(){
 var ccxMoveBtn = $("dMove");
 if (ccxMoveBtn) ccxMoveBtn.addEventListener("click", openMoveSheet);
 renderCovers();
+
+/* ===== FIX PASS 2 — check lane (items 20, 23, 27, 33, 38) ===== */
+function ccxDownscale(dataUrl, maxDim, cb){
+  if (!dataUrl || typeof dataUrl !== "string" || dataUrl.indexOf("data:image") !== 0) { cb(null); return; }
+  var im = new Image();
+  im.onload = function(){
+    try {
+      var sc = Math.min(1, maxDim / Math.max(im.width || maxDim, im.height || maxDim));
+      var cv = document.createElement("canvas");
+      cv.width = Math.max(1, Math.round((im.width || maxDim) * sc));
+      cv.height = Math.max(1, Math.round((im.height || maxDim) * sc));
+      cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+      cb(cv.toDataURL("image/jpeg", 0.72));
+    } catch(e) { cb(null); }
+  };
+  im.onerror = function(){ cb(null); };
+  im.src = dataUrl;
+}
+function ccxReadScans(){ try { var r = JSON.parse(localStorage.getItem("cc_my_scans") || "[]"); return Array.isArray(r) ? r : []; } catch(e) { return []; } }
+function ccxWriteScans(recs){ try { localStorage.setItem("cc_my_scans", JSON.stringify(recs.slice(0, 40))); } catch(e) {} }
+/* Item 23: when a real check files to the pool, its binder record also keeps
+   the BACK photo on-device (downscaled, size-guarded). */
+function ccxAttachBack(sid){
+  if (!S || !S.back) return;
+  ccxDownscale(S.back, 480, function(small){
+    if (!small) return;
+    var tries = 0;
+    (function patch(){
+      var recs = ccxReadScans(), rec = null, i;
+      for (i = 0; i < recs.length; i++) if (recs[i].id === sid) { rec = recs[i]; break; }
+      if (rec) { rec.back = small; ccxWriteScans(recs); }
+      else if (++tries < 12) setTimeout(patch, 300);
+    })();
+  });
+}
+/* Item 33: the result screen's Save is real. Samples save NOTHING and say so. */
+function ccxSaveResult(btn){
+  if (btn && btn.disabled) return;   /* one save per result, however wired */
+  if (S.sample) {
+    if (btn) { btn.disabled = true; btn.textContent = "Sample — nothing to save"; }
+    var sv0 = $("rSaved"); if (sv0) sv0.textContent = "Sample result — a teaching example. Nothing was saved.";
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+  var r = S.read || { name: "Your scanned card" };
+  var p = priceLookup(r), priceNum = null;
+  if (p && p.price) { var m = String(p.price).replace(/[^0-9.]/g, ""); if (m) priceNum = parseFloat(m); }
+  ccxDownscale(S.front, 480, function(frontSmall){
+    ccxDownscale(S.back, 480, function(backSmall){
+      /* One binder record per check: if this check already filed to the
+         pool, poolSaveMyScan wrote a front-only record whose thumb is the
+         180px recipe below — Save replaces that record with this richer
+         one (name, price, back photo) instead of duplicating the card. */
+      ccxThumb180(S.front, function(thumb180){
+      var recs = ccxReadScans().filter(function(x){ return !thumb180 || x.thumb !== thumb180; });
+      recs.unshift({ id: "scan-" + Date.now(), when: new Date().toISOString(),
+        thumb: frontSmall || S.front || "", back: backSmall || null,
+        name: r.name || "Your scanned card", verdict: "", price: priceNum });
+      ccxWriteScans(recs);
+      if (btn) { btn.disabled = true; btn.textContent = "Saved ✓"; }
+      var sv = $("rSaved"); if (sv) sv.textContent = "Saved to Binders · All checks ✓";
+      if (typeof window.renderHome === "function") { try { window.renderHome(); } catch(e) {} }
+      });
+    });
+  });
+}
+/* poolSaveMyScan's exact thumb recipe (180px, jpeg 0.7) — used to spot the
+   intake-filed copy of the same front photo. */
+function ccxThumb180(dataUrl, cb){
+  if (!dataUrl || typeof dataUrl !== "string" || dataUrl.indexOf("data:image") !== 0) { cb(null); return; }
+  var im = new Image();
+  im.onload = function(){
+    try {
+      var cv = document.createElement("canvas");
+      var sc = Math.min(1, 180 / (im.width || 180));
+      cv.width = Math.round((im.width || 180) * sc);
+      cv.height = Math.round((im.height || 252) * sc);
+      cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+      cb(cv.toDataURL("image/jpeg", 0.7));
+    } catch(e) { cb(null); }
+  };
+  im.onerror = function(){ cb(null); };
+  im.src = dataUrl;
+}
+function ccxGradeFromResult(){
+  GR.cardName = (S.read && S.read.name) || "Your card";
+  GR.cardFront = S.front || null; GR.cardBack = S.back || null;
+  GR.answers = { photos: "check" }; GR.step = 1; GR.done = false;
+  if (window.show) window.show("condition");
+  renderGrader();
+}
+function ccxWireResultActions(){
+  var nx = $("rNext"); if (!nx) return;
+  if (!S.sample && !nx.querySelector("button[data-fp2-save]")) {
+    var b = document.createElement("button");
+    b.className = "secbtn"; b.type = "button"; b.setAttribute("data-fp2-save", "1");
+    b.textContent = "Save this result";
+    b.addEventListener("click", function(){ ccxSaveResult(b); });
+    nx.appendChild(b);
+  }
+  nx.querySelectorAll("button").forEach(function(btn){
+    if (btn.hasAttribute("data-fp2-save")) return;   /* already wired above */
+    var t = (btn.textContent || "").trim();
+    if (t === "Save this result" || t === "Add to a binder") btn.addEventListener("click", function(){ ccxSaveResult(btn); });
+    else if (t === "Grade its condition") btn.addEventListener("click", function(){ ccxGradeFromResult(); });
+  });
+  var sv = $("rSaved");
+  if (sv) {
+    if (S.sample) sv.textContent = "Sample result — a teaching example. Nothing was saved.";
+    else if (intakeOn()) sv.textContent = "This check files to the test pool. Tap Save this result to keep it in your binder on this device.";
+    else sv.textContent = "Not saved yet — tap Save this result to keep it in your binder on this device.";
+  }
+}
+/* Item 20: Grid | Binder choice persists per binder. */
+function ccxSetBinderView(v){
+  try { localStorage.setItem("ccx_bview_" + binderCur(), v); } catch(e) {}
+  ccxApplyBinderView();
+}
+function ccxApplyBinderView(){
+  var v = "grid";
+  try { v = localStorage.getItem("ccx_bview_" + binderCur()) || "grid"; } catch(e) {}
+  var g = $("binderGrid"), p = $("binderPage"), bg = $("bvGrid"), bb = $("bvBinder");
+  if (!g || !p) return;
+  g.hidden = (v !== "grid"); p.hidden = (v !== "binder");
+  if (bg) bg.setAttribute("aria-pressed", v === "grid" ? "true" : "false");
+  if (bb) bb.setAttribute("aria-pressed", v === "binder" ? "true" : "false");
+}
+window.__ccxApplyBinderView = ccxApplyBinderView;
+/* The binders render entry: FP1 renders covers + grid + title directly at
+   load and on chip clicks; there is no single entry point, so FP2 defines
+   one for the glue to call whenever the Binders screen opens. */
+window.ccxBindRender = function(){
+  renderCovers(); renderBinder();
+  if (typeof ccxBinderTitle === "function") ccxBinderTitle();
+  ccxApplyBinderView();
+};
+/* Binder cover clicks call renderBinder() directly — re-apply the view
+   after every render, whoever triggered it. */
+if (typeof renderBinder === "function") {
+  var _fp2RenderBinder = renderBinder;
+  renderBinder = function(){ _fp2RenderBinder(); ccxApplyBinderView(); };
+}
+/* Item 38: the photo-warning sheet can be dismissed by tapping its veil. */
+var _fp2wv = $("warnVeil");
+if (_fp2wv) _fp2wv.addEventListener("click", function(e){ if (e.target === _fp2wv) closeWarn(); });
+/* Item 27: the entry note reflects a recorded Do-not-agree choice. Consent
+   is answered at the gate, AFTER this script first runs — so the rider is
+   applied when the entry screen shows, reading the persisted choice. */
+function ccxConsentRider(){
+  var v = ""; try { v = localStorage.getItem("cc_pool_consent") || ""; } catch(e) {}
+  if (v !== "deny") return;
+  var gn = document.querySelector("#scr-check .gatenote");
+  if (gn && !gn.querySelector(".fp2-rider")) {
+    var s = document.createElement("span"); s.className = "fp2-rider";
+    s.innerHTML = " <b>Your sign-up choice:</b> you picked Do not agree — your checks stay on this device and are not filed to the pool.";
+    gn.appendChild(s);
+  }
+}
+var _fp2LaneShow = show;
+show = function(name){ _fp2LaneShow(name); if (name === "entry") ccxConsentRider(); };
 
 })();
 </script>
@@ -30019,7 +30185,7 @@ renderCovers();
   document.getElementById('doneBtn').addEventListener('click', closeSheet);
   document.getElementById('manageBtn').addEventListener('click', closeSheet);
 
-  document.getElementById('gSignIn').addEventListener('click', function(){
+  var _fp2gs = document.getElementById('gSignIn'); if (_fp2gs) _fp2gs.addEventListener('click', function(){
     document.getElementById('signinNote').textContent = 'Signed in with Google — your plans and free checks now follow this account.';
   });
 
@@ -30155,5 +30321,316 @@ if(note){
 })();
 </script>
 
+<style id="fp2-css">
+/* ===== FIX PASS 2 ===== */
+/* Items 21/31/37 root cause: the check, grader and purchase flows were
+   100dvh tall but start BELOW the demo banner, so their bottom bars
+   (grader Next, purchase Subscribe) rendered off-screen — the grader
+   looked like a dead end. The three tab-less flow screens now take the
+   full viewport as fixed overlays; their flows fill them exactly. */
+#scr-check.active, #scr-condition.active, #scr-plan.active{position:fixed;inset:0;z-index:55;overflow:hidden;background:radial-gradient(1100px 600px at 85% -10%, #4b2566 0%, transparent 55%),radial-gradient(900px 700px at -10% 110%, #3a1a52 0%, transparent 55%),#1c0b24;}
+#scr-check .ccx-flow, #scr-condition .ccx-flow, #scr-plan .ccxm-flow{height:100%;}
+/* Item 24: drawer flush to the left screen edge at phone widths */
+@media (max-width:900px){
+  .ccs-drawerwrap{left:0;right:0;margin:0;max-width:none;}
+  .ccs-drawerwrap .ccs-drawer{left:0;}
+}
+/* Item 19: the binder grid can never blow out sideways */
+.ccx .grid3{grid-template-columns:repeat(3,minmax(0,1fr));}
+.ccx .gtile{min-width:0;}
+.ccx .gphoto{width:100%;}
+.ccx .gphoto img{object-position:center;}
+#binderScroll{overflow-x:hidden;}
+/* Items 22/38: check-flow exit bar */
+.ccx-exitbar{flex:none;display:flex;align-items:center;justify-content:space-between;padding:12px 16px 2px;}
+.ccx-exitbar-t{font-weight:900;font-size:15px;}
+.ccx-exit{width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;font-size:16px;cursor:pointer;flex:none;}
+/* Bravio 5: the games instruction card speaks the app font, not serif */
+.cc-card, .cc-controls, .cc-controls h4{font-family:"Nunito","Trebuchet MS",system-ui,sans-serif;}
+/* Items 26/27: the consent step — two buttons, nothing else */
+.cc-consent{position:relative;z-index:2;width:min(430px,100%);margin:0 auto;background:linear-gradient(180deg,#2c1544,#1d0e2e);border:1.5px solid rgba(255,255,255,.16);border-radius:26px;padding:26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.55);}
+.cc-consent[hidden]{display:none!important;}
+.cc-consent h3{margin:0 0 10px;font-size:21px;}
+.cc-consent p{font-size:14.5px;line-height:1.5;color:#e9defc;margin:0 0 8px;}
+.cc-consent button{display:block;width:100%;min-height:52px;border-radius:16px;font:inherit;font-weight:900;font-size:16px;cursor:pointer;margin-top:10px;}
+#ccConsentAgree{background:linear-gradient(180deg,#ffd76a,#f0a91e);border:none;color:#2a1503;}
+#ccConsentDeny{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.3);color:#fff;}
+/* Item 31: the purchase screen fits ONE screen — this screen only */
+#scr-plan .scroll{padding:10px 14px 6px;}
+#scr-plan .topbar{margin-bottom:4px;}
+#scr-plan .headline{font-size:20px;margin:0 0 3px;}
+#scr-plan .subline{font-size:12.5px;margin-bottom:8px;}
+#scr-plan .freebanner{padding:7px 10px;font-size:12.5px;margin-bottom:8px;border-radius:12px;}
+#scr-plan .benefits{gap:4px;margin-bottom:8px;}
+#scr-plan .benefits li{font-size:12.5px;}
+#scr-plan .plan{padding:10px 12px;margin-bottom:8px;border-radius:16px;}
+#scr-plan .plan h3{font-size:15.5px;}
+#scr-plan .plan .desc{font-size:12.5px;}
+#scr-plan .plan .price{font-size:17px;}
+#scr-plan .seg{gap:6px;margin-top:8px;}
+#scr-plan .seg button{min-height:36px;padding:5px 4px;font-size:13px;border-radius:11px;}
+#scr-plan .unit{font-size:11.5px;margin-top:5px;}
+#scr-plan .honest{font-size:11px;margin-top:4px;}
+#scr-plan .badge{font-size:10px;padding:2px 7px;}
+#scr-plan .cauldron{padding:10px 12px;margin-top:8px;border-radius:16px;}
+#scr-plan .cauldron .chead{font-size:14.5px;}
+#scr-plan .slogan{font-size:12px;margin-bottom:6px;}
+#scr-plan .potbar{height:8px;margin:6px 0;}
+#scr-plan .potline{font-size:11.5px;}
+#scr-plan .cauldron ul{gap:3px;margin-top:6px;}
+#scr-plan .cauldron li{font-size:12px;}
+#scr-plan .chones{font-size:10.5px;margin-top:5px;}
+#scr-plan .sticky{padding:5px 12px calc(6px + env(safe-area-inset-bottom));}
+#scr-plan .sumrow{font-size:12.5px;}
+#scr-plan .cta{min-height:44px;font-size:15.5px;border-radius:14px;}
+#scr-plan .payrow{font-size:11px;margin-top:4px;}
+#scr-plan .disclosure{font-size:10px;margin-top:4px;}
+#scr-plan .footlinks{margin-top:4px;}
+/* Item 30: theme picker living in the drawer */
+.ccs-drawer-pal{padding:2px 18px 14px;}
+.ccs-drawer-pal .pal-note{font-size:12px;color:#cdbcf5;margin:8px 2px 0;}
+/* Item 31 round 2: measured condensation — every block tightened, no text
+   below readable size, no content dropped (see FIX-PASS-2-REPORT.md) */
+#scr-plan{padding:0;}
+#scr-plan .ccxm-flow{padding-top:0;}
+#scr-plan .topbar{min-height:0;margin:0 0 2px;}
+#scr-plan .closebtn{width:32px;height:32px;min-height:32px;font-size:14px;}
+#scr-plan .headline{line-height:1.12;}
+#scr-plan .freebanner .dot{width:18px;height:18px;font-size:11px;}
+#scr-plan .benefits{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+#scr-plan .benefits li{font-size:10.5px;line-height:1.28;gap:5px;}
+#scr-plan .benefits .ic{width:15px;height:15px;flex:none;}
+#scr-plan .plan{padding:8px 11px;margin-bottom:6px;}
+#scr-plan .plan .desc{font-size:11.5px;line-height:1.3;}
+#scr-plan .plan .price .amt{font-size:17px;}
+#scr-plan .plan .per{font-size:10px;}
+#scr-plan .seg{margin-top:6px;gap:5px;}
+#scr-plan .seg button{min-height:34px;}
+#scr-plan .seg small{font-size:10px;}
+#scr-plan .unit{font-size:11px;line-height:1.3;margin-top:4px;}
+#scr-plan .honest{line-height:1.3;margin-top:3px;}
+#scr-plan .badge{margin-bottom:4px;}
+#scr-plan .cauldron{padding:8px 11px;}
+#scr-plan .cauldron .chead{margin-bottom:4px;}
+#scr-plan .cauldron h3{font-size:15px;line-height:1.1;}
+#scr-plan .csub{font-size:11px;}
+#scr-plan .cmark{width:30px;height:30px;flex:none;}
+#scr-plan .slogan{line-height:1.3;margin-bottom:4px;}
+#scr-plan .potbar{margin:4px 0;}
+#scr-plan .potline{margin-bottom:4px;}
+#scr-plan .cauldron ul{gap:2px;margin-top:2px;}
+#scr-plan .cauldron li{font-size:11.5px;line-height:1.32;gap:6px;}
+#scr-plan .cauldron .ic{width:15px;height:15px;flex:none;}
+#scr-plan .chones{font-size:9.5px;line-height:1.28;}
+#scr-plan .payrow{line-height:1.3;}
+#scr-plan .disclosure{line-height:1.28;}
+/* Item 31 round 3: reclaim the shell state line on the flow screens, finish
+   the sticky, and style the Cauldron fold */
+#scr-check .cc-state-line, #scr-condition .cc-state-line, #scr-plan .cc-state-line{display:none;}
+#scr-plan .restore{min-height:32px;}
+#scr-plan .seg small{display:inline;margin-left:5px;}
+#scr-plan .payrow svg{width:15px;height:15px;flex:none;}
+#scr-plan .footlinks button{min-height:18px;}
+#scr-plan .summary{margin-bottom:2px;}
+#scr-plan .disclosure{line-height:1.22;}
+.cauldron-toggle{display:block;width:100%;margin-top:8px;padding:7px 10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.22);border-radius:11px;color:#ffd76a;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;text-align:left;}
+.cauldron-more{margin-top:6px;}
+/* Item 31 round 4: final measured trims */
+#scr-plan .scroll{padding:4px 14px 2px;}
+#scr-plan .topbar{padding:0;}
+#scr-plan .headline{font-size:18.5px;}
+#scr-plan .freebanner{font-size:11.5px;line-height:1.3;}
+#scr-plan .benefits li{font-size:10px;}
+#scr-plan .seg button{font-size:11.5px;line-height:1.15;padding:3px 2px;min-height:30px;}
+#scr-plan .seg small{font-size:9px;}
+#scr-plan .unit{font-size:10.5px;line-height:1.25;}
+#scr-plan .plan{padding:7px 11px;margin-bottom:5px;}
+#scr-plan .cauldron{margin-top:5px;}
+#scr-plan .potbar{margin:2px 0;}
+#scr-plan .potline{margin-bottom:2px;}
+#scr-plan .slogan{font-size:11.5px;}
+.cauldron-toggle{padding:5px 10px;margin-top:6px;}
+#scr-plan .payrow{font-size:10.5px;}
+#scr-plan .footlinks button{font-size:11px;min-height:18px;}
+#scr-plan .cta{min-height:42px;}
+#scr-plan .sticky{padding-top:4px;padding-bottom:calc(5px + env(safe-area-inset-bottom));}
+/* Item 31 round 5: widen the text measure, zero stray margins */
+#scr-plan .scroll{padding:2px 10px 0;}
+#scr-plan .topbar .restore{padding:2px 8px;min-height:30px;}
+#scr-plan .closebtn{width:30px;height:30px;min-height:30px;}
+#scr-plan .headline{font-size:17.5px;margin-bottom:1px;}
+#scr-plan .freebanner{padding:5px 10px;}
+#scr-plan .plan{padding:6px 11px;margin-bottom:4px;}
+#scr-plan .plan h3{margin:0;}
+#scr-plan .plan .desc{margin:0;line-height:1.25;}
+#scr-plan .seg{margin-top:2px;}
+#scr-plan .unit{margin-top:2px;}
+#scr-plan .honest{font-size:10.5px;line-height:1.25;margin-top:2px;}
+#scr-plan .badge{padding:1px 6px;font-size:9.5px;}
+#scr-plan .cauldron{padding:6px 9px;margin-top:4px;}
+#scr-plan .cmark{width:26px;height:26px;}
+#scr-plan .slogan{line-height:1.25;}
+#scr-plan .potline{font-size:10.5px;}
+.cauldron-toggle{font-size:12px;}
+#scr-plan .payrow{margin-top:2px;}
+#scr-plan .disclosure{margin-top:2px;line-height:1.18;}
+#scr-plan .footlinks{margin-top:2px;}
+/* Item 31 round 6: line-mechanics — three texts were spilling one line each */
+#scr-plan .seg button{min-height:0;padding:2px 2px;line-height:1.1;}
+#scr-plan .seg small{letter-spacing:-.3px;}
+#scr-plan .unit{font-size:10px;line-height:1.2;letter-spacing:-.2px;}
+#scr-plan .slogan{font-size:11px;}
+#scr-plan .benefits li{line-height:1.2;}
+#scr-plan .freebanner>span:last-child{line-height:1.22;}
+#scr-plan .headline{line-height:1.08;}
+#scr-plan .plan .desc{line-height:1.2;}
+/* Item 29: tappable avatar header in Settings */
+#fp2AvatarBtn{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:inherit;font:inherit;text-align:left;cursor:pointer;padding:2px;}
+#fp2AvatarBtn img{width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.08);flex:none;}
+#fp2AvatarBtn b{display:block;font-size:16.5px;}
+#fp2AvatarBtn .sub{display:block;font-size:12.5px;opacity:.75;margin-top:2px;}
+.cc-pet-flash{outline:3px solid #ffd76a;outline-offset:3px;}
+</style>
+<script id="fp2-glue">
+/* ===== FIX PASS 2 GLUE — items 25-30, 38; Bravio 7 ===== */
+(function(){
+"use strict";
+function $(id){ return document.getElementById(id); }
+/* ---- Items 26/27: sign-up is the first gate; consent before entry ---- */
+var CONSENT_KEY = "cc_pool_consent", pendingBtn = null;
+function consentVal(){ try { return localStorage.getItem(CONSENT_KEY) || ""; } catch(e) { return ""; } }
+function applyConsent(v){
+  window.__ccPoolConsent = v;
+  try { localStorage.setItem(CONSENT_KEY, v); } catch(e) {}
+  try { localStorage.setItem("cc_pool_share", v === "agree" ? "yes" : "no"); } catch(e) {}
+  if (typeof window.poolOptinYes !== "undefined") window.poolOptinYes = (v === "agree");
+}
+var _cv = consentVal(); if (_cv) window.__ccPoolConsent = _cv;
+function enterApp(){
+  if (typeof window.opGateLoginGuest === "function") window.opGateLoginGuest();
+  else if (typeof window.opHideGate === "function") window.opHideGate();
+}
+function showConsent(){
+  var gate = $("opLoginGate"); if (!gate) { enterApp(); return; }
+  var signin = gate.querySelector(".ccxm-gate"); if (signin) signin.style.display = "none";
+  var step = $("ccConsentStep"); if (step) step.hidden = false;
+}
+function finishConsent(v){
+  applyConsent(v);
+  var step = $("ccConsentStep"); if (step) step.hidden = true;
+  var signin = document.querySelector("#opLoginGate .ccxm-gate"); if (signin) signin.style.display = "";
+  var b = pendingBtn; pendingBtn = null;
+  if (b && b.id !== "lGuest") { try { b.click(); } catch(e) {} }
+  enterApp();
+}
+var _ag = $("ccConsentAgree"), _dn = $("ccConsentDeny");
+if (_ag) _ag.addEventListener("click", function(){ finishConsent("agree"); });
+if (_dn) _dn.addEventListener("click", function(){ finishConsent("deny"); });
+var _gate = $("opLoginGate");
+if (_gate) _gate.addEventListener("click", function(e){
+  var t = e.target && e.target.closest ? e.target.closest("#lGuest,#lGoogle,#lApple,#lEmail,#lPhone") : null;
+  if (!t || consentVal()) return;
+  e.stopPropagation(); e.preventDefault();
+  pendingBtn = t; showConsent();
+}, true);
+/* Returning user (consent already answered): the Google/Apple/email/phone
+   buttons complete sign-in and enter, like the guest link does. */
+[["lGoogle", null], ["lApple", null], ["lEmail", "lEmailIn"], ["lPhone", "lPhoneIn"]].forEach(function(pair){
+  var b = $(pair[0]); if (!b) return;
+  b.addEventListener("click", function(){
+    if (!consentVal()) return;
+    if (pair[1]) { var inp = $(pair[1]); if (!inp || !inp.value.trim()) return; }
+    setTimeout(enterApp, 400);
+  });
+});
+/* Gate fine-print Terms/Privacy answer honestly instead of jumping (item 38). */
+document.querySelectorAll("#opLoginGate .l-fine a").forEach(function(a){
+  a.addEventListener("click", function(e){
+    e.preventDefault();
+    var st = $("lStatus");
+    if (st) st.textContent = "Terms and the Privacy Policy live at cardcauldrontcg.com — this demo keeps everything on this device.";
+  });
+});
+/* ---- Item 31: the Cauldron fold on the purchase screen ---- */
+var _ct = $("cauldronToggle"), _cm = $("cauldronMore");
+if (_ct && _cm) _ct.addEventListener("click", function(){
+  var open = _cm.hidden;
+  _cm.hidden = !open;
+  _ct.setAttribute("aria-expanded", open ? "true" : "false");
+  _ct.textContent = open ? "How the Cauldron works ▴" : "How the Cauldron works ▾";
+});
+/* ---- Bravio 7: the guide never piles onto the rewards popup ---- */
+var _rpSeen = 0;
+setInterval(function(){
+  var rp = $("rewardsOpenPop");
+  if (rp && !rp.hidden && rp.style.display !== "none") _rpSeen = Date.now();
+}, 400);
+if (window.CC_GUIDE && typeof window.CC_GUIDE.open === "function") {
+  var _origGuideOpen = window.CC_GUIDE.open.bind(window.CC_GUIDE);
+  window.CC_GUIDE.open = function(){
+    var wait = 2600 - (Date.now() - (_rpSeen || 0));
+    if (_rpSeen && wait > 0) setTimeout(function(){ _origGuideOpen(); }, wait);
+    else _origGuideOpen();
+  };
+}
+/* ---- Items 20/33: Binders re-renders when opened (FP1 rendered only at
+        load and on chip clicks, so a card saved minutes ago never appeared
+        until some other binder action forced a render), then the saved
+        per-binder view is re-applied ---- */
+if (typeof window.show === "function") {
+  var _fp2Show = window.show;
+  window.show = function(id){
+    var r = _fp2Show.apply(this, arguments);
+    if (id === "binders") {
+      if (window.ccxBindRender) { try { window.ccxBindRender(); } catch(e) {} }
+      if (window.__ccxApplyBinderView) { try { window.__ccxApplyBinderView(); } catch(e) {} }
+    }
+    return r;
+  };
+}
+/* ---- Items 22/38: check-flow exit + result footer doors ---- */
+var _cx = $("ccxExit");
+if (_cx) _cx.addEventListener("click", function(){ if (window.show) window.show("home"); });
+[["rHome", "home"], ["rHow", "tells"], ["rTell", "feedback"]].forEach(function(pair){
+  var b = $(pair[0]);
+  if (b) b.addEventListener("click", function(){ if (window.show) window.show(pair[1]); });
+});
+/* ---- Items 28/29: Settings — avatar header mirrors the pet; the duplicate
+        leaderboard-name card folds into the Profile card ---- */
+var _pv = $("opAvatarPreviewImg"), _top = $("fp2AvatarTop"), _abtn = $("fp2AvatarBtn"), _anm = $("fp2AvatarName");
+function mirrorAvatar(){
+  if (_pv && _top) { _top.src = _pv.src; _top.style.filter = _pv.style.filter; _top.style.objectFit = _pv.style.objectFit; }
+  if (_anm) { var dn = $("opDisplayName"); _anm.textContent = (dn && dn.value) || "Your avatar"; }
+}
+if (typeof window.opRenderAvatar === "function") {
+  var _ora = window.opRenderAvatar;
+  window.opRenderAvatar = function(){ var r = _ora.apply(this, arguments); try { mirrorAvatar(); } catch(e) {} return r; };
+}
+mirrorAvatar();
+if (_abtn) _abtn.addEventListener("click", function(){
+  var pet = _pv ? _pv.closest(".card") : null;
+  if (pet) {
+    pet.scrollIntoView({ behavior: "smooth", block: "center" });
+    pet.classList.add("cc-pet-flash");
+    setTimeout(function(){ pet.classList.remove("cc-pet-flash"); }, 1600);
+  }
+});
+var _ln = $("opLoginName"), _dnm = $("opDisplayName");
+if (_ln && _dnm) {
+  var lnCard = _ln.closest(".card"), profCard = _dnm.closest(".card");
+  if (lnCard && profCard && lnCard !== profCard) {
+    var label = document.createElement("p");
+    label.className = "small"; label.style.cssText = "font-weight:800;margin-top:14px";
+    label.textContent = "Display name for leaderboards";
+    profCard.appendChild(label);
+    Array.prototype.slice.call(lnCard.childNodes).forEach(function(n){
+      if (n.nodeType === 1 && n.tagName === "H3") return;
+      profCard.appendChild(n);
+    });
+    lnCard.style.display = "none";
+  }
+}
+})();
+</script>
 </body>
 </html>
