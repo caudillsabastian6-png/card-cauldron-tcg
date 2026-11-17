@@ -877,7 +877,7 @@ body.neon .top-banner{
    The circle is the row's ::before; its emoji is keyed by :nth-child to the OP_SHOP
    order (tee, hoodie, smartjacket, headphones, glasses, hats, pet-mallow, pet-ember,
    anim-bg, frame-gold, frame-crown, bubble-tint, gold-name, badge-hunter, hint-mystery,
-   poppath-guide, double-coins, streak-freeze, mystery-rounds, emoji-pack,
+   poppath-guide, streak-freeze, mystery-rounds, emoji-pack,
    sticker-pack, victory-sounds, home-banner). If OP_SHOP is ever reordered, this
    emoji table must be reordered to match. */
 body.neon #shopList{
@@ -932,17 +932,16 @@ body.neon #shopList > div:nth-child(13)::before{content:"\2728";}
 body.neon #shopList > div:nth-child(14)::before{content:"\1F396\FE0F";}
 body.neon #shopList > div:nth-child(15)::before{content:"\2B50";}
 body.neon #shopList > div:nth-child(16)::before{content:"\1F9ED";}
-body.neon #shopList > div:nth-child(17)::before{content:"\1F4B0";}
-body.neon #shopList > div:nth-child(18)::before{content:"\1F9CA";}
-body.neon #shopList > div:nth-child(19)::before{content:"\1F3B2";}
-body.neon #shopList > div:nth-child(20)::before{content:"\1F600";}
-body.neon #shopList > div:nth-child(21)::before{content:"\1F3F7\FE0F";}
-body.neon #shopList > div:nth-child(22)::before{content:"\1F50A";}
-body.neon #shopList > div:nth-child(23)::before{content:"\1F5BC\FE0F";}
-body.neon #shopList > div:nth-child(24)::before{content:"\1F9EA";}
-body.neon #shopList > div:nth-child(25)::before{content:"\1F409";}
-body.neon #shopList > div:nth-child(26)::before{content:"\1F989";}
-body.neon #shopList > div:nth-child(27)::before{content:"\1F0CF";}
+body.neon #shopList > div:nth-child(17)::before{content:"\1F9CA";}
+body.neon #shopList > div:nth-child(18)::before{content:"\1F3B2";}
+body.neon #shopList > div:nth-child(19)::before{content:"\1F600";}
+body.neon #shopList > div:nth-child(20)::before{content:"\1F3F7\FE0F";}
+body.neon #shopList > div:nth-child(21)::before{content:"\1F50A";}
+body.neon #shopList > div:nth-child(22)::before{content:"\1F5BC\FE0F";}
+body.neon #shopList > div:nth-child(23)::before{content:"\1F9EA";}
+body.neon #shopList > div:nth-child(24)::before{content:"\1F409";}
+body.neon #shopList > div:nth-child(25)::before{content:"\1F989";}
+body.neon #shopList > div:nth-child(26)::before{content:"\1F0CF";}
 
 /* ============ Batch camera + hero video (Oct 29 — Workstreams A/B) ============ */
 body.neon .top-banner{position:relative;}
@@ -3330,12 +3329,12 @@ window.opGateLogin = function(){
               <button type="button" class="cauldron-toggle" id="cauldronToggle" aria-expanded="false">How the Cauldron works ▾</button>
 <div class="cauldron-more" id="cauldronMore" hidden>
 <ul>
-                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>Coins spent in the app fill the pot. At 🪙 250,000 it tips.</span></li>
-                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>Each fill sends Child's Play $25 worth of sealed Pokémon packs — real product from our own shelves, at our cost.</span></li>
+                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>Coins poured into the Cauldron fill the pot. At 🪙 250,000 it tips.</span></li>
+                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>Each fill sends Child's Play $25 worth of sealed Pokémon packs — real product from our own shelves, at our cost. One fill converts per month, so the promise never outruns the fund.</span></li>
                 <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>5% of every upgrade builds the fund that pays for the packs.</span></li>
                 <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>The receipt and a photo get posted here every time a pot ships.</span></li>
               </ul>
-              <p class="chones">The pot fills for real as coins are spent. A donation goes out only when the pot is full <b>and</b> the fund covers the full $25 — until then, nothing is promised and nothing is sent.</p>
+              <p class="chones">The pot fills for real as coins are poured in. A donation goes out only when the pot is full <b>and</b> the fund covers the full $25 — and at most one fill ships per month; extra fills roll over to the next month. Until then, nothing is promised and nothing is sent.</p>
 </div>
             </div>
           </div>
@@ -3396,7 +3395,7 @@ window.opGateLogin = function(){
       <button type="button" class="bubble-btn b-gold" data-game="gameStack"><span>🧱 Cardboard Stack</span><span class="sub">by Potion 🌙 · Drop each slab flush — the overhang breaks off.</span><span class="p2-runs" data-runs-for="gameStack"></span></button>
     </div>
     <div class="card mt" role="note" aria-label="About practice runs">
-      <p class="small" style="margin:0;">🫧 Each game gives you <b>3 free runs a day</b>. After that, a practice run costs 🪙 10 — practice scores never post to any leaderboard, ever.</p>
+      <p class="small" style="margin:0;">🫧 Each game gives you <b>3 free runs a day</b>. After that, a practice run costs 🪙 10 — practice scores never post to any leaderboard, ever, and practice runs pay no coins.</p>
     </div>
     <div id="gamesList1" hidden></div>
     <div id="gamesList2" hidden></div>
@@ -3704,7 +3703,7 @@ window.opGateLogin = function(){
     </div>
     <div class="card mt">
       <h3 style="margin:0;">Play &amp; learn — practice with coins</h3>
-      <p class="small dim">Every game on the shelf gives 3 free runs a day. Past that, a practice run costs 🪙 10 — and its score <b>never</b> posts to any leaderboard. The tell lessons themselves stay free forever; coins only ever buy <i>more practice</i>, never the lesson.</p>
+      <p class="small dim">Every game on the shelf gives 3 free runs a day. Past that, a practice run costs 🪙 10 — its score <b>never</b> posts to any leaderboard, and the run pays <b>no coins</b>. The tell lessons themselves stay free forever; coins only ever buy <i>more practice</i>, never the lesson.</p>
       <div id="p2TrainShop" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
       <p class="small dim" id="p2TrainStatus" style="margin-top:8px;"></p>
     </div>
@@ -3712,7 +3711,7 @@ window.opGateLogin = function(){
       <h3 style="margin:0;">The donation cauldron</h3>
       <p class="lead" style="font-size:16px;margin-top:6px;">Pokémon is hard for kids to get these days. We catch the fakes — and a slice of every upgrade puts sealed packs in kids' hands.</p>
       <p class="small dim" style="margin-top:4px;">5% of every upgrade goes into the donation fund.</p>
-      <p class="small">Pour coins into the shared cauldron. When the community jar fills, the donation fund covers $25 of Pokémon product (at our cost), donated through Child's Play — games for kids in hospitals — and the receipt and a photo are posted right here, where everyone can see it. One fill is always that same $25 of product: coins never convert to money at any other rate, and the donation is always made by hand, never charged automatically. More cards into more players' hands.</p>
+      <p class="small">Pour coins into the shared cauldron. When the community jar fills, the donation fund covers $25 of Pokémon product (at our cost), donated through Child's Play — games for kids in hospitals — and the receipt and a photo are posted right here, where everyone can see it. One fill is always that same $25 of product: coins never convert to money at any other rate, and the donation is always made by hand, never charged automatically. At most one fill converts per month — if the jar fills again in the same month, those coins roll into next month's jar, so the promise always stays inside the month's $25 budget. More cards into more players' hands.</p>
       <p class="p2-jar-num" id="p2PourCount">🪙 0</p>
       <p class="small dim">poured by you, on this device. In the full app the jar is shared by every user, and the running total is public.</p>
       <div class="p2-donate-jar" aria-hidden="true"><div class="p2-donate-fill" id="p2DonateFill"></div></div>
@@ -3728,7 +3727,7 @@ window.opGateLogin = function(){
       <summary style="font-weight:900;cursor:pointer;">🪙 How coins work</summary>
       <p class="small dim">Your coins live on this device only, for now. They are never real money. When real sign-in lands, your coins move to your account — until then, nobody else's device can see your coins, and we cannot see theirs either.</p>
       <h3 style="margin:0;">How you earn coins right now</h3>
-      <p class="small">🎮 Games pay coins — the first clear of a level pays most: Bubble Beat 50 · Cauldron Words 25 · Cauldron Match 30 · Cauldron Cannon 30 · Mystery Bubble 20 · Match Audit 20 · Pop Path 25 (a full run) · Rapid Fire 15 (a full run, +1 a stage past the first) · Cardboard Stack 10 (+2 a rung crossed). Replays pay a smaller amount, and each game pays up to 150 coins a day.<br>📅 Daily check-in — +10 coins<br>🃏 Scan a card (front + back) — +10 coins per scan, max 50 a day from scans</p>
+      <p class="small">🎮 Games pay coins — the first clear of a level pays most: Bubble Beat 50 · Cauldron Words 25 · Cauldron Match 30 · Cauldron Cannon 30 · Mystery Bubble 20 · Match Audit 20 · Pop Path 25 (a full run) · Rapid Fire 15 (a full run, +1 a stage past the first) · Cardboard Stack 10 (+2 a rung crossed). Replays pay a flat 🪙 5, and daily bonus modes pay 🪙 10. Every faucet together pays up to 🪙 200 a day (each game up to 🪙 60 a day) — fair for players, and the Cauldron promise stays safe.<br>📅 Daily check-in — +10 coins<br>🃏 Scan a card (front + back) — +10 coins per scan, max 50 a day from scans (counts toward the 🪙 200 daily cap)</p>
  <h3 style="margin:0;">Avatar bases &amp; looks</h3>
       <p class="small">Avatar bases are picked free in Profile / Settings, and avatar looks/accessories live in the shop below.</p>
     </details>
@@ -5820,7 +5819,7 @@ function startMatch(){
           if(OP_MATCH_LEVEL < OP_MATCH_LEVELS.length && isFrontier){ OP_MATCH_UNLOCKED = OP_MATCH_LEVEL + 1; try{ localStorage.setItem("cc_demo_match_unlocked", String(OP_MATCH_UNLOCKED)); }catch(e){} unlockMsg = " Board " + OP_MATCH_UNLOCKED + " unlocked!"; }
           /* §3.8 Perfect Audit: minimum possible flips and no peek spent */
           var perfect = (attempts === symbols.length) && !peekUsed;
-          var mAward = window.ccAwardGame ? window.ccAwardGame("match", (isFrontier ? 20 : 7) + (perfect ? 10 : 0)) : { paid: 0, capped: false };
+          var mAward = window.ccAwardGame ? window.ccAwardGame("match", isFrontier ? (20 + (perfect ? 10 : 0)) : 5) : { paid: 0, capped: false };
           body.innerHTML = doneHTML(sc, "All pairs matched in "+attempts+" flips."+(perfect ? " ⭐ Perfect Audit — not one wasted flip!" : "")+unlockMsg);
           var mm = body.querySelector(".gdone") || body;
           if(window.ccLevelNav) window.ccLevelNav(mm, { coinText: window.ccCoinLine276 ? window.ccCoinLine276(mAward) : "",
@@ -6076,7 +6075,7 @@ function startBeat(){
       var doneD = ""; try{ doneD = localStorage.getItem("cc_beat_daily_done") || ""; }catch(e){}
       var dNote;
       if(doneD === dkey){ dNote = "Daily already banked today — this run was for glory 🌟"; }
-      else { award = window.ccAwardGame ? window.ccAwardGame("beat", 15) : award; try{ localStorage.setItem("cc_beat_daily_done", dkey); }catch(e){} dNote = award.paid ? "Daily bonus +15 coins 🪙" : "Game coins maxed for today — the Cauldron refills tomorrow 🌙"; }
+      else { award = window.ccAwardGame ? window.ccAwardGame("beat", 10) : award; try{ localStorage.setItem("cc_beat_daily_done", dkey); }catch(e){} dNote = award.practice ? "Practice run — no coins, just the reps 🫧" : (award.paid ? "Daily bonus +" + award.paid + " coins 🪙" : "Game coins maxed for today — the Cauldron refills tomorrow 🌙"); }
       body.innerHTML = doneHTML(score, "📅 Daily Bubble complete!" + (beatClean ? " Clean finish, too!" : ""));
       window.ccLevelNav(navMount(), { coinText: dNote,
         replay: function(){ OP_BEAT_DAILY = true; startBeat(); },
@@ -6087,7 +6086,7 @@ function startBeat(){
       return;
     }
     if(beatMode276 === "encore"){
-      award = window.ccAwardGame ? window.ccAwardGame("beat", 15) : award;
+      award = window.ccAwardGame ? window.ccAwardGame("beat", 5) : award;
       body.innerHTML = doneHTML(score, "♾ Encore over — three misses end the show. You popped " + spawned + " bubbles.");
       window.ccLevelNav(navMount(), { coinText: window.ccCoinLine276 ? window.ccCoinLine276(award) : "",
         replay: function(){ startBeat(); },
@@ -6107,7 +6106,7 @@ function startBeat(){
         unlockMsg += " 🏆 New chapter: " + CC_CHAPTERS.gameBeat[Math.floor((OP_BEAT_UNLOCKED - 1) / 5)] + "!";
       }
     }
-    award = window.ccAwardGame ? window.ccAwardGame("beat", beatClean ? (isFrontier ? 50 : 15) : 5) : award;
+    award = window.ccAwardGame ? window.ccAwardGame("beat", beatClean ? (isFrontier ? 50 : 5) : 5) : award;
     body.innerHTML = doneHTML(score, "You kept the beat floating!" + (beatClean ? " Clean finish!" : " Missed a bubble — no clean-finish unlock this run.") + unlockMsg);
     var hasNext = OP_BEAT_LEVEL < OP_BEAT_LEVELS.length && OP_BEAT_UNLOCKED > OP_BEAT_LEVEL;
     window.ccLevelNav(navMount(), { coinText: window.ccCoinLine276 ? window.ccCoinLine276(award) : "",
@@ -6171,7 +6170,7 @@ function startPopPath(){
   function fadeMs(){ return level === 0 ? 30000 : (level < FADES.length ? FADES[level] : 5625); }
   function awardFullRun276(){
     var runs = 0; try{ runs = parseInt(localStorage.getItem("cc_poppath_runs") || "0", 10) || 0; }catch(e){}
-    var a = window.ccAwardGame ? window.ccAwardGame("poppath", runs === 0 ? 25 : 10) : { paid: 0, capped: false };
+    var a = window.ccAwardGame ? window.ccAwardGame("poppath", runs === 0 ? 25 : 5) : { paid: 0, capped: false };
     try{ localStorage.setItem("cc_poppath_runs", String(runs + 1)); }catch(e){}
     return a;
   }
@@ -6484,7 +6483,7 @@ function startMystery(){
       var mdDone = ""; try{ mdDone = localStorage.getItem("cc_mystery_daily_done") || ""; }catch(e){}
       var mAward = { paid: 0, capped: false }, mNote;
       if(mdDone === mdkey){ mNote = "Daily already banked today — this run was for glory 🌟"; }
-      else { mAward = window.ccAwardGame ? window.ccAwardGame("mystery", 15) : mAward; try{ localStorage.setItem("cc_mystery_daily_done", mdkey); }catch(e){} mNote = mAward.paid ? "Daily bonus +15 coins 🪙" : "Game coins maxed for today — the Cauldron refills tomorrow 🌙"; }
+      else { mAward = window.ccAwardGame ? window.ccAwardGame("mystery", 10) : mAward; try{ localStorage.setItem("cc_mystery_daily_done", mdkey); }catch(e){} mNote = mAward.practice ? "Practice run — no coins, just the reps 🫧" : (mAward.paid ? "Daily bonus +" + mAward.paid + " coins 🪙" : "Game coins maxed for today — the Cauldron refills tomorrow 🌙"); }
       body.innerHTML = doneHTML(score, "📅 Daily Mystery complete — the same shuffle for everyone today. Best tracking streak: "+bestStreak+" in a row. Come back tomorrow for the next one.");
       var mm2 = body.querySelector(".gdone") || body;
       if(window.ccLevelNav) window.ccLevelNav(mm2, { coinText: mNote,
@@ -6498,7 +6497,7 @@ function startMystery(){
       return;
     }
     if(endlessM){
-      var wAward = window.ccAwardGame ? window.ccAwardGame("mystery", 7) : { paid: 0, capped: false };
+      var wAward = window.ccAwardGame ? window.ccAwardGame("mystery", 5) : { paid: 0, capped: false };
       body.innerHTML = doneHTML(score, "♾ Shuffle Marathon over — the star slipped away in wave "+(Math.floor(round/5)+1)+", round "+(round+1)+". Best tracking streak: "+bestStreak+" in a row.");
       var wm = body.querySelector(".gdone") || body;
       if(window.ccLevelNav) window.ccLevelNav(wm, { coinText: window.ccCoinLine276 ? window.ccCoinLine276(wAward) : "",
@@ -6514,7 +6513,7 @@ function startMystery(){
     var isFrontier = OP_MYSTERY_LEVEL >= OP_MYSTERY_UNLOCKED;
     var unlockMsg = "";
     if(OP_MYSTERY_LEVEL < OP_MYSTERY_LEVELS.length && isFrontier){ OP_MYSTERY_UNLOCKED = OP_MYSTERY_LEVEL + 1; try{ localStorage.setItem("cc_demo_mystery_unlocked", String(OP_MYSTERY_UNLOCKED)); }catch(e){} unlockMsg = " Level " + OP_MYSTERY_UNLOCKED + " unlocked!"; }
-    var yAward = window.ccAwardGame ? window.ccAwardGame("mystery", isFrontier ? 20 : 7) : { paid: 0, capped: false };
+    var yAward = window.ccAwardGame ? window.ccAwardGame("mystery", isFrontier ? 20 : 5) : { paid: 0, capped: false };
     body.innerHTML = doneHTML(score, "Level "+OP_MYSTERY_LEVEL+" — "+LV.name+". Best tracking streak: "+bestStreak+" in a row."+unlockMsg);
     var ym = body.querySelector(".gdone") || body;
     if(window.ccLevelNav) window.ccLevelNav(ym, { coinText: window.ccCoinLine276 ? window.ccCoinLine276(yAward) : "",
@@ -7217,10 +7216,11 @@ function startStack() {
       /* §3.9 Tier Celebration: crossing a rung ticks +2 coins toward the
          run's settle (cap +16), shown the moment it happens */
       runTierBonus = Math.min(16, runTierBonus + 2);
-      if (window.ccCoinTick) window.ccCoinTick(2);
+      var tPractice = false; try{ tPractice = window.__p2Practice === "gameStack"; }catch(e){}
+      if (window.ccCoinTick && !tPractice) window.ccCoinTick(2);
       var tName = tNow <= STACK_TIERS.length ? STACK_TIERS[tNow - 1] : "RUNG " + tNow;
       var tHeight = height;
-      setTimeout(function(){ if (playing) flashGrade(tName + "!", "ccstack-g-flush", "Height " + tHeight + " · +2 coins banked · the slide quickens"); }, 950);
+      setTimeout(function(){ if (playing) flashGrade(tName + "!", "ccstack-g-flush", "Height " + tHeight + (tPractice ? " · the slide quickens" : " · +2 coins banked · the slide quickens")); }, 950);
     }
     spawnMover();
   }
@@ -7239,7 +7239,7 @@ function startStack() {
     /* §6.2: the run settles here — 10 + the rung ticks banked on the way up */
     if (typeof window.ccAwardGame === "function") {
       var sAward276 = window.ccAwardGame("stack", 10 + runTierBonus);
-      stackCoinLine276 = sAward276.paid ? "Earned +" + sAward276.paid + " coins 🪙" : (sAward276.capped ? "Game coins maxed for today 🌙" : "");
+      stackCoinLine276 = sAward276.practice ? "Practice run — no coins, just the reps 🫧" : (sAward276.paid ? "Earned +" + sAward276.paid + " coins 🪙" : (sAward276.capped ? "Game coins maxed for today 🌙" : ""));
     }
     endPending = function () {
       if (!active) return;
@@ -8288,7 +8288,7 @@ function showWin(){
     brewSession += S.score;
     try{ recordBest("words", brewSession); }catch(e){}
     save.brewCount = (save.brewCount || 0) + 1;
-    const awB = window.ccAwardGame ? window.ccAwardGame("words", 8 + (noHint ? 10 : 0)) : { paid: 0, capped: false };
+    const awB = window.ccAwardGame ? window.ccAwardGame("words", 5) : { paid: 0, capped: false };
     coinNote = (awB.paid ? " Earned +" + awB.paid + " coins 🪙" : (awB.capped ? " Game coins maxed for today 🌙" : "")) + (noHint ? " ⭐ No-Hint Hero!" : "");
     persist();
     $("cw-winWord").textContent = cwLongest([...S.found]) + "!";
@@ -8301,9 +8301,9 @@ function showWin(){
     return;
   }
   try{ recordBest("words", S.score); }catch(e){}
-  /* §6.2: first completion 25, repeat 8, No-Hint Hero +10 */
+  /* §6.2 + item 63: first completion 25 (+10 No-Hint Hero), repeat flat 5 */
   const isFirst = !lsW.done; lsW.done = true;
-  const aw = window.ccAwardGame ? window.ccAwardGame("words", (isFirst ? 25 : 8) + (noHint ? 10 : 0)) : { paid: 0, capped: false };
+  const aw = window.ccAwardGame ? window.ccAwardGame("words", isFirst ? (25 + (noHint ? 10 : 0)) : 5) : { paid: 0, capped: false };
   coinNote = (aw.paid ? " Earned +" + aw.paid + " coins 🪙" : (aw.capped ? " Game coins maxed for today 🌙" : "")) + (noHint ? " ⭐ No-Hint Hero — not one hint used!" : "");
   save.unlocked = Math.max(save.unlocked, Math.min(S.levelIdx + 1, LEVELS.length - 1));
   selLevel = Math.min(save.unlocked, LEVELS.length - 1);
@@ -9384,7 +9384,7 @@ var CMCore = (function(){
       if (firstWin){ w.push(level); try{ localStorage.setItem('cm_match_won', JSON.stringify(w)); }catch(e){} }
       if (cmEndless){ towerHeight += C.LAYOUTS[C.LEVELS[level].layout].length; }
       else if (level + 1 < C.LEVELS.length){ try{ localStorage.setItem('cm_match_level', String(level + 1)); }catch(e){} }
-      if (window.ccAwardGame) cmAward = window.ccAwardGame('cmatch', cmEndless ? 10 : (firstWin ? 30 : 10));
+      if (window.ccAwardGame) cmAward = window.ccAwardGame('cmatch', cmEndless ? 5 : (firstWin ? 30 : 5));
     }
     $('cm-endTitle').textContent = won ? '🫧 Brew Complete!' : '💦 The tray overflowed…';
     $('cm-endTag').textContent = won
@@ -10164,13 +10164,13 @@ var CC_CANNON_CORE = (function(){
       cnMedals[levelIdx] = 1;
       try{ localStorage.setItem("ccCannonMedals", JSON.stringify(cnMedals)); }catch(e){}
     }
-    /* §5 frontier advance + §6.2 coins (30 first clear / 10 repeat, +5 golden) */
+    /* §5 frontier advance + §6.2 coins (30 first clear +5 golden / repeat flat 5, item 63) */
     var frontierBefore = cnFrontier;
     if(!cnSiege && levelIdx === cnFrontier && cnFrontier < LEVELS.length - 1){
       cnFrontier++;
       try{ localStorage.setItem("ccCannonFrontier", String(cnFrontier)); }catch(e){}
     }
-    if(window.ccAwardGame) window.ccAwardGame("cannon", ((levelIdx === frontierBefore && !cnSiege) ? 30 : 10) + (goldenDown ? 5 : 0));
+    if(window.ccAwardGame) window.ccAwardGame("cannon", ((levelIdx === frontierBefore && !cnSiege) ? (30 + (goldenDown ? 5 : 0)) : 5));
     var prev=best[levelIdx]||0;
     if(score>prev){ best[levelIdx]=score; try{ localStorage.setItem("ccCannonBest", JSON.stringify(best)); }catch(e){} }
     updateHUD(true);
@@ -10195,7 +10195,7 @@ var CC_CANNON_CORE = (function(){
     var b=best[levelIdx]||0;
     var cnAward = window.__ccLastAward || { paid: 0, capped: false };
     var notes = "";
-    if(wonGame && goldenDown) notes += "<br>⭐ Golden Block down! +150 points, +5 coins";
+    if(wonGame && goldenDown) notes += "<br>⭐ Golden Block down! +150 points";
     if(wonGame && (ballsTotal - ballsLeft) === 1) notes += "<br>🏅 One-Ball Medal — the whole fort with a single ball!";
     if(wonGame && cnAward.paid) notes += "<br>Earned +" + cnAward.paid + " coins 🪙";
     if(wonGame && cnAward.capped && !cnAward.paid) notes += "<br>Game coins maxed for today 🌙";
@@ -14145,7 +14145,6 @@ var OP_SHOP = [
   {id:"badge-hunter",name:"Title badge: Card Hunter",price:250,cat:"Look"},
   {id:"hint-mystery",name:"Mystery hint: reveal star once",price:25,cat:"Games"},
   {id:"poppath-guide",name:"Pop Path guide stay-on, one trail",price:25,cat:"Games"},
-  {id:"double-coins",name:"Double coins booster, 24h",price:250,cat:"Games"},
   {id:"streak-freeze",name:"Streak freeze, one missed day",price:100,cat:"Games"},
   {id:"mystery-rounds",name:"Mystery +5 rounds, one play",price:50,cat:"Games"},
   {id:"emoji-pack",name:"Chat emoji pack",price:50,cat:"Fun"},
@@ -14445,8 +14444,11 @@ function opDailyCheckin(){
   if(last===today) { opRenderRewards(); return; }
   streak = (last===yesterday) ? streak+1 : 1;
   try{ localStorage.setItem("cc_daily_checkin_date", today); localStorage.setItem("cc_daily_streak", String(streak)); }catch(e){}
-  opAddCoins(10); opRenderRewards();
-  var msg=document.getElementById("dailyStatus"); if(msg) msg.textContent = "+10 coins! Streak is now " + streak + (streak===1 ? " day." : " days.");
+  /* Item 63: the check-in coin counts toward the global 200/day faucet cap. */
+  var ciPay = (typeof window.ccFaucetPay === "function") ? window.ccFaucetPay(null, 10) : 10;
+  if(ciPay > 0) opAddCoins(ciPay);
+  opRenderRewards();
+  var msg=document.getElementById("dailyStatus"); if(msg) msg.textContent = ciPay > 0 ? ("+" + ciPay + " coins! Streak is now " + streak + (streak===1 ? " day." : " days.")) : ("Checked in — streak is now " + streak + (streak===1 ? " day." : " days.") + " Today's 🪙 200 earning cap is already reached, so no coins this time.");
 }
 function opChatEmoji(e){ var tx=document.getElementById("chatText"); if(!tx) return; tx.value = tx.value + e; tx.focus(); }
 function opSendChat(){
@@ -19462,192 +19464,6 @@ if (typeof document !== "undefined") (function () {
   return api;
 });
 </script>
-<script id="ccTestGrantScript">
-/* CC-TESTGRANT-BEGIN */
-(function () {
-  "use strict";
-  if (typeof window === "undefined" || typeof document === "undefined") return;
-  if (window.__ccTestGrantInit) return;
-  window.__ccTestGrantInit = true;
-
-  var TESTGRANT_SHA256 = "79acf72d903a96f95bfc3e7471aaeaaf48907d08c5d33d0c0c29b2799877a47f";
-  var TESTGRANT_AMOUNT = 100000;
-  var COINS_KEY = "op_coins";
-  var busy = false;
-  var claimsThisSession = 0;
-
-  function storageGet(key) {
-    try { return window.localStorage.getItem(key); } catch (e) { return null; }
-  }
-  function storageSet(key, value) {
-    try { window.localStorage.setItem(key, value); } catch (e) {}
-  }
-  function byId(id) { return document.getElementById(id); }
-
-  function setStatus(text) {
-    var el = byId("ccTestGrantStatus");
-    if (el) el.textContent = text;
-  }
-
-  function hexOf(buffer) {
-    var bytes = new Uint8Array(buffer);
-    var out = "";
-    for (var i = 0; i < bytes.length; i++) {
-      out += ("0" + bytes[i].toString(16)).slice(-2);
-    }
-    return out;
-  }
-
-  /* Add to the EARNED bucket only. Prefers the demo's own opAddCoins()
-     (which persists "op_coins" and re-renders); the coin block's wrapped
-     copy is equally safe — its syncPurchasedBalance only ever LOWERS the
-     purchased bucket when it exceeds the total, and a grant raises the
-     total, so the purchased bucket is never written on this path.
-     Fallback (no demo globals): write "op_coins" directly, keep a
-     numeric window.opCoins in sync if one exists, render, and refresh
-     the Rewards balance line. The purchased key and the purchase ledger
-     are never referenced here. */
-  function addEarnedCoins(n) {
-    if (typeof window.opAddCoins === "function") {
-      window.opAddCoins(n);
-      return;
-    }
-    var current = parseInt(storageGet(COINS_KEY) || "0", 10) || 0;
-    var next = current + n;
-    storageSet(COINS_KEY, String(next));
-    try {
-      if (typeof window.opCoins === "number") window.opCoins = next;
-    } catch (e) {}
-    if (typeof window.opRenderCoins === "function") {
-      try { window.opRenderCoins(); } catch (e) {}
-    }
-    var bal = byId("rewardsCoins");
-    if (bal) bal.textContent = "🪙 " + next;
-  }
-
-  async function onClaimTap() {
-    if (busy) return;
-    if (!window.crypto || !window.crypto.subtle ||
-        typeof window.crypto.subtle.digest !== "function") {
-      setStatus("Test grant isn't available in this browser.");
-      return;
-    }
-    var input = byId("ccTestGrantInput");
-    var normalized = String(input ? input.value : "").trim().toUpperCase();
-    busy = true;
-    var digest = "";
-    try {
-      var data = new TextEncoder().encode(normalized);
-      digest = hexOf(await window.crypto.subtle.digest("SHA-256", data));
-    } catch (e) {
-      busy = false;
-      setStatus("Test grant isn't available in this browser.");
-      return;
-    }
-    busy = false;
-    if (digest !== TESTGRANT_SHA256) {
-      setStatus("That code doesn't match — check with us for the tester code.");
-      return;
-    }
-    addEarnedCoins(TESTGRANT_AMOUNT);
-    claimsThisSession++;
-    /* The row stays active — testers can claim as often as they need. */
-    setStatus(claimsThisSession > 1
-      ? "Test coins added: +100,000 (claimed again — testers can claim as often as they need)"
-      : "Test coins added: +100,000 on this device.");
-  }
-
-  /* The "Your coins" card on the Rewards screen is the demo's coins
-     card (static markup: the card containing #rewardsCoins). Walk up
-     from the balance line to its .card; fall back to the Rewards
-     section, then the Profile/Settings section, then <body>, so the
-     row still lands somewhere sensible if cards are reshuffled. */
-  function findHost() {
-    var el = byId("rewardsCoins");
-    for (var i = 0; el && i < 8; i++) {
-      el = el.parentNode;
-      if (el && typeof el.className === "string" &&
-          (" " + el.className + " ").indexOf(" card ") >= 0) return el;
-    }
-    return byId("scr-rewards") || byId("scr-settings") || document.body;
-  }
-
-  function buildRow() {
-    var row = document.createElement("div");
-    row.className = "cc-testgrant-row";
-    row.id = "ccTestGrantRow";
-    row.style.marginTop = "10px";
-
-    var label = document.createElement("p");
-    label.className = "small";
-    label.style.margin = "0 0 6px";
-    label.textContent = "🧪 Testing with us?";
-    row.appendChild(label);
-
-    var controls = document.createElement("div");
-    controls.style.display = "flex";
-    controls.style.gap = "8px";
-    controls.style.flexWrap = "wrap";
-    controls.style.alignItems = "center";
-
-    var input = document.createElement("input");
-    input.setAttribute("type", "text");
-    input.setAttribute("placeholder", "Tester code");
-    input.setAttribute("autocomplete", "off");
-    input.setAttribute("autocapitalize", "characters");
-    input.setAttribute("aria-label", "Tester code");
-    input.id = "ccTestGrantInput";
-    input.style.flex = "1 1 150px";
-    input.style.minWidth = "130px";
-    input.style.padding = ".55rem .8rem";
-    input.style.borderRadius = "999px";
-    input.style.border = "1px solid rgba(255,215,106,.45)";
-    input.style.background = "rgba(20,14,32,.55)";
-    input.style.color = "inherit";
-    input.addEventListener("keydown", function (ev) {
-      if (ev && ev.key === "Enter") { ev.preventDefault(); onClaimTap(); }
-    });
-    controls.appendChild(input);
-
-    var button = document.createElement("button");
-    button.setAttribute("type", "button");
-    button.className = "bubble-btn b-white";
-    button.id = "ccTestGrantBtn";
-    button.innerHTML = "<span>Claim test coins</span>";
-    button.addEventListener("click", function () { onClaimTap(); });
-    controls.appendChild(button);
-    row.appendChild(controls);
-
-    var note = document.createElement("p");
-    note.className = "small dim";
-    note.style.margin = "6px 0 0";
-    note.textContent = "Testers: enter the tester code for +100,000 test coins — claim as often as you need while testing.";
-    row.appendChild(note);
-
-    var status = document.createElement("p");
-    status.className = "small";
-    status.id = "ccTestGrantStatus";
-    status.setAttribute("role", "status");
-    status.style.margin = "6px 0 0";
-    row.appendChild(status);
-
-    return row;
-  }
-
-  function init() {
-    if (byId("ccTestGrantRow")) return;
-    var host = findHost();
-    if (host) host.appendChild(buildRow());
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
-})();
-/* CC-TESTGRANT-END */
-</script>
 <!-- CC-COIN-END --><script id="ccHelperPackScript">
 /* =====================================================================
    MALLOW — DEFAULT QUESTIONS PACK  (cost lever 1: local first)
@@ -24354,7 +24170,9 @@ html, body, main, .screen, #ccMallowFloatSheet{ touch-action:pan-y; }
    Every game/scan award in #27.6 lands through window.opAddCoins (the EARNED
    bucket) via these helpers, so the visible feedback (stage coin chip,
    floater, count-up, blip) fires identically on every award path. Spends
-   subtract directly and never call these. The CC-TESTGRANT block is untouched. */
+   subtract directly and never call these. (The CC-TESTGRANT tester-code
+   grant block was removed Nov 16, 2026 — item 63: no shipped code path
+   mints coins from a code.) */
 (function(){
 "use strict";
 function ccToday276(){ var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
@@ -24423,35 +24241,63 @@ window.ccCoinFx = function(n, opts){
   }catch(e){}
 };
 window.ccCoinTick = function(n){ window.ccCoinFx(n, { visualOnly: true }); };
-/* §6.3 per-game daily soft cap (150) — record key cc_game_coins_day */
+/* §6.3 daily faucet caps — ITEM 63 (owner-approved Nov 16, 2026):
+   ONE global cap of 200 earned coins/day across ALL faucets (games,
+   pool-submit scans, daily check-in, Guess the Price) with a per-game
+   soft cap of 60/day, replacing the nine separate 150/day per-game
+   caps. Both counts live in ONE record (cc_faucet_day) so they can
+   never drift apart. The legacy cc_game_coins_day record is retired. */
+var CC_FAUCET_DAY_CAP = 200, CC_GAME_DAY_CAP = 60;
 function ccGameDayRec(){
   var rec = null;
-  try{ rec = JSON.parse(localStorage.getItem("cc_game_coins_day") || "null"); }catch(e){}
-  if(!rec || rec.date !== ccToday276() || typeof rec.games !== "object" || !rec.games) rec = { date: ccToday276(), games: {} };
+  try{ rec = JSON.parse(localStorage.getItem("cc_faucet_day") || "null"); }catch(e){}
+  if(!rec || rec.date !== ccToday276() || typeof rec.total !== "number" || typeof rec.games !== "object" || !rec.games) rec = { date: ccToday276(), total: 0, games: {} };
   return rec;
 }
 window.ccGameCoinsUsed = function(game){ var rec = ccGameDayRec(); return rec.games[game] || 0; };
+window.ccFaucetUsed = function(){ return ccGameDayRec().total; };
+/* Shared faucet gate: returns how much of `amount` may be paid right
+   now (0 when a cap is hit) and records what was paid. gameKey null =
+   a non-game faucet (counts toward the global 200 only). */
+window.ccFaucetPay = function(gameKey, amount){
+  var pay = 0;
+  try{
+    if(!amount || amount <= 0) return 0;
+    var rec = ccGameDayRec();
+    var room = CC_FAUCET_DAY_CAP - rec.total;
+    if(gameKey) room = Math.min(room, CC_GAME_DAY_CAP - (rec.games[gameKey] || 0));
+    pay = Math.max(0, Math.min(amount, room));
+    if(pay > 0){
+      rec.total += pay;
+      if(gameKey) rec.games[gameKey] = (rec.games[gameKey] || 0) + pay;
+      try{ localStorage.setItem("cc_faucet_day", JSON.stringify(rec)); }catch(e){}
+    }
+  }catch(e){}
+  return pay;
+};
 /* Award for a level completion / run. Returns {paid, capped} and mirrors it
    to window.__ccLastAward for the interstitial line. */
 window.ccAwardGame = function(game, amount){
   var res = { paid: 0, capped: false };
   try{
     if(!amount || amount <= 0){ window.__ccLastAward = res; return res; }
-    var rec = ccGameDayRec();
-    var used = rec.games[game] || 0;
-    var room = Math.max(0, 150 - used);
-    res.paid = Math.min(amount, room);
-    res.capped = res.paid < amount;
-    if(res.paid > 0){
-      rec.games[game] = used + res.paid;
-      try{ localStorage.setItem("cc_game_coins_day", JSON.stringify(rec)); }catch(e){}
-      if(typeof window.opAddCoins === "function") window.opAddCoins(res.paid);
+    /* Item 63: practice runs pay 0. The Sink B practice flag names the
+       shelf screen being practiced; only that game's awards zero out. */
+    var pScr = null; try{ pScr = window.__p2Practice; }catch(e){}
+    if(pScr && typeof window.P2_SHELF !== "undefined" && window.P2_SHELF[pScr] && window.P2_SHELF[pScr].gid === game){
+      res.practice = true;
+      window.__ccLastAward = res;
+      return res;
     }
+    res.paid = window.ccFaucetPay(game, amount);
+    res.capped = res.paid < amount;
+    if(res.paid > 0 && typeof window.opAddCoins === "function") window.opAddCoins(res.paid);
   }catch(e){}
   window.__ccLastAward = res;
   return res;
 };
-/* §6.2 scan award: +10 at pool submit-success, max 5 paid scans/day. */
+/* §6.2 scan award: +10 at pool submit-success, max 5 paid scans/day;
+   counts toward the global 200/day faucet cap (item 63). */
 window.ccAwardScan = function(){
   var res = { paid: 0, maxed: false, count: 0 };
   try{
@@ -24460,10 +24306,14 @@ window.ccAwardScan = function(){
     if(!rec || rec.date !== ccToday276() || typeof rec.count !== "number") rec = { date: ccToday276(), count: 0 };
     res.count = rec.count;
     if(rec.count >= 5){ res.maxed = true; window.__ccLastAward = res; return res; }
+    /* Item 63: a scan only uses one of the 5 daily paid slots when the
+       global faucet cap actually lets it pay. */
+    var pay = window.ccFaucetPay(null, 10);
+    if(pay <= 0){ res.maxed = true; window.__ccLastAward = res; return res; }
     rec.count += 1;
     try{ localStorage.setItem("cc_scan_coins_day", JSON.stringify(rec)); }catch(e){}
-    if(typeof window.opAddCoins === "function") window.opAddCoins(10);
-    res.paid = 10; res.count = rec.count;
+    if(typeof window.opAddCoins === "function") window.opAddCoins(pay);
+    res.paid = pay; res.count = rec.count;
   }catch(e){}
   window.__ccLastAward = res;
   return res;
@@ -24534,6 +24384,7 @@ function ccChapterLine(scr, level, total){
 }
 function ccCoinLine276(award){
   if(!award) return "";
+  if(award.practice) return "Practice run — no coins, just the reps 🫧";
   if(award.paid > 0) return "Earned +" + award.paid + " coins 🪙";
   if(award.capped) return "Game coins maxed for today — the Cauldron refills tomorrow 🌙";
   return "";
@@ -25610,9 +25461,12 @@ ccApplySettings(false);
         setLs("cc_ref_by_" + name, code);
         delLs("cc_ref_pending");
         delLs("cc_ref_claim_tries");
-        if(typeof opAddCoins === "function") opAddCoins(100);
+        /* Item 63: the join bonus counts toward the joiner's global
+           200/day faucet cap, like every other faucet. */
+        var joinPay = (typeof window.ccFaucetPay === "function") ? window.ccFaucetPay(null, 100) : 100;
+        if(joinPay > 0 && typeof opAddCoins === "function") opAddCoins(joinPay);
         showRefPop("🎉 You're in, " + name + "!",
-          "You joined with " + (b.referrer || "a friend") + "'s invite link, so +100 coins just landed in your wallet — and " + (b.referrer || "they") + " got +100 too. When you grab your first coin pack, you will both get +10 free checks.");
+          "You joined with " + (b.referrer || "a friend") + "'s invite link, so +" + joinPay + " coins just landed in your wallet — and " + (b.referrer || "they") + " got +100 too. When you grab your first coin pack, you will both get +10 free checks.");
         renderInvite();
       } else if(res.status === 400 && /yourself/i.test(b.error || "")){
         delLs("cc_ref_pending"); /* his own link: nothing to claim, no nagging */
@@ -25666,9 +25520,22 @@ ccApplySettings(false);
     var pApplied = parseInt(ls("cc_ref_synced_pcoins_" + name) || "0", 10) || 0;
     if(pTotal > pApplied){
       var pDue = pTotal - pApplied;
-      if(typeof opAddCoins === "function") opAddCoins(pDue);
-      setLs("cc_ref_synced_pcoins_" + name, String(pTotal));
-      notes.push("+" + pDue + " coins from a friend's first coin pack just landed in your wallet.");
+      /* Item 63: referral coins are APPLIED at most 500/day on this
+         client (5 friends' worth) — the synced marker advances only
+         by what was actually applied, so the rest lands on later
+         days instead of all at once. The authoritative cap on the
+         join bonus itself (5 friends/day) is enforced server-side;
+         this client never credits referrer join coins on its own. */
+      var aDay = null; try{ aDay = JSON.parse(ls("cc_ref_apply_day_" + name) || "null"); }catch(e){}
+      var aToday = (typeof opLocalDateStr === "function") ? opLocalDateStr(new Date()) : new Date().toISOString().slice(0, 10);
+      if(!aDay || aDay.date !== aToday || typeof aDay.applied !== "number") aDay = { date: aToday, applied: 0 };
+      var pNow = Math.min(pDue, Math.max(0, 500 - aDay.applied));
+      if(pNow > 0){
+        if(typeof opAddCoins === "function") opAddCoins(pNow);
+        setLs("cc_ref_synced_pcoins_" + name, String(pApplied + pNow));
+        aDay.applied += pNow; setLs("cc_ref_apply_day_" + name, JSON.stringify(aDay));
+        notes.push("+" + pNow + " coins from a friend's first coin pack just landed in your wallet.");
+      }
     }
     if(notes.length) setLs("cc_ref_sync_note_" + name, notes.join(" "));
   }
@@ -27309,6 +27176,9 @@ var P2_SHELF = {
   gameMatch: { gid: "match", title: "Match Audit" },
   gameStack: { gid: "stack", title: "Cardboard Stack" }
 };
+/* Exposed for the §6 award gate (item 63): ccAwardGame lives in another
+   script and reads this map to zero out practice-run awards. */
+window.P2_SHELF = P2_SHELF;
 function runsState(){
   var st = lsGet("cc_p2_runs", null);
   if (!st || st.day !== todayKey()) st = { day: todayKey(), counts: {} };
@@ -27332,7 +27202,7 @@ function showPracticeBar(scr){
   var g = P2_SHELF[scr];
   bar.hidden = false;
   bar.innerHTML = '<h3 style="margin:0;">' + g.title + ' — free runs done for today</h3>'
-    + '<p class="small dim">You\'ve had today\'s ' + P2_FREE_RUNS + ' free runs of ' + g.title + '. A practice run costs 🪙 ' + P2_PRACTICE_COST + ' — and practice scores <b>never</b> post to any leaderboard.</p>'
+    + '<p class="small dim">You\'ve had today\'s ' + P2_FREE_RUNS + ' free runs of ' + g.title + '. A practice run costs 🪙 ' + P2_PRACTICE_COST + ' — practice scores <b>never</b> post to any leaderboard, and practice runs pay <b>no coins</b>.</p>'
     + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">'
     + '<button type="button" class="bubble-btn b-gold" onclick="p2StartPractice(\'' + scr + '\')"><span>Start practice run — 🪙 ' + P2_PRACTICE_COST + '</span></button>'
     + '<button type="button" class="bubble-btn b-white" onclick="p2HidePractice()"><span>Not now</span></button></div>';
@@ -27475,25 +27345,56 @@ window.p2BuyTrain = function(id){
 
 /* ================= 10. Sink C — the donation cauldron ==============
    Threshold math (earn rates from the app's own coin table): a keen
-   user earns roughly 60–120 coins/day (daily check-in 10, scans 10
-   each, game clears 20–50 first time, small repeats). Even if all
-   12 closed-test testers poured EVERY coin for the 21 days to
-   Dec 4 — 12 × ~100 × 21 ≈ 25,200 — the jar cannot fill before
-   Dec 4. First fill lands well after public launch, by design. */
+   user earns roughly 60–120 coins/day, and item 63 (Nov 16, 2026)
+   caps ALL faucets at 200 coins/day — filling the 250,000 jar is a
+   community-scale event. Conversion cap (item 63): at most ONE fill
+   converts per calendar month — the owner's $25/month donation
+   budget — and extra pours roll into the next jar, so the promise
+   can never outrun the budget no matter how many coins exist. */
 var P2_DONATE_TARGET = 250000;
-function donateState(){ return lsGet("cc_p2_donation", { poured: 0 }); }
+function donateState(){
+  var st = lsGet("cc_p2_donation", { poured: 0 });
+  if (!st || typeof st.poured !== "number") st = { poured: 0 };
+  if (typeof st.fillMonth !== "string") st.fillMonth = "";
+  if (typeof st.fills !== "number") st.fills = 0;
+  return st;
+}
+function p2MonthKey(){ var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); }
+/* Item 63 conversion cap: at most one fill converts per calendar
+   month. When the jar fills and this month has no conversion yet, one
+   target's worth converts and the rest rolls into the next jar; if
+   this month already converted, pours simply keep filling. */
+function p2CauldronSettle(st){
+  var converted = false;
+  while (st.poured >= P2_DONATE_TARGET && st.fillMonth !== p2MonthKey()){
+    st.poured -= P2_DONATE_TARGET;
+    st.fillMonth = p2MonthKey();
+    st.fills += 1;
+    converted = true;
+  }
+  return converted;
+}
 function renderDonation(){
   var st = donateState();
+  if (p2CauldronSettle(st)) lsSet("cc_p2_donation", st);
   var n = $("p2PourCount"); if (n) n.textContent = "🪙 " + st.poured;
   var pct = st.poured / P2_DONATE_TARGET * 100;
   var f = $("p2DonateFill"); if (f) f.style.width = Math.min(100, pct) + "%";
   var t = $("p2DonatePct");
-  if (t) t.textContent = "Your pours are " + (pct < 0.01 ? pct.toFixed(3) : pct.toFixed(2)) + "% of the 🪙 " + P2_DONATE_TARGET.toLocaleString("en-US") + " community target.";
+  if (t){
+    t.textContent = "Your pours are " + (pct < 0.01 ? pct.toFixed(3) : pct.toFixed(2)) + "% of the 🪙 " + P2_DONATE_TARGET.toLocaleString("en-US") + " community target."
+      + (st.fillMonth === p2MonthKey() ? " This month's $25 fill has converted — every pour now rolls toward next month's jar." : "");
+  }
 }
 window.p2Pour = function(n){
   if (!spend(n)){ notEnough(n); return; }
-  var st = donateState(); st.poured += n; lsSet("cc_p2_donation", st); renderDonation();
-  var s = $("p2PourStatus"); if (s) s.textContent = "You poured 🪙 " + n + " into the cauldron. Thank you — generosity is the house style.";
+  var st = donateState(); st.poured += n;
+  var converted = p2CauldronSettle(st);
+  lsSet("cc_p2_donation", st); renderDonation();
+  var s = $("p2PourStatus");
+  if (s) s.textContent = converted
+    ? "You poured 🪙 " + n + " — and that filled the jar! This month's $25 donation is on its way. One fill converts per month, so extra pours roll into next month's jar."
+    : "You poured 🪙 " + n + " into the cauldron. Thank you — generosity is the house style.";
   react(dock, "bounce");
 };
 
@@ -27511,8 +27412,10 @@ function renderGuessRound(){
     var awarded = "";
     if (lsGetRaw("cc_p2_guess_day") !== todayKey()){
       lsSetRaw("cc_p2_guess_day", todayKey());
-      if (typeof opAddCoins === "function") opAddCoins(10);
-      awarded = " Finishing a set pays 🪙 10, once a day.";
+      /* Item 63: the set bonus counts toward the global 200/day faucet cap. */
+      var gPay = (typeof window.ccFaucetPay === "function") ? window.ccFaucetPay(null, 10) : 10;
+      if (gPay > 0 && typeof opAddCoins === "function") opAddCoins(gPay);
+      awarded = gPay > 0 ? " Finishing a set pays 🪙 " + gPay + ", once a day." : " Today's 🪙 200 earning cap is already reached, so this set paid no coins — the eye training is still yours.";
     }
     body.innerHTML = '<div class="card mt center"><h3 style="margin:0;">You called ' + st.right + ' of ' + st.deck.length + '</h3>'
       + '<p class="small dim" style="margin-top:8px;">Every price was a real recorded eBay sold from the demo snapshot (Oct 25, 2026) — never a made-up number.' + awarded + '</p>'
@@ -30210,8 +30113,11 @@ show = function(name){ _fp2LaneShow(name); if (name === "entry") ccxConsentRider
   });
 
   /* ===== Donation Cauldron pot — one data value renders count + bar.
-         Staging state is the honest launch state: 0 coins. At merge this reads the real pot total. ===== */
+         Item 63: reads this device's real pour jar (cc_p2_donation — the
+         same counter the Rewards pour fills), so both Cauldron surfaces
+         tell one story. In the full app the jar is the shared total. ===== */
   var POT = { coins: 0, goal: 250000 };
+  try{ var _dj = JSON.parse(localStorage.getItem('cc_p2_donation') || 'null'); if(_dj && typeof _dj.poured === 'number') POT.coins = Math.min(_dj.poured, POT.goal); }catch(e){}
   document.getElementById('potCoins').textContent = '🪙 ' + POT.coins.toLocaleString('en-US');
   document.getElementById('potFill').style.width = Math.min(100, POT.coins / POT.goal * 100) + '%';
 
