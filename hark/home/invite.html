@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#271133" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:," />
+<title>Invite friends — Real or Replica (preview)</title>
+<!-- Hark build, branch hark/home-screen. Referral page preview. Sample numbers.
+     Reward amounts are a DRAFT pending Sabastian + Potion sign-off. -->
+<style>
+  @font-face{font-family:"Nunito";src:url("Nunito.ttf") format("truetype");font-weight:200 1000;font-display:swap}
+  :root{--plum-950:#1c0b24;--plum-900:#271133;--plum-800:#351747;--plum-card:#2e143f;--ink:#f7f0fb;--ink-soft:#d9c8e8;--ink-mute:#b39ec9;
+    --gold-deep:#d99e22;--gold-ink:#2a1a05;--red:#E8424A;--sun:#FFD84D;--line-soft:rgba(255,255,255,.10)}
+  *{box-sizing:border-box} html,body{margin:0}
+  body{font-family:"Nunito",system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--plum-800),var(--plum-900) 50%,var(--plum-950));min-height:100vh;-webkit-font-smoothing:antialiased}
+  .app{max-width:480px;margin:0 auto;padding:16px 18px 40px}
+  .top{display:flex;align-items:center;gap:12px}
+  .back{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.08);color:var(--ink);font-size:22px;font-weight:900;cursor:pointer}
+  .top b{font-size:18px;font-weight:900}
+  .hero{text-align:center;margin:14px 0 6px;position:relative}
+  .hero .crew{display:flex;justify-content:center;align-items:flex-end;gap:0;height:120px}
+  .hero .crew img{width:92px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));animation:bob 3s ease-in-out infinite}
+  .hero .crew img:nth-child(2){width:116px;animation-delay:.3s;margin:0 -10px}
+  .hero .crew img:nth-child(3){animation-delay:.6s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @media (prefers-reduced-motion:reduce){.hero .crew img{animation:none}}
+  h1{font-size:26px;font-weight:900;line-height:1.15;margin:10px 0 6px}
+  .lead{font-size:14.5px;color:var(--ink-soft);font-weight:700;margin:0 auto 18px;max-width:340px;line-height:1.45}
+  .card{background:var(--plum-card);border:1px solid var(--line-soft);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+  .gets{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .get{border-radius:16px;padding:12px;text-align:center}
+  .get.you{background:rgba(232,66,74,.14);border:1px solid rgba(232,66,74,.45)}
+  .get.them{background:rgba(255,216,77,.12);border:1px solid rgba(255,216,77,.42)}
+  .get small{display:block;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute)}
+  .get b{display:block;font-size:24px;font-weight:900;margin:2px 0}
+  .get span{font-size:12px;font-weight:700;color:var(--ink-soft);line-height:1.35;display:block}
+  .code{display:flex;gap:8px;align-items:center;margin-top:14px}
+  .code input{flex:1;min-width:0;min-height:50px;border-radius:14px;border:1px dashed rgba(255,255,255,.35);background:rgba(255,255,255,.05);color:#fff;font:inherit;font-weight:900;font-size:15px;padding:0 14px}
+  .code button{min-height:50px;padding:0 18px;border:none;border-radius:14px;background:linear-gradient(180deg,#ffd873,var(--gold-deep));color:var(--gold-ink);font:inherit;font-weight:900;cursor:pointer}
+  .label{font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+  .label::before{content:"";width:4px;height:14px;border-radius:2px;background:var(--red)}
+  .bubbles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 8px}
+  .bub{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:none;color:var(--ink-soft);font:inherit;font-size:11.5px;font-weight:800;cursor:pointer;text-decoration:none}
+  .bub i{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;position:relative;
+    box-shadow:inset 0 -6px 12px rgba(0,0,0,.18),inset 0 6px 10px rgba(255,255,255,.35),0 8px 16px rgba(0,0,0,.3);transition:transform .15s}
+  .bub i::after{content:"";position:absolute;top:8px;left:13px;width:16px;height:9px;border-radius:50%;background:rgba(255,255,255,.55);transform:rotate(-25deg)}
+  .bub:active i{transform:scale(.9)}
+  .bub svg{width:26px;height:26px;fill:#fff}
+  .steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .steps li{display:flex;gap:12px;align-items:center;font-size:14px;font-weight:700;color:var(--ink-soft)}
+  .steps li b{flex:none;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;color:#fff;font-weight:900}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+  .stats b{display:block;font-size:22px;font-weight:900}
+  .stats span{font-size:11.5px;color:var(--ink-mute);font-weight:800}
+  .unlock{display:flex;align-items:center;gap:12px}
+  .unlock img{width:64px;flex:none;filter:grayscale(.2) drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+  .unlock b{display:block;font-size:15px;font-weight:900}
+  .unlock span{font-size:12.5px;color:var(--ink-soft);font-weight:700}
+  .bar{height:10px;border-radius:6px;background:rgba(255,255,255,.1);margin-top:8px;overflow:hidden}
+  .bar i{display:block;height:100%;width:33%;border-radius:6px;background:linear-gradient(90deg,var(--red),var(--sun))}
+  .fine{font-size:11.5px;color:var(--ink-mute);font-weight:700;text-align:center;line-height:1.45;margin:16px 6px 0}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);background:#fff;color:#271133;font-weight:900;padding:10px 16px;border-radius:999px;opacity:0;transition:.2s;pointer-events:none}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><button class="back" type="button" onclick="history.length>1?history.back():location.href='index.html'" aria-label="Back">‹</button><b>Invite friends</b></div>
+
+  <div class="hero">
+    <div class="crew"><img src="pets/zapkit.webp" alt=""><img src="pets/emberwyrm.webp" alt=""><img src="pets/bubblet.webp" alt=""></div>
+    <h1>Bring a friend,<br>both of you win</h1>
+    <p class="lead">Every friend who joins and plays helps fill the Donation Cauldron for kids in the hospital.</p>
+  </div>
+
+  <div class="card">
+    <div class="gets">
+      <div class="get you"><small>You get</small><b>100 coins</b><span>after your friend plays 3 games</span></div>
+      <div class="get them"><small>They get</small><b>50 coins</b><span>the moment they join</span></div>
+    </div>
+    <div class="code"><input id="link" value="realorreplica.app/i/BASH-7Q4" readonly aria-label="Your invite link"><button type="button" id="copy">Copy</button></div>
+  </div>
+
+  <p class="label">Share it your way</p>
+  <div class="bubbles" id="share">
+    <a class="bub" data-app="sms"><i style="background:#34C759"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.4 1.3 4.6 3.4 6.1L4.5 21l4.2-2.2c1 .3 2.1.4 3.3.4 5.5 0 10-3.6 10-8.1S17.5 3 12 3z"/></svg></i>Text</a>
+    <a class="bub" data-app="whatsapp"><i style="background:#25D366"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2zm5 13.6c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1-3-1-5-4-5.1-4.2-.2-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg></i>WhatsApp</a>
+    <a class="bub" data-app="messenger"><i style="background:linear-gradient(160deg,#00B2FF,#A033FF)"><svg viewBox="0 0 24 24"><path d="M12 2C6.4 2 2 6.1 2 11.7c0 2.9 1.2 5.5 3.2 7.3V22l3-1.6c1.2.3 2.4.5 3.8.5 5.6 0 10-4.1 10-9.7S17.6 2 12 2zm1 13l-2.6-2.7-5 2.8 5.5-5.8 2.6 2.7 5-2.8L13 15z"/></svg></i>Messenger</a>
+    <a class="bub" data-app="facebook"><i style="background:#1877F2"><svg viewBox="0 0 24 24"><path d="M14 8h3V4h-3c-2.8 0-4 1.7-4 4.3V10H7v4h3v8h4v-8h3l1-4h-4V8.6c0-.4.3-.6.6-.6z"/></svg></i>Facebook</a>
+    <a class="bub" data-app="x"><i style="background:#111"><svg viewBox="0 0 24 24"><path d="M17.8 3h3.1l-6.8 7.8 8 10.2h-6.3l-4.9-6.4L5.3 21H2.2l7.3-8.3L1.8 3h6.4l4.4 5.9L17.8 3zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5z"/></svg></i>X</a>
+    <a class="bub" data-app="snap"><i style="background:#FFFC00"><svg viewBox="0 0 24 24" style="fill:#111"><path d="M12 2.5c2.9 0 5 2.2 5 5.2v2.1l1.4-.5c.6 0 1 .4.9.9-.1.6-1.8 1.1-2.2 1.4.3 1.3 1.9 3.3 3.6 3.7.4.1.4.6 0 .8-.9.4-2 .5-2.3.8-.2.3 0 1.1-.5 1.2-.6.1-1.5-.3-2.6.1-1.2.4-1.8 1.8-3.3 1.8s-2.1-1.4-3.3-1.8c-1.1-.4-2-.1-2.6-.1-.5-.1-.3-.9-.5-1.2-.3-.3-1.4-.4-2.3-.8-.4-.2-.4-.7 0-.8 1.7-.4 3.3-2.4 3.6-3.7-.4-.3-2.1-.8-2.2-1.4 0-.5.3-.9.9-.9l1.4.5V7.7c0-3 2.1-5.2 5-5.2z"/></svg></i>Snapchat</a>
+    <a class="bub" data-app="email"><i style="background:var(--red)"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.2L4 7.3V8l8 5 8-5v-.7l-8 4.9z"/></svg></i>Email</a>
+    <a class="bub" data-app="more"><i style="background:linear-gradient(160deg,#a678e8,#5a2a86)"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/></svg></i>More</a>
+  </div>
+
+  <p class="label">How it works</p>
+  <div class="card"><ol class="steps">
+    <li><b>1</b>Share your link with a tap</li>
+    <li><b>2</b>Your friend joins and gets 50 coins</li>
+    <li><b>3</b>They play 3 games, you get 100 coins</li>
+  </ol></div>
+
+  <p class="label">Your invites</p>
+  <div class="card">
+    <div class="stats"><div><b>2</b><span>Joined</span></div><div><b>1</b><span>Played 3 games</span></div><div><b>100</b><span>Coins earned</span></div></div>
+  </div>
+  <div class="card unlock">
+    <img src="pets/frostfin.webp" alt="">
+    <div style="flex:1"><b>Unlock Frostfin</b><span>Invite 3 friends who play to unlock this pet</span><div class="bar"><i></i></div></div>
+  </div>
+
+  <p class="fine">Draft rewards for preview. Coins have no cash value. Friends must be new players. Up to 10 rewarded invites a month.</p>
+</div>
+<p class="toast" id="toast"></p>
+<script>
+(function(){
+  var link="https://"+document.getElementById("link").value, msg="Come play Real or Replica with me! We both get coins and help send packs to kids in the hospital: "+link,
+      e=encodeURIComponent, t=document.getElementById("toast"), tm;
+  function say(s){t.textContent=s;t.classList.add("show");clearTimeout(tm);tm=setTimeout(function(){t.classList.remove("show")},1600);}
+  var U={sms:"sms:?&body="+e(msg),whatsapp:"https://wa.me/?text="+e(msg),messenger:"fb-messenger://share?link="+e(link),
+    facebook:"https://www.facebook.com/sharer/sharer.php?u="+e(link),x:"https://twitter.com/intent/tweet?text="+e(msg),
+    snap:"https://www.snapchat.com/scan?attachmentUrl="+e(link),email:"mailto:?subject="+e("Play Real or Replica with me")+"&body="+e(msg)};
+  document.querySelectorAll(".bub").forEach(function(b){var a=b.dataset.app;
+    if(a==="more"){b.onclick=function(){if(navigator.share)navigator.share({title:"Real or Replica",text:msg,url:link}).catch(function(){});else copy();};}
+    else{b.href=U[a];b.target="_blank";b.rel="noopener";}});
+  function copy(){(navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject()).then(function(){say("Link copied")},function(){say("Long-press the link to copy")});}
+  document.getElementById("copy").onclick=copy;
+})();
+</script>
+</body>
+</html>
