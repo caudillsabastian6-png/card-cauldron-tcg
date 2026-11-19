@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1c0b24" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:," />
+<title>Check a card — camera (preview)</title>
+<!-- Hark build, branch hark/home-screen. Live camera behind a card-shaped window,
+     regular Arcane Lab theme around it, shutter button under the card. Front photo only.
+     No verdict is shown: the photo goes on to the normal check flow. -->
+<style>
+  @font-face{font-family:"Nunito";src:url("Nunito.ttf") format("truetype");font-weight:200 1000;font-display:swap}
+  :root{--plum-950:#1c0b24;--plum-900:#271133;--plum-800:#351747;--ink:#f7f0fb;--ink-soft:#d9c8e8;--ink-mute:#b39ec9;
+    --gold:#f2c14e;--gold-deep:#d99e22;--gold-ink:#2a1a05;--red:#E8424A;--sun:#FFD84D;--line-soft:rgba(255,255,255,.10)}
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{font-family:"Nunito",system-ui,sans-serif;color:var(--ink);background:var(--plum-950);overflow:hidden;-webkit-font-smoothing:antialiased}
+  .app{position:relative;max-width:480px;height:100vh;height:100dvh;margin:0 auto;overflow:hidden}
+  /* live feed fills the screen; the themed shade sits on top with a card-shaped hole */
+  video,#still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+  #still{display:none}
+  .shade{position:absolute;left:50%;top:var(--top);transform:translateX(-50%);width:var(--w);aspect-ratio:63/88;border-radius:18px;
+    box-shadow:0 0 0 200vmax rgba(39,17,51,.96);pointer-events:none}
+  .frame{position:absolute;left:50%;top:var(--top);transform:translateX(-50%);width:var(--w);aspect-ratio:63/88;border-radius:18px;
+    border:3px solid rgba(255,255,255,.92);box-shadow:0 0 24px rgba(242,193,78,.35),inset 0 0 18px rgba(242,193,78,.18);pointer-events:none}
+  .frame i{position:absolute;width:30px;height:30px;border:5px solid var(--sun)}
+  .frame i:nth-child(1){left:-6px;top:-6px;border-right:0;border-bottom:0;border-top-left-radius:20px}
+  .frame i:nth-child(2){right:-6px;top:-6px;border-left:0;border-bottom:0;border-top-right-radius:20px}
+  .frame i:nth-child(3){left:-6px;bottom:-6px;border-right:0;border-top:0;border-bottom-left-radius:20px}
+  .frame i:nth-child(4){right:-6px;bottom:-6px;border-left:0;border-top:0;border-bottom-right-radius:20px}
+  .app{--w:min(72vw,330px);--top:calc(env(safe-area-inset-top) + 92px)}
+  @media (max-height:700px){.app{--w:min(60vw,280px);--top:76px}}
+  .top{position:absolute;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top) + 16px) 16px 0;display:flex;align-items:center;gap:12px;z-index:3}
+  .back{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.08);color:var(--ink);font-size:22px;font-weight:900;display:grid;place-items:center;cursor:pointer}
+  .top b{font-size:18px;font-weight:900;display:block;line-height:1.15}
+  .top span{font-size:12.5px;color:var(--ink-mute);font-weight:700}
+  .hint{position:absolute;left:0;right:0;top:calc(var(--top) + var(--w) * 88 / 63 + 14px);text-align:center;font-size:14px;font-weight:800;color:var(--ink-soft);z-index:3;padding:0 20px}
+  .bar{position:absolute;left:0;right:0;bottom:0;padding:0 24px calc(env(safe-area-inset-bottom) + 26px);display:flex;align-items:center;justify-content:space-between;z-index:3}
+  .side{width:52px;height:52px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.08);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+  .side svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2}
+  .shutter{width:82px;height:82px;border-radius:50%;border:5px solid #fff;padding:5px;background:transparent;cursor:pointer;box-shadow:0 10px 26px rgba(242,193,78,.4)}
+  .shutter span{display:block;width:100%;height:100%;border-radius:50%;background:linear-gradient(180deg,#ffd873,var(--gold-deep))}
+  .shutter:active span{transform:scale(.92)}
+  .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:4;transition:opacity .25s}
+  .flash.on{opacity:.85;transition:none}
+  .review{position:absolute;left:0;right:0;bottom:0;padding:0 18px calc(env(safe-area-inset-bottom) + 22px);display:none;gap:10px;z-index:3}
+  .review button{flex:1;min-height:54px;border-radius:16px;font:inherit;font-size:16px;font-weight:900;cursor:pointer;border:1px solid var(--line-soft)}
+  .retake{background:rgba(255,255,255,.08);color:var(--ink)}
+  .use{background:linear-gradient(180deg,#ffd873,var(--gold-deep));color:var(--gold-ink);border:none}
+  .app.taken .bar{display:none}.app.taken .review{display:flex}.app.taken #still{display:block}
+  .nocam{position:absolute;left:50%;top:var(--top);transform:translateX(-50%);width:var(--w);aspect-ratio:63/88;display:none;place-items:center;text-align:center;padding:20px;font-size:14px;font-weight:800;color:var(--ink-soft);z-index:2;
+    background:linear-gradient(160deg,var(--plum-800),var(--plum-900));border-radius:18px}
+  .app.off .nocam{display:grid}
+  input[type=file]{display:none}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <video id="cam" autoplay playsinline muted></video>
+  <canvas id="still"></canvas>
+  <div class="nocam" id="nocam">Allow the camera to see your card live here.<br><br>Or tap the photo button to pick one.</div>
+  <div class="shade"></div>
+  <div class="frame"><i></i><i></i><i></i><i></i></div>
+
+  <div class="top">
+    <button class="back" type="button" onclick="history.length>1?history.back():location.href='index.html'" aria-label="Back">‹</button>
+    <div><b>Check a card</b><span>Front of the card only</span></div>
+  </div>
+  <p class="hint" id="hint">Line the card up inside the outline</p>
+
+  <div class="bar">
+    <label class="side" aria-label="Pick a photo"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 8"/></svg><input type="file" accept="image/*" id="pick"></label>
+    <button class="shutter" id="shoot" type="button" aria-label="Take picture"><span></span></button>
+    <button class="side" id="torch" type="button" aria-label="Flash"><svg viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg></button>
+  </div>
+  <div class="review"><button class="retake" id="retake" type="button">Retake</button><button class="use" id="use" type="button">Use photo</button></div>
+  <div class="flash" id="flash"></div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var app=document.getElementById("app"),v=document.getElementById("cam"),c=document.getElementById("still"),
+      hint=document.getElementById("hint"),track=null,torchOn=false;
+  function start(){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){app.classList.add("off");return;}
+    navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false})
+      .then(function(s){v.srcObject=s;track=s.getVideoTracks()[0];app.classList.remove("off");})
+      .catch(function(){app.classList.add("off");});
+  }
+  /* crop exactly what is inside the card outline */
+  function cropFrom(src,sw,sh){
+    var f=document.querySelector(".frame").getBoundingClientRect(),a=app.getBoundingClientRect();
+    var scale=Math.max(a.width/sw,a.height/sh),ox=(a.width-sw*scale)/2,oy=(a.height-sh*scale)/2;
+    var x=(f.left-a.left-ox)/scale,y=(f.top-a.top-oy)/scale,w=f.width/scale,h=f.height/scale;
+    var out=document.createElement("canvas");out.width=Math.round(w);out.height=Math.round(h);
+    out.getContext("2d").drawImage(src,x,y,w,h,0,0,out.width,out.height);
+    c.width=a.width;c.height=a.height;var g=c.getContext("2d");g.drawImage(src,ox,oy,sw*scale,sh*scale);
+    return out;
+  }
+  document.getElementById("shoot").onclick=function(){
+    if(!v.videoWidth){document.getElementById("pick").click();return;}
+    var fl=document.getElementById("flash");fl.classList.add("on");setTimeout(function(){fl.classList.remove("on");},60);
+    window.cardPhoto=cropFrom(v,v.videoWidth,v.videoHeight);
+    app.classList.add("taken");hint.textContent="Is the whole card sharp and inside the outline?";
+  };
+  document.getElementById("pick").onchange=function(e){
+    var f=e.target.files[0];if(!f)return;var img=new Image();
+    img.onload=function(){window.cardPhoto=cropFrom(img,img.naturalWidth,img.naturalHeight);app.classList.add("taken");hint.textContent="Is the whole card sharp and inside the outline?";};
+    img.src=URL.createObjectURL(f);
+  };
+  document.getElementById("retake").onclick=function(){app.classList.remove("taken");hint.textContent="Line the card up inside the outline";};
+  document.getElementById("use").onclick=function(){hint.textContent="Photo ready. In the app this goes on to the check.";};
+  document.getElementById("torch").onclick=function(){
+    if(!track||!track.getCapabilities||!track.getCapabilities().torch){hint.textContent="This phone's browser doesn't allow the flash";return;}
+    torchOn=!torchOn;track.applyConstraints({advanced:[{torch:torchOn}]});
+  };
+  start();
+})();
+</script>
+</body>
+</html>

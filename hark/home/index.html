@@ -376,6 +376,7 @@
   document.querySelectorAll("[data-go]").forEach(function(b){
     b.addEventListener("click",function(){
       if(drawer.classList.contains("open")) setDrawer(false);
+      if(/^Check/.test(b.getAttribute("data-go"))){ location.href="camera.html"; return; }
       say("Opens " + b.getAttribute("data-go") + " in the app");
     });
   });
