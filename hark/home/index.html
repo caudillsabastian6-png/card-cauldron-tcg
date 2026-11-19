@@ -220,6 +220,7 @@
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 <link rel="stylesheet" href="colorpop.css" />
+<link rel="stylesheet" href="creatures.css" />
 </head>
 <body>
 <div class="app">
@@ -233,7 +234,7 @@
     <header class="appbar">
       <span class="atitle"><b>Real or Replica</b><span>Home</span></span>
       <span class="chip"><b>240</b> coins</span>
-      <span class="avatar" aria-hidden="true">S</span>
+      <button class="avatar pet" type="button" data-pet-picker aria-label="Change your pet icon"><img src="pets/emberwyrm.webp" alt=""></button>
     </header>
     <p class="tagline">Fighting fakes, backing collectors, giving back to kids.</p>
 
@@ -267,7 +268,7 @@
     <!-- 3. games on Home: Bubble Beat featured, nine total -->
     <p class="hsec"><span>Games</span><button type="button" data-go="Games — all nine">All 9</button></p>
     <button class="feat" type="button" data-go="Bubble Beat">
-      <span class="fic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><circle cx="11" cy="11" r="2.5"/></svg></span>
+      <span class="fic"><img src="pets/zapkit.webp" alt=""></span>
       <span class="ftxt"><span class="fkick">Featured</span><b>Bubble Beat</b><span class="fdesc">Tap each bubble as it crosses the ring</span></span>
       <span class="play">Play</span>
     </button>
@@ -284,13 +285,13 @@
 
     <!-- 4. Donation Cauldron door — middle of Home, directly ABOVE Pull of the Day -->
     <button class="cauldron" type="button" data-go="The Donation Cauldron">
-      <span class="cmark" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M5 10h14l-1.6 6.2a5 5 0 0 1-4.8 3.8h-1.2a5 5 0 0 1-4.8-3.8L5 10z"/><path d="M3.5 10h17"/><path d="M8.5 6.5c0-1.5 1.5-1.5 1.5-3M13.5 6.5c0-1.5 1.5-1.5 1.5-3"/></svg></span>
+      <span class="cmark" aria-hidden="true"><img src="pets/bubblet.webp" alt=""></span>
       <span class="ctxt"><b>The Donation Cauldron</b><span class="csub">Pour your coins in. Every full pot sends sealed Pokémon packs to kids through Child's Play.</span></span>
       <span class="chev" aria-hidden="true">›</span>
     </button>
 
     <!-- 5. Pull of the Day -->
-    <section class="potd" aria-labelledby="potdTitle">
+    <section class="potd" aria-labelledby="potdTitle"><img class="peek" src="pets/cinderclaw.webp" alt="">
       <h2 id="potdTitle">Pull of the Day</h2>
       <p class="pdate" id="potdDate">Everyone sees this same card today.</p>
       <div class="prow">
@@ -305,7 +306,7 @@
 
     <!-- 6. binders entry -->
     <p class="hsec"><span>Binders</span></p>
-    <button class="binders" type="button" data-go="My binders">
+    <button class="binders" type="button" data-go="My binders"><img class="peek" src="pets/mosspup.webp" alt="">
       <span class="bhead"><b>My binders</b><span>Open →</span></span>
       <span class="covers">
         <span class="cover"><span class="art"></span><b>Main binder</b><small>86 cards</small></span>
@@ -330,7 +331,7 @@
   <aside class="drawer" id="drawer" aria-label="Side menu" aria-hidden="true">
     <div class="drawer-head">
       <button class="drawer-close" type="button" id="drawerClose" aria-label="Close menu">✕</button>
-      <span class="avatar" aria-hidden="true">S</span>
+      <button class="avatar pet" type="button" data-pet-picker aria-label="Change your pet icon"><img src="pets/emberwyrm.webp" alt=""></button>
       <b>Your account ›</b>
       <span class="sub">Tap for Profile &amp; Settings</span>
       <span class="dbal"><span><b>240</b> coins</span><span><b>7</b> free checks left</span></span>
@@ -387,5 +388,6 @@
   }catch(e){}
 })();
 </script>
+<script src="creatures.js"></script>
 </body>
 </html>

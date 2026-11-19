@@ -1,0 +1,47 @@
+/* Creatures v1 (Hark, Nov 19 2026): original mascots only, no Pokémon. */
+.pet{padding:0;overflow:hidden;cursor:pointer;background:radial-gradient(circle at 50% 38%,#4a2466,#271133)!important;border:2px solid #fff!important}
+.pet img{width:118%;height:118%;object-fit:contain;margin:6% 0 0 -9%}
+.fic img,.cmark img{width:118%;height:118%;object-fit:contain}
+.peek{position:absolute;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.potd,.binders,.collband{position:relative;overflow:visible}
+.potd .peek{right:10px;top:-34px;width:78px;animation:bob 3.2s ease-in-out infinite}
+.binders .peek{right:12px;top:-30px;width:62px;animation:bob 3.6s ease-in-out infinite .4s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+.feat .fic{animation:bob 3s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.peek,.feat .fic,.helper img{animation:none}}
+/* pet picker sheet */
+.sheet-scrim{position:fixed;inset:0;background:rgba(8,2,14,.55);z-index:20;opacity:0;pointer-events:none;transition:opacity .2s}
+.sheet-scrim.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:100%;max-width:480px;z-index:21;
+  background:linear-gradient(180deg,#3a1a4f,#271133);border-radius:24px 24px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom));
+  box-shadow:0 -20px 40px rgba(0,0,0,.45);transition:transform .28s cubic-bezier(.2,.9,.3,1.2);max-height:82vh;display:flex;flex-direction:column}
+.sheet.open{transform:translate(-50%,0)}
+.sheet h3{margin:0 0 2px;font-size:19px;font-weight:900}
+.sheet .sub{margin:0 0 14px;font-size:13px;color:#d9c8e8;font-weight:700}
+.sheet .grab{width:44px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:0 auto 12px}
+.petgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.petopt{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.10);border-radius:18px;padding:8px 6px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:#f7f0fb}
+.petopt img{width:76px;height:76px;object-fit:contain;transition:transform .2s}
+.petopt b{font-size:12.5px;font-weight:900}
+.petopt[aria-pressed="true"]{border-color:#FFD84D;background:rgba(255,216,77,.12)}
+.petopt[aria-pressed="true"] img{transform:scale(1.12) translateY(-3px)}
+.petopt small{font-size:10.5px;color:#b39ec9;font-weight:800}
+/* helper bubble */
+.helper{position:fixed;right:max(14px,calc(50% - 226px));bottom:calc(var(--bar-h,76px) + 18px + env(safe-area-inset-bottom));z-index:6;
+  width:62px;height:62px;border-radius:50%;border:2px solid #fff;padding:0;cursor:pointer;
+  background:radial-gradient(circle at 35% 30%,#a678e8,#5a2a86);box-shadow:0 10px 24px rgba(0,0,0,.4),0 0 0 6px rgba(166,120,232,.18)}
+.helper img{width:112%;height:112%;object-fit:contain;margin:-8% 0 0 -6%;animation:bob 2.8s ease-in-out infinite}
+.helper .dot{position:absolute;top:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:#E8424A;border:2px solid #271133}
+.chat{flex:1;min-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px 10px}
+.msg{max-width:84%;padding:10px 13px;border-radius:16px;font-size:14px;font-weight:700;line-height:1.4}
+.msg.bot{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);align-self:flex-start;border-bottom-left-radius:6px}
+.msg.me{background:linear-gradient(180deg,#ffd873,#d99e22);color:#2a1a05;align-self:flex-end;border-bottom-right-radius:6px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin:4px 0 10px}
+.chips button{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#f7f0fb;border-radius:999px;padding:8px 12px;font-size:12.5px;font-weight:800;cursor:pointer;min-height:36px}
+.ask{display:flex;gap:8px}
+.ask input{flex:1;min-height:46px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#f7f0fb;font:inherit;font-weight:700;padding:0 14px}
+.ask button{min-width:64px;border:none;border-radius:14px;background:#E8424A;color:#fff;font-weight:900;cursor:pointer}
+.bothead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.bothead img{width:52px;height:52px;object-fit:contain}
+.potd h2,.potd .pdate{padding-right:84px}
+.binders .bhead{padding-right:64px}
