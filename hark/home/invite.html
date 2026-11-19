@@ -63,6 +63,24 @@
   .fine{font-size:11.5px;color:var(--ink-mute);font-weight:700;text-align:center;line-height:1.45;margin:16px 6px 0}
   .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);background:#fff;color:#271133;font-weight:900;padding:10px 16px;border-radius:999px;opacity:0;transition:.2s;pointer-events:none}
   .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* compact: fit one phone screen */
+  .app{padding:10px 16px 16px}
+  .back{width:38px;height:38px;font-size:20px}
+  .hero{margin:2px 0 4px}
+  .hero .crew{height:74px}
+  .hero .crew img{width:58px}.hero .crew img:nth-child(2){width:76px}
+  h1{font-size:21px;margin:4px 0 2px}
+  .lead{font-size:13px;margin:0 auto 10px;line-height:1.35}
+  .card{padding:12px;margin-bottom:8px;border-radius:18px}
+  .get{padding:8px}.get b{font-size:20px}.get span{font-size:11.5px}
+  .code{margin-top:10px}.code input,.code button{min-height:44px}
+  .label{margin:12px 0 8px}
+  .bubbles{gap:10px 6px}.bub i{width:50px;height:50px}.bub svg{width:22px;height:22px}.bub i::after{top:7px;left:11px;width:13px;height:7px}
+  .stats b{font-size:19px}
+  .unlock{margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft)}
+  .unlock img{width:48px}
+  .fine{margin:8px 4px 0;font-size:10.5px}
 </style>
 </head>
 <body>
@@ -71,8 +89,8 @@
 
   <div class="hero">
     <div class="crew"><img src="pets/zapkit.webp" alt=""><img src="pets/emberwyrm.webp" alt=""><img src="pets/bubblet.webp" alt=""></div>
-    <h1>Bring a friend,<br>both of you win</h1>
-    <p class="lead">Every friend who joins and plays helps fill the Donation Cauldron for kids in the hospital.</p>
+    <h1>Bring a friend, both of you win</h1>
+    <p class="lead">Every friend who plays helps fill the Donation Cauldron for kids in the hospital.</p>
   </div>
 
   <div class="card">
@@ -95,20 +113,13 @@
     <a class="bub" data-app="more"><i style="background:linear-gradient(160deg,#a678e8,#5a2a86)"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/></svg></i>More</a>
   </div>
 
-  <p class="label">How it works</p>
-  <div class="card"><ol class="steps">
-    <li><b>1</b>Share your link with a tap</li>
-    <li><b>2</b>Your friend joins and gets 50 coins</li>
-    <li><b>3</b>They play 3 games, you get 100 coins</li>
-  </ol></div>
-
   <p class="label">Your invites</p>
   <div class="card">
     <div class="stats"><div><b>2</b><span>Joined</span></div><div><b>1</b><span>Played 3 games</span></div><div><b>100</b><span>Coins earned</span></div></div>
-  </div>
-  <div class="card unlock">
+    <div class="unlock">
     <img src="pets/frostfin.webp" alt="">
     <div style="flex:1"><b>Unlock Frostfin</b><span>Invite 3 friends who play to unlock this pet</span><div class="bar"><i></i></div></div>
+    </div>
   </div>
 
   <p class="fine">Draft rewards for preview. Coins have no cash value. Friends must be new players. Up to 10 rewarded invites a month.</p>
