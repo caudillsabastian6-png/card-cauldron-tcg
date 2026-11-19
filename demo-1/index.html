@@ -29929,6 +29929,12 @@ function ccxThumb180(dataUrl, cb){
   im.onerror = function(){ cb(null); };
   im.src = dataUrl;
 }
+window.ccOpenGraderFresh = function(){ /* Hark: used by the Grade app-icon shortcut */
+  GR.cardName = "Your card"; GR.cardFront = null; GR.cardBack = null;
+  GR.answers = { photos:"check", corners:null, edges:null, surface:null, centering:null, extra:[] }; GR.step = 1; GR.done = false;
+  if (window.show) window.show("condition");
+  renderGrader();
+};
 function ccxGradeFromResult(){
   GR.cardName = (S.read && S.read.name) || "Your card";
   GR.cardFront = S.front || null; GR.cardBack = S.back || null;
@@ -30638,6 +30644,23 @@ if (_ln && _dnm) {
     lnCard.style.display = "none";
   }
 }
+})();
+</script>
+<script>
+/* Hark: app-icon shortcuts (?go=check / ?go=grade). Waits until the app first reaches Home,
+   so the sign-in gate is never skipped, then opens the checker or the grader once. */
+(function(){
+  var m=/[?&]go=(check|grade)\b/.exec(location.search||"");if(!m)return;var want=m[1],done=false,orig=window.show;
+  if(typeof orig!=="function")return;
+  window.show=function(id){
+    var r=orig.apply(this,arguments);
+    if(!done&&id==="home"){done=true;window.show=orig;setTimeout(function(){try{
+      if(want==="check"&&window.startCapture){window.startCapture();}
+      else if(want==="grade"&&window.ccOpenGraderFresh){window.ccOpenGraderFresh();}
+    }catch(e){}},60);}
+    return r;
+  };
+  window.addEventListener("load",function(){setTimeout(function(){var h=document.getElementById("scr-home");if(!done&&h&&h.classList.contains("active"))window.show("home");},400);});
 })();
 </script>
 </body>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#271133" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:," />
+<title>Main binder — Real or Replica (preview)</title>
+<!-- Hark build, branch hark/home-screen. Binder page view: 3x3 pockets, Next page flip, totals.
+     Sample cards (Scarlet & Violet 151, official images from images.pokemontcg.io). Sample prices. -->
+<style>
+  @font-face{font-family:"Nunito";src:url("Nunito.ttf") format("truetype");font-weight:200 1000;font-display:swap}
+  :root{--plum-950:#1c0b24;--plum-900:#271133;--plum-800:#351747;--plum-card:#2e143f;--ink:#f7f0fb;--ink-soft:#d9c8e8;--ink-mute:#b39ec9;
+    --gold-deep:#d99e22;--gold-ink:#2a1a05;--red:#E8424A;--sun:#FFD84D;--line-soft:rgba(255,255,255,.10)}
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{font-family:"Nunito",system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--plum-800),var(--plum-950));-webkit-font-smoothing:antialiased;overflow:hidden}
+  .app{max-width:480px;height:100vh;height:100dvh;margin:0 auto;padding:10px 14px calc(env(safe-area-inset-bottom) + 12px);display:flex;flex-direction:column}
+  .top{display:flex;align-items:center;gap:10px}
+  .back{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.08);color:var(--ink);font-size:20px;font-weight:900;cursor:pointer;flex:none}
+  .top b{font-size:18px;font-weight:900;display:block;line-height:1.1}
+  .top small{font-size:12px;color:var(--ink-mute);font-weight:800}
+  .tot{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0 8px;background:var(--plum-card);border:1px solid var(--line-soft);border-radius:16px;padding:8px;text-align:center;position:relative}
+  .tot b{display:block;font-size:19px;font-weight:900;line-height:1.1}
+  .tot span{font-size:11px;color:var(--ink-mute);font-weight:800}
+  .tot .v b{color:var(--sun)}
+  .tot .peek{position:absolute;right:-6px;top:-30px;width:50px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));animation:bob 3.2s ease-in-out infinite;pointer-events:none}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  /* the binder */
+  .binder{flex:1;min-height:0;position:relative;perspective:1600px;display:flex}
+  .page{flex:1;position:relative;border-radius:10px 18px 18px 10px;padding:12px 12px 12px 26px;
+    background:linear-gradient(90deg,#3a1a4f 0,#2a1238 14px,#2f1540 22px,#2f1540 100%);
+    box-shadow:inset 6px 0 14px rgba(0,0,0,.45),0 14px 30px rgba(0,0,0,.45);transform-origin:left center;transition:transform .45s ease,opacity .45s}
+  .page::before{content:"";position:absolute;left:7px;top:8%;bottom:8%;width:6px;background:radial-gradient(circle,#c9b6dc 3px,transparent 3.5px) 0 0/6px 25% repeat-y;opacity:.7}
+  .page.out-l{transform:rotateY(-80deg);opacity:0}.page.out-r{transform:rotateY(30deg) translateX(40px);opacity:0}
+  .grid{height:100%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8px}
+  .pocket{position:relative;border-radius:8px;background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;padding:3px;min-height:0;cursor:pointer}
+  .pocket::after{content:"";position:absolute;inset:0;border-radius:8px;background:linear-gradient(125deg,rgba(255,255,255,.22),transparent 35%,transparent 70%,rgba(255,255,255,.08));pointer-events:none}
+  .pocket img{max-width:100%;max-height:100%;border-radius:5px;display:block}
+  .pocket .tag{position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);background:#fff;color:#271133;font-size:10.5px;font-weight:900;padding:1px 7px;border-radius:999px;white-space:nowrap;box-shadow:0 3px 8px rgba(0,0,0,.35);z-index:1}
+  .pocket .ok{position:absolute;right:-3px;top:-3px;width:18px;height:18px;border-radius:50%;background:#34C759;color:#fff;font-size:11px;font-weight:900;display:grid;place-items:center;z-index:1;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+  .pocket.empty{border-style:dashed;cursor:default}.pocket.empty::before{content:"+";font-size:22px;color:var(--ink-mute);font-weight:900}
+  .nav{display:flex;align-items:center;gap:10px;margin-top:10px}
+  .nav button{flex:1;min-height:48px;border-radius:14px;font:inherit;font-size:15px;font-weight:900;cursor:pointer;border:1px solid var(--line-soft);background:rgba(255,255,255,.08);color:var(--ink)}
+  .nav button.next{background:linear-gradient(180deg,#ffd873,var(--gold-deep));color:var(--gold-ink);border:none}
+  .nav button:disabled{opacity:.35;cursor:default}
+  .nav .pg{flex:none;font-size:13px;font-weight:900;color:var(--ink-soft);min-width:78px;text-align:center}
+  /* card zoom */
+  .zoom{position:fixed;inset:0;background:rgba(20,8,28,.88);display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;z-index:9;padding:20px}
+  .zoom.on{display:flex}.zoom img{width:min(70vw,300px);border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.6)}
+  .zoom b{font-size:18px;font-weight:900}.zoom span{font-size:13px;color:var(--ink-soft);font-weight:800;text-align:center}
+  @media (prefers-reduced-motion:reduce){.page{transition:none}.tot .peek{animation:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <button class="back" type="button" onclick="history.length>1?history.back():location.href='index.html'" aria-label="Back">‹</button>
+    <div><b>Main binder</b><small>Swipe or tap Next page</small></div>
+  </div>
+  <div class="tot"><img class="peek" src="pets/mosspup.webp" alt="">
+    <div><b id="nCards">0</b><span>Cards</span></div>
+    <div class="v"><b id="nVal">$0</b><span>Market value</span></div>
+    <div><b id="nReal">0</b><span>Checked real</span></div>
+  </div>
+  <div class="binder" id="binder"><div class="page" id="page"><div class="grid" id="grid"></div></div></div>
+  <div class="nav"><button type="button" id="prev">‹ Back</button><span class="pg" id="pg">Page 1 of 1</span><button type="button" class="next" id="next">Next page ›</button></div>
+</div>
+<div class="zoom" id="zoom"><img id="zimg" alt=""><b id="zname"></b><span id="zinfo"></span></div>
+<script>
+(function(){
+  "use strict";
+  /* sample binder: Scarlet & Violet 151, numbers 1-25; prices are sample market prices */
+  var N=["Bulbasaur","Ivysaur","Venusaur ex","Charmander","Charmeleon","Charizard ex","Squirtle","Wartortle","Blastoise ex","Caterpie","Metapod","Butterfree","Weedle","Kakuna","Beedrill","Pidgey","Pidgeotto","Pidgeot","Rattata","Raticate","Spearow","Fearow","Ekans","Arbok ex","Pikachu"];
+  var P=[0.42,0.30,3.10,0.55,0.35,9.80,0.48,0.32,4.20,0.12,0.10,0.25,0.10,0.10,0.22,0.10,0.12,0.30,0.10,0.12,0.10,0.15,0.12,1.40,1.85];
+  var cards=N.map(function(n,i){return{n:n,num:i+1,p:P[i],img:"cards/sv3pt5-"+(i+1)+".webp"};});
+  var per=9,pages=Math.max(1,Math.ceil(cards.length/per)),cur=0,busy=false;
+  var $=function(id){return document.getElementById(id);};
+  $("nCards").textContent=cards.length;
+  $("nVal").textContent="$"+cards.reduce(function(a,c){return a+c.p;},0).toFixed(2);
+  $("nReal").textContent=cards.length;
+  function money(v){return "$"+v.toFixed(2);}
+  function draw(){
+    var g=$("grid");g.innerHTML="";
+    for(var k=0;k<per;k++){
+      var c=cards[cur*per+k],el=document.createElement("button");el.type="button";el.className="pocket";
+      if(!c){el.classList.add("empty");el.setAttribute("aria-label","Empty pocket");g.appendChild(el);continue;}
+      el.innerHTML='<img loading="lazy" alt="'+c.n+'" src="'+c.img+'"><span class="tag">'+money(c.p)+'</span><span class="ok" title="Checked real">✓</span>';
+      (function(c){el.onclick=function(){$("zimg").src=c.img;$("zname").textContent=c.n;$("zinfo").textContent="151 · #"+c.num+" · Market "+money(c.p)+" · Checked real";$("zoom").classList.add("on");};})(c);
+      g.appendChild(el);
+    }
+    $("pg").textContent="Page "+(cur+1)+" of "+pages;$("prev").disabled=cur===0;$("next").disabled=cur===pages-1;
+  }
+  function go(d){
+    if(busy||cur+d<0||cur+d>=pages)return;busy=true;var p=$("page");
+    p.classList.add(d>0?"out-l":"out-r");
+    setTimeout(function(){cur+=d;draw();p.style.transition="none";p.classList.remove("out-l","out-r");p.classList.add(d>0?"out-r":"out-l");
+      void p.offsetWidth;p.style.transition="";p.classList.remove("out-l","out-r");setTimeout(function(){busy=false;},450);},430);
+  }
+  $("next").onclick=function(){go(1);};$("prev").onclick=function(){go(-1);};
+  $("zoom").onclick=function(){this.classList.remove("on");};
+  var sx=null;$("binder").addEventListener("touchstart",function(e){sx=e.touches[0].clientX;},{passive:true});
+  $("binder").addEventListener("touchend",function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)go(dx<0?1:-1);sx=null;});
+  draw();
+})();
+</script>
+</body>
+</html>

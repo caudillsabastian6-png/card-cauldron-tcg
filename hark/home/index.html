@@ -380,6 +380,7 @@
       if(drawer.classList.contains("open")) setDrawer(false);
       if(/^Check/.test(b.getAttribute("data-go"))){ location.href="camera.html"; return; }
       if(/Invite|Refer/i.test(b.getAttribute("data-go"))){ location.href="invite.html"; return; }
+      if(/binder/i.test(b.getAttribute("data-go"))){ location.href="binder.html"; return; }
       say("Opens " + b.getAttribute("data-go") + " in the app");
     });
   });
