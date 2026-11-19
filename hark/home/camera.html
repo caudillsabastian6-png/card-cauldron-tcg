@@ -8,7 +8,7 @@
 <link rel="icon" href="data:," />
 <title>Check a card — camera (preview)</title>
 <!-- Hark build, branch hark/home-screen. Live camera behind a card-shaped window,
-     regular Arcane Lab theme around it, shutter button under the card. Front photo only.
+     regular Arcane Lab theme around it, shutter button under the card. Front, then back, with creature guides.
      No verdict is shown: the photo goes on to the normal check flow. -->
 <style>
   @font-face{font-family:"Nunito";src:url("Nunito.ttf") format("truetype");font-weight:200 1000;font-display:swap}
@@ -53,6 +53,19 @@
     background:linear-gradient(160deg,var(--plum-800),var(--plum-900));border-radius:18px}
   .app.off .nocam{display:grid}
   input[type=file]{display:none}
+  /* creature guide */
+  .guide{position:absolute;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom) + 128px);display:flex;align-items:flex-end;gap:8px;z-index:3;pointer-events:none}
+  .guide img{width:82px;flex:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.4));animation:gbob 3s ease-in-out infinite}
+  .guide p{margin:0 0 18px;background:#fff;color:#271133;font-size:14px;font-weight:900;line-height:1.3;padding:10px 13px;border-radius:16px 16px 16px 4px;box-shadow:0 8px 18px rgba(0,0,0,.3);max-width:250px}
+  .guide.pop img{animation:gpop .5s cubic-bezier(.3,1.6,.5,1),gbob 3s ease-in-out .5s infinite}
+  .guide.pop p{animation:gpop .5s cubic-bezier(.3,1.6,.5,1) .1s both}
+  @keyframes gbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @keyframes gpop{0%{transform:scale(.3) translateY(30px);opacity:0}100%{transform:none;opacity:1}}
+  @media (prefers-reduced-motion:reduce){.guide img,.guide.pop img,.guide.pop p{animation:none}}
+  @media (max-height:760px){.guide img{width:60px}.guide p{font-size:13px}}
+  .steps{display:flex;gap:6px;margin-left:auto}
+  .steps i{width:26px;height:6px;border-radius:3px;background:rgba(255,255,255,.2)}.steps i.on{background:var(--sun)}
+  .app.done .bar,.app.done .review{display:none}
 </style>
 </head>
 <body>
@@ -65,7 +78,7 @@
 
   <div class="top">
     <button class="back" type="button" onclick="history.length>1?history.back():location.href='index.html'" aria-label="Back">‹</button>
-    <div><b>Check a card</b><span>Front of the card only</span></div>
+    <div><b>Check a card</b><span id="side">Step 1 of 2 · Front</span></div><div class="steps"><i class="on"></i><i id="s2"></i></div>
   </div>
   <p class="hint" id="hint">Line the card up inside the outline</p>
 
@@ -75,6 +88,7 @@
     <button class="side" id="torch" type="button" aria-label="Flash"><svg viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg></button>
   </div>
   <div class="review"><button class="retake" id="retake" type="button">Retake</button><button class="use" id="use" type="button">Use photo</button></div>
+  <div class="guide pop" id="guide"><img id="gimg" src="pets/zapkit.webp" alt=""><p id="gtxt">Hi! Put the front of your card in the outline, then tap the gold button.</p></div>
   <div class="flash" id="flash"></div>
 </div>
 <script>
@@ -102,15 +116,26 @@
     if(!v.videoWidth){document.getElementById("pick").click();return;}
     var fl=document.getElementById("flash");fl.classList.add("on");setTimeout(function(){fl.classList.remove("on");},60);
     window.cardPhoto=cropFrom(v,v.videoWidth,v.videoHeight);
-    app.classList.add("taken");hint.textContent="Is the whole card sharp and inside the outline?";
+    app.classList.add("taken");hint.textContent="Is the whole card sharp and inside the outline?";gt.textContent="Looks good? Tap Use photo, or Retake.";
   };
   document.getElementById("pick").onchange=function(e){
     var f=e.target.files[0];if(!f)return;var img=new Image();
-    img.onload=function(){window.cardPhoto=cropFrom(img,img.naturalWidth,img.naturalHeight);app.classList.add("taken");hint.textContent="Is the whole card sharp and inside the outline?";};
+    img.onload=function(){window.cardPhoto=cropFrom(img,img.naturalWidth,img.naturalHeight);app.classList.add("taken");hint.textContent="Is the whole card sharp and inside the outline?";gt.textContent="Looks good? Tap Use photo, or Retake.";};
     img.src=URL.createObjectURL(f);
   };
-  document.getElementById("retake").onclick=function(){app.classList.remove("taken");hint.textContent="Line the card up inside the outline";};
-  document.getElementById("use").onclick=function(){hint.textContent="Photo ready. In the app this goes on to the check.";};
+  document.getElementById("retake").onclick=function(){app.classList.remove("taken");hint.textContent="Line the card up inside the outline";gt.textContent=step===1?"No problem! Front of the card in the outline, then the gold button.":"No problem! Back of the card in the outline, then the gold button.";};
+  var step=1,G=document.getElementById("guide"),gi=document.getElementById("gimg"),gt=document.getElementById("gtxt");
+  function guide(pet,txt){G.classList.remove("pop");void G.offsetWidth;gi.src="pets/"+pet+".webp";gt.textContent=txt;G.classList.add("pop");}
+  window.cardPhotos={};
+  document.getElementById("use").onclick=function(){
+    if(step===1){window.cardPhotos.front=window.cardPhoto;step=2;app.classList.remove("taken");
+      document.getElementById("side").textContent="Step 2 of 2 · Back";document.getElementById("s2").classList.add("on");
+      hint.textContent="Line the back up inside the outline";
+      guide("frostfin","Great shot! Now flip it over. Please take a picture of the back of the card.");}
+    else{window.cardPhotos.back=window.cardPhoto;app.classList.add("done");
+      hint.textContent="Both sides ready. In the app this goes on to the check.";
+      guide("emberwyrm","All set! I'm checking your card now.");}
+  };
   document.getElementById("torch").onclick=function(){
     if(!track||!track.getCapabilities||!track.getCapabilities().torch){hint.textContent="This phone's browser doesn't allow the flash";return;}
     torchOn=!torchOn;track.applyConstraints({advanced:[{torch:torchOn}]});
