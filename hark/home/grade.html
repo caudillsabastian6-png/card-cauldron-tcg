@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#271133" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:," />
+<title>Grade a card — Real or Replica (preview)</title>
+<!-- Hark build, branch hark/home-screen. Grader result preview in the checker's style. Sample card + sample numbers. -->
+<style>
+  @font-face{font-family:"Nunito";src:url("Nunito.ttf") format("truetype");font-weight:200 1000;font-display:swap}
+  :root{--plum-950:#1c0b24;--plum-900:#271133;--plum-800:#351747;--plum-card:#2e143f;--ink:#f7f0fb;--ink-soft:#d9c8e8;--ink-mute:#b39ec9;
+    --gold-deep:#d99e22;--gold-ink:#2a1a05;--red:#E8424A;--sun:#FFD84D;--green:#34C759;--line-soft:rgba(255,255,255,.10)}
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{font-family:"Nunito",system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--plum-800),var(--plum-950));-webkit-font-smoothing:antialiased}
+  .app{max-width:480px;min-height:100vh;min-height:100dvh;margin:0 auto;padding:10px 16px calc(env(safe-area-inset-bottom) + 14px);display:flex;flex-direction:column;gap:10px}
+  .top{display:flex;align-items:center;gap:10px}
+  .back{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.08);color:var(--ink);font-size:20px;font-weight:900;cursor:pointer;flex:none}
+  .top b{font-size:18px;font-weight:900;display:block;line-height:1.1}.top small{font-size:12px;color:var(--ink-mute);font-weight:800}
+  .card{background:var(--plum-card);border:1px solid var(--line-soft);border-radius:18px;padding:12px;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+  /* hero: card + big grade */
+  .hero{display:flex;gap:14px;align-items:center}
+  .hero .pic{width:104px;flex:none;border-radius:8px;box-shadow:0 10px 22px rgba(0,0,0,.45)}
+  .hero .name{font-size:17px;font-weight:900;line-height:1.15}
+  .hero .set{font-size:12px;color:var(--ink-mute);font-weight:800;margin:2px 0 8px}
+  .slab{display:inline-flex;align-items:center;gap:10px;background:#fff;color:#271133;border-radius:14px;padding:6px 12px 6px 6px;box-shadow:0 8px 18px rgba(0,0,0,.35)}
+  .slab .g{width:50px;height:50px;border-radius:10px;background:linear-gradient(180deg,#ffd873,var(--gold-deep));display:grid;place-items:center;font-size:26px;font-weight:1000;color:var(--gold-ink)}
+  .slab small{display:block;font-size:10.5px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:#7a6a88}
+  .slab b{font-size:15px;font-weight:1000}
+  .range{font-size:12px;color:var(--ink-soft);font-weight:800;margin-top:8px}
+  .peek{position:absolute;right:-4px;top:-30px;width:56px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));animation:bob 3.2s ease-in-out infinite;pointer-events:none}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  /* subgrades */
+  .subs{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+  .sub span{display:flex;justify-content:space-between;font-size:12.5px;font-weight:900;color:var(--ink-soft)}
+  .sub span b{color:#fff}
+  .bar{height:8px;border-radius:5px;background:rgba(255,255,255,.1);margin-top:5px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--red),var(--sun) 60%,var(--green))}
+  .note{font-size:11.5px;color:var(--ink-mute);font-weight:700;margin:8px 0 0}
+  /* companies */
+  .cos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+  .co{border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--line-soft);padding:7px 2px}
+  .co small{display:block;font-size:10.5px;font-weight:900;color:var(--ink-mute)}
+  .co b{font-size:17px;font-weight:1000}
+  .co.best{border-color:rgba(255,216,77,.6);background:rgba(255,216,77,.1)}
+  /* worth it */
+  .worth{display:flex;align-items:center;gap:10px}
+  .worth .col{flex:1;text-align:center}
+  .worth small{display:block;font-size:11px;font-weight:900;color:var(--ink-mute)}
+  .worth b{font-size:19px;font-weight:1000}
+  .worth .arrow{font-size:20px;color:var(--ink-mute);font-weight:900}
+  .verdict{margin-top:8px;text-align:center;font-size:13.5px;font-weight:900;color:var(--green)}
+  .label{font-size:11.5px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 8px;display:flex;align-items:center;gap:8px}
+  .label::before{content:"";width:4px;height:13px;border-radius:2px;background:var(--red)}
+  .acts{display:flex;gap:10px;margin-top:auto}
+  .acts button{flex:1;min-height:50px;border-radius:14px;font:inherit;font-size:15px;font-weight:900;cursor:pointer;border:1px solid var(--line-soft);background:rgba(255,255,255,.08);color:var(--ink)}
+  .acts .go{background:linear-gradient(180deg,#ffd873,var(--gold-deep));color:var(--gold-ink);border:none}
+  @media (prefers-reduced-motion:reduce){.peek{animation:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <button class="back" type="button" onclick="history.length>1?history.back():location.href='index.html'" aria-label="Back">‹</button>
+    <div><b>Grade a card</b><small>Estimate from your front and back photos</small></div>
+  </div>
+
+  <div class="card"><img class="peek" src="pets/cinderclaw.webp" alt="">
+    <div class="hero">
+      <img class="pic" src="cards/sv3pt5-6.webp" alt="Charizard ex">
+      <div>
+        <div class="name">Charizard ex</div>
+        <div class="set">151 · #6</div>
+        <div class="slab"><span class="g">9</span><span><small>Likely grade</small><b>Mint</b></span></div>
+        <div class="range">Could land 8 to 10</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="label">What we saw</p>
+    <div class="subs">
+      <div class="sub"><span>Centering <b>9</b></span><div class="bar"><i style="width:90%"></i></div></div>
+      <div class="sub"><span>Corners <b>9.5</b></span><div class="bar"><i style="width:95%"></i></div></div>
+      <div class="sub"><span>Edges <b>8.5</b></span><div class="bar"><i style="width:85%"></i></div></div>
+      <div class="sub"><span>Surface <b>9</b></span><div class="bar"><i style="width:90%"></i></div></div>
+    </div>
+    <p class="note">Light whitening on the back left edge. Front centering about 55/45.</p>
+  </div>
+
+  <div class="card">
+    <p class="label">By grading company</p>
+    <div class="cos">
+      <div class="co best"><small>PSA</small><b>9</b></div>
+      <div class="co"><small>CGC</small><b>9</b></div>
+      <div class="co"><small>BGS</small><b>8.5</b></div>
+      <div class="co"><small>SGC</small><b>9</b></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="label">Worth grading?</p>
+    <div class="worth">
+      <div class="col"><small>Raw now</small><b>$9.80</b></div><span class="arrow">→</span>
+      <div class="col"><small>PSA 9</small><b>$24</b></div><span class="arrow">−</span>
+      <div class="col"><small>Grading fee</small><b>$25</b></div>
+    </div>
+    <div class="verdict" style="color:var(--sun)">Not worth it at this grade. Keep it raw.</div>
+  </div>
+
+  <div class="acts"><button type="button" onclick="location.href='camera.html?mode=grade'">Grade another</button><button class="go" type="button" onclick="location.href='binder.html'">Save to binder</button></div>
+</div>
+</body>
+</html>

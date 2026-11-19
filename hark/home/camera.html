@@ -78,7 +78,7 @@
 
   <div class="top">
     <button class="back" type="button" onclick="history.length>1?history.back():location.href='index.html'" aria-label="Back">‹</button>
-    <div><b>Check a card</b><span id="side">Step 1 of 2 · Front</span></div><div class="steps"><i class="on"></i><i id="s2"></i></div>
+    <div><b id="ttl">Check a card</b><span id="side">Step 1 of 2 · Front</span></div><div class="steps"><i class="on"></i><i id="s2"></i></div>
   </div>
   <p class="hint" id="hint">Line the card up inside the outline</p>
 
@@ -124,6 +124,7 @@
     img.src=URL.createObjectURL(f);
   };
   document.getElementById("retake").onclick=function(){app.classList.remove("taken");hint.textContent="Line the card up inside the outline";gt.textContent=step===1?"No problem! Front of the card in the outline, then the gold button.":"No problem! Back of the card in the outline, then the gold button.";};
+  var GRADE=/[?&]mode=grade/.test(location.search);if(GRADE){document.getElementById("ttl").textContent="Grade a card";document.title="Grade a card";}
   var step=1,G=document.getElementById("guide"),gi=document.getElementById("gimg"),gt=document.getElementById("gtxt");
   function guide(pet,txt){G.classList.remove("pop");void G.offsetWidth;gi.src="pets/"+pet+".webp";gt.textContent=txt;G.classList.add("pop");}
   window.cardPhotos={};
@@ -134,7 +135,7 @@
       guide("frostfin","Great shot! Now flip it over. Please take a picture of the back of the card.");}
     else{window.cardPhotos.back=window.cardPhoto;app.classList.add("done");
       hint.textContent="Both sides ready. In the app this goes on to the check.";
-      guide("emberwyrm","All set! I'm checking your card now.");}
+      guide("emberwyrm",GRADE?"All set! Let's see what it grades.":"All set! I'm checking your card now.");if(GRADE)setTimeout(function(){location.href="grade.html";},1400);}
   };
   document.getElementById("torch").onclick=function(){
     if(!track||!track.getCapabilities||!track.getCapabilities().torch){hint.textContent="This phone's browser doesn't allow the flash";return;}
