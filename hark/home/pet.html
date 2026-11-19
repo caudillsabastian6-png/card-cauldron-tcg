@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#271133" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:," />
+<title>My Pet — Real or Replica (preview)</title>
+<!-- Hark build, branch hark/home-screen. My Pet: every pet feature in one place (feed/grow, shop, creature book, streak).
+     Preview: coins and progress are saved on this device only (localStorage). Draft prices. -->
+<style>
+  @font-face{font-family:"Nunito";src:url("Nunito.ttf") format("truetype");font-weight:200 1000;font-display:swap}
+  :root{--plum-950:#1c0b24;--plum-900:#271133;--plum-800:#351747;--plum-card:#2e143f;--ink:#f7f0fb;--ink-soft:#d9c8e8;--ink-mute:#b39ec9;
+    --gold-deep:#d99e22;--gold-ink:#2a1a05;--red:#E8424A;--sun:#FFD84D;--green:#34C759;--line-soft:rgba(255,255,255,.10)}
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{font-family:"Nunito",system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--plum-800),var(--plum-950));-webkit-font-smoothing:antialiased;overflow:hidden}
+  .app{max-width:480px;height:100vh;height:100dvh;margin:0 auto;padding:10px 16px calc(env(safe-area-inset-bottom) + 12px);display:flex;flex-direction:column;gap:10px}
+  .top{display:flex;align-items:center;gap:10px}
+  .back{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.08);color:var(--ink);font-size:20px;font-weight:900;cursor:pointer;flex:none}
+  .top b{font-size:18px;font-weight:900;flex:1}
+  .coins{background:rgba(255,216,77,.14);border:1px solid rgba(255,216,77,.45);border-radius:999px;padding:5px 12px;font-weight:900;font-size:14px}
+  .coins b{color:var(--sun)}
+  /* stage */
+  .stage{position:relative;flex:1;min-height:200px;border-radius:22px;overflow:hidden;
+    background:radial-gradient(ellipse 60% 22% at 50% 88%,rgba(0,0,0,.35),transparent 70%),radial-gradient(circle at 50% 40%,rgba(184,120,224,.35),transparent 60%),var(--plum-card);border:1px solid var(--line-soft);display:flex;align-items:center;justify-content:center}
+  .pet{position:relative;width:min(56%,210px);transition:transform .3s;cursor:pointer}
+  .pet img{width:100%;display:block;filter:drop-shadow(0 14px 16px rgba(0,0,0,.4));animation:bob 3s ease-in-out infinite}
+  .pet .hat{position:absolute;left:50%;top:-6%;transform:translateX(-50%);font-size:46px;display:none;pointer-events:none}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .pet.happy img{animation:hop .5s ease 2}
+  @keyframes hop{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-22px) scale(1.06,.95)}}
+  .say{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;color:#271133;font-weight:900;font-size:13.5px;padding:7px 12px;border-radius:14px;white-space:nowrap;box-shadow:0 6px 14px rgba(0,0,0,.3)}
+  .lvl{position:absolute;left:12px;right:12px;bottom:10px}
+  .lvl span{display:flex;justify-content:space-between;font-size:12px;font-weight:900;color:var(--ink-soft)}
+  .lvl .bar{height:10px;border-radius:6px;background:rgba(255,255,255,.12);margin-top:4px;overflow:hidden}
+  .lvl .bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--red),var(--sun));transition:width .4s}
+  .crumbs{position:absolute;inset:0;pointer-events:none}
+  .crumbs i{position:absolute;font-style:normal;font-size:22px;animation:drop .9s ease-in forwards}
+  @keyframes drop{0%{transform:translateY(-40px);opacity:0}30%{opacity:1}100%{transform:translateY(90px) scale(.4);opacity:0}}
+  /* actions */
+  .acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .act{min-height:58px;border-radius:16px;border:1px solid var(--line-soft);background:rgba(255,255,255,.07);color:var(--ink);font:inherit;font-weight:900;font-size:13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .act .e{font-size:20px}.act small{font-size:11px;color:var(--ink-mute);font-weight:800}
+  .act.feed{background:linear-gradient(180deg,#ffd873,var(--gold-deep));color:var(--gold-ink);border:none}.act.feed small{color:#5a3d0a}
+  .streak{display:flex;align-items:center;gap:10px;background:var(--plum-card);border:1px solid var(--line-soft);border-radius:16px;padding:9px 12px}
+  .streak b{font-size:14px;font-weight:900}.streak small{display:block;font-size:11.5px;color:var(--ink-mute);font-weight:800}
+  .dots{display:flex;gap:5px;margin-left:auto}.dots i{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.12)}.dots i.on{background:var(--sun)}
+  /* sheets */
+  .scrim{position:fixed;inset:0;background:rgba(10,4,14,.6);display:none;z-index:8}.scrim.on{display:block}
+  .sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,100%);width:100%;max-width:480px;background:var(--plum-900);border-radius:24px 24px 0 0;padding:14px 16px calc(env(safe-area-inset-bottom) + 16px);z-index:9;transition:transform .28s}
+  .sheet.on{transform:translate(-50%,0)}
+  .sheet h3{margin:4px 0 2px;font-size:18px;font-weight:900}.sheet p{margin:0 0 12px;font-size:12.5px;color:var(--ink-mute);font-weight:800}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .item{border-radius:16px;border:1px solid var(--line-soft);background:rgba(255,255,255,.06);padding:10px 4px;text-align:center;color:var(--ink);font:inherit;cursor:pointer}
+  .item .e{font-size:30px;display:block;line-height:1.2}.item img{width:62px;height:62px;object-fit:contain;display:block;margin:0 auto}
+  .item b{display:block;font-size:12.5px;font-weight:900;margin-top:4px}.item small{font-size:11.5px;font-weight:900;color:var(--sun)}
+  .item.owned small{color:var(--green)}.item.on{border-color:var(--sun);background:rgba(255,216,77,.1)}
+  .item.locked img{filter:brightness(0) opacity(.45)}.item.locked small{color:var(--ink-mute)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);background:#fff;color:#271133;font-weight:900;padding:10px 16px;border-radius:999px;opacity:0;transition:.2s;pointer-events:none;z-index:10;white-space:nowrap}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .fine{margin:0;text-align:center;font-size:10.5px;color:var(--ink-mute);font-weight:700}
+  @media (prefers-reduced-motion:reduce){.pet img,.crumbs i{animation:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <button class="back" type="button" onclick="history.length>1?history.back():location.href='index.html'" aria-label="Back">‹</button>
+    <b id="petName">My Pet</b><span class="coins"><b id="coins">240</b> coins</span>
+  </div>
+
+  <div class="stage" id="stage">
+    <span class="say" id="say">Hi! I missed you!</span>
+    <div class="pet" id="pet"><img id="petImg" src="pets/emberwyrm.webp" alt=""><span class="hat" id="hat"></span></div>
+    <div class="crumbs" id="crumbs"></div>
+    <div class="lvl"><span><b id="lvlTxt">Level 1 · Baby</b><span id="xpTxt">0 / 5 treats</span></span><div class="bar"><i id="xp" style="width:0"></i></div></div>
+  </div>
+
+  <div class="acts">
+    <button class="act feed" type="button" id="feed"><span class="e">🍓</span>Feed<small>10 coins</small></button>
+    <button class="act" type="button" data-sheet="shop"><span class="e">🎩</span>Shop<small>Hats & more</small></button>
+    <button class="act" type="button" data-sheet="book"><span class="e">📖</span>Creatures<small id="bookCount">1 of 6</small></button>
+  </div>
+
+  <div class="streak"><span style="font-size:24px">🔥</span><div><b><span id="streakN">3</span>-day visit streak</b><small>Visit 7 days in a row for 25 bonus coins</small></div>
+    <div class="dots" id="dots"></div></div>
+  <p class="fine">Preview: coins here are pretend and saved on this phone only. Prices are a draft.</p>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="shop"><h3>Pet shop</h3><p>Dress up your pet. Coins only, never real money.</p><div class="grid" id="shopGrid"></div></div>
+<div class="sheet" id="book"><h3>Creature book</h3><p>Tap one you've unlocked to make it your pet.</p><div class="grid" id="bookGrid"></div></div>
+<p class="toast" id="toast"></p>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id);};
+  var PETS=[
+    {id:"emberwyrm",n:"Emberwyrm",how:"Starter"},{id:"zapkit",n:"Zapkit",how:"Starter"},{id:"bubblet",n:"Bubblet",how:"Starter"},
+    {id:"cinderclaw",n:"Cinderclaw",how:"Reach level 5"},{id:"mosspup",n:"Mosspup",how:"Donate 100 coins"},{id:"frostfin",n:"Frostfin",how:"Invite 3 friends"}];
+  var HATS=[{id:"crown",e:"👑",n:"Crown",p:120},{id:"top",e:"🎩",n:"Top hat",p:80},{id:"cap",e:"🧢",n:"Cap",p:40},
+            {id:"bow",e:"🎀",n:"Bow",p:40},{id:"party",e:"🥳",n:"Party",p:60},{id:"none",e:"✖️",n:"No hat",p:0}];
+  var K="ror.petstate",st;
+  try{st=JSON.parse(localStorage.getItem(K))||{};}catch(e){st={};}
+  st.coins=st.coins==null?240:st.coins;st.treats=st.treats||0;st.owned=st.owned||["none"];st.hat=st.hat||"none";
+  st.unlocked=st.unlocked||["emberwyrm","zapkit","bubblet"];
+  var pet=localStorage.getItem("ror.pet")||"emberwyrm";
+  function save(){try{localStorage.setItem(K,JSON.stringify(st));localStorage.setItem("ror.pet",pet);}catch(e){}}
+  var t=$("toast"),tm;function toast(s){t.textContent=s;t.classList.add("show");clearTimeout(tm);tm=setTimeout(function(){t.classList.remove("show");},1600);}
+  var STAGES=["Baby","Baby","Kid","Kid","Teen","Teen","Grown","Grown","Legend"];
+  function draw(){
+    var P=PETS.filter(function(x){return x.id===pet;})[0]||PETS[0];
+    $("petImg").src="pets/"+P.id+".webp";$("petName").textContent=P.n;$("coins").textContent=st.coins;
+    var lvl=1+Math.floor(st.treats/5),into=st.treats%5;
+    $("lvlTxt").textContent="Level "+lvl+" · "+STAGES[Math.min(lvl-1,STAGES.length-1)];
+    $("xpTxt").textContent=into+" / 5 treats";$("xp").style.width=(into*20)+"%";
+    $("pet").style.transform="scale("+Math.min(1+(lvl-1)*.06,1.3)+")";
+    var h=HATS.filter(function(x){return x.id===st.hat;})[0];$("hat").style.display=h&&h.id!=="none"?"block":"none";$("hat").textContent=h?h.e:"";
+    if(lvl>=5&&st.unlocked.indexOf("cinderclaw")<0){st.unlocked.push("cinderclaw");toast("New creature unlocked: Cinderclaw!");}
+    $("bookCount").textContent=st.unlocked.length+" of "+PETS.length;
+    var d=$("dots");d.innerHTML="";for(var i=0;i<7;i++){var x=document.createElement("i");if(i<3)x.className="on";d.appendChild(x);}
+    save();
+  }
+  var LINES=["Yum!","So good!","More please!","I'm growing!","Best snack ever!"];
+  $("feed").onclick=function(){
+    if(st.coins<10){$("say").textContent="Play a game to earn more coins!";return;}
+    st.coins-=10;st.treats++;var c=$("crumbs"),f=document.createElement("i");f.textContent="🍓";f.style.left=(45+Math.random()*10)+"%";f.style.top="30%";c.appendChild(f);setTimeout(function(){f.remove();},950);
+    var p=$("pet");p.classList.remove("happy");void p.offsetWidth;p.classList.add("happy");
+    var before=Math.floor((st.treats-1)/5);$("say").textContent=Math.floor(st.treats/5)>before?"Level up! I grew!":LINES[st.treats%LINES.length];draw();
+  };
+  $("pet").onclick=function(){$("say").textContent=["Hehe, that tickles!","Let's check some cards!","You're my favorite!"][Math.floor(Math.random()*3)];};
+  function open(id){$("scrim").classList.add("on");$(id).classList.add("on");if(id==="shop")shop();else book();}
+  function close(){$("scrim").classList.remove("on");document.querySelectorAll(".sheet").forEach(function(s){s.classList.remove("on");});}
+  document.querySelectorAll("[data-sheet]").forEach(function(b){b.onclick=function(){open(b.dataset.sheet);};});
+  $("scrim").onclick=close;
+  function shop(){
+    var g=$("shopGrid");g.innerHTML="";
+    HATS.forEach(function(h){var own=st.owned.indexOf(h.id)>=0,b=document.createElement("button");b.type="button";
+      b.className="item"+(own?" owned":"")+(st.hat===h.id?" on":"");
+      b.innerHTML='<span class="e">'+h.e+'</span><b>'+h.n+'</b><small>'+(st.hat===h.id?"Wearing":own?"Owned":h.p+" coins")+'</small>';
+      b.onclick=function(){if(!own){if(st.coins<h.p){toast("Not enough coins yet");return;}st.coins-=h.p;st.owned.push(h.id);toast(h.n+" bought!");}
+        st.hat=h.id;draw();shop();};g.appendChild(b);});
+  }
+  function book(){
+    var g=$("bookGrid");g.innerHTML="";
+    PETS.forEach(function(p){var un=st.unlocked.indexOf(p.id)>=0,b=document.createElement("button");b.type="button";
+      b.className="item"+(un?"":" locked")+(pet===p.id?" on":"");
+      b.innerHTML='<img src="pets/'+p.id+'.webp" alt=""><b>'+(un?p.n:"???")+'</b><small>'+(pet===p.id?"Your pet":un?"Tap to pick":p.how)+'</small>';
+      b.onclick=function(){if(!un){toast("Unlock: "+p.how);return;}pet=p.id;$("say").textContent="Hi! I'm "+p.n+"!";draw();book();};g.appendChild(b);});
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

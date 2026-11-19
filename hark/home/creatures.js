@@ -49,7 +49,7 @@
     s.el.querySelector("form").onsubmit=function(e){e.preventDefault();var i=this.querySelector("input");if(!i.value.trim())return;say(i.value,"me");var a=answer(i.value);i.value="";setTimeout(function(){say(a,"bot");},350);};
     var dot=document.querySelector(".helper .dot");if(dot)dot.remove();
   }
-  document.querySelectorAll("[data-pet-picker]").forEach(function(b){b.addEventListener("click",function(e){e.stopPropagation();picker();});});
+  document.querySelectorAll("[data-pet-picker]").forEach(function(b){b.addEventListener("click",function(e){e.stopPropagation();location.href="pet.html";});});
   var h=document.createElement("button");h.className="helper";h.type="button";h.setAttribute("aria-label","Ask Bubblet for help");
   h.innerHTML='<img src="pets/bubblet.webp" alt=""><span class="dot"></span>';h.onclick=helper;document.body.appendChild(h);
   paint();
