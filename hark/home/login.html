@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1c0b24" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:," />
+<title>Sign in — Real or Replica (preview)</title>
+<!-- Hark build, branch hark/home-screen. Login preview: lamp shining down on the sign-in, create-account bubbles.
+     Buttons are not wired to real sign-in yet. -->
+<style>
+  @font-face{font-family:"Nunito";src:url("Nunito.ttf") format("truetype");font-weight:200 1000;font-display:swap}
+  :root{--plum-950:#1c0b24;--plum-900:#271133;--plum-800:#351747;--ink:#f7f0fb;--ink-soft:#d9c8e8;--ink-mute:#b39ec9;
+    --gold-deep:#d99e22;--gold-ink:#2a1a05;--red:#E8424A;--sun:#FFD84D;--line-soft:rgba(255,255,255,.12)}
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{font-family:"Nunito",system-ui,sans-serif;color:var(--ink);background:var(--plum-950);-webkit-font-smoothing:antialiased;overflow:hidden}
+  .app{position:relative;max-width:480px;height:100vh;height:100dvh;margin:0 auto;padding:0 22px calc(env(safe-area-inset-bottom) + 14px);display:flex;flex-direction:column;overflow:hidden}
+  h1{margin:calc(env(safe-area-inset-top) + 18px) 0 0;text-align:center;font-size:30px;font-weight:1000;letter-spacing:.01em;line-height:1}
+  h1 span{color:var(--red)}
+  .tag{text-align:center;font-size:12.5px;font-weight:800;color:var(--ink-mute);margin:6px 0 0}
+  /* the lamp */
+  .lamp{position:relative;height:118px;display:flex;justify-content:center;flex:none}
+  .lamp svg{position:relative;z-index:2;width:120px;height:118px;transform-origin:50% 0;animation:sway 6s ease-in-out infinite}
+  @keyframes sway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+  .beam{position:absolute;left:50%;top:104px;transform:translateX(-50%);width:440px;height:330px;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse 50% 100% at 50% 0,rgba(255,224,140,.42),rgba(255,214,110,.16) 45%,transparent 75%);
+    clip-path:polygon(41% 0,59% 0,100% 100%,0 100%);animation:flick 5s infinite}
+  @keyframes flick{0%,100%{opacity:1}47%{opacity:1}48%{opacity:.85}49%{opacity:1}}
+  .pool{position:absolute;left:50%;top:400px;transform:translateX(-50%);width:380px;height:60px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,220,130,.18),transparent 70%);pointer-events:none}
+  /* sign in, sitting in the light */
+  form{position:relative;z-index:1;display:grid;gap:10px;margin-top:4px}
+  .field{position:relative}
+  .field input{width:100%;min-height:52px;border-radius:14px;border:1px solid rgba(255,230,160,.35);background:rgba(255,248,230,.08);color:#fff;font:inherit;font-size:16px;font-weight:800;padding:0 16px;outline:none}
+  .field input::placeholder{color:rgba(255,240,215,.62)}
+  .field input:focus{border-color:var(--sun);box-shadow:0 0 0 3px rgba(255,216,77,.2)}
+  .eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--ink-mute);font:inherit;font-size:12.5px;font-weight:900;padding:8px;cursor:pointer}
+  .signin{min-height:54px;border:none;border-radius:16px;background:linear-gradient(180deg,#ffd873,var(--gold-deep));color:var(--gold-ink);font:inherit;font-size:17px;font-weight:1000;cursor:pointer;box-shadow:0 10px 24px rgba(242,193,78,.3)}
+  .forgot{justify-self:center;background:none;border:none;color:var(--ink-soft);font:inherit;font-size:13px;font-weight:800;text-decoration:underline;cursor:pointer;padding:2px}
+  /* create account */
+  .or{display:flex;align-items:center;gap:10px;color:var(--ink-mute);font-size:12.5px;font-weight:900;margin:16px 0 12px;position:relative;z-index:1}
+  .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line-soft)}
+  .bubbles{display:flex;justify-content:center;gap:16px;position:relative;z-index:1}
+  .bub{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:none;color:var(--ink-soft);font:inherit;font-size:11.5px;font-weight:800;cursor:pointer}
+  .bub i{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;position:relative;
+    box-shadow:inset 0 -6px 12px rgba(0,0,0,.16),inset 0 6px 10px rgba(255,255,255,.35),0 8px 16px rgba(0,0,0,.35);transition:transform .15s}
+  .bub i::after{content:"";position:absolute;top:7px;left:12px;width:14px;height:8px;border-radius:50%;background:rgba(255,255,255,.55);transform:rotate(-25deg)}
+  .bub:active i{transform:scale(.9)}
+  .bub svg{width:26px;height:26px}
+  .fine{margin:auto 0 0;text-align:center;font-size:11px;color:var(--ink-mute);font-weight:700;line-height:1.4;position:relative;z-index:1}
+  .fine a{color:var(--ink-soft)}
+  .peek{position:absolute;right:-6px;bottom:70px;width:74px;z-index:1;filter:drop-shadow(0 6px 10px rgba(0,0,0,.4));animation:bob 3.4s ease-in-out infinite;pointer-events:none}
+  .peek2{position:absolute;left:-10px;top:150px;width:58px;z-index:1;filter:drop-shadow(0 6px 10px rgba(0,0,0,.4));animation:bob 3s ease-in-out .5s infinite;pointer-events:none}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);background:#fff;color:#271133;font-weight:900;padding:10px 16px;border-radius:999px;opacity:0;transition:.2s;pointer-events:none;z-index:9;white-space:nowrap}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  @media (max-height:720px){.lamp{height:92px}.lamp svg{height:92px}.beam{top:84px}h1{font-size:26px}.bub i{width:50px;height:50px}.or{margin:10px 0 8px}}
+  @media (prefers-reduced-motion:reduce){.lamp svg,.beam,.peek,.peek2{animation:none}}
+  /* layout pass 2 */
+  .app{justify-content:center;padding-top:calc(env(safe-area-inset-top) + 10px);padding-bottom:calc(env(safe-area-inset-bottom) + 40px)}
+  h1{margin-top:0}
+  .lamp{height:150px;margin-top:6px}
+  .lamp svg{width:150px;height:150px}
+  .stage{position:relative}
+  .beam{top:118px;width:150%;height:300px;clip-path:polygon(43% 0,57% 0,92% 100%,8% 100%);
+    background:linear-gradient(180deg,rgba(255,226,140,.45),rgba(255,214,110,.14) 70%,transparent)}
+  .pool{display:none}
+  .fine{position:absolute;left:22px;right:22px;bottom:calc(env(safe-area-inset-bottom) + 12px);margin:0}
+  .peek2{left:auto;right:calc(50% - 128px);top:auto;bottom:auto;width:58px}
+  .lampwrap{position:relative}
+  .lampwrap .peek2{top:46px}
+  .peek{bottom:48px}
+  @media (max-height:720px){.peek{display:none}.lamp{height:112px}.lamp svg{width:112px;height:112px}.beam{top:88px}.lampwrap .peek2{top:30px;width:46px;right:calc(50% - 96px)}.app{padding-bottom:34px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Real <span>or</span> Replica</h1>
+  <p class="tag">Check it. Grade it. Collect it.</p>
+
+  <div class="lampwrap"><div class="lamp" aria-hidden="true">
+    <svg viewBox="0 0 120 118">
+      <defs><linearGradient id="sh" x1="0" x2="1"><stop offset="0" stop-color="#7a3fa0"/><stop offset=".5" stop-color="#b878e0"/><stop offset="1" stop-color="#5a2a7a"/></linearGradient></defs>
+      <rect x="58" y="0" width="4" height="46" fill="#9a86ad"/>
+      <rect x="52" y="44" width="16" height="10" rx="3" fill="#c9a24a"/>
+      <path d="M30 98 L44 54 H76 L90 98 Z" fill="url(#sh)"/>
+      <path d="M44 54 H76 L78 60 H42 Z" fill="#e2c26a"/>
+      <ellipse cx="60" cy="98" rx="30" ry="6" fill="#ffe7a6"/>
+      <ellipse cx="60" cy="100" rx="13" ry="7" fill="#fff6d6"/>
+    </svg>
+    <div class="beam"></div>
+  </div>
+  <img class="peek2" src="pets/zapkit.webp" alt=""></div>
+
+  <form id="f" autocomplete="on" novalidate>
+    <div class="field"><input id="user" name="username" placeholder="Username or email" autocomplete="username" required></div>
+    <div class="field"><input id="pass" name="password" type="password" placeholder="Password" autocomplete="current-password" required><button class="eye" type="button" id="eye">Show</button></div>
+    <button class="signin" type="submit">Sign in</button>
+    <button class="forgot" type="button" id="forgot">Forgot password?</button>
+  </form>
+
+  <p class="or">New here? Create an account</p>
+  <div class="bubbles">
+    <button class="bub" type="button" data-w="Google"><i style="background:#fff"><svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.6 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9l3.7-2.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.2-3.2A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg></i>Google</button>
+    <button class="bub" type="button" data-w="Facebook"><i style="background:#1877F2"><svg viewBox="0 0 24 24" fill="#fff"><path d="M14 8h3V4h-3c-2.8 0-4 1.7-4 4.3V10H7v4h3v8h4v-8h3l1-4h-4V8.6c0-.4.3-.6.6-.6z"/></svg></i>Facebook</button>
+    <button class="bub" type="button" data-w="Email"><i style="background:var(--red)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.2L4 7.3V8l8 5 8-5v-.7l-8 4.9z"/></svg></i>Email</button>
+    <button class="bub" type="button" data-w="Phone"><i style="background:#34C759"><svg viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg></i>Phone</button>
+  </div>
+
+  <img class="peek" src="pets/bubblet.webp" alt="">
+  <p class="fine">By continuing you agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+</div>
+<p class="toast" id="toast"></p>
+<script>
+(function(){
+  var t=document.getElementById("toast"),tm;
+  function say(s){t.textContent=s;t.classList.add("show");clearTimeout(tm);tm=setTimeout(function(){t.classList.remove("show")},1700);}
+  document.getElementById("eye").onclick=function(){var p=document.getElementById("pass"),on=p.type==="password";p.type=on?"text":"password";this.textContent=on?"Hide":"Show";};
+  document.getElementById("f").onsubmit=function(e){e.preventDefault();say("Preview: sign-in isn't wired up yet");};
+  document.getElementById("forgot").onclick=function(){say("Preview: reset link goes here");};
+  document.querySelectorAll(".bub").forEach(function(b){b.onclick=function(){say("Preview: create account with "+b.dataset.w);};});
+})();
+</script>
+</body>
+</html>
