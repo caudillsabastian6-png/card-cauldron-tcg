@@ -1,0 +1,38 @@
+/* Color pop v1 (Hark, Nov 19 2026): keeps the plum + purple + gold base, adds
+   red, white and a touch of extra yellow. Red is decoration only: never on a
+   Check result or anything that could read as "fake". */
+:root{
+  --red:#E8424A; --red-deep:#B82331; --red-soft:#FF7A80; --red-bg:rgba(232,66,74,.14); --red-line:rgba(232,66,74,.45);
+  --white:#ffffff; --white-bg:rgba(255,255,255,.10); --white-line:rgba(255,255,255,.32);
+  --sun:#FFD84D; --sun-bg:rgba(255,216,77,.14); --sun-line:rgba(255,216,77,.42);
+}
+/* white: crisp headline numbers + a soft top highlight on cards */
+.cval,.freechk .n,.stat b,.potd h2,.feat b{color:var(--white)}
+.collband,.potd,.binders,.gtile{box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+/* red: avatar, section markers, featured game, active tab */
+.avatar{background:linear-gradient(160deg,var(--red-soft),var(--red-deep));border-color:var(--white)}
+.hsec>span:first-child,.hsec>:first-child{display:inline-flex;align-items:center;gap:8px}
+.hsec>:first-child::before{content:"";width:4px;height:14px;border-radius:2px;background:var(--red)}
+.feat{background:linear-gradient(150deg,#5a1f3f,var(--plum-card) 72%);border-color:var(--red-line)}
+.feat .fic{background:var(--red-bg)}
+.feat .fic svg{stroke:var(--red-soft)}
+.feat .fkick{color:var(--red-soft)}
+.feat .play{background:var(--red);box-shadow:0 6px 16px rgba(232,66,74,.35)}
+.tab[aria-current="page"]{color:var(--white)}
+.tab[aria-current="page"] svg{stroke:var(--red-soft)}
+/* game tiles rotate purple, red, white, yellow */
+.gtile:nth-child(4n+2) .tic{background:var(--red-bg)} .gtile:nth-child(4n+2) .tic svg{stroke:var(--red-soft)}
+.gtile:nth-child(4n+3) .tic{background:var(--white-bg)} .gtile:nth-child(4n+3) .tic svg{stroke:var(--white)}
+.gtile:nth-child(4n+4) .tic{background:var(--sun-bg)} .gtile:nth-child(4n+4) .tic svg{stroke:var(--sun)}
+/* a little yellow: free-check pips, binder pill */
+.pips i{background:radial-gradient(circle at 32% 30%,#fff,var(--sun) 62%)}
+.status-pill{background:var(--sun-bg);color:#ffe9a3;border-color:var(--sun-line)}
+/* binder covers: red, purple, white */
+.cover:nth-child(1) .art{background:linear-gradient(160deg,var(--red),#5a1f3f)}
+.cover:nth-child(3) .art{background:linear-gradient(160deg,#f3eef8,#9c8bb0)}
+/* bubbles pick up the new colors */
+.bubbles i:nth-child(2){background:radial-gradient(circle at 32% 30%,rgba(255,122,128,.55),rgba(232,66,74,.06) 60%);border-color:rgba(255,122,128,.3)}
+.bubbles i:nth-child(4){background:radial-gradient(circle at 32% 30%,rgba(255,216,77,.5),rgba(255,216,77,.05) 60%);border-color:rgba(255,216,77,.3)}
+.bubbles i:nth-child(5){background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.6),rgba(255,255,255,.08) 60%);border-color:rgba(255,255,255,.35)}
+/* tabs page: pill tabs */
+.pill[aria-selected="true"],.ptab[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--red)}
