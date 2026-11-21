@@ -447,3 +447,6 @@ section.cc-slim>details.cc-more{margin-left:0; margin-right:0}
   .cc-tablist{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); overflow:visible}
   .cc-tablist [role=tab]{padding:8px 10px; white-space:normal; line-height:1.15}
 }
+/* listing photo that failed to load: shop mark, same tile size */
+.ph.ph-missing{background:radial-gradient(circle at 50% 42%,rgba(240,178,62,.16),transparent 62%),rgba(255,255,255,.04)}
+.ph.ph-missing img{object-fit:contain !important;padding:30%;opacity:.7}

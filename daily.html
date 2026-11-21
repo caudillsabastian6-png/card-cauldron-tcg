@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png" />
+<title>Daily 10 — Real or Replica | Card Cauldron TCG</title>
+<meta name="description" content="Ten card photos, the same for everyone today. Real or fake?" />
+<link rel="canonical" href="https://cardcauldrontcg.com/daily" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://cardcauldrontcg.com/daily" />
+<meta property="og:title" content="Daily 10 — Real or Replica" />
+<meta property="og:description" content="Ten card photos, the same for everyone today. Real or fake?" />
+<meta property="og:image" content="https://cardcauldrontcg.com/assets/og-card.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="robots" content="noindex" />
+<!-- Daily 10 on the web (Hark, 2026-11-21). Same ten photo cards as the app's Rapid Fire Daily 10
+     for the same local date (same 43-card photo deck, same date seed), so a shared result link can be
+     played by anyone. Photos are the app's documented pool, served from /demo/demo-pool/.
+     Untimed, hits out of 10. No names shown, nothing sent anywhere; best/streak kept in this browser. -->
+<style>
+  :root{--plum-950:#1c0b24;--plum-900:#271133;--plum-800:#351747;--card:#2e143f;--ink:#f7f0fb;--soft:#d9c8e8;--mute:#b39ec9;--line:rgba(255,255,255,.10);--gold:#d99e22;--red:#E8424A;--green:#34C759}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{min-height:100dvh;font-family:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--plum-800),var(--plum-900) 55%,var(--plum-950));-webkit-font-smoothing:antialiased}
+  .w{max-width:440px;margin:0 auto;padding:14px 16px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+  .top{display:flex;align-items:center;gap:10px}.top a{color:var(--soft);text-decoration:none;font-weight:800;font-size:13px;border:1px solid var(--line);border-radius:999px;padding:7px 12px;background:rgba(255,255,255,.06)}
+  .top b{flex:1;font-size:17px;font-weight:900}.top span{font-size:13px;font-weight:800;color:var(--mute)}
+  .grid{display:flex;gap:4px;justify-content:center;font-size:18px;min-height:26px}
+  .grid i{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.1);font-style:normal}
+  .grid i.ok{background:var(--green)}.grid i.no{background:var(--red)}.grid i.now{outline:2px solid #FFD84D;outline-offset:1px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12);text-align:center}
+  .ph{width:min(240px,64vw);aspect-ratio:63/88;margin:0 auto;border-radius:14px;overflow:hidden;background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(0,0,0,.45);transition:box-shadow .2s}
+  .ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .ph.ok{box-shadow:0 0 0 4px var(--green),0 10px 24px rgba(0,0,0,.45)}.ph.no{box-shadow:0 0 0 4px var(--red),0 10px 24px rgba(0,0,0,.45)}
+  .tag{min-height:22px;margin:8px 0 0;font-weight:900;font-size:14px}
+  .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  button,.cta{min-height:54px;border-radius:16px;border:1px solid var(--line);font:inherit;font-size:17px;font-weight:900;cursor:pointer;color:var(--ink);background:rgba(255,255,255,.08)}
+  .real{background:linear-gradient(180deg,#5fe08a,#2e9e57);border:none;color:#062b14}.fake{background:var(--red);border:none;color:#fff}
+  button:disabled{opacity:.45;cursor:default}
+  .end{display:none;flex-direction:column;gap:10px}.end.on{display:flex}
+  .big{font-size:40px;font-weight:1000;margin:0}.stats{color:var(--mute);font-weight:800;font-size:13px;margin:0}
+  .gold{background:linear-gradient(180deg,#ffd873,var(--gold));border:none;color:#2a1a05}
+  .cta{display:flex;align-items:center;justify-content:center;text-decoration:none}
+  .friend{font-weight:900;color:#ffe9a3;background:rgba(255,216,77,.14);border:1px solid rgba(255,216,77,.42);border-radius:14px;padding:8px 12px;margin:0;text-align:center;display:none}
+  :focus-visible{outline:3px solid #A678E8;outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="w">
+  <div class="top"><a href="/">← Card Cauldron</a><b>Daily 10</b><span id="day"></span></div>
+  <p class="friend" id="friend"></p>
+  <div class="grid" id="grid" aria-hidden="true"></div>
+  <section id="play">
+    <div class="card"><div class="ph" id="ph"><img id="img" alt=""></div><p class="tag" id="tag" role="status" aria-live="polite"></p></div>
+    <div class="btns" style="margin-top:12px"><button class="real" id="bReal" type="button">Real</button><button class="fake" id="bFake" type="button">Fake</button></div>
+  </section>
+  <section class="end card" id="end">
+    <p class="big" id="score"></p>
+    <p class="stats" id="stats"></p>
+    <button class="gold" id="share" type="button">Share</button>
+    <p class="stats" id="shareMsg" role="status"></p>
+    <a class="cta" href="/app.html">Real or Replica app</a>
+  </section>
+</main>
+<script>
+(function(){
+  "use strict";
+  var F=[["rapid-real-1.jpg",1],["rapid-real-2.jpg",1],["rapid-real-3.jpg",1],["rapid-real-4.jpg",1],["rapid-real-5.jpg",1],["rapid-real-6.jpg",1],["rapid-fake-1.jpg",0],["rapid-fake-2.jpg",0],["rapid-fake-3.jpg",0],["rapid-fake-4.jpg",0],["rapid-real-7.jpg",1],["rapid-real-8.jpg",1],["rapid-real-9.jpg",1],["rapid-real-10.jpg",1],["rapid-real-11.jpg",1],["rapid-real-12.jpg",1],["rapid-real-13.jpg",1],["rapid-real-14.jpg",1],["rapid-real-15.jpg",1],["rapid-real-16.jpg",1],["rapid-real-17.jpg",1],["rapid-real-18.jpg",1],["rapid-real-19.jpg",1],["rapid-real-20.jpg",1],["rapid-real-21.jpg",1],["rapid-real-22.jpg",1],["rapid-real-23.jpg",1],["rapid-real-24.jpg",1],["rapid-fake-5.jpg",0],["rapid-fake-6.jpg",0],["rapid-fake-7.jpg",0],["rapid-fake-8.jpg",0],["rapid-fake-9.jpg",0],["rapid-fake-10.jpg",0],["rapid-fake-11.jpg",0],["rapid-fake-12.jpg",0],["rapid-fake-13.jpg",0],["rapid-fake-14.jpg",0],["rapid-fake-15.jpg",0],["rapid-fake-16.jpg",0],["rapid-fake-17.jpg",0],["rapid-fake-18.jpg",0],["rapid-fake-19.jpg",0]], IMG="/demo/demo-pool/";
+  function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+  var K=today();
+  /* same shuffle as the app's Daily 10 (index.html startRapid, rfDaily) */
+  var sd=2166136261;for(var i=0;i<K.length;i++){sd^=K.charCodeAt(i);sd=Math.imul(sd,16777619)>>>0;}
+  function rng(){sd=(Math.imul(sd^(sd>>>15),2246822507)+0x6D2B79F5)>>>0;return(sd%1000000)/1000000;}
+  var p=F.slice();for(var j=p.length-1;j>0;j--){var r=Math.floor(rng()*(j+1)),t=p[j];p[j]=p[r];p[r]=t;}
+  var deck=p.slice(0,10),res=[],n=0,lock=false,$=function(x){return document.getElementById(x);};
+  $("day").textContent=K.slice(5).replace("-","/");
+  var q=new URLSearchParams(location.search),fs=parseInt(q.get("s"),10);
+  if(q.get("d")===K&&fs>=0&&fs<=10){$("friend").textContent="🎯 "+fs+"/10";$("friend").style.display="block";}
+  var LS="ror.webdaily";function st(){try{return JSON.parse(localStorage.getItem(LS)||"{}")||{};}catch(e){return{};}}
+  function grid(){var h="";for(var i=0;i<10;i++)h+='<i class="'+(res[i]===1?"ok":res[i]===0?"no":(i===n?"now":""))+'"></i>';$("grid").innerHTML=h;}
+  function show(){var c=deck[n];$("img").src=IMG+c[0];$("img").alt="Card "+(n+1)+" of 10";$("ph").className="ph";$("tag").textContent="";$("bReal").disabled=$("bFake").disabled=false;lock=false;grid();
+    if(n<9){var pre=new Image();pre.src=IMG+deck[n+1][0];}}
+  function emo(){return res.map(function(r){return r?"🟩":"🟥";}).join("");}
+  function done(){
+    var hits=res.filter(Boolean).length,s=st();
+    if(s.last!==K){var y=new Date(Date.now()-864e5),yk=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
+      s.streak=(s.last===yk?(s.streak||0):0)+1;s.last=K;s.score=hits;s.grid=emo();try{localStorage.setItem(LS,JSON.stringify(s));}catch(e){}}
+    $("play").style.display="none";$("end").classList.add("on");grid();
+    $("score").textContent=s.score+"/10";$("stats").textContent=(s.streak>1?"🔥 "+s.streak+" · ":"")+K;
+    var txt="Real or Replica · Daily 10 · "+K+"\n"+s.grid+"\n"+s.score+"/10"+(s.streak>1?" · 🔥 "+s.streak+"-day streak":"")+"\nhttps://cardcauldrontcg.com/daily?d="+K+"&s="+s.score;
+    $("share").onclick=function(){
+      function cp(){(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){$("shareMsg").textContent="✓ Copied";},function(){$("shareMsg").textContent=txt;});}
+      if(navigator.share)navigator.share({text:txt}).catch(function(e){if(!e||e.name!=="AbortError")cp();});else cp();};
+  }
+  function answer(saidReal){if(lock)return;lock=true;$("bReal").disabled=$("bFake").disabled=true;
+    var real=!!deck[n][1],ok=saidReal===real;res[n]=ok?1:0;$("ph").className="ph "+(ok?"ok":"no");
+    $("tag").textContent=(ok?"✓ ":"✕ ")+(real?"Real":"Fake");grid();
+    setTimeout(function(){n++;if(n>=10)done();else show();},ok?800:1200);}
+  $("bReal").onclick=function(){answer(true);};$("bFake").onclick=function(){answer(false);};
+  document.addEventListener("keydown",function(e){if(e.key==="r"||e.key==="ArrowLeft")answer(true);if(e.key==="f"||e.key==="ArrowRight")answer(false);});
+  $("img").onerror=function(){$("tag").textContent="⚠";};
+  var s0=st();if(s0.last===K){res=s0.grid?[...s0.grid].filter(function(c){return c.trim();}).map(function(c){return c==="🟩"?1:0;}):[];n=10;done();}else show();
+})();
+</script>
+</body>
+</html>

@@ -616,3 +616,28 @@ window.CC_FEATURED_PIN = window.CC_FEATURED_PIN || null;
   }
   if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", init); else init();
 })();
+
+/* ---------- 5) a listing photo that fails to load (ended or moved eBay listing,
+   eBay image host down) no longer leaves a broken-image box: the tile keeps
+   its size and shows the shop mark instead. The Buy link is untouched. ---------- */
+(function () {
+  "use strict";
+  function fix(img) {
+    if (img.__ccFixed) return; img.__ccFixed = 1;
+    var ph = img.closest(".ph") || img.parentNode;
+    if (ph) ph.classList.add("ph-missing");
+    img.removeAttribute("srcset"); img.alt = img.alt || "";
+    img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='%23f0b23e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 26h40l-3 16a14 14 0 0 1-14 12h-6a14 14 0 0 1-14-12z'/%3E%3Cpath d='M8 26h48M22 54l-3 5M42 54l3 5'/%3E%3Ccircle cx='26' cy='17' r='3'/%3E%3Ccircle cx='36' cy='11' r='2'/%3E%3Ccircle cx='38' cy='19' r='2.5'/%3E%3C/svg%3E"; /* plain cauldron outline, no card art */
+  }
+  document.addEventListener("error", function (e) {
+    var t = e.target;
+    if (t && t.tagName === "IMG" && /ebayimg\.com/.test(t.currentSrc || t.src || "")) fix(t);
+  }, true);
+  /* images that already failed before this script ran */
+  function sweep() {
+    var imgs = document.querySelectorAll('img[src*="ebayimg.com"]');
+    for (var i = 0; i < imgs.length; i++) if (imgs[i].complete && imgs[i].naturalWidth === 0 && imgs[i].getBoundingClientRect().width) fix(imgs[i]);
+  }
+  if (document.readyState === "complete") sweep(); else window.addEventListener("load", sweep);
+  setTimeout(sweep, 0);
+})();
