@@ -988,8 +988,10 @@ footer{
   .cfg-layout{gap:1rem;margin-top:1.5rem}
   .cfg-item{padding:.75rem .8rem .7rem}
   .cfg-summary{padding:1.1rem 1.05rem}
-  .labels-sheet{grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1.1rem}
-  .spine{padding:.55rem .6rem;gap:.55rem}
+  .labels-sheet{grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin-top:1.1rem}
+  .spine{padding:.55rem .6rem;gap:.55rem;min-width:0}
+  .spine .spine-set{min-width:0;font-size:.92rem;overflow-wrap:anywhere}
+  .spine .spine-store{letter-spacing:.06em}
   .spine .spine-side img{width:40px;height:40px}
   table.odds th,table.odds td{padding:.38rem .55rem}
   .odds-note{padding:.8rem .9rem}
@@ -1271,13 +1273,11 @@ footer{padding:32px 16px 48px}
     <a href="/demo/">Demo — Real or Replica</a>
     <a href="/ask.html">Ask the Office</a>
     <a href="/about.html">About</a>
-    <span class="web-menu-label">Demo — Real or Replica</span>
-    <a href="/demo/">Demo home</a>
-    <a href="/demo/">Check a card</a>
-    <a href="/demo/">Mini games</a>
-    <a href="/demo/">My Binders</a>
-    <a href="/demo/">Checks &amp; Plan</a>
-    <a href="/demo/">Tells</a>
+    <span class="web-menu-label">Free collector tools</span>
+    <a href="/is-my-card-fake.html">Is my card fake? Start here</a>
+    <a href="/guess-the-grade/">Guess the Grade (game)</a>
+    <a href="/grade-it-or-keep-it-raw/">Grade it or keep it raw?</a>
+    <a href="mailto:caudillsabastian6@gmail.com?subject=Real%20or%20Replica%20Android%20tester">Be a free Android tester ✉</a>
     <span class="web-menu-label">Follow the shop</span>
     <a href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">eBay Store ↗</a>
     <a href="https://discord.gg/Aj4ahGsSx" target="_blank" rel="noopener">Discord ↗</a>
@@ -1999,8 +1999,8 @@ footer{padding:32px 16px 48px}
       <h3>Hunting a card that's not here?</h3>
       <p>Tell us what you're looking for. If it's sitting in the binders — or it hits the scanner next — you'll hear about it first. No list, no spam — just a heads-up when your card shows up.</p>
       <div class="want-row">
-        <a class="btn btn-gold" href="/cdn-cgi/l/email-protection#80e3e1f5e4e9ececf3e1e2e1f3f4e9e1eeb6c0e7ede1e9ecaee3efedbff3f5e2eae5e3f4bdd7e1eef4a5b2b0ece9f3f4a5b2b0a5c5b2a5b8b0a5b9b4a5b2b0c3e1f2e4a5b2b0c3e1f5ece4f2efeea5b2b0d4c3c7a6e1edf0bbe2efe4f9bdc3e1f2e4a5b3c1a5b0c1d3e5f4a5b3c1a5b0c1cef5ede2e5f2a5b3c1a5b0c1c6e9eee9f3e8a5b2b0a8c8efecefa5b2b0a5b2c6a5b2b0d2e5f6e5f2f3e5a5b2b0c8efecefa5b2b0a5b2c6a5b2b0d2e5e7f5ece1f2a9a5b3c1">🎯 Start a Want-List Email</a>
-        <p class="want-alt">Opens your mail app — or copy the address and write us. <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0162607465686d6d72606360727568606f3741666c60686d2f626e6c">[email&#160;protected]</a></strong><button class="copybtn" id="wantCopy" type="button">Copy the address</button><span class="copied" id="wantCopied" role="status"></span></p>
+        <a class="btn btn-gold" href="mailto:caudillsabastian6@gmail.com?subject=Want%20list%20%E2%80%94%20Card%20Cauldron%20TCG&amp;body=Card%3A%0ASet%3A%0ANumber%3A%0AFinish%20(Holo%20%2F%20Reverse%20Holo%20%2F%20Regular)%3A">🎯 Start a Want-List Email</a>
+        <p class="want-alt">Opens your mail app — or copy the address and write us. <strong><a href="mailto:caudillsabastian6@gmail.com">caudillsabastian6@gmail.com</a></strong><button class="copybtn" id="wantCopy" type="button">Copy the address</button><span class="copied" id="wantCopied" role="status"></span></p>
       </div>
     </div>
   </section>
@@ -2159,7 +2159,7 @@ footer{padding:32px 16px 48px}
 <audio id="ccLoop" src="assets/site-sound-loop.mp3" loop preload="none"></audio>
 <!-- Cauldron Sound now plays our own cauldron-bubbling background loop from assets/site-sound-loop.mp3 — no words, loops while you browse. -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 (function(){
   "use strict";
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
