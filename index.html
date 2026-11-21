@@ -29,7 +29,7 @@
 <style>.pop,.zoom{opacity:1 !important; transform:none !important; filter:none !important}</style></noscript>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
   :root{
     --bg:#0a0714; --bg2:#120c26; --panel:#181130; --panel2:#1f1840;
@@ -1279,6 +1279,7 @@ footer{padding:32px 16px 48px}
 .cauldron-row input{min-height:48px}
 .social-row a{min-height:44px; display:inline-flex; align-items:center; padding:8px 4px}
 </style>
+<link rel="stylesheet" href="/site-pass.css">
 </head>
 <body>
 
@@ -1294,7 +1295,7 @@ footer{padding:32px 16px 48px}
 <header class="web-topbar">
   <button type="button" class="web-menu-btn" id="webMenuBtn" aria-expanded="false" aria-controls="webMenuPanel" aria-label="Open menu">☰</button>
   <a class="brand" href="#top">CARD CAULDRON TCG</a>
-  <a class="store-btn" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">eBay Store ↗</a>
+  <a class="store-btn" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">🛒 Shop ↗</a>
   <div class="web-menu-panel" id="webMenuPanel" hidden>
     <a href="/">Home</a>
     <a href="/shop.html">Shop</a>
@@ -1343,16 +1344,17 @@ footer{padding:32px 16px 48px}
 
     <p class="kicker pop in">Van Wert, Ohio · home of Card Cauldron TCG</p>
     <h1 class="pop in d1">Card Cauldron<span class="tcg">T C G</span></h1>
+    <p class="cc-tagline pop in d1">Fighting fakes, backing collectors, giving back to kids.</p>
     <p class="tag pop in d2">Every card has a story. <b>Find yours.</b> 114 Pokémon singles live right now — EX and V hits, vintage yellow-borders and Japanese imports — every photo is the actual card you'll get, and new listings land as fast as we can scan them.</p>
     <div class="hero-ctas pop in d3">
-      <a class="btn btn-gold" href="/shop.html#catalog">Shop the Catalog ↓</a>
-      <a class="btn btn-ghost" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">Visit the eBay Store ↗</a>
+      <a class="btn btn-gold" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">🛒 Shop the eBay Store ↗</a>
+      <a class="btn btn-ghost" href="/shop.html#catalog">Browse the catalog ↓</a>
     </div>
-    <div class="hero-stats pop in d4">
-      <span>114 listings in the eBay store</span>
-      <span>$0.78 envelope shipping under $20</span>
-      <span>Ships in 24 hours</span>
-      <span>New drops daily</span>
+    <div class="hero-stats cc-trust pop in d4" aria-label="Why buyers trust the shop">
+      <span>⭐ <b>98.1%</b> positive on eBay</span>
+      <span>📦 <b>112</b> sold on eBay</span>
+      <span>📍 Small shop · Van Wert, Ohio</span>
+      <span>✉️ $0.78 envelope shipping under $20</span>
     </div>
     <div class="scroll-cue" aria-hidden="true">Scroll<span class="cue-tail"> — the cauldron's hot</span> ▼</div>
   </header>
@@ -1365,6 +1367,7 @@ footer{padding:32px 16px 48px}
       <span>Yellow borders, holos &amp; hits</span>
       <span>Brewed fresh in Van Wert, Ohio</span>
       <span>The cauldron's always hot</span>
+      <span>Fighting fakes, backing collectors, giving back to kids</span>
     </div>
   </div>
 
@@ -1380,13 +1383,16 @@ footer{padding:32px 16px 48px}
           <a class="btn btn-ghost" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">Shop the eBay Store ↗</a>
         </div>
       </div>
-      <figure class="motion-card pop">
-        <video class="motion-video" controls autoplay muted loop playsinline preload="metadata" width="720" height="1280" poster="media/charizard-poster.jpg" aria-label="3D animated Charizard soaring over a pile of Pokémon cards — a Card Cauldron TCG shop short asking viewers to follow the shop">
+      <details class="cc-reel" id="ccReel">
+      <summary>▶ Watch the 10-second shop short</summary>
+      <figure class="motion-card">
+        <video class="motion-video" controls muted loop playsinline preload="none" width="720" height="1280" poster="media/charizard-poster.jpg" aria-label="3D animated Charizard soaring over a pile of Pokémon cards — a Card Cauldron TCG shop short asking viewers to follow the shop">
           <source src="media/charizard.mp4" type="video/mp4" />
           Your browser can't play this video inline — <a href="media/charizard.mp4">watch the Charizard shop short here</a>.
         </video>
         <figcaption>🔥 <b>Charizard over the card pile</b> — follow <b>@thecardcauldrontcg</b> for daily drops, pulls and shop clips, and find every real card in the eBay store.</figcaption>
       </figure>
+      </details>
     </div>
   </section>
 
@@ -1428,6 +1434,33 @@ footer{padding:32px 16px 48px}
         <p>Mega Dream ex, Simplified Chinese 151 and more — the stuff you can't pull at Target.</p>
         <span class="go">Browse the catalog ↓</span>
       </a>
+    </div>
+  </section>
+
+  <!-- ============ MISSION + REAL OR REPLICA TEASER (site pass Nov 20) ============ -->
+  <section id="mission">
+    <div class="sec-head pop">
+      <div class="num">Why this shop exists</div>
+      <h2>Fakes out. <em>Real cards</em> in.</h2>
+      <p>Fighting fakes, backing collectors, giving back to kids — that's the whole recipe.</p>
+    </div>
+    <div class="cc-tiles">
+      <div class="cc-tile cc-foil"><span class="ic" aria-hidden="true">🛡️</span><h3>Fighting fakes</h3><p>Every listing photo is the actual card you'll get, and our free guides teach you the tells.</p></div>
+      <div class="cc-tile cc-foil"><span class="ic" aria-hidden="true">🤝</span><h3>Backing collectors</h3><p>A small shop with a real person behind it. Questions? <a href="/ask.html">Ask the Office</a>.</p></div>
+      <div class="cc-tile cc-foil"><span class="ic" aria-hidden="true">🎁</span><h3>Giving back to kids</h3><p>Real cards into kids' hands instead of fakes. Donations are on the way.</p><span class="cc-soon">Coming soon</span></div>
+    </div>
+    <div class="cc-teaser cc-foil" id="ccTeaser">
+      <h3>Real or Replica? Quick quiz</h3>
+      <p class="small" style="margin:0">Tell or myth? Tap your answer.</p>
+      <p class="q" id="ccQ" aria-live="polite"></p>
+      <div class="opts"><button type="button" data-a="tell">🔍 Real tell</button><button type="button" data-a="myth">🙅 Myth</button></div>
+      <p class="fb" id="ccFb" aria-live="polite"></p>
+      <p class="small">Tells are clues, not proof — a guide, not a guarantee.</p>
+      <div class="cc-ctas">
+        <a class="btn btn-ghost" href="/is-my-card-fake.html">Full fake-check guide →</a>
+        <a class="btn btn-gold" href="mailto:caudillsabastian6@gmail.com?subject=Real%20or%20Replica%20Android%20tester">📱 Free Android tester spot ✉</a>
+      </div>
+      <p class="small">Real or Replica, our card-checking app, is in free testing on Android. Email us to get a tester invite.</p>
     </div>
   </section>
 
@@ -1486,7 +1519,7 @@ footer{padding:32px 16px 48px}
     <details class="sec-fold">
     <summary class="sec-head pop">
       <div class="num">New-release intake calendar</div>
-      <h2>What's <em>landing next</em></h2>
+      <h2>Recent <em>releases</em></h2>
       <p>The releases we're covering, and how. Everything we sell from a new set is <b>opened from our own sealed product</b> and scanned before it lists — so coverage lands release week, not release minute.</p>
       <p class="fold-hint-line"><span class="fold-hint">— TAP TO OPEN ▾</span></p>
     </summary>
@@ -1497,7 +1530,7 @@ footer{padding:32px 16px 48px}
           <h3>Delta Reign — new expansion release</h3>
           <p>The next expansion drops and we're in line release morning. Our own boxes, opened in-house: holos, reverse holos and hits scanned and listed through release week.</p>
         </div>
-        <span class="cal-status">Coverage lands release week</span>
+        <span class="cal-status">Released Nov 6</span>
       </div>
       <div class="cal-item pop">
         <div class="cal-date">Nov 6<small>2026</small></div>
@@ -1505,7 +1538,7 @@ footer{padding:32px 16px 48px}
           <h3>30th Celebration Ultra Premium Collection</h3>
           <p>The big box: <b>Day &amp; Night editions with Espeon ex and Umbreon ex, 30 packs each</b>. We're hunting it the morning it drops — sealed goes up the moment it's in hand.</p>
         </div>
-        <span class="cal-status">Hunting release morning</span>
+        <span class="cal-status">Released Nov 6</span>
       </div>
       <div class="cal-item pop">
         <div class="cal-date">Oct 30<small>2026</small></div>
@@ -1513,55 +1546,23 @@ footer{padding:32px 16px 48px}
           <h3>30th Celebration — launch day</h3>
           <p>The 30th Anniversary set arrives. Pack-fresh singles from our own pulls hit the store as fast as they scan, all through launch week.</p>
         </div>
-        <span class="cal-status">Coverage lands release week</span>
+        <span class="cal-status">Released Oct 30</span>
       </div>
     </div>
     <p class="byline">Kept by Index 🗂️ — dates are the announced release dates; if a release moves, this page moves with it. Updated October 21, 2026.</p>
     </details>
   </section>
 
-  <!-- ============ DROP-DAY COUNTDOWN ============ -->
+  <!-- ============ FRESH PULLS (site pass Nov 20: replaces the expired Oct 30 / Nov 6 countdowns) ============ -->
   <section id="drops">
-    <div class="sec-head pop">
-      <div class="num">Ziggy — drop-day countdown</div>
-      <h2>The next drops, <em>counted down</em></h2>
-      <p>Two release days are circled on the shop calendar. The timers below run <b>live off your clock</b>, counting to midnight Eastern on each launch morning — and the moment one hits zero, it's drop day.</p>
-    </div>
-    <div class="drop-grid">
-      <article class="drop-card pop" data-countdown="2026-10-30T00:00:00-04:00">
-        <span class="drop-tag">Oct 30, 2026 · Launch Day</span>
-        <h3>30th Celebration — Launch</h3>
-        <p>The 30th Anniversary set arrives. Pack-fresh singles from our own sealed product, scanned and listed through launch week.</p>
-        <div class="cd-row" aria-label="Countdown to the 30th Celebration launch">
-          <div class="cd-cell"><span data-cd="d">--</span><small>Days</small></div>
-          <div class="cd-cell"><span data-cd="h">--</span><small>Hours</small></div>
-          <div class="cd-cell"><span data-cd="m">--</span><small>Minutes</small></div>
-          <div class="cd-cell"><span data-cd="s">--</span><small>Seconds</small></div>
-        </div>
-        <p class="cd-note">Counting down to midnight ET, launch morning.</p>
-      </article>
-      <article class="drop-card pop d1" data-countdown="2026-11-06T00:00:00-05:00">
-        <span class="drop-tag">Nov 6, 2026 · Double Drop</span>
-        <h3>Delta Reign + 30th Celebration UPC</h3>
-        <p>A two-for-one release day: the Delta Reign expansion, plus the 30th Celebration Ultra Premium Collection — Day &amp; Night editions with Espeon ex and Umbreon ex, 30 packs each.</p>
-        <div class="cd-row" aria-label="Countdown to Delta Reign and the 30th Celebration UPC">
-          <div class="cd-cell"><span data-cd="d">--</span><small>Days</small></div>
-          <div class="cd-cell"><span data-cd="h">--</span><small>Hours</small></div>
-          <div class="cd-cell"><span data-cd="m">--</span><small>Minutes</small></div>
-          <div class="cd-cell"><span data-cd="s">--</span><small>Seconds</small></div>
-        </div>
-        <p class="cd-note">Counting down to midnight ET, release morning.</p>
-      </article>
-    </div>
-    <div class="drop-alert pop">
-      <h3>Want first dibs when they land?</h3>
-      <p>Join the Cauldron List and the drop alerts come to you — List members hear about a drop by email the moment it lists, before it hits social. It's a head start, not a hold: we never reserve cards. Opt-in only, no spam, and we never sell your email.</p>
-      <div class="want-row">
-        <button class="btn btn-ghost" type="button" data-open-cauldron="drops">🔔 Get drop alerts — Join the Cauldron List</button>
-        <p class="want-alt">Opens the Cauldron List signup panel below — the same list, framed for drop alerts.</p>
+    <div class="drop-alert cc-foil pop">
+      <h3>🫧 Fresh pulls land in the eBay store first</h3>
+      <p>New singles list as fast as we can scan them — sort the store by newest to see what just came out of the cauldron. Want a heads-up? The Cauldron List emails drops before social. A head start, not a hold: we never reserve cards. Opt-in only, no spam, and we never sell your email.</p>
+      <div class="cc-ctas">
+        <a class="btn btn-gold" href="https://www.ebay.com/str/cardcauldrontcg?_sop=10" target="_blank" rel="noopener">See the newest listings ↗</a>
+        <button class="btn btn-ghost" type="button" data-open-cauldron="drops">🔔 Get drop alerts</button>
       </div>
     </div>
-    <p class="byline">Timed by Ziggy ⚡ — dates are the announced release dates, the same ones on the intake calendar above; if a release moves, the timers move with it.</p>
   </section>
 
   <!-- ============ SOUND VAULT (now its own page: sounds.html) ============ -->
@@ -1589,6 +1590,8 @@ footer{padding:32px 16px 48px}
     <a href="https://www.facebook.com/profile.php?id=1412438935277177" target="_blank" rel="noopener">Facebook</a>
     <a href="https://www.pinterest.com/caudillsabastian6" target="_blank" rel="noopener">Pinterest</a>
   </nav>
+  <p class="cc-tagline">Fighting fakes, backing collectors, giving back to kids.</p>
+  <p><a href="/is-my-card-fake.html">Is my card fake?</a> · <a href="/guess-the-grade/">Guess the Grade</a> · <a href="/grade-it-or-keep-it-raw/">Grade it or keep it raw?</a> · <a href="/bulk.html">We buy bulk</a></p>
   <p><a href="/about.html#contact">Need help? Talk to a human →</a></p>
   <p><a href="/privacy.html">Privacy Policy</a></p>
   <p><a href="/sounds.html">🎵 The Sound Vault</a></p>
@@ -2279,6 +2282,35 @@ footer{padding:32px 16px 48px}
     if (reduceMotion) { drawFrame(); }        // one static frame, no loop
     else if (!document.hidden) { start(); }   // pause while the tab is hidden
   }
+})();
+</script>
+<script>
+/* site pass Nov 20: Real or Replica quick quiz + shop-short fold */
+(function(){
+  var Q=[
+    ["Spelling mistakes or odd-looking fonts in the card text are a common counterfeit sign.","tell","Real tell. Typos and wrong fonts show up on a lot of fakes."],
+    ["If a card is super shiny all over, it must be real.","myth","Myth. Many fakes are extra glossy — shine alone proves nothing."],
+    ["A washed-out or purple-tinted card back is worth a closer look.","tell","Real tell. Back colour that looks off is a classic clue."],
+    ["A card that feels flimsy or thin compared to your other cards can be a warning sign.","tell","Real tell. Compare it with a card you trust."],
+    ["A low price is proof the seller is hiding nothing.","myth","Myth. A deal that looks too good deserves extra care."]
+  ];
+  var q=document.getElementById("ccQ"), fb=document.getElementById("ccFb"), box=document.getElementById("ccTeaser");
+  if(q&&fb&&box){
+    var i=0, score=0, seen=0, busy=false;
+    function show(){ q.textContent=(i+1)+"/"+Q.length+" · "+Q[i][0]; }
+    box.querySelectorAll("[data-a]").forEach(function(b){
+      b.addEventListener("click",function(){
+        if(busy) return; busy=true; seen++;
+        var ok=b.getAttribute("data-a")===Q[i][1]; if(ok) score++;
+        fb.innerHTML=(ok?"✅ ":"❌ ")+Q[i][2]+" <b>"+score+"/"+seen+"</b>";
+        setTimeout(function(){ i=(i+1)%Q.length; if(i===0){score=0;seen=0;} show(); busy=false; },1400);
+      });
+    });
+    show();
+  }
+  var r=document.getElementById("ccReel");
+  if(r){ r.addEventListener("toggle",function(){ var v=r.querySelector("video"); if(!v) return;
+    if(r.open){ try{ var p=v.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} } else { v.pause(); } }); }
 })();
 </script>
 </body>

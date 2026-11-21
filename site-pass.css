@@ -1,0 +1,129 @@
+/* ================================================================
+   CARD CAULDRON TCG — SITE PASS (Nov 20, 2026) · "Arcane Lab" finish
+   One small sheet, loaded LAST in <head> on the shop pages, so it
+   wins ties over each page's layered skins without deleting them.
+   Remove the <link> to roll the whole look back.
+   Look: dark plum ground, gold accents, Nunito type (the wordmark
+   keeps Cinzel). Motion lives only in backgrounds and on hover,
+   and reduced-motion stills it.
+   ================================================================ */
+:root{
+  --bg:#1B0E30; --bg2:#231340; --panel:#2A1745; --panel2:#3A2260;
+  --ink:#F7F2FF; --muted:#D6C9F0; --faint:#AE9DD2;
+  --gold:#E2B84A; --gold2:#F6D77C; --gold-deep:#B98E22;
+  --violet:#A678E8; --line:rgba(226,184,74,.32); --cardline:rgba(166,120,232,.24);
+  --cc-font-body:"Nunito","Segoe UI",system-ui,-apple-system,sans-serif;
+  --cc-ink:#F7F2FF; --cc-dim:#D6C9F0; --cc-faint:#AE9DD2;
+  --cc-ground:#170B2A; --cc-dock:#1F1037;
+  --cc-gold:#E2B84A; --cc-gold-ink:#241A02;
+  --cc-line:rgba(166,120,232,.28);
+  --hero-ov:linear-gradient(180deg,rgba(27,14,48,.50) 0%,rgba(27,14,48,.74) 55%,#1B0E30 100%);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#1B0E30; --bg2:#231340; --panel:#2A1745; --panel2:#3A2260;
+    --ink:#F7F2FF; --muted:#D6C9F0; --faint:#AE9DD2;
+    --gold:#E2B84A; --gold2:#F6D77C; --gold-deep:#B98E22;
+    --violet:#A678E8; --line:rgba(226,184,74,.32); --cardline:rgba(166,120,232,.24);
+    --hero-ov:linear-gradient(180deg,rgba(27,14,48,.50) 0%,rgba(27,14,48,.74) 55%,#1B0E30 100%);
+    color-scheme:dark;
+  }
+}
+
+/* ---------- ground: plum with a soft cauldron glow at the top ---------- */
+html{background:#1B0E30}
+body{
+  font-family:var(--cc-font-body);
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -140px, rgba(124,77,189,.38), transparent 70%),
+    radial-gradient(600px 400px at 100% 40%, rgba(201,162,39,.06), transparent 70%);
+  background-repeat:no-repeat;
+  color:var(--ink);
+}
+
+/* ---------- type: Nunito for every heading; the wordmark keeps its face ---------- */
+h2,h3,h4,.sec-head h2,.cat h3,.drop-alert h3,.soundcard h3{
+  font-family:var(--cc-font-body); font-weight:900; letter-spacing:-.005em;
+}
+h1:not(.hero h1){font-family:var(--cc-font-body); font-weight:900}
+.sec-head h2 em,h2 em{color:var(--gold2)}
+.num{color:var(--gold)}
+
+/* ---------- chrome: plum bars, gold primary action ---------- */
+.web-topbar{background:rgba(23,11,42,.94); border-bottom:1px solid rgba(226,184,74,.22)}
+.web-topbar .store-btn,.store-btn{
+  background:linear-gradient(180deg,var(--gold2),var(--gold)); color:#241A02;
+  border:0; border-radius:999px; font-weight:900;
+}
+.btn{border-radius:999px; font-family:var(--cc-font-body); font-weight:800}
+.btn-gold{background:linear-gradient(180deg,var(--gold2),var(--gold)); border-color:var(--gold); color:#241A02}
+.btn-ghost{background:rgba(42,23,69,.7); border:1px solid rgba(246,215,124,.45)}
+.btn-gold:hover,.btn-ghost:hover{transform:translateY(-2px)}
+.web-dock{background:rgba(31,16,55,.95)}
+footer{background:linear-gradient(180deg,transparent,rgba(42,23,69,.55))}
+
+/* ---------- cards & panels: plum glass with a gold hairline ---------- */
+.cat,.review,.drop-alert,.soundcard,.cal-item,.drop-card,.cc-tile,.cc-teaser{
+  background:linear-gradient(180deg,rgba(58,34,96,.72),rgba(42,23,69,.82));
+  border:1px solid rgba(166,120,232,.30); border-radius:18px;
+}
+
+/* ---------- hover foil: a light holo sweep across tiles (hover only) ---------- */
+.cat,.cc-foil{position:relative; overflow:hidden; isolation:isolate}
+.cat::before,.cc-foil::before{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; border-radius:inherit;
+  background:linear-gradient(115deg, transparent 30%, rgba(246,215,124,.22) 42%,
+    rgba(166,120,232,.26) 50%, rgba(120,214,255,.16) 57%, transparent 68%);
+  background-size:260% 100%; background-position:110% 0; opacity:0;
+  transition:opacity .35s ease, background-position .9s ease;
+}
+.cat:hover::before,.cc-foil:hover::before,.cat:focus-visible::before,.cc-foil:focus-visible::before{
+  opacity:1; background-position:-10% 0;
+}
+.cat:hover,.cc-foil:hover{border-color:rgba(246,215,124,.55)}
+@media (prefers-reduced-motion: reduce){
+  .cat::before,.cc-foil::before{transition:none}
+  .btn-gold:hover,.btn-ghost:hover{transform:none}
+}
+
+/* ---------- homepage additions (site pass) ---------- */
+.cc-tagline{margin:.35rem auto .2rem; font-weight:800; font-size:clamp(.98rem,3.6vw,1.15rem);
+  color:var(--gold2); letter-spacing:.01em; text-align:inherit}
+.cc-trust span b{color:var(--gold2)}
+.cc-reel{margin-top:12px}
+.cc-reel>summary{cursor:pointer; list-style:none; display:inline-flex; align-items:center; gap:8px;
+  min-height:44px; padding:8px 18px; border-radius:999px; font-weight:800;
+  border:1px solid rgba(246,215,124,.45); background:rgba(42,23,69,.7); color:var(--ink)}
+.cc-reel>summary::-webkit-details-marker{display:none}
+.cc-reel[open]>summary{margin-bottom:12px}
+
+#mission{padding-top:32px; padding-bottom:16px}
+.cc-tiles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:16px}
+.cc-tile{padding:14px 14px 12px}
+.cc-tile .ic{font-size:1.4rem; line-height:1}
+.cc-tile h3{margin:6px 0 4px; font-size:1.02rem}
+.cc-tile p{margin:0; font-size:.86rem; line-height:1.4; color:var(--muted)}
+.cc-soon{display:inline-block; margin-top:6px; padding:2px 10px; border-radius:999px; font-size:.72rem;
+  font-weight:900; color:#241A02; background:var(--gold2)}
+@media (max-width:640px){ .cc-tiles{grid-template-columns:1fr; gap:8px} .cc-tile{display:grid; grid-template-columns:30px 1fr; column-gap:10px; align-items:start} .cc-tile .ic{grid-row:span 3; padding-top:4px} .cc-tile h3{margin-top:0} }
+
+.cc-teaser{margin-top:16px; padding:16px}
+.cc-teaser h3{margin:0 0 4px; font-size:1.15rem}
+.cc-teaser .q{margin:10px 0 8px; font-weight:800; min-height:3em}
+.cc-teaser .opts{display:flex; gap:8px; flex-wrap:wrap}
+.cc-teaser .opts button{min-height:44px; padding:8px 20px; border-radius:999px; font:inherit; font-weight:900; cursor:pointer;
+  border:1px solid rgba(246,215,124,.5); background:rgba(27,14,48,.6); color:var(--ink)}
+.cc-teaser .opts button:hover{background:var(--gold); color:#241A02}
+.cc-teaser .fb{min-height:1.4em; margin:8px 0 0; font-size:.9rem; color:var(--muted)}
+.cc-teaser .fb b{color:var(--gold2)}
+.cc-teaser .small{font-size:.78rem; color:var(--faint); margin:8px 0 0}
+.cc-ctas{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
+.cc-ctas .btn{min-height:44px; padding:10px 18px; font-size:.92rem}
+.cc-soon{justify-self:start; grid-column:2}
+@media (min-width:641px){ .cc-soon{grid-column:auto} }
+
+/* small labels speak Nunito too (several layers had pinned a serif) */
+.num,.ticker-track span,.reviews-score,.drop-tag,.cal-date,.kicker{font-family:var(--cc-font-body) !important}
+.num{letter-spacing:.06em; text-transform:none; font-weight:800}
