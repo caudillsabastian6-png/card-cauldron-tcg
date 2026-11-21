@@ -140,3 +140,107 @@ footer{background:linear-gradient(180deg,transparent,rgba(42,23,69,.55))}
   #soundToggle::before{content:"\1F50A"; font-size:1.2rem}
   #soundToggle .snd-state{display:none !important}
 }
+
+/* ================================================================
+   DECLUTTER PASS (Nov 20, 2026, late) — calm pages, no overlaps,
+   pet mascots, drifting background. Pairs with /site-pass.js.
+   ================================================================ */
+
+/* ---------- content always paints above the drifting background ---------- */
+main,footer,.ref-banner{position:relative; z-index:1}
+#ccDrift{position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:.55}
+@media print{#ccDrift,.cc-pet{display:none !important}}
+
+/* ---------- folds: "More about…" blocks hold the owner's secondary content ---------- */
+details.cc-more{margin:14px auto; max-width:1100px; border:1px solid rgba(166,120,232,.30); border-radius:16px;
+  background:rgba(42,23,69,.55)}
+details.cc-more>summary{cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:10px;
+  min-height:48px; padding:10px 16px; font-weight:800; color:var(--ink); font-size:1rem}
+details.cc-more>summary::-webkit-details-marker{display:none}
+details.cc-more>summary::after{content:"＋"; color:var(--gold2); font-weight:900; flex:none}
+details.cc-more[open]>summary::after{content:"－"}
+details.cc-more[open]>summary{border-bottom:1px solid rgba(166,120,232,.22)}
+details.cc-more>section,details.cc-more>div{margin-top:0}
+.cc-wrap-more{padding:0 16px}
+
+/* ---------- shown-first grids: the rest sits behind one button ---------- */
+.cc-limit:not(.cc-all)>.cc-over{display:none !important}
+.cc-showall{display:flex; justify-content:center; margin:14px 0 4px}
+.cc-showall button{min-height:44px; padding:10px 22px; border-radius:999px; font:inherit; font-weight:800; cursor:pointer;
+  color:var(--ink); background:rgba(42,23,69,.75); border:1px solid rgba(246,215,124,.5)}
+
+/* ---------- slim one-line Muse bar ---------- */
+.ref-banner{flex-wrap:nowrap !important; gap:.6rem !important; padding:6px 12px !important; min-height:0 !important;
+  font-size:.82rem !important; line-height:1.25 !important; box-shadow:none !important}
+.ref-banner span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0}
+
+/* ---------- floating chrome: dock + sound share one bottom band, never stacked ---------- */
+.web-dock{left:8px !important; right:64px !important; width:auto !important; max-width:none !important;
+  transform:none !important; bottom:calc(8px + env(safe-area-inset-bottom, 0px)) !important}
+#soundToggle{right:8px !important; bottom:calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+  width:48px !important; height:48px !important; min-height:48px !important; min-width:48px !important;
+  padding:0 !important; gap:0 !important; font-size:0 !important; border-radius:50% !important;
+  justify-content:center !important; overflow:hidden}
+#soundToggle::before{content:"\1F50A"; font-size:1.2rem}
+#soundToggle .snd-state{display:none !important}
+@media (min-width:761px){
+  .web-dock{left:50% !important; right:auto !important; transform:translateX(-50%) !important;
+    width:min(900px, calc(100vw - 160px)) !important}
+}
+/* page end clears the whole bottom band (height measured live by site-pass.js) */
+body{padding-bottom:calc(var(--cc-band, 130px) + 16px) !important}
+footer{padding-bottom:24px !important}
+
+/* ---------- pet mascots (the app's own creatures) ---------- */
+.cc-pet{display:block; width:64px; height:64px; object-fit:contain; pointer-events:none;
+  filter:drop-shadow(0 6px 10px rgba(0,0,0,.45)); animation:ccBob 5.5s ease-in-out infinite}
+.cc-pet-hero{margin:0 auto 6px; position:relative; z-index:2}
+.cc-pet-foot{width:56px; height:56px; margin:0 auto 6px; animation:ccWave 7s ease-in-out infinite}
+.cc-pet-row{display:flex; align-items:center; justify-content:center; gap:10px}
+@keyframes ccBob{0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-7px) rotate(2deg)}}
+@keyframes ccWave{0%,100%{transform:rotate(0) translateY(0)} 20%{transform:rotate(-7deg) translateY(-3px)}
+  40%{transform:rotate(6deg) translateY(-4px)} 60%{transform:rotate(0) translateY(0)}}
+@media (prefers-reduced-motion: reduce){
+  .cc-pet{animation:none !important}
+  #ccDrift{display:none !important}
+}
+
+/* homepage hero: one compact trust line so the first screen ends above the bottom band */
+@media (max-width:760px){
+  .hero{padding-top:1.4rem !important; padding-bottom:1.6rem !important; min-height:0 !important}
+  .hero .cc-pet-hero{width:52px; height:52px; margin-bottom:2px}
+  .hero h1{margin-bottom:.1rem}
+  .hero .tag{margin:.6rem auto !important}
+  .hero-ctas{gap:10px !important; margin-top:.8rem !important}
+  .hero-stats.cc-trust{margin-top:.9rem !important; gap:2px 12px !important; justify-content:center}
+  .hero-stats.cc-trust span{padding:0 !important; border:0 !important; background:none !important; box-shadow:none !important;
+    font-size:.78rem !important; letter-spacing:0 !important}
+}
+
+/* dock + sound button: tucked away on the first screen and while scrolling down (site-pass.js) */
+.web-dock,#soundToggle{transition:opacity .25s ease, visibility .25s ease}
+.cc-chrome-hide .web-dock,.cc-chrome-hide #soundToggle{opacity:0 !important; visibility:hidden !important; pointer-events:none !important}
+
+/* footer social links are a plain row, never a fixed bar (a bare nav{position:fixed} rule caught them on one page) */
+footer nav.social-row{position:static !important; background:none !important; backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important; border:0 !important; padding:0 !important; flex-wrap:wrap !important; justify-content:center !important}
+/* the standalone top bar scrolls with the page instead of floating over it */
+body.subpage nav.top{position:relative !important}
+body.subpage main > section:first-child,body.subpage main > details:first-child > section{padding-top:clamp(1.6rem,5vw,3rem) !important}
+
+/* phones: tighter rhythm between sections so pages scan in a few screens */
+@media (max-width:760px){
+  main > section, main > details > section{padding-top:28px !important; padding-bottom:28px !important}
+  main > details.cc-more{margin-left:16px; margin-right:16px}
+  details.cc-more > section{padding-left:14px !important; padding-right:14px !important}
+  .sec-head{margin-bottom:14px !important}
+}
+
+/* compact footer: same links and lines, less height */
+footer{padding-top:22px !important}
+footer .disp{margin-bottom:4px !important}
+footer p{margin:6px auto !important; font-size:.8rem !important; line-height:1.45 !important}
+footer .social-row{gap:2px 14px !important; margin:8px auto !important}
+footer .social-row a{display:inline-flex; align-items:center; min-height:36px; padding:0 2px !important;
+  border:0 !important; background:none !important; box-shadow:none !important; font-size:.88rem !important}
+footer .cc-pet-foot{margin-top:4px}

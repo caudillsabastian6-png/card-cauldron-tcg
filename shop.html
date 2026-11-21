@@ -1253,6 +1253,7 @@ footer{padding:32px 16px 48px}
 .social-row a{min-height:44px; display:inline-flex; align-items:center; padding:8px 4px}
 </style>
 <link rel="stylesheet" href="/site-pass.css">
+<script src="/site-pass.js" defer></script>
 </head>
 <body class="subpage">
 
@@ -1304,13 +1305,16 @@ footer{padding:32px 16px 48px}
     <div class="sec-head pop">
       <div class="num">// 02 — THE CATALOG</div>
       <h2>Fresh out of <em>the cauldron</em></h2>
-      <p>Pokémon TCG singles for sale — everything that's live right now. Every card is <b>hand-checked, Near Mint or better</b>, and the photo is the exact card that ships to you. Tap any card to buy it on eBay — live price, Best Offer, buyer protection.</p>
+      <p>Every card is <b>hand-checked, Near Mint or better</b>, and the photo is the exact card that ships. Tap a card to buy it on eBay.</p>
     </div>
-    <p class="stamp">✓ Catalog checked November 12, 2026 — every card here links to its eBay listing, and the listing price is always the final word. If a link here ever lands on the wrong card, tell us and we fix it the same day. — Noor 🦉, audit desk</p>
-    <div class="promise pop">
+    <p class="stamp">✓ Checked November 12, 2026 — the eBay listing price is always the final word. Wrong card on a link? Tell us and we fix it the same day.</p>
+    <details class="cc-more"><summary>Penny's Price Promise — prices &amp; shipping</summary>
+<div class="promise pop">
       <p><strong>Penny's Price Promise</strong> — No mystery prices. Every card here links to its live eBay listing, where the exact price shows before you buy. For raw singles, our floor is <b>$1.73</b>; cards worth more are priced at true value. <b>Listings under $20 ship in an eBay Standard Envelope for $0.78.</b> Listings $20 and over ship by buyer-paid USPS Ground Advantage ($5.99). Returns, where offered, are shown on the eBay listing.</p>
     </div>
-    <div class="packbox pop" id="samplePack">
+</details>
+    <details class="cc-more"><summary>Rip a Sample Pack — five random live cards</summary>
+<div class="packbox pop" id="samplePack">
       <div class="pack-top">
         <img class="pack-art" src="assets/hero-cauldron.webp" alt="The Card Cauldron TCG cauldron — sample packs are packed from the shop's live stock" loading="lazy" width="1600" height="564" />
         <div class="pack-info">
@@ -1322,6 +1326,7 @@ footer{padding:32px 16px 48px}
       </div>
       <div class="pack-hand" id="packHand" aria-live="polite"></div>
     </div>
+</details>
     <div class="chips" role="group" aria-label="Filter the catalog">
       <button class="chip" data-filter="all" aria-pressed="true">All cards</button>
       <button class="chip" data-filter="hits" aria-pressed="false">Hits</button>
@@ -1994,9 +1999,10 @@ footer{padding:32px 16px 48px}
     </div>
     <p class="fineprint">Prices live on the eBay listing and can move — the listing price is the real one. Singles under $20 ship in an eBay Standard Envelope for $0.78; singles $20 and up ship by buyer-paid USPS Ground Advantage.</p>
     <div class="store-cta pop">
-      <a class="btn btn-gold" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">Browse all 114 live listings on eBay ↗</a>
+      <a class="btn btn-gold" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">Browse every live listing on eBay ↗</a>
     </div>
-    <div class="wantstrip pop">
+    <details class="cc-more"><summary>Hunting a card that's not here?</summary>
+<div class="wantstrip pop">
       <h3>Hunting a card that's not here?</h3>
       <p>Tell us what you're looking for. If it's sitting in the binders — or it hits the scanner next — you'll hear about it first. No list, no spam — just a heads-up when your card shows up.</p>
       <div class="want-row">
@@ -2004,17 +2010,18 @@ footer{padding:32px 16px 48px}
         <p class="want-alt">Opens your mail app — or copy the address and write us. <strong><a href="mailto:caudillsabastian6@gmail.com">caudillsabastian6@gmail.com</a></strong><button class="copybtn" id="wantCopy" type="button">Copy the address</button><span class="copied" id="wantCopied" role="status"></span></p>
       </div>
     </div>
+</details>
   </section>
 
   <!-- ============ HITS ============ -->
-  <section class="hits-wrap" id="hits">
+  <details class="cc-more"><summary>More: the heavy hitters &amp; graded slabs</summary>
+<section class="hits-wrap" id="hits">
     <div class="hits-inner">
       <div class="sec-head pop">
         <div class="num">// 03 — THE HIT SECTION</div>
         <h2>The heavy <em>hitters</em></h2>
         <p>EXs, VMAXs, illustration rares and full arts — the cards that make people stop scrolling. <b>When they're gone, they're gone.</b></p>
-        <p class="stamp">✓ Catalog checked November 12, 2026 — every card here links to its eBay listing, and the listing price is always the final word. If a link here ever lands on the wrong card, tell us and we fix it the same day. — Noor 🦉, audit desk</p>
-      </div>
+        </div>
       <div class="hit-stage">
         <div>
           <h3 class="pop" style="font-size:1.3rem; margin:0 0 1rem">More heavy hitters</h3>
@@ -2060,9 +2067,11 @@ footer{padding:32px 16px 48px}
       </div>
     </div>
   </section>
+</details>
 
   <!-- ============ YELLOW BORDER ============ -->
-  <section id="yellow">
+  <details class="cc-more"><summary>More: the Yellow Border Vault, set by set</summary>
+<section id="yellow">
     <div class="sec-head pop">
       <div class="num">// 04 — THE YELLOW BORDER VAULT</div>
       <h2>Old school, <em>set by set</em></h2>
@@ -2098,9 +2107,11 @@ footer{padding:32px 16px 48px}
       <a class="btn btn-ghost" style="background:var(--panel); color:var(--ink); border-color:var(--line)" href="https://www.ebay.com/str/cardcauldrontcg" target="_blank" rel="noopener">Hunting a specific card? Message the shop on eBay ↗</a>
     </div>
   </section>
+</details>
 
   <!-- ============ PRINTABLE BINDER LABELS ============ -->
-  <section id="binderlabels">
+  <details class="cc-more"><summary>More: free printable binder spine labels</summary>
+<section id="binderlabels">
     <div class="sec-head pop">
       <div class="num">// 12 — BINDER LABELS</div>
       <h2>Spine labels for <em>your binders</em></h2>
@@ -2134,6 +2145,7 @@ footer{padding:32px 16px 48px}
     </div>
     <p class="byline">Cut out by Penny 🪙 — trim each strip to your binder's spine width; the QR still scans at spine size.</p>
   </section>
+</details>
 
 </main>
 
