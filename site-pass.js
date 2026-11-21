@@ -285,21 +285,24 @@ window.CC_FEATURED_PIN = window.CC_FEATURED_PIN || null;
     var p = points(), l = levelOf(p), next = LEVELS[LEVELS.indexOf(l) + 1];
     return l.ic + " " + l.n + (next ? " · " + p + "/" + next.at + " to " + next.n : " · top level");
   }
-  function toast(msg) {
+  function toast(msg, near) {
+    // inline, never floating: under the block that earned it, else under the top bar
     var t = el("div", "cc-toast", msg); t.setAttribute("role", "status");
-    doc.body.appendChild(t);
+    var at = near || $(".web-topbar") || $("main > nav") || $("body > header");
+    if (at && at.parentNode) at.parentNode.insertBefore(t, at.nextSibling);
+    else { var host = $("main") || doc.body; host.insertBefore(t, host.firstChild); }
     setTimeout(function () { t.classList.add("in"); }, 30);
-    setTimeout(function () { t.classList.remove("in"); setTimeout(function () { t.remove(); }, 400); }, 3800);
+    setTimeout(function () { t.style.maxHeight = t.offsetHeight + "px"; t.classList.add("out"); setTimeout(function () { t.remove(); }, 700); }, 3800);
   }
-  function refreshLevel(quiet) {
+  function refreshLevel(quiet, near) {
     var l = levelOf(points()), was = get("level", null);
     $$(".cc-level").forEach(function (c) { c.textContent = chipText(); });
     if (was !== l.n) {
       put("level", l.n);
-      if (was && !quiet) toast(l.ic + " Level up: you're now an " + l.n + "!");
+      if (was && !quiet) toast(l.ic + " Level up: you're now an " + l.n + "!", near);
     }
   }
-  function played() { put("games", (get("games", 0) | 0) + 1); refreshLevel(); }
+  function played(near) { put("games", (get("games", 0) | 0) + 1); refreshLevel(false, near && near.nodeType === 1 ? near : null); }
   function level() {
     var pages = get("pages", {}); pages[path()] = 1; put("pages", pages);
     var panel = $("#webMenuPanel");
@@ -309,8 +312,8 @@ window.CC_FEATURED_PIN = window.CC_FEATURED_PIN || null;
     }
     refreshLevel(!get("level", null));
     // existing games count too
-    $$("#ccTeaser .opts button").forEach(function (b) { b.addEventListener("click", played); });
-    var rip = $("#ripBtn"); if (rip) rip.addEventListener("click", played);
+    $$("#ccTeaser .opts button").forEach(function (b) { b.addEventListener("click", function () { played(b.closest(".opts") || b.parentNode); }); });
+    var rip = $("#ripBtn"); if (rip) rip.addEventListener("click", function () { played(rip.parentNode); });
   }
 
   /* ---------- 5) EMBERWYRM TIP — once per page per visitor, inline (never floats over anything) ---------- */
@@ -424,7 +427,7 @@ window.CC_FEATURED_PIN = window.CC_FEATURED_PIN || null;
       s = ok ? s + 1 : 0; put("spot_streak", s); if (s > (get("spot_best", 0) | 0)) put("spot_best", s);
       $$(".cc-pick", q).forEach(function (p) { p.disabled = true; p.classList.add(p.dataset.side === "fake" ? "was-fake" : "was-real"); });
       fb.innerHTML = (ok ? "<b>Got it.</b> " : "<b>Not this time.</b> ") + R.tell.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-      nx.hidden = false; streak(); played();
+      nx.hidden = false; streak(); played(fb);
     }
     nx.addEventListener("click", deal);
     streak(); deal();

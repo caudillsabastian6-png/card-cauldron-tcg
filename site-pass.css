@@ -430,3 +430,20 @@ section.cc-slim>details.cc-more{margin-left:0; margin-right:0}
 @media (min-width:641px){ .cc-fotw{display:grid; grid-template-columns:300px 1fr; column-gap:18px; align-items:start}
   .cc-fotw>.cc-kicker,.cc-fotw>h3{grid-column:1/-1} .cc-fotw-pair{grid-row:3/5} .cc-fotw .cc-tells,.cc-fotw .small{grid-column:2} }
 .cc-tablist [role=tab]{padding:8px 13px; font-size:.86rem}
+
+/* ---------- overlap sweep (Nov 21): no text on text, no see-through overlays ---------- */
+/* open site menu: fully opaque so page text never ghosts through it */
+#webMenuPanel{background-color:rgb(20,14,32)}
+/* level-up toast sits in the page flow (under the top bar or under the button that earned it), never over text */
+.cc-toast{position:static; display:block; width:fit-content; max-width:calc(100% - 32px); margin:8px auto; transform:translateY(-6px);
+  text-align:center; line-height:1.3; border-radius:18px; overflow:hidden}
+.cc-toast.in{transform:none}
+.cc-toast.out{opacity:0; max-height:0 !important; margin-top:0; margin-bottom:0; padding-top:0; padding-bottom:0; transition:opacity .25s ease, max-height .35s ease .2s, margin .35s ease .2s, padding .35s ease .2s}
+/* Spot the Fake: the Fake/Real badge gets its own row above the answer text */
+.cc-spot-q.is-text .cc-pick.was-fake,.cc-spot-q.is-text .cc-pick.was-real{padding-top:34px}
+.cc-spot-q.is-text .cc-pick.was-fake::after,.cc-spot-q.is-text .cc-pick.was-real::after{left:auto; right:8px; top:8px}
+/* phones: tabs sit in a tidy grid instead of a row cut off at the screen edge */
+@media (max-width:480px){
+  .cc-tablist{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); overflow:visible}
+  .cc-tablist [role=tab]{padding:8px 10px; white-space:normal; line-height:1.15}
+}
