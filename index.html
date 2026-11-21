@@ -1360,32 +1360,15 @@ footer{padding:32px 16px 48px}
     
   </header>
 
+  <!-- ============ TODAY'S FEATURED CARD (ideas pass Nov 20; picked per day in site-pass.js) ============ -->
+  <section id="featured" class="cc-slim">
+    <div class="cc-featured" data-cc="featured" aria-live="polite"></div>
+  </section>
+
+
   <!-- ============ TICKER ============ -->
   
 
-  <!-- ============ CHARIZARD IN MOTION (v9) ============ -->
-  <section id="watch">
-    <div class="motion-layout">
-      <div class="sec-head pop">
-        <div class="num">Spotlight — the cauldron in motion</div>
-        <h2>Watch the <em>Cauldron</em> in motion</h2>
-        <p>Our 3D shop short — the same fire we bring to every listing.</p>
-        <div class="motion-ctas">
-          <a class="btn btn-ghost" href="https://www.tiktok.com/@thecardcauldrontcg" target="_blank" rel="noopener">🎵 Follow on TikTok ↗</a>
-        </div>
-      </div>
-      <details class="cc-reel" id="ccReel">
-      <summary>▶ Watch the 10-second shop short</summary>
-      <figure class="motion-card">
-        <video class="motion-video" controls muted loop playsinline preload="none" width="720" height="1280" poster="media/charizard-poster.jpg" aria-label="3D animated Charizard soaring over a pile of Pokémon cards — a Card Cauldron TCG shop short asking viewers to follow the shop">
-          <source src="media/charizard.mp4" type="video/mp4" />
-          Your browser can't play this video inline — <a href="media/charizard.mp4">watch the Charizard shop short here</a>.
-        </video>
-        <figcaption>🔥 <b>Charizard over the card pile</b> — follow <b>@thecardcauldrontcg</b> for daily drops, pulls and shop clips, and find every real card in the eBay store.</figcaption>
-      </figure>
-      </details>
-    </div>
-  </section>
 
   <!-- ============ CATEGORIES ============ -->
   <section id="categories">
@@ -1428,6 +1411,48 @@ footer{padding:32px 16px 48px}
     </div>
   </section>
 
+  <!-- ============ PLAY: quiz / spot the fake / fake of the week / mystery pack (ideas pass Nov 20) ============ -->
+  <section id="play">
+    <div class="sec-head pop">
+      <div class="num">Play</div>
+      <h2>Train your <em>eye</em></h2>
+    </div>
+    <div class="cc-tabs" data-cc-tabs>
+      <div class="cc-tablist" role="tablist" aria-label="Games and guides">
+        <button type="button" role="tab" id="t-quiz" aria-controls="p-quiz" aria-selected="true">Quiz</button>
+        <button type="button" role="tab" id="t-spot" aria-controls="p-spot" aria-selected="false" tabindex="-1">Spot the Fake</button>
+        <button type="button" role="tab" id="t-fotw" aria-controls="p-fotw" aria-selected="false" tabindex="-1">Weekly Fake</button>
+        <button type="button" role="tab" id="t-pack" aria-controls="p-pack" aria-selected="false" tabindex="-1">Pack</button>
+      </div>
+      <div class="cc-tabpanel" role="tabpanel" id="p-quiz" aria-labelledby="t-quiz">
+<div class="cc-teaser cc-foil" id="ccTeaser">
+      <h3>Real or Replica? Quick quiz</h3>
+      <p class="small" style="margin:0">Tell or myth? Tap your answer.</p>
+      <p class="q" id="ccQ" aria-live="polite"></p>
+      <div class="opts"><button type="button" data-a="tell">🔍 Real tell</button><button type="button" data-a="myth">🙅 Myth</button></div>
+      <p class="fb" id="ccFb" aria-live="polite"></p>
+      <p class="small">Tells are clues, not proof — a guide, not a guarantee.</p>
+      <div class="cc-ctas">
+        <a class="cc-link" href="/is-my-card-fake.html">Full fake-check guide →</a>
+        <a class="cc-link" href="mailto:caudillsabastian6@gmail.com?subject=Real%20or%20Replica%20Android%20tester">📱 Free Android tester spot ✉</a>
+      </div>
+    </div>
+      </div>
+      <div class="cc-tabpanel" role="tabpanel" id="p-spot" aria-labelledby="t-spot" hidden><div data-cc="spot"></div></div>
+      <div class="cc-tabpanel" role="tabpanel" id="p-fotw" aria-labelledby="t-fotw" hidden><div data-cc="fotw"></div></div>
+      <div class="cc-tabpanel" role="tabpanel" id="p-pack" aria-labelledby="t-pack" hidden>
+        <div class="cc-packteaser cc-teaser">
+          <a class="cc-mpack" href="/shop.html#samplePack" aria-label="Open a Mystery Pack on the shop page"><span aria-hidden="true">✦</span></a>
+          <div>
+            <h3>Mystery Pack</h3>
+            <p class="small" style="margin:0">Tap the pack on the shop page: five random cards from the live catalog flip out, each linked to its real eBay listing.</p>
+            <div class="cc-ctas"><a class="btn btn-ghost" href="/shop.html#samplePack">Open a Mystery Pack →</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ MISSION + REAL OR REPLICA TEASER (site pass Nov 20) ============ -->
   <section id="mission">
     <div class="sec-head pop">
@@ -1439,34 +1464,54 @@ footer{padding:32px 16px 48px}
     <div class="cc-tiles">
       <div class="cc-tile cc-foil"><span class="ic" aria-hidden="true">🛡️</span><h3>Fighting fakes</h3><p>Every listing photo is the actual card you'll get, and our free guides teach you the tells.</p></div>
       <div class="cc-tile cc-foil"><span class="ic" aria-hidden="true">🤝</span><h3>Backing collectors</h3><p>A small shop with a real person behind it. Questions? <a href="/ask.html">Ask the Office</a>.</p></div>
-      <div class="cc-tile cc-foil"><span class="ic" aria-hidden="true">🎁</span><h3>Giving back to kids</h3><p>Real cards into kids' hands instead of fakes. Donations are on the way.</p><span class="cc-soon">Coming soon</span></div>
+      <div class="cc-tile cc-foil"><span class="ic" aria-hidden="true">🎁</span><h3>Giving back to kids</h3><p>Real cards into kids' hands instead of fakes.</p><div class="cc-donate" data-cc="donate"></div></div>
     </div>
-    <details class="cc-more"><summary>Try the Real or Replica quiz</summary>
-<div class="cc-teaser cc-foil" id="ccTeaser">
-      <h3>Real or Replica? Quick quiz</h3>
-      <p class="small" style="margin:0">Tell or myth? Tap your answer.</p>
-      <p class="q" id="ccQ" aria-live="polite"></p>
-      <div class="opts"><button type="button" data-a="tell">🔍 Real tell</button><button type="button" data-a="myth">🙅 Myth</button></div>
-      <p class="fb" id="ccFb" aria-live="polite"></p>
-      <p class="small">Tells are clues, not proof — a guide, not a guarantee.</p>
+  </section>
+
+  <!-- ============ DROP CLUB (ideas pass Nov 20: replaces the fresh-pulls card; mailto only, nothing collected here) ============ -->
+  <section id="drops">
+    <div class="drop-alert cc-foil pop cc-dropclub">
+      <h3>🫧 Join the Drop Club</h3>
+      <p>A heads-up when fresh pulls land. The button opens your own email app; nothing is collected on this site.</p>
+      <p><span class="cc-soon cc-soon-inline">Monthly giveaway coming soon</span></p>
       <div class="cc-ctas">
-        <a class="btn btn-ghost" href="/is-my-card-fake.html">Full fake-check guide →</a>
-        <a class="btn btn-gold" href="mailto:caudillsabastian6@gmail.com?subject=Real%20or%20Replica%20Android%20tester">📱 Free Android tester spot ✉</a>
+        <a class="btn btn-gold" href="mailto:caudillsabastian6@gmail.com?subject=Join%20the%20Drop%20Club&amp;body=Please%20add%20me%20to%20the%20Drop%20Club.">✉ Join the Drop Club</a>
+        <a class="cc-link" href="https://www.ebay.com/str/cardcauldrontcg?_sop=10" target="_blank" rel="noopener">See the newest listings ↗</a>
       </div>
-      <p class="small">Real or Replica, our card-checking app, is in free testing on Android. Email us to get a tester invite.</p>
     </div>
-</details>
+  </section>
+
+  <!-- ============ FAN WALL (ideas pass Nov 20: empty until real fans send photos with permission) ============ -->
+  <details class="cc-more" id="fanwall"><summary>📸 Show off your pulls: the Fan Wall</summary>
+  <div class="cc-fanwall">
+    <p>Pulled something great? Email us a photo and say it's OK to post. We only put up photos sent with permission, and the wall is empty until the first one arrives.</p>
+    <div class="cc-fangrid" role="list" aria-label="Fan Wall, empty for now">
+      <div class="cc-fanslot" role="listitem"><span aria-hidden="true">✦</span>Your pull here</div>
+      <div class="cc-fanslot" role="listitem"><span aria-hidden="true">✦</span>Your pull here</div>
+      <div class="cc-fanslot" role="listitem"><span aria-hidden="true">✦</span>Your pull here</div>
+    </div>
+    <div class="cc-ctas"><a class="btn btn-ghost" href="mailto:caudillsabastian6@gmail.com?subject=Fan%20Wall%20photo&amp;body=Here%27s%20my%20pull%20(photo%20attached).%20You%20have%20my%20permission%20to%20post%20it%20on%20the%20Card%20Cauldron%20TCG%20Fan%20Wall.%0A%0AName%20or%20handle%20to%20credit%20(optional)%3A">📸 Send a photo, with permission ✉</a></div>
+  </div>
+  </details>
+
+  <!-- ============ SHOP SHORT (slimmed: just the tap-to-play reel) ============ -->
+  <section id="watch" class="cc-slim">
+    <details class="cc-reel" id="ccReel">
+      <summary>▶ Watch the 10-second shop short</summary>
+      <figure class="motion-card">
+        <video class="motion-video" controls muted loop playsinline preload="none" width="720" height="1280" poster="media/charizard-poster.jpg" aria-label="3D animated Charizard soaring over a pile of Pokémon cards — a Card Cauldron TCG shop short asking viewers to follow the shop">
+          <source src="media/charizard.mp4" type="video/mp4" />
+          Your browser can't play this video inline — <a href="media/charizard.mp4">watch the Charizard shop short here</a>.
+        </video>
+        <figcaption>🔥 <b>Charizard over the card pile</b> — follow <b>@thecardcauldrontcg</b> for daily drops, pulls and shop clips, and find every real card in the eBay store.</figcaption>
+      </figure>
+      </details>
   </section>
 
   <!-- ============ WHAT BUYERS SAY ============ -->
-  <section id="reviews">
-    <details class="sec-fold">
-    <summary class="sec-head">
-      <div class="num">Word of mouth</div>
-      <h2>What buyers <em>say</em></h2>
-      <p class="reviews-score">98.1% positive · feedback score 78 on eBay</p>
-      <p class="fold-hint-line"><span class="fold-hint">— TAP TO OPEN ▾</span></p>
-    </summary>
+  <section id="reviews" class="cc-slim">
+    <details class="cc-more cc-fold-sec">
+    <summary>⭐ What buyers say: 98.1% positive on eBay</summary>
     <div class="reviews-grid">
       <figure class="review">
         <blockquote><p>The communication with the seller was excellent. The shipping was done pristinely and the packaging was done so carefully. The card quality was exactly as described and came to me when I actually needed it. I appreciate that very much.</p></blockquote>
@@ -1508,14 +1553,10 @@ footer{padding:32px 16px 48px}
   </section>
 
   <!-- ============ RELEASE CALENDAR ============ -->
-  <section id="calendar">
-    <details class="sec-fold">
-    <summary class="sec-head pop">
-      <div class="num">New-release intake calendar</div>
-      <h2>Recent <em>releases</em></h2>
-      <p>New sets are opened from our own sealed product and scanned before they list.</p>
-      <p class="fold-hint-line"><span class="fold-hint">— TAP TO OPEN ▾</span></p>
-    </summary>
+  <section id="calendar" class="cc-slim">
+    <details class="cc-more cc-fold-sec">
+    <summary>🗓️ Recent releases we opened</summary>
+    <p class="cc-pad" style="margin:0">New sets are opened from our own sealed product and scanned before they list.</p>
     <div class="cal-list">
       <div class="cal-item pop">
         <div class="cal-date">Nov 6<small>2026</small></div>
@@ -1546,17 +1587,8 @@ footer{padding:32px 16px 48px}
     </details>
   </section>
 
-  <!-- ============ FRESH PULLS (site pass Nov 20: replaces the expired Oct 30 / Nov 6 countdowns) ============ -->
-  <section id="drops">
-    <div class="drop-alert cc-foil pop">
-      <h3>🫧 Fresh pulls land in the eBay store first</h3>
-      <p>New singles list as fast as we can scan them. Want a heads-up first? Join the Cauldron List — opt-in, no spam, and a head start, not a hold.</p>
-      <div class="cc-ctas">
-        <a class="btn btn-gold" href="https://www.ebay.com/str/cardcauldrontcg?_sop=10" target="_blank" rel="noopener">See the newest listings ↗</a>
-        <button class="btn btn-ghost" type="button" data-open-cauldron="drops">🔔 Get drop alerts</button>
-      </div>
-    </div>
-  </section>
+
+
 
   <!-- ============ SOUND VAULT (now its own page: sounds.html) ============ -->
   

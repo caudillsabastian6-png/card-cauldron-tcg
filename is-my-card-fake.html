@@ -1007,6 +1007,17 @@ details.sec-fold>summary::-webkit-details-marker{display:none}
     </div>
   </section>
 
+  <!-- ============ FAKE OF THE WEEK + SPOT THE FAKE (ideas pass Nov 20; content lives in site-pass.js) ============ -->
+  <section id="fake-of-the-week" class="cc-slim">
+    <div class="cc-tabs" data-cc-tabs>
+      <div class="cc-tablist" role="tablist" aria-label="Practice your eye">
+        <button type="button" role="tab" id="t-fotw" aria-controls="p-fotw" aria-selected="true">Fake of the Week</button>
+        <button type="button" role="tab" id="t-spot" aria-controls="p-spot" aria-selected="false" tabindex="-1">🎯 Spot the Fake</button>
+      </div>
+      <div class="cc-tabpanel" role="tabpanel" id="p-fotw" aria-labelledby="t-fotw"><div data-cc="fotw"></div></div>
+      <div class="cc-tabpanel" role="tabpanel" id="p-spot" aria-labelledby="t-spot" hidden><div data-cc="spot"></div></div>
+    </div>
+  </section>
   <details class="cc-more"><summary>Checks 2–5: print, color, holo &amp; the details</summary>
 <section id="check2">
     <div class="sec-head pop">
